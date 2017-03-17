@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/">
+        <file>fonts/TrebuchetMSn.ttf</file>
+        <file>P2PStyle/BusyIndicator.qml</file>
+        <file>P2PStyle/HeaderSplash.qml</file>
+        <file>ui/buttons/backButton.png</file>
+        <file>ui/buttons/sendButton.png</file>
+        <file>chat.qml</file>
+        <file>load.qml</file>
+        <file>P2PStyle/Menusdrawer.qml</file>
+        <file>P2PStyle/Background.qml</file>
+        <file>start.qml</file>
+        <file>login.qml</file>
+        <file>ui/chat/leFtMessage.png</file>
+        <file>ui/chat/rightMessag.png</file>
+        <file>js/URLQuery.js</file>
+        <file>js/xHRQuery.js</file>
+        <file>ui/bars/icons/configDBlue.png</file>
+        <file>ui/bars/icons/configWhite.png</file>
+        <file>ui/icons/passWIconWhite.png</file>
+        <file>ui/icons/phoneIconWhite.png</file>
+        <file>ui/logos/logo.png</file>
+        <file>P2PStyle/WindsDialogs.qml</file>
+    </qresource>
+</RCC>
