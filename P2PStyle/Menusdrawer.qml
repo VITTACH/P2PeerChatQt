@@ -6,11 +6,17 @@ Drawer {
     id: drawer
     property int workout
     height:parent.height
-    width: 0.75*parent.width
+    width:0.75*parent.width
     background: Rectangle {color: "transparent";}
+    
+    function getPeersModel() {return usersModel;}
 
-    function getMyPeers() {
-        return usersModel;
+    Connections {
+        onOpened: {
+        usersModel.clear();
+        getMePeers();
+        }
+        target:drawer
     }
 
     function getMePeers() {
@@ -54,12 +60,6 @@ Drawer {
             id: listView
             anchors.fill: parent
             boundsBehavior:Flickable.StopAtBounds
-
-            Component.onCompleted:
-            {
-                usersModel.clear()
-                getMePeers();
-            }
 
             model:  ListModel {
                 id: usersModel;
