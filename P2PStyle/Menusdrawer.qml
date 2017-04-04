@@ -4,19 +4,24 @@ import QtGraphicalEffects 1.0
 
 Drawer {
     id: drawer
-    property int workout
-    height:parent.height
+    property int workout:0;
+    height: {parent.height}
     width:0.75*parent.width
     background: Rectangle {color: "transparent";}
     
     function getPeersModel() {return usersModel;}
 
     Connections {
-        onOpened: {
-        usersModel.clear();
-        getMePeers();
+        target: drawer
+        onOpened:getMePeers();
+    }
+
+    function findPeer(phone) {
+        for(var i = 0; i<usersModel.count; i++) {
+            if (usersModel.get(i).phone == phone)
+                return i;
         }
-        target:drawer
+        return -1;
     }
 
     function getMePeers() {
@@ -29,17 +34,25 @@ Drawer {
                 {
                 var obj = JSON.parse(request.responseText)
                     for (var i = 0; i < obj.length; i++) {
-                        usersModel.append({
-                            target: obj[i].name,
-                            port: obj[i].port,
-                            ip: obj[i].ip,
-                            image1: "",
-                            image2: ""
-                        });
+                        var index = findPeer(obj[i].name);
+                        if(usersModel.count==0 || index<0)
+                            usersModel.append({
+                                image: "http://lorempixel.com/200/200/sports",
+                                famil: obj[i].family,
+                                login: obj[i].login,
+                                phone: obj[i].name,
+                                port: obj[i].port,
+                                ip: obj[i].ip
+                            });
+                        else {
+                            usersModel.setProperty(index, "port", obj[i].port)
+                            usersModel.setProperty(index, "ip", obj[i].ip)
+                        }
                     }
                 }
             }
-        } request.setRequestHeader('Content-Type' , 'application/x-www-form-urlencoded');
+        }
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         request.send("READ=2")
     }
 
@@ -61,41 +74,39 @@ Drawer {
             anchors.fill: parent
             boundsBehavior:Flickable.StopAtBounds
 
+            Component.onCompleted: {usersModel.clear();}
+
             model:  ListModel {
                 id: usersModel;
                     ListElement {
-                        image1: ""
-                        image2: ""
-                        target: ""
+                        image: ""
+                        famil: ""
+                        login: ""
+                        phone: ""
                         port: ""
                         ip: ""
                     }
-                    /*
-                    ListElement {
-                        image1: "qrc:/ui/bars/icons/configDBlue.png";
-                        image2: "qrc:/ui/bars/icons/configWhite.png";
-                        target: "Настройки"
-                    }
-                    */
                 }
             delegate: Rectangle {
                 width: parent.width
-                height: facade.toPx(100)
-                color: ListView.isCurrentItem? "#00FFFFFF": "#FFFFFF"
+                height: {facade.toPx(20) + Math.max(bug.height, info.implicitHeight);}
+                color: ListView.isCurrentItem? "#FFFFFF": "#40FFFFFF"
+
                 MouseArea {
                     id: navMouseArea
-                    anchors.fill: parent
+                    anchors.fill:parent
                     propagateComposedEvents: true
+                    /*
                     onExited: {
                         listView.currentIndex=-1;
                     }
-                    onEntered: {
-                        if(index != 0) {
+                    */
+                    onEntered:{
+                        if(index!=-1)
                             listView.currentIndex = index
-                        }
                     }
 
-                    onClicked: {
+                    onClicked:{
                         var json = {
                             ip:usersModel.get(index).ip,
                             pt:usersModel.get(index).port
@@ -113,78 +124,104 @@ Drawer {
                         */
                     }
                 }
-                Row {
-                    spacing: facade.toPx(25)
-                    anchors{
-                        fill: parent
+
+                OpacityMask {
+                    source: bug
+                    maskSource: mask
+                    anchors.fill: bug
+                }
+
+                Rectangle {
+                    id: bug
+                    clip: true
+                    smooth: true
+                    visible: false
+                    x: facade.toPx(20)
+                    width: facade.toPx(100)
+                    height:facade.toPx(100)
+                    anchors.verticalCenter: parent.verticalCenter
+                    Image {
+                        source: image
+                        height:sourceSize.width>sourceSize.height? parent.height:sourceSize.height * (parent.width/sourceSize.width)
+                        width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                    }
+                }
+
+                Image {
+                    id: mask
+                    smooth: true
+                    visible: false
+                    source: "qrc:/ui/mask/round.png"
+                    sourceSize: {Qt.size(bug.width, bug.height);}
+                }
+
+                Text {
+                    id: info
+                    lineHeight: 1.2
+                    wrapMode: Text.Wrap
+                    width: parent.width-facade.toPx(60)-bug.width
+                    anchors {
+                        left: bug.right
                         leftMargin: facade.toPx(20)
                     }
-                    Image {
-                        source: navMouseArea.pressed==true || listView.currentIndex == index? image2: image1
-                        anchors.verticalCenter: parent.verticalCenter;
-                    }
-                    Text {
-                        text: target
-                        wrapMode: Text.Wrap;
-                        font.family: trebu4etMsNorm.name
-                        font.pixelSize: facade.doPx(24);
-                        width: (index != 0)? (0.75 * drawer.width): 0;
-                        anchors.verticalCenter: parent.verticalCenter;
-                        color: navMouseArea.pressed || listView.currentIndex == index? "#FFFFFF": "#10387F";
-                    }
-                    /*
-                    Switch {
-                        id: myswitcher
-                        height: facade.toPx(80);
-                        spacing: facade.toPx(15)
-                        visible: index==0 ? 1: 0
-                        anchors.verticalCenter: parent.verticalCenter;
-
-                        font {
-                            family: trebu4etMsNorm.name
-                            pixelSize: facade.doPx(24);
-                        }
-                        text: checked? qsTr("Online"): qsTr("Offline")
-
-                        indicator: Rectangle {
-                            radius:facade.toPx(25)
-                            x: parent.leftPadding;
-                            y: parent.height/2 - height/2;
-                            implicitWidth: facade.toPx(90)
-                            implicitHeight:facade.toPx(40)
-                            color:parent.checked?"#10387F":"#8610387F"
-
-                            Rectangle {
-                                x:parent.parent.checked?
-                                      parent.width-width-(parent.height-height)/2: (parent.height-height)/2;
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: parent.parent.height/1.5
-                                height:parent.parent.height/1.5
-                                radius: width / 2;
-                                color: "#76CCCCCC"
-                            }
-                            Rectangle {
-                                radius: width / 2;
-                                x: parent.parent.checked?
-                                      parent.width-width-(parent.height-height)/2: (parent.height-height)/2;
-                                color:myswitcher.down? "#9610387F": (myswitcher.checked? "white": "#337CFD")
-                                anchors.verticalCenter: parent.verticalCenter
-                                width: parent.parent.height/1.8
-                                height:parent.parent.height/1.8
-                            }
-                        }
-
-                        contentItem: Text {
-                            leftPadding: (parent.indicator.width + parent.spacing)
-                            color: navMouseArea.pressed||listView.currentIndex==index? "#FFFFFF": "#10387F";
-                            opacity: enabled == true? 1.0: 0.3;
-                            verticalAlignment:Text.AlignVCenter
-                            text: parent.text
-                            font: parent.font
-                        }
-                    }
-                    */
+                    font.family:trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(24)
+                    text: {famil + " " + login + "<br>" + phone;}
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: navMouseArea.pressed || listView.currentIndex == index? "#10387F": "#FFFFFF";
                 }
+                /*
+                Switch {
+                    id: myswitcher
+                    height: facade.toPx(80);
+                    spacing: facade.toPx(15)
+                    visible: index==0 ? 1: 0
+                    anchors.verticalCenter: parent.verticalCenter;
+
+                    font {
+                        family: trebu4etMsNorm.name
+                        pixelSize: facade.doPx(24);
+                    }
+                    text: checked? qsTr("Online"): qsTr("Offline")
+
+                    indicator: Rectangle {
+                        radius:facade.toPx(25)
+                        x: parent.leftPadding;
+                        y: parent.height/2 - height/2;
+                        implicitWidth: facade.toPx(90)
+                        implicitHeight:facade.toPx(40)
+                        color:parent.checked?"#10387F":"#8610387F"
+
+                        Rectangle {
+                            x:parent.parent.checked?
+                                  parent.width-width-(parent.height-height)/2: (parent.height-height)/2;
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: parent.parent.height/1.5
+                            height:parent.parent.height/1.5
+                            radius: width / 2;
+                            color: "#76CCCCCC"
+                        }
+                        Rectangle {
+                            radius: width / 2;
+                            x: parent.parent.checked?
+                                  parent.width-width-(parent.height-height)/2: (parent.height-height)/2;
+                            color:myswitcher.down? "#9610387F": (myswitcher.checked? "white": "#337CFD")
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: parent.parent.height/1.8
+                            height:parent.parent.height/1.8
+                        }
+                    }
+
+                    contentItem: Text {
+                        leftPadding: (parent.indicator.width + parent.spacing)
+                        color: navMouseArea.pressed||listView.currentIndex==index? "#FFFFFF": "#10387F";
+                        opacity: enabled == true? 1.0: 0.3;
+                        verticalAlignment:Text.AlignVCenter
+                        text: parent.text
+                        font: parent.font
+                    }
+                }
+                */
             }
         }
     }

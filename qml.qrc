@@ -21,5 +21,8 @@
         <file>ui/icons/phoneIconWhite.png</file>
         <file>ui/logos/logo.png</file>
         <file>P2PStyle/WindsDialogs.qml</file>
+        <file>regin.qml</file>
+        <file>ui/icons/personIconwhite.png</file>
+        <file>ui/mask/round.png</file>
     </qresource>
 </RCC>

@@ -106,7 +106,7 @@ Item {
                 }
                 background: Rectangle {
                     color:parent.down?"#FFC129":"#FFCC40"
-                    radius:facade.toPx(25)
+                    radius:facade.toPx(40)
                 }
                 contentItem: Text {
                     color:parent.down?"black":"#960f133d"
@@ -125,18 +125,18 @@ Item {
                 anchors {
                     left: parent.left
                     right: parent.right
-                    leftMargin: 0.09*parent.width
-                    rightMargin:0.09*parent.width
+                    leftMargin: 0.09 * parent.width
+                    rightMargin:0.09 * parent.width
                 }
                 TextField {
                     color:"white"
-                    height: facade.toPx(88)
-                    placeholderText: plaseholder
+                    height:facade.toPx(88)
+                    placeholderText: {plaseholder;}
                     anchors {
-                        left: parent.left
-                        right: parent.right
+                        left: parent.left;
+                        right:parent.right
                         rightMargin:0.09*parent.width
-                        leftMargin: (facade.toPx(60))
+                        leftMargin: facade.toPx(80)
                     }
 
                     onFocusChanged: if (text.length==0&&index==0) text="8"
@@ -160,23 +160,14 @@ Item {
             }
 
             Button {
-                text: plaseholder
-                visible: index==3?1:0
-
                 background: Rectangle {opacity:0}
 
-                //font.underline:true
                 font.pixelSize: {facade.doPx(22)}
                 font.family: trebu4etMsNorm.name;
 
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    leftMargin: 0.09*parent.width
-                    rightMargin:0.09*parent.width
-                }
+                onClicked: loader.goTo("qrc:/regin.qml");
 
-                onClicked: loader.goTo("qrc:/regist.qml")
+                visible: index==3?1:0
 
                 contentItem: Text {
                     color:parent.down?"#960f133d":"white"
@@ -184,22 +175,30 @@ Item {
                     verticalAlignment : Text.AlignVCenter
                     opacity: enabled?1:0.3
                     elide: Text.ElideRight
-                    text: parent.text
-                    font: parent.font
-                    padding: -8
+                    text: parent.text;
+                    font: parent.font;
+                    padding: -8;
                 }
-            }
 
-            Rectangle {// ебаное нижне подчеркивание
-                height: 1
-                color: "#FFFFFF"
-                visible: index < 2?1:0
                 anchors {
                     left: parent.left;
                     right:parent.right
-                    leftMargin: 0.09 * parent.width;
-                    rightMargin:0.09 * parent.width;
+                    leftMargin: 0.09 * parent.width
+                    rightMargin:0.09 * parent.width
                 }
+                text:plaseholder
+            }
+
+            Rectangle {
+                anchors {
+                    leftMargin: 0.09 * parent.width
+                    rightMargin:0.09 * parent.width
+                    right:parent.right
+                    left: parent.left;
+                }
+                visible: index<2? 1:0;
+                color: "#FFFFFF"
+                height: 1
             }
         }
     }
