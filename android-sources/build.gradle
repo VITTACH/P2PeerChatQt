@@ -1,0 +1,68 @@
+import groovy.json.JsonSlurper
+
+String getAndroidPackageSourceDir() {
+    String res = System.getProperty("user.dir");
+
+    FileTree tree = fileTree(dir: res + '/..').include('android*deployment-settings.json');
+
+    String json = tree[0];
+    def inputFile=new File(json);
+    def InputJSON=new JsonSlurper().parseText(inputFile.text);
+    res = InputJSON["android-package-source-directory"]
+
+    return res;
+}
+
+String androidPackageSourceDir = getAndroidPackageSourceDir();
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.android.tools.build:gradle:1.1.0'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+apply plugin: 'com.google.gms.google-services'
+
+apply plugin: 'com.android.application'
+
+dependencies {
+    compile 'com.google.firebase:firebase-messaging:9.8.0'
+    compile 'com.google.firebase:firebase-core:9.8.0'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+android {
+    compileSdkVersion androidCompileSdkVersion.toInteger()
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java', androidPackageSourceDir+ '/../../../java']
+            aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
+            res.srcDirs = [qt5AndroidDir + '/res', 'res']
+            renderscript.srcDirs = ['src']
+            resources.srcDirs= ['src']
+            assets.srcDirs= ['assets']
+            jniLibs.srcDirs = ['libs']
+       }
+    }
+
+    defaultConfig {
+      applicationId "org.qtproject.example.allpeerpeer"
+    }
+
+    buildToolsVersion androidBuildToolsVersion
+
+    lintOptions {abortOnError false}
+}

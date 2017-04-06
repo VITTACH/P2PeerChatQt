@@ -79,12 +79,11 @@ Item {
                 font.pixelSize: facade.doPx(24);
                 font.family: trebu4etMsNorm.name
 
-            anchors {
-                left: parent.left;
-                right:parent.right
-                leftMargin: 0.12 * parent.width;
-                rightMargin:0.12 * parent.width;
-                verticalCenter: parent.verticalCenter;
+                anchors {
+                    left: parent.left;
+                    right:parent.right
+                    leftMargin: 0.12 * parent.width;
+                    rightMargin:0.12 * parent.width;
                 }
 
                 onClicked: {

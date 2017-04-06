@@ -44,6 +44,7 @@ ApplicationWindow {
         objectName: "loader"
         anchors.fill: parent
         property real dpi: 0
+        property bool avatar
         property bool dialog
         property bool webvew
 
@@ -74,6 +75,15 @@ ApplicationWindow {
         }
     }
 
+    Loader {
+        id: imagePicker
+        source: event_handler.currentOSys()==0?"AndImagePicker.qml": "IOsImagesPicker.qml"
+
+        onLoaded:item.onChange=function(url) {
+            //TODO: set property new image url
+        }
+    }
+
     P2PStyle.HeaderSplash {
         visible: loader.source=="qrc:/start.qml"? 0: 1
         id: partnerHeader;
@@ -85,6 +95,8 @@ ApplicationWindow {
     }
 
     P2PStyle.BusyIndicator {id: busyIndicator}
+
+    P2PStyle.Avatardialogs {id: avatardialogs}
 
     P2PStyle.WindsDialogs {id: windsDialogs}
 

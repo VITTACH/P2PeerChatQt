@@ -6,7 +6,7 @@ Drawer {
     id: drawer
     property int workout:0;
     height: {parent.height}
-    width:0.75*parent.width
+    width: Math.min(facade.toPx(625), 0.75 * parent.width)
     background: Rectangle {color: "transparent";}
     
     function getPeersModel() {return usersModel;}
@@ -69,12 +69,151 @@ Drawer {
             }
         }
 
+        Column {
+            id: profile
+            y: facade.toPx(25)
+            spacing: facade.toPx(10)
+            anchors.horizontalCenter: parent.horizontalCenter
+            Row {
+                id: firstRow
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: facade.toPx(30)/Math.max(facade.toPx(625) - drawer.width, 1);
+                Column {
+                    anchors.verticalCenter: parent.verticalCenter
+                    Text {
+                        text: usersModel.count
+                        color: "white"
+                        font.bold: true
+                        font.family: trebu4etMsNorm.name
+                        font.pixelSize: facade.doPx(46);
+                        anchors.horizontalCenter:parent.horizontalCenter
+                    }
+                    Text {
+                        text: "Друзья"
+                        color: "white"
+                        font.family: trebu4etMsNorm.name
+                        font.pixelSize: facade.doPx(24);
+                        anchors.horizontalCenter:parent.horizontalCenter
+                    }
+                }
+                Button {
+                    id: avatarButton
+                    width: facade.toPx(250)
+                    height:facade.toPx(250)
+                    background: Rectangle {
+                        radius: width * 0.5
+                        color: "transparent"
+                        border {
+                          width: 1
+                          color: "#40FFFFFF"
+                        }
+                    }
+
+                    onClicked: {
+                        drawer.close()
+                        loader.avatar = true
+                    }
+
+                    Rectangle {
+                        id: bag
+                        clip: true
+                        smooth: true
+                        visible: false
+                        width: {parent.width - facade.toPx(50.0)}
+                        height: {parent.height - facade.toPx(50)}
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            horizontalCenter: (parent.horizontalCenter);
+                        }
+                        Image {
+                            source:"qrc:/ui/profiles/default/Human.png";
+                            height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width)
+                            width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width
+                            anchors.centerIn: parent
+                        }
+                    }
+
+                    OpacityMask {
+                        source: bag
+                        maskSource: misk
+                        anchors.fill:bag
+                    }
+
+                    Image {
+                        id: misk
+                        smooth: true;
+                        visible:false
+                        source: "qrc:/ui/mask/round.png"
+                        sourceSize: Qt.size(bag.width,bag.height)
+                    }
+                }
+                Column {
+                    anchors.verticalCenter: parent.verticalCenter
+                    Text {
+                        text: "0"
+                        color: "white"
+                        font.bold: true
+                        font.family: trebu4etMsNorm.name
+                        font.pixelSize: facade.doPx(46);
+                        anchors.horizontalCenter:parent.horizontalCenter
+                    }
+                    Text {
+                        text: "Баланс"
+                        color: "white"
+                        font.family: trebu4etMsNorm.name
+                        font.pixelSize: facade.doPx(24);
+                        anchors.horizontalCenter:parent.horizontalCenter
+                    }
+                }
+            }
+
+            Row {
+                width: firstRow.width
+                anchors.horizontalCenter: parent.horizontalCenter
+                Text {
+                    elide: Text.ElideRight
+                    color: "white"
+                    font.bold: true
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(28);
+                    width: parent.width - scope1.implicitWidth - scope2.implicitWidth - image1.width
+                    text: "Гоман Леонид Алексеевич";
+                }
+                Text {
+                    id: scope1
+                    text: " ( "
+                    color: "#FFFFFF"
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(28);
+                }
+                Image {
+                    id: image1
+                    source:"qrc:/ui/profiles/lin.png"
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                Text {
+                    id: scope2
+                    text: " 0 )"
+                    color: "#FFFFFF"
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(28);
+                }
+            }
+        }
+
         ListView {
             id: listView
-            anchors.fill: parent
-            boundsBehavior:Flickable.StopAtBounds
+            anchors {
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
 
-            Component.onCompleted: {usersModel.clear();}
+                top: profile.bottom
+                topMargin: facade.toPx(50)
+            }
+            boundsBehavior: {Flickable.StopAtBounds}
+
+            Component.onCompleted:usersModel.clear()
 
             model:  ListModel {
                 id: usersModel;
@@ -89,8 +228,8 @@ Drawer {
                 }
             delegate: Rectangle {
                 width: parent.width
-                height: {facade.toPx(20) + Math.max(bug.height, info.implicitHeight);}
-                color: ListView.isCurrentItem? "#FFFFFF": "#40FFFFFF"
+                color: ListView.isCurrentItem==true? "white":"#40FFFFFF"
+                height: facade.toPx(20)+Math.max(bug.height,info.height)
 
                 MouseArea {
                     id: navMouseArea
@@ -128,7 +267,7 @@ Drawer {
                 OpacityMask {
                     source: bug
                     maskSource: mask
-                    anchors.fill: bug
+                    anchors.fill:bug
                 }
 
                 Rectangle {
@@ -142,33 +281,44 @@ Drawer {
                     anchors.verticalCenter: parent.verticalCenter
                     Image {
                         source: image
-                        height:sourceSize.width>sourceSize.height? parent.height:sourceSize.height * (parent.width/sourceSize.width)
-                        width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                        anchors.centerIn: parent
+                        height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width)
+                        width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width
                     }
                 }
 
                 Image {
                     id: mask
-                    smooth: true
-                    visible: false
-                    source: "qrc:/ui/mask/round.png"
+                    smooth: true;
+                    visible:false
+                    source:"qrc:/ui/mask/round.png"
                     sourceSize: {Qt.size(bug.width, bug.height);}
                 }
 
-                Text {
+                Column {
                     id: info
-                    lineHeight: 1.2
-                    wrapMode: Text.Wrap
-                    width: parent.width-facade.toPx(60)-bug.width
+                    width: parent.width
                     anchors {
                         left: bug.right
                         leftMargin: facade.toPx(20)
                     }
-                    font.family:trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(24)
-                    text: {famil + " " + login + "<br>" + phone;}
                     anchors.verticalCenter: parent.verticalCenter
-                    color: navMouseArea.pressed || listView.currentIndex == index? "#10387F": "#FFFFFF";
+                    Text {
+                        elide: Text.ElideRight
+                        text: famil+" "+login+": "+port
+                        font.family:trebu4etMsNorm.name
+                        font.pixelSize: facade.doPx(24)
+                        width: parent.width-facade.toPx(60)-bug.width
+                        color: navMouseArea.pressed || listView.currentIndex == index? "#10387F": "#FFFFFF";
+                    }
+                    Text {
+                        text: phone.substring(0,1)+"("+ phone.substring(1,4)+ ") "+ phone.substring(4,7) + "-" + phone.substring(7)
+                        elide: Text.ElideRight
+                        font.family:trebu4etMsNorm.name
+                        font.pixelSize: facade.doPx(24)
+                        width: parent.width-facade.toPx(60)-bug.width
+                        color: navMouseArea.pressed || listView.currentIndex == index? "#10387F": "#FFFFFF";
+                    }
                 }
                 /*
                 Switch {

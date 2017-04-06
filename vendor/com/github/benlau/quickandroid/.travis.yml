@@ -1,0 +1,24 @@
+language : cpp
+env:
+  - DISPLAY=:99.0
+compiler:
+  - gcc
+before_install:
+    - sudo add-apt-repository --yes ppa:beineri/opt-qt542
+    - sudo apt-get update -qq
+    - apt-cache search qt5
+    - sudo apt-get install -qq qt54quickcontrols  qt54declarative qt54script qt54graphicaleffects
+
+    - sh -e /etc/init.d/xvfb start
+script:
+    - source /opt/qt54/bin/qt54-env.sh 
+    - cd tests/quickandroidcpptests
+    - qmake
+    - make
+    - ls
+    - ./quickandroidcpptests
+    - cd ../quickandroidtests
+    - qmake
+    - make
+    - ls
+    - ./quickandroidtests

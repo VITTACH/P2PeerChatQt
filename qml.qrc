@@ -24,5 +24,14 @@
         <file>regin.qml</file>
         <file>ui/icons/personIconwhite.png</file>
         <file>ui/mask/round.png</file>
+        <file>ui/profiles/default/Human.png</file>
+        <file>ui/profiles/default/woman.png</file>
+        <file>ui/profiles/lin.png</file>
+        <file>P2PStyle/Avatardialogs.qml</file>
+        <file>AndImagePicker.qml</file>
+        <file>IOsImagesPicker.qml</file>
+        <file>ui/apkIcon/iconMaxim.png</file>
+        <file>ui/apkIcon/iconMediw.png</file>
+        <file>ui/apkIcon/iconSmaler.png</file>
     </qresource>
 </RCC>
