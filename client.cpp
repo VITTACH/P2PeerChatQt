@@ -29,9 +29,8 @@ void Client::connectedToIp(QString address, QString port) {
 }
 
 Client::Client(QObject *parent1): QObject(parent1) {
-    connect(&iosocket, SIGNAL(error(QAbstractSocket::SocketError)),this, SLOT(slotSoketError(QAbstractSocket::SocketError))
-    );
-    connect(&iosocket, SIGNAL(readyRead()),this,SLOT(startRead()));
+    connect(&iosocket,SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(slotSoketError(QAbstractSocket::SocketError)));
+    connect(&iosocket,SIGNAL(readyRead()),this,SLOT(startRead()));
 
     /*
     broadcastSocket.bind(QHostAddress("192.168.1.104"), 4444, QUdpSocket :: ShareAddress | QUdpSocket :: ReuseAddressHint);
@@ -43,7 +42,7 @@ Client::Client(QObject *parent1): QObject(parent1) {
 void Client::startRead() {
     qDebug() << "Starting reading data...";
 
-    char readerBuffer[64]={0};
+    char readerBuffer[16384]={0};
     iosocket.read(readerBuffer, iosocket.bytesAvailable());
 
     QString msg(readerBuffer);

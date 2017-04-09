@@ -9,15 +9,21 @@ Item {
         visible: false
         wrapMode:TextEdit.Wrap
         width: 3*rootChat.width/4
-        font.pixelSize: facade.doPx(26)
-        font.family:trebu4etMsNorm.name
+        font {
+            pixelSize: facade.doPx(26)
+            family:trebu4etMsNorm.name
+        }
     }
 
     property bool input: false
 
     Connections {
         target: event_handler;
-        onReciving: appendMessage(response, 1)
+        onReciving: {
+            buferText.text = response;
+            appendMessage(response, 1)
+            chatScreenList.positionViewAtEnd()
+        }
     }
 
     /*
