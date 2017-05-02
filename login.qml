@@ -13,23 +13,32 @@ Item {
     }
 
     function login(phone,password) {
-        var request=new XMLHttpRequest()
+        var request = new XMLHttpRequest(), response;
         request.open('POST',"http://hoppernet.hol.es/default.php")
-        request.onreadystatechange = function(){
+        request.onreadystatechange = function() {
             if (request.readyState == XMLHttpRequest.DONE) {
                 if (request.status && request.status==200) {
-                var response = (request.responseText=="yes")? 1: (request.responseText=="no"? 0: -1)
+                    if (request.responseText == "") response = -1;
+                    else if (request.responseText != "no") {
+                        response = 1;
+                        var obj = JSON.parse(request.responseText)
+                        loader.famil = obj.family
+                        loader.login = obj.login;
+                        loader.tel = obj.name
+                    }
+                    else
+                        response = 0;
                 switch(response)
                 {
-                    case 1:
+                case 1:
                     loader.goTo("qrc:/chat.qml");
                     event_handler.sendMsgs(phone)
                     break;
-                    case 0:
+                case 0:
                     windsDialogs.text = "Вы не зарегистрированы!";
                     loader.dialog = true
                     break;
-                    case -1:
+                case -1:
                     windsDialogs.text = "Нет доступа к интернету";
                     loader.dialog = true
                     break;

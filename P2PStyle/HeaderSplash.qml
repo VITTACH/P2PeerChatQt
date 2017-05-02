@@ -44,8 +44,9 @@ Button {
 
     Button {
         x: facade.toPx(20)
-        width: 3*hambrgrButtonImage.width;
-        height:3*hambrgrButtonImage.height
+        visible: (loader.source != "qrc:/login.qml");
+        width: 2*hambrgrButtonImage.width;
+        height:2*hambrgrButtonImage.height
         background: Rectangle {opacity: 0}
         anchors.verticalCenter: parent.verticalCenter
         Image {
@@ -53,10 +54,10 @@ Button {
         anchors.verticalCenter: parent.verticalCenter
         height:facade.toPx(sourceSize.height*1.2 - 6)
         width: facade.toPx(sourceSize.width *1.2)
-        source: "qrc:/ui/buttons/backButton.png";
         fillMode: Image.PreserveAspectFit;
+        source: "qrc:/ui/buttons/" + (loader.source=="qrc:/regin.qml"? "back":"infor") + "Button.png"
         }
-        onClicked:menuDrawer.open()
+        onClicked: loader.source == "qrc:/regin.qml"? loader.back(): menuDrawer.open()
     }
 
     contentItem: Text {opacity: 0;}

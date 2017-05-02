@@ -33,5 +33,11 @@
         <file>ui/apkIcon/iconMaxim.png</file>
         <file>ui/apkIcon/iconMediw.png</file>
         <file>ui/apkIcon/iconSmaler.png</file>
+        <file>ui/buttons/inforButton.png</file>
+        <file>ui/icons/searchIconWhite.png</file>
+        <file>ui/icons/closedIconWhite.png</file>
+        <file>ui/icons/DevsIconBlue.png</file>
+        <file>ui/icons/doorIconBlue.png</file>
+        <file>ui/icons/HelpIconBlue.png</file>
     </qresource>
 </RCC>

@@ -20,6 +20,9 @@ Item {
             if(request.readyState == XMLHttpRequest.DONE) {
                 if(request.status && request.status==200) {
                     if (request.responseText == "yes") {
+                        loader.tel = phone;
+                        loader.famil = family
+                        loader.login = login;
                         loader.dialog=true;windsDialogs.text = "Вы зарегистрированы";
                         loader.goTo("qrc:/chat.qml")
                     }

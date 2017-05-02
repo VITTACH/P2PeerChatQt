@@ -48,6 +48,10 @@ ApplicationWindow {
         property bool dialog
         property bool webvew
 
+        property string tel
+        property string login;
+        property string famil;
+
         Keys.onReleased: listenBack(event);
 
         Component.onCompleted: strartPage()
@@ -85,7 +89,7 @@ ApplicationWindow {
     }
 
     P2PStyle.HeaderSplash {
-        visible: loader.source=="qrc:/start.qml"? 0: 1
+        visible:loader.source!="qrc:/start.qml"
         id: partnerHeader;
     }
 
