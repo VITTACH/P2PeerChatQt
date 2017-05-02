@@ -489,8 +489,8 @@ Drawer {
                             Rectangle {
                                 x: parent.parent.checked? parent.width - width - (parent.height - height)/2: (parent.height - height)/2;
                                 anchors.verticalCenter: parent.verticalCenter
-                                width: parent.parent.height/2.0
-                                height:parent.parent.height/2.0
+                                width: myswitcher.height/2
+                                height:myswitcher.height/2
                                 radius:width/2
                                 color: "#76CCCCCC"
                             }
@@ -499,8 +499,8 @@ Drawer {
                                 x: parent.parent.checked? parent.width - width - (parent.height - height)/2: (parent.height - height)/2;
                                 color: myswitcher.down? "#0094FF": (myswitcher.checked? "#326EB7":"#29567A")
                                 anchors.verticalCenter: parent.verticalCenter
-                                width: parent.parent.height/2.3
-                                height:parent.parent.height/2.3
+                                width: myswitcher.height/2.3
+                                height:myswitcher.height/2.3
                             }
                         }
                     }
@@ -510,8 +510,8 @@ Drawer {
                         anchors.verticalCenter: parent.verticalCenter
                         color: "#FF51587F"
                         elide: Text.ElideRight;
-                        font.family: trebu4etMsNorm.name
-                        font.pixelSize: facade.doPx(20);
+                        font.family: {trebu4etMsNorm.name}
+                        font.pixelSize: {facade.doPx(20);}
                     }
                 }
             }
