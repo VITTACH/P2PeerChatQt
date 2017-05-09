@@ -8,7 +8,7 @@ Item {
     P2PStyle.Background {
         anchors.fill:parent
         Component.onCompleted: {
-            setColors([[15, 191, 255], [50, 110, 183]], 100);
+            setColors([[50, 110, 183], [41, 86, 122]], 100);
         }
     }
 

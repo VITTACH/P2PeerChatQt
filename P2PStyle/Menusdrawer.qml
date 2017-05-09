@@ -7,10 +7,26 @@ Drawer {
     clip: true
     property bool find: true
     height: {parent.height;}
-    width: Math.min(facade.toPx(625), 0.75 * parent.width)
+    width: Math.min(facade.toPx(625), 0.75 * parent.width);
     background: Rectangle {color: "transparent";}
-    
-    function getPeersModel() {return usersModel;}
+
+    function getCurPeerInd() {return listView.currentIndex}
+    function getPeersModel(index, field) {
+        var results =""
+        if(field == "famil")
+            results = usersModel.get(index).famil
+        if(field == "login")
+            results = usersModel.get(index).login
+        if(field == "image")
+            results = usersModel.get(index).image
+        if(field == "phone")
+            results = usersModel.get(index).phone
+        if(field == "port")
+            results = usersModel.get(index).port
+        return results
+    }
+    function getPeersCount()
+    {return listView.count;}
 
     Connections {
         target: drawer;
@@ -49,9 +65,10 @@ Drawer {
                 if (request.status&&request.status==200) {
                     obj = JSON.parse(request.responseText)
                     for (var i = 0; i < obj.length; i++) {
-                        if (obj[i].name===loader.tel)continue
+                        if (obj[i].name===loader.tel) continue
                         index = findPeer(obj[i].name)
-                        if (usersModel.count===0||index<0)
+                        if (usersModel.count<1||index<0) {
+                            loader.chats.push({phone:obj[i].name, message:[]})
                             usersModel.append({
                                 image: "http://lorempixel.com/200/20" + i + "/sports",
                                 famil: obj[i].family,
@@ -61,7 +78,7 @@ Drawer {
                                 ip: obj[i].ip,
                                 activity: 1
                             });
-                        else {
+                        }else {
                             usersModel.setProperty(index, "port", obj[i].port)
                             usersModel.setProperty(index, "ip", obj[i].ip)
                         }
@@ -116,7 +133,7 @@ Drawer {
             Row {
                 id: firstRow
                 anchors.horizontalCenter: parent.horizontalCenter;
-                spacing:facade.toPx(30) - (facade.toPx(625)-drawer.width)/facade.toPx(10);
+                spacing: {facade.toPx(30) - (facade.toPx(625) - drawer.width)/facade.toPx(10)}
                 Column {
                     anchors.verticalCenter: parent.verticalCenter;
                     Text {
@@ -168,8 +185,8 @@ Drawer {
                         }
                         Image {
                             source:"qrc:/ui/profiles/default/Human.png";
-                            height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width)
-                            width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width
+                            height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
+                            width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                             anchors.centerIn: parent
                         }
                     }
@@ -260,6 +277,7 @@ Drawer {
             }
             width: parent.width
             ListView {
+                spacing: 1
                 id: listView
                 anchors.fill: parent;
 
@@ -288,14 +306,13 @@ Drawer {
                     MouseArea {
                         id: navMouseArea;
                         anchors.fill:parent
-                        onEntered: {
-                            if(index!=-1)
-                                listView.currentIndex = index
-                        }
-
                         onClicked: {
                             var json
+                            partnerHeader.text = "Чат с: " + usersModel.get(index).login + " " + usersModel.get(index).famil
                             json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
+                            partnerHeader.stat = (json.port == 0) == true? "Offline": "Online"
+                            partnerHeader.phot = usersModel.get(index).image
+                            if (index!=-1) listView.currentIndex = index
                             event_handler.sendMsgs(JSON.stringify(json))
                         }
                     }
@@ -340,12 +357,13 @@ Drawer {
                         }
                         anchors.verticalCenter: parent.verticalCenter
                         Text {
+                            lineHeight: 1.3
                             text: login+" "+famil;
                             elide: Text.ElideRight
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(24)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:navMouseArea.pressed || listView.currentIndex == index? "#10387F": "white"
+                            color:listView.currentIndex == index? "#10387F": (navMouseArea.pressed? "yellow": "white")
                         }
                         Text {
                             text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+": "+port
@@ -353,7 +371,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(24)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:navMouseArea.pressed || listView.currentIndex == index? "#10387F": "white"
+                            color:listView.currentIndex == index? "#10387F": (navMouseArea.pressed? "yellow": "white")
                         }
                     }
                 }
@@ -394,14 +412,16 @@ Drawer {
                     }
 
                     onClicked: {
+                        switch(index) {
+                        case 3:
+                            usersModel.clear();
+                            loader.goTo("qrc:/login.qml"); break;
+                        }
                         if (index == 1)
                             myswitcher.checked = !myswitcher.checked;
                         else if (index > 1) {
                             drawer.close();
                             if (index<=2)listMenu.currentIndex=index;
-                        }
-                        switch(index) {
-                        case 3: loader.goTo("qrc:/login.qml"); break;
                         }
                     }
                 }
@@ -443,7 +463,7 @@ Drawer {
                         }
                         TextField {
                             id: inerText
-                            color: "#F9ED82"
+                            color: "#90FFFFFF"
                             height:parent.parent.height
                             width: parent.parent.width - inerImage.width - parent.spacing - facade.toPx(20);
 

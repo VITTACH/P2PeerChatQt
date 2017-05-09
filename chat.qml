@@ -15,25 +15,40 @@ Item {
         }
     }
 
+    Timer {
+        running: true
+        interval: 100
+        onTriggered:{
+            if(menuDrawer.getPeersCount()>0) {
+            partnerHeader.phot = menuDrawer.getPeersModel(0,"image")
+            partnerHeader.stat = menuDrawer.getPeersModel(0, "port") == 0? "Offline": "Online"
+            partnerHeader.text = "Чат с: " + menuDrawer.getPeersModel(0, "login") + " " + menuDrawer.getPeersModel(0, "famil")
+            }
+            else start()
+        }
+    }
+
     property bool input: false
 
     Connections {
         target: event_handler;
         onReciving: {
-            buferText.text = response;
-            appendMessage(response, 1)
-            chatScreenList.positionViewAtEnd()
+            var i
+            for(i=0; i<loader.chats.length; i++) {
+                if (response.phone === loader.chats[i].phone) break;
+            }
+            loader.chats[i].message.push(buferText.text = response);
+            if (i == menuDrawer.getCurPeerInd()) {
+                appendMessage(response, 1)
+                chatScreenList.positionViewAtEnd()
+            }
         }
     }
 
-    /*
-    P2PStyle.Background {
-        anchors.fill:parent
-        Component.onCompleted: {
-            setColors([[255,235,93], [252, 175, 39]], 100)
-        }
+    function parseToJSON(message, phone, ip) {
+        var JSONobj
+        return JSON.stringify(JSONobj = {message: message, phone: phone , ip: ip});
     }
-    */
 
     function appendMessage(newmessage, flag) {
         chatModel.append({
@@ -45,10 +60,10 @@ Item {
             HorizonPosition: facade.toPx(30)+flag*(parent.width/4-facade.toPx(60)),
             image: flag === 0? "ui/chat/leFtMessage.png": "ui/chat/rightMessag.png"
         });
-        if (flag == 0) event_handler.sendMsgs(newmessage);
+        if(flag == 0) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0));
     }
 
-    Component.onCompleted: partnerHeader.text = "Комната";
+    Component.onCompleted: {menuDrawer.getMePeers();}
 
     ListView {
         id: chatScreenList

@@ -52,6 +52,8 @@ ApplicationWindow {
         property string login;
         property string famil;
 
+        property var chats:[];
+
         Keys.onReleased: listenBack(event);
 
         Component.onCompleted: strartPage()

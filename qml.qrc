@@ -39,5 +39,6 @@
         <file>ui/icons/DevsIconBlue.png</file>
         <file>ui/icons/doorIconBlue.png</file>
         <file>ui/icons/HelpIconBlue.png</file>
+        <file>ui/buttons/moreButton.png</file>
     </qresource>
 </RCC>
