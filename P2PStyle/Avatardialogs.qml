@@ -12,9 +12,7 @@ Button {
         color: "#CC404040";
     }
 
-    onClicked: {
-        loader.avatar=false
-    }
+    onClicked: loader.avatar=false;
 
     contentItem: Text {opacity: 0;}
 

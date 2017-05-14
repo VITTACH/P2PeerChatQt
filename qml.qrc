@@ -40,5 +40,6 @@
         <file>ui/icons/doorIconBlue.png</file>
         <file>ui/icons/HelpIconBlue.png</file>
         <file>ui/buttons/moreButton.png</file>
+        <file>P2PStyle/ContextMenu.qml</file>
     </qresource>
 </RCC>

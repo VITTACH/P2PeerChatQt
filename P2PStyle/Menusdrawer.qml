@@ -218,7 +218,7 @@ Drawer {
                         anchors.horizontalCenter:parent.horizontalCenter
                     }
                     Text {
-                        text: "Баланс"
+                        text: "Онлайн"
                         color: "white"
                         font.family: trebu4etMsNorm.name
                         font.pixelSize: facade.doPx(24);

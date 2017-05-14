@@ -4,6 +4,11 @@ import"P2PStyle"as P2PStyle
 
 Item {
     id: rootChat
+
+    property var select: []
+
+    property bool input: false
+
     TextArea {
         id: buferText;
         visible: false
@@ -28,7 +33,23 @@ Item {
         }
     }
 
-    property bool input: false
+    Connections {
+        target: contextDialog;
+        onActionChanged: {
+            if(contextDialog.action==1)
+            {
+                for(var i=0; i<select.length; i++)
+                    chatModel.remove(select[i]-i);
+                contextDialog.menu = 1;
+                contextDialog.action=0;
+                select=[];
+            }
+            if(contextDialog.action==4)
+            event_handler.copyText(chatModel.get(select[select.length-1]).someText)
+            if(contextDialog.action==8)
+                chatModel.clear()
+        }
+    }
 
     Connections {
         target: event_handler;
@@ -63,7 +84,7 @@ Item {
         if(flag == 0) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0));
     }
 
-    Component.onCompleted: {menuDrawer.getMePeers();}
+    Component.onCompleted: menuDrawer.getMePeers()
 
     ListView {
         id: chatScreenList
@@ -99,6 +120,32 @@ Item {
                 background: Rectangle {
                     color: backgroundColor
                     radius:facade.toPx(25)
+
+                    MouseArea {
+                    anchors.fill: {parent}
+                    onClicked: {
+                        var p= 0
+                        if (select.length > 0) {
+                            p= select.indexOf(index)
+                            if (p >= 0)
+                            select.splice(p,1)
+                            else {
+                            select.push(index)
+                            contextDialog.menu = 0;;
+                            parent.color = "#FFDC86"
+                            return
+                            }
+                        }
+                        parent.color=backgroundColor
+                        if (select.length < 1)
+                            contextDialog.menu = 1;;
+                        }
+                        onPressAndHold: {
+                            select.push(index)
+                            contextDialog.menu = 0;;
+                            parent.color = "#FFDC86"
+                        }
+                    }
                 }
 
                 wrapMode: {TextEdit.Wrap;}
@@ -111,7 +158,7 @@ Item {
                 pixelSize: facade.doPx(26)
                 }
 
-                verticalAlignment:Text.AlignVCenter
+                verticalAlignment: Text.AlignVCenter
                 color: textColor;
                 x:HorizonPosition
             }
@@ -143,14 +190,16 @@ Item {
         }
 
         height: (screenTextFieldPost.lineCount < 5)? facade.toPx(70)+
-                (screenTextFieldPost.lineCount - 1)* facade.doPx(43):
-                 facade.toPx(70)+4*facade.doPx(43)
+                (screenTextFieldPost.lineCount - 1)* facade.doPx(33):
+                 facade.toPx(70)+4*facade.doPx(33);
 
-        flickableDirection:Flickable.VerticalFlick
+        flickableDirection:Flickable.VerticalFlick;
 
         TextArea.flickable:TextArea
         {
-            verticalAlignment: {Text.AlignVCenter}
+            verticalAlignment: {
+                Text.AlignVCenter;
+            }
             placeholderText: "Написать...";
             onActiveFocusChanged:input=true
             font {

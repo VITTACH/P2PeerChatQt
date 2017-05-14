@@ -111,6 +111,7 @@ Button {
         width: hamMoreButtonImage.width
         height:2*hamMoreButtonImage.height
         background: Rectangle {opacity: 0}
+        x: parent.width-facade.toPx(20)-width;
         anchors.verticalCenter: parent.verticalCenter
         Image {
             id: hamMoreButtonImage
@@ -122,7 +123,11 @@ Button {
             width: facade.toPx(sourceSize.width *1.2)
             fillMode: Image.PreserveAspectFit;
         }
-        x: parent.width-facade.toPx(20)-width;
+        onClicked: {
+            contextDialog.xPosition = rootItem.width- contextDialog.w- facade.toPx(20)
+            contextDialog.yPosition = facade.toPx(20)
+            loader.context=true;
+            }
         }
     }
 

@@ -51,6 +51,7 @@ ApplicationWindow {
         property string tel
         property string login;
         property string famil;
+        property bool context;
 
         property var chats:[];
 
@@ -103,6 +104,8 @@ ApplicationWindow {
     P2PStyle.BusyIndicator {id: busyIndicator}
 
     P2PStyle.Avatardialogs {id: avatardialogs}
+
+    P2PStyle.ContextMenu {id: contextDialog}
 
     P2PStyle.WindsDialogs {id: windsDialogs}
 
