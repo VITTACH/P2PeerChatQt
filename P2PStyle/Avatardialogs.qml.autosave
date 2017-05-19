@@ -171,7 +171,7 @@ Button {
         id:fileDialog
         folder: shortcuts.home
         title: "Выберите изображение"
-        nameFilters:["Изображения (*.jpg,*.png)","Все файлы (*)"]
+        nameFilters:["Изображения (*.jpg *.png)","Все файлы (*)"]
         onAccepted: {
             loader.avatarPath = fileUrl
             event_handler.sendAvatar(decodeURIComponent(fileUrl))

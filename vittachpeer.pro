@@ -4,8 +4,8 @@ CONFIG +=c++11 qml_debug
 
 android {
      QT += androidextras
-     OTHER_FILES+=$$PWD/android-sources/java/com/lasconic/QShareUtils.java
      ANDROID_PACKAGE_SOURCE_DIR= $$PWD/android-sources
+     OTHER_FILES+=$$PWD/android-sources/java/com/lasconic/QShareUtils.java
      include($$PWD/vendor/com/github/benlau/quickandroid/quickandroid.pri)
      # Additional import path used to resolve QML modules in Qt Creator' s
      QML_IMPORT_PATH += $$PWD/vendor/com/github/benlau/quickandroid/
@@ -56,10 +56,11 @@ DISTFILES += \
     android-sources/res/drawable/splash.xml \
     android-sources/gradle/wrapper/gradle-wrapper.jar \
     android-sources/java/com/lasconic/QShareUtils.java\
-    android-sources/java/com/lasconic/QShareUtils.java\
     android-sources/java/quickandroid/PushService.java\
     android-sources/gradle/wrapper/gradle-wrapper.properties
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
-    ANDROID_EXTRA_LIBS = \ $$PWD/ssl/libssl.so \ $$PWD/ssl/libcrypto.so
+    ANDROID_EXTRA_LIBS = \
+    $$PWD/ssl/libssl.so \
+    $$PWD/ssl/libcrypto.so
 }

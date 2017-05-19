@@ -27,7 +27,7 @@ Item {
             if(menuDrawer.getPeersCount()>0) {
             partnerHeader.phot = menuDrawer.getPeersModel(0,"image")
             partnerHeader.stat = menuDrawer.getPeersModel(0, "port") == 0? "Offline": "Online"
-            partnerHeader.text = "Чат с: " + menuDrawer.getPeersModel(0, "login") + " " + menuDrawer.getPeersModel(0, "famil")
+            partnerHeader.text = menuDrawer.getPeersModel(0, "login") + " " + menuDrawer.getPeersModel(0, "famil")
             }
             else start()
         }
@@ -107,10 +107,10 @@ Item {
                 source: image
                 width: facade.toPx(sourceSize.width * 1.2)
                 height:facade.toPx(sourceSize.width * 1.2)
-                y: parentText.y + parentText.height-sourceSize.height
+                y: parentText.y +parentText.height-sourceSize.height
                 x: (parentText.x == facade.toPx(30))?
                         parentText.x - width/2:
-                            parentText.x + parentText.width - width/2
+                            parentText.x +parentText.width - width/2
             }
             TextArea {
                 id: parentText
@@ -151,7 +151,7 @@ Item {
                 wrapMode: {TextEdit.Wrap;}
                 width: 3*rootChat.width/4;
                 height: (facade.toPx(65)- myheight >= 0)?
-                         facade.toPx(65): myheight + facade.doPx(26);
+                         facade.toPx(65): myheight + facade.doPx(26)
 
                 font {
                 family:trebu4etMsNorm.name
@@ -170,82 +170,73 @@ Item {
             leftMargin: 0.02*parent.width;
             rightMargin:0.02*parent.width;
             top: flickableTextArea.top
-            bottom: parent.bottom
-            right: parent.right;
-            left: parent.left;
+            bottom:parent.bottom;
+            right:parent.right
+            left:parent.left
         }
         radius:facade.toPx(25)
     }
 
-    Flickable {
+    Row {
         id: flickableTextArea;
-
+        spacing: facade.toPx(20);
         anchors {
-            left: parent.left;
-            rightMargin: 0.03*parent.width+chatScreenPostButton.width
-            bottomMargin: input?rootChat.height*0.45:facade.toPx(25);
-            leftMargin: 0.02*parent.width;
-            right: (parent.right)
+            bottomMargin: input?rootChat.height*0.45:facade.toPx(25)
+            horizontalCenter: parent.horizontalCenter
             bottom:parent.bottom;
         }
+        Flickable {
+            width: rootChat.width-chatScreenButton.width-facade.toPx(50)
+            height: (screenTextFieldPost.lineCount < 5)? facade.toPx(70)+
+                    (screenTextFieldPost.lineCount - 1)* facade.doPx(33):
+                     facade.toPx(70)+4*facade.doPx(33);
 
-        height: (screenTextFieldPost.lineCount < 5)? facade.toPx(70)+
-                (screenTextFieldPost.lineCount - 1)* facade.doPx(33):
-                 facade.toPx(70)+4*facade.doPx(33);
+            flickableDirection:Flickable.VerticalFlick;
 
-        flickableDirection:Flickable.VerticalFlick;
-
-        TextArea.flickable:TextArea
-        {
-            verticalAlignment: {
-                Text.AlignVCenter;
+            TextArea.flickable:TextArea
+            {
+                verticalAlignment: {Text.AlignVCenter;}
+                placeholderText: "Написать...";
+                font {
+                    pixelSize: facade.doPx(26);
+                    family: trebu4etMsNorm.name
+                }
+                id: screenTextFieldPost
+                wrapMode: TextEdit.Wrap
+                background: Rectangle {
+                    border {
+                        color:"#C8C8C8"
+                        width:2
+                    }
+                }
             }
-            placeholderText: "Написать...";
-            onActiveFocusChanged:input=true
-            font {
-                pixelSize: facade.doPx(26);
-                family: trebu4etMsNorm.name
-            }
-            id: screenTextFieldPost
-            wrapMode: TextEdit.Wrap
-            background: Rectangle {
-            radius: facade.toPx(25)
-            border.color: "#C8C8C8"
-            border.width: 2
-            }
         }
-    }
 
-    Button {
-        width: buttonImage.width + facade.toPx(10);
-        height:buttonImage.height;
-        contentItem: Text {
-            elide: Text.ElideRight
-            color:parent.down? "#0f133d": "#7680B1"
-            verticalAlignment: {Text.AlignVCenter}
-            horizontalAlignment:Text.AlignHCenter;
+        Button {
+            contentItem: Text {
+                elide:Text.ElideRight
+                color:parent.down? "#0f133d": "#7680B1"
+                verticalAlignment: {Text.AlignVCenter;}
+                horizontalAlignment:Text.AlignHCenter;
+            }
+            Image {
+            id: buttonImage
+            source:"ui/buttons/sendButton.png"
+            height:facade.toPx(sourceSize.height* 1.5);
+            width: facade.toPx(sourceSize.width * 1.5);
+            }
+            onClicked: {
+            if (screenTextFieldPost.text.length >= 1) {
+                buferText.text=screenTextFieldPost.text
+                appendMessage(buferText.text,0.0);
+                chatScreenList.positionViewAtEnd()
+                screenTextFieldPost.text = "";
+                }
+            }
+            background: Rectangle {opacity: 0}
+            width: buttonImage.width;
+            height:buttonImage.height
+            id:chatScreenButton
         }
-        Image {
-        id: buttonImage
-        source:"ui/buttons/sendButton.png"
-        height:facade.toPx(sourceSize.height* 1.5);
-        width: facade.toPx(sourceSize.width * 1.5);
-        }
-        onClicked: {
-        if (screenTextFieldPost.text.length >= 1) {
-            buferText.text=screenTextFieldPost.text
-            appendMessage(buferText.text,0.0);
-            chatScreenList.positionViewAtEnd()
-            screenTextFieldPost.text = "";
-        }
-        input = false
-        }
-        background: Rectangle {opacity: 0}
-        anchors {
-            rightMargin: 0.02*parent.width
-            right: parent.right
-        }
-        id:chatScreenPostButton
-        y: flickableTextArea.y;
     }
 }

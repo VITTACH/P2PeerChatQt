@@ -4,19 +4,25 @@ import QtGraphicalEffects 1.0
 
 Button {
     id: rootItem
+    property int h: 150;
     property string stat
     property string phot
 
     Rectangle {
         color: "#3589E9"
         width: {parent.width}
-        height: facade.toPx(120);
+        height:facade.toPx(h-10)
 
         Item {
             id: inerItem
             Row {
                 spacing: facade.toPx(30)
-                anchors.centerIn: parent
+                anchors {
+                    left: loader.source == "qrc:/chat.qml"? parent.left: undefined;
+                    leftMargin: loader.source == "qrc:/chat.qml"? facade.toPx(50):0
+                    verticalCenter: parent.verticalCenter
+                    horizontalCenter: loader.source == "qrc:/chat.qml"?undefined: parent.horizontalCenter
+                }
 
                 Item {
                     width: bug.width
@@ -65,7 +71,7 @@ Button {
                         width: Math.min(inerItem.width - bug.width - facade.toPx(90), this.implicitWidth)
                         text: {rootItem.text.replace("\n" , "");}
 
-                        font.pixelSize: facade.doPx(26)
+                        font.pixelSize: facade.doPx(28)
                         font.family:trebu4etMsNorm.name
                     }
                     Text {
@@ -88,8 +94,8 @@ Button {
         x: facade.toPx(20)
         id: hambrgrButton;
         visible: (loader.source != "qrc:/login.qml");
-        width: hambrgrButtonImage.width
-        height:2*hambrgrButtonImage.height
+        width: Math.max(hambrgrButtonImage.width, facade.toPx(70))
+        height:Math.max(hambrgrButtonImage.height,facade.toPx(70))
         background: Rectangle {opacity: 0}
         anchors.verticalCenter: parent.verticalCenter
         Image {
@@ -108,8 +114,8 @@ Button {
         Button {
         id: hamMoreButton;
         visible:loader.source == "qrc:/chat.qml";
-        width: hamMoreButtonImage.width
-        height:2*hamMoreButtonImage.height
+        width: Math.max(hamMoreButtonImage.width, facade.toPx(70))
+        height:Math.max(hamMoreButtonImage.height,facade.toPx(70))
         background: Rectangle {opacity: 0}
         x: parent.width-facade.toPx(20)-width;
         anchors.verticalCenter: parent.verticalCenter
@@ -153,7 +159,7 @@ Button {
 
     contentItem: Text{opacity:0}
     width: parent.width
-    height:facade.toPx(130)
+    height: facade.toPx(h)
     background: Rectangle {
         color:"transparent"
     }

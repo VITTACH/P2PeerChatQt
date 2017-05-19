@@ -13,7 +13,7 @@ Item {
 
     Timer {
         running: true
-        interval:2000
+        interval:2500
         onTriggered: {
             loader.goTo("qrc:/login.qml");
         }
@@ -53,8 +53,8 @@ Item {
         scale: 0.8
         opacity: 0
         source:("qrc:/ui/logos/logo.png");
-        width: sourceSize.width/ 1.5*(parent.width < 600? parent.width: 600)/500
-        height:sourceSize.height/1.5*(parent.width < 600? parent.width: 600)/500
+        width: sourceSize.width/ 1.2*(parent.width < 600? parent.width: 600)/500
+        height:sourceSize.height/1.2*(parent.width < 600? parent.width: 600)/500
         x: (parent.width / 2 - width / 2);
         y: (parent.height/ 2 - height/ 2);
     }

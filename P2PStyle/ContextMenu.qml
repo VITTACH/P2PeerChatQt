@@ -34,7 +34,7 @@ Button {
         x: xPosition;
         y: yPosition;
         radius: 8
-        width: Math.max(funcs.width, facade.toPx(380))
+        width: Math.max(funcs.width, facade.toPx(400))
         height: funcs.implicitHeight + facade.toPx(20)
 
         Column {
@@ -52,7 +52,7 @@ Button {
                     radius:listText.radius
                     width: listText.width;
                     height:inerText.implicitHeight+
-                           facade.toPx(20)
+                           facade.toPx(60)
                     Text {
                         anchors {
                             left: parent.left
@@ -65,7 +65,7 @@ Button {
                         id: inerText
                         text: modelData
                         font {
-                            pixelSize: facade.doPx(24)
+                            pixelSize: facade.doPx(26)
                             family:trebu4etMsNorm.name
                         }
                     }

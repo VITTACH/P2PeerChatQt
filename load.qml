@@ -4,7 +4,7 @@ import"P2PStyle"as P2PStyle
 
 ApplicationWindow {
     width: 500
-    height: 900
+    height: 700
     visible: true
     title: qsTr("P2P Chat")
 
@@ -55,6 +55,8 @@ ApplicationWindow {
 
         property var chats:[];
 
+        property string avatarPath: "qrc:/ui/profiles/default/Human.png"
+
         Keys.onReleased: listenBack(event);
 
         Component.onCompleted: strartPage()
@@ -103,9 +105,9 @@ ApplicationWindow {
 
     P2PStyle.BusyIndicator {id: busyIndicator}
 
-    P2PStyle.Avatardialogs {id: avatardialogs}
-
     P2PStyle.ContextMenu {id: contextDialog}
+
+    P2PStyle.Avatardialogs {id: avatardialogs}
 
     P2PStyle.WindsDialogs {id: windsDialogs}
 

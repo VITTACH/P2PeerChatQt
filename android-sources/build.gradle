@@ -59,7 +59,7 @@ android {
     }
 
     defaultConfig {
-      applicationId "org.qtproject.example.allpeerpeer"
+        applicationId "org.qtproject.example.vittachpeer"
     }
 
     buildToolsVersion androidBuildToolsVersion

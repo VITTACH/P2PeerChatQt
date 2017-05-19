@@ -58,7 +58,7 @@ Item {
         anchors {
             top: parent.top
             bottom:parent.bottom
-            topMargin:0.22*parent.height
+            topMargin:0.5*parent.height - 2*facade.toPx(100)
         }
 
         model:ListModel {
@@ -79,9 +79,12 @@ Item {
                 plaseholder: "Еще нет аккаунта?";
             }
         }
+
+        displayMarginBeginning: {parent.height*0.5 - 2*facade.toPx(100);}
+
         delegate: Column {
             width: parent.width
-            height:index==2?facade.toPx(110):facade.toPx(89)
+            height:{(index==2)==true? facade.toPx(110): facade.toPx(89);}
             Button {
                 text: plaseholder
                 height:facade.toPx(100)
@@ -98,12 +101,12 @@ Item {
 
                 onClicked: {
                     if(loader.fields[0].length <11) {
-                        windsDialogs.text = "Укажите корректный телефон!";
+                        windsDialogs.text = "Укажите корректный телефон!"
                         loader.dialog = true
                     }
                     else
                     if(loader.fields[1].length < 5) {
-                        windsDialogs.text = "Пароль короче 5-ти символов";
+                        windsDialogs.text = "Пароль короче 5-ти символов"
                         loader.dialog = true
                     }
                     else {
@@ -148,9 +151,9 @@ Item {
                         leftMargin: facade.toPx(80)
                     }
 
-                    onFocusChanged: if (text.length==0&&index==0) text="8"
+                    onFocusChanged: if(text.length==0&&index==0) text="8"
 
-                    echoMode:index==1?TextInput.Password:TextInput.Normal;
+                    echoMode:index==1?TextInput.Password:TextInput.Normal
 
                     background:Rectangle {opacity: 0}
                     font.family: trebu4etMsNorm.name;

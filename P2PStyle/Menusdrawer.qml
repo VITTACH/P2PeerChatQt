@@ -184,7 +184,7 @@ Drawer {
                             horizontalCenter: (parent.horizontalCenter);
                         }
                         Image {
-                            source:"qrc:/ui/profiles/default/Human.png";
+                            source:loader.avatarPath
                             height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                             width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                             anchors.centerIn: parent
@@ -230,11 +230,11 @@ Drawer {
             Row {
                 width:firstRow.width
                 Text {
-                    text: loader.login+" "+loader.famil;
+                    text:loader.login+" "+loader.famil
                     color: "white"
                     font.bold: true
-                    font.family: trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(28);
+                    font.family: {trebu4etMsNorm.name}
+                    font.pixelSize: {facade.doPx(28);}
                     elide: Text.ElideRight
                     width: parent.width-scope1.implicitWidth-scope2.implicitWidth-image1.width
                 }
@@ -243,20 +243,29 @@ Drawer {
                     id: scope1
                     text: " ( "
                     color: "#FFFFFF"
-                    font.family: trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(28);
+                    font.family: {trebu4etMsNorm.name}
+                    font.pixelSize: {facade.doPx(28);}
                 }
                 Image {
                     id: image1
-                    source:"qrc:/ui/profiles/lin.png"
-                    anchors.verticalCenter: parent.verticalCenter;
+                    source: "qrc:/ui/profiles/lin.png"
+                    width: {
+                    facade.toPx(sourceSize.width* 1.5)
+                    }
+                    height: {
+                    facade.toPx(sourceSize.height*1.5)
+                    }
+                    anchors {
+                        top: parent.top
+                        topMargin: facade.toPx(15)
+                    }
                 }
                 Text {
                     id: scope2
                     text: " 0 )"
                     color: "#FFFFFF"
-                    font.family: trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(28);
+                    font.family: {trebu4etMsNorm.name}
+                    font.pixelSize: {facade.doPx(28);}
                 }
             }
 
@@ -267,17 +276,17 @@ Drawer {
         }
 
         Rectangle {
-            clip:true
+            clip: true
+            width: parent.width
             color:"transparent"
             anchors {
+                topMargin: 2
+                bottomMargin: 1
                 top: profile.bottom
                 bottom:listMenu.top
-                bottomMargin: 1
-                topMargin: 1
             }
-            width: parent.width
             ListView {
-                spacing: 1
+                spacing: 2
                 id: listView
                 anchors.fill: parent;
 
@@ -300,15 +309,15 @@ Drawer {
                 delegate: Rectangle {
                     visible: activity
                     width: parent.width
-                    color: ListView.isCurrentItem? "#FFFFFF":"#40FFFFFF"
+                    color: myMouseArea.pressed==true? "lightgray": (ListView.isCurrentItem? "white":"#40FFFFFF")
                     height: activity == 1? facade.toPx(20) + Math.max(bug.height, fo.height):0
 
                     MouseArea {
-                        id: navMouseArea;
+                        id: myMouseArea
                         anchors.fill:parent
                         onClicked: {
                             var json
-                            partnerHeader.text = "Чат с: " + usersModel.get(index).login + " " + usersModel.get(index).famil
+                            partnerHeader.text = usersModel.get(index).login + " " + usersModel.get(index).famil
                             json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
                             partnerHeader.stat = (json.port == 0) == true? "Offline": "Online"
                             partnerHeader.phot = usersModel.get(index).image
@@ -363,7 +372,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(24)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex == index? "#10387F": (navMouseArea.pressed? "yellow": "white")
+                            color:listView.currentIndex ==index? "#10387F": "white"
                         }
                         Text {
                             text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+": "+port
@@ -371,7 +380,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(24)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex == index? "#10387F": (navMouseArea.pressed? "yellow": "white")
+                            color:listView.currentIndex ==index? "#10387F": "white"
                         }
                     }
                 }
@@ -494,6 +503,7 @@ Drawer {
                     }
                     Switch {
                         id: myswitcher
+                        checked: true;
                         visible: index == 1
                         width: facade.toPx(64)
                         height:facade.toPx(80)
@@ -504,7 +514,7 @@ Drawer {
                             y: parent.height/2 - height/2;
                             implicitWidth: facade.toPx(60)
                             implicitHeight:facade.toPx(30)
-                            color: parent.checked==true?"#10387F":"#8610387F"
+                            color: parent.checked==true? "#C5D9FB": "#B1B1B1"
 
                             Rectangle {
                                 x: parent.parent.checked? parent.width - width - (parent.height - height)/2: (parent.height - height)/2;
@@ -517,7 +527,7 @@ Drawer {
                             Rectangle {
                                 radius:width/2
                                 x: parent.parent.checked? parent.width - width - (parent.height - height)/2: (parent.height - height)/2;
-                                color: myswitcher.down? "#0094FF": (myswitcher.checked? "#326EB7":"#29567A")
+                                color: myswitcher.down? "#004A7F": (myswitcher.checked? "#4182EF":"#ECECEC")
                                 anchors.verticalCenter: parent.verticalCenter
                                 width: myswitcher.height/2.3
                                 height:myswitcher.height/2.3
@@ -525,7 +535,7 @@ Drawer {
                         }
                     }
                     Text {
-                        text: index == 1? (myswitcher.checked == true? qsTr("Невидимый"): "В сети"): target;
+                        text: index == 1? (myswitcher.checked == true? "В сети": qsTr("Невидимый")): target;
                         width:parent.width-icon.width-facade.toPx(40)
                         anchors.verticalCenter: parent.verticalCenter
                         color: "#FF51587F"

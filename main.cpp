@@ -14,6 +14,26 @@
 
 int currentSys = 0;
 
+#ifdef Q_OS_IOS
+currentSys = 2;
+#endif
+
+#ifdef Q_OS_ANDROID
+#include "quickandroid.h"
+#include "qadrawableprovider.h"
+#include "qasystemdispatcher.h"
+#include <QtAndroidExtras/QAndroidJniObject>
+#include <QtAndroidExtras/QAndroidJniEnvironment>
+
+JNIEXPORT jint JNI_OnLoad(JavaVM * javm, void*) {
+    Q_UNUSED(javm);
+    currentSys = 1;
+    QASystemDispatcher::registerNatives();
+    QAndroidJniObject::callStaticMethod <void>("org/qtproject/example/vittachpeer/PushService", "start", "()V");
+    return JNI_VERSION_1_6;
+}
+#endif
+
 int main(int argc,char **argv)
 {
     QApplication a(argc,argv);
