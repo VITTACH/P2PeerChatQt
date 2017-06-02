@@ -22,6 +22,8 @@ ApplicationWindow {
             event.accepted= true
             if (loader.dialog==true) {
             loader.dialog = !loader.dialog;
+            } else if(loader.avatar) {
+            loader.avatar = !loader.avatar;
             } else if(loader.webvew) {
             loader.webvew = !loader.webvew;
             } else backTimer.restart()
@@ -105,11 +107,11 @@ ApplicationWindow {
 
     P2PStyle.BusyIndicator {id: busyIndicator}
 
-    P2PStyle.ContextMenu {id: contextDialog}
-
     P2PStyle.Avatardialogs {id: avatardialogs}
 
     P2PStyle.WindsDialogs {id: windsDialogs}
+
+    P2PStyle.ContextMenu {id: contextDialog}
 
     P2PStyle.Menusdrawer {id: menuDrawer}
 }

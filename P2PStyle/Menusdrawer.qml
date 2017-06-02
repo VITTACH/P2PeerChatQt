@@ -7,7 +7,7 @@ Drawer {
     clip: true
     property bool find: true
     height: {parent.height;}
-    width: Math.min(facade.toPx(625), 0.75 * parent.width);
+    width: Math.min(facade.toPx(708), 0.85 * parent.width);
     background: Rectangle {color: "transparent";}
 
     function getCurPeerInd() {return listView.currentIndex}
@@ -133,7 +133,7 @@ Drawer {
             Row {
                 id: firstRow
                 anchors.horizontalCenter: parent.horizontalCenter;
-                spacing: {facade.toPx(30) - (facade.toPx(625) - drawer.width)/facade.toPx(10)}
+                spacing: {facade.toPx(30) - (facade.toPx(708) - drawer.width)/facade.toPx(10)}
                 Column {
                     anchors.verticalCenter: parent.verticalCenter;
                     Text {
@@ -337,7 +337,7 @@ Drawer {
                         clip: true
                         smooth: true
                         visible: false
-                        x: facade.toPx(50) - (facade.toPx(625) - drawer.width)/facade.toPx(5);
+                        x: facade.toPx(90) - (facade.toPx(708) - drawer.width)/facade.toPx(5);
                         width: facade.toPx(100)
                         height:facade.toPx(100)
                         anchors.verticalCenter: parent.verticalCenter

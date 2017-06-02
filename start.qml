@@ -19,21 +19,22 @@ Item {
         }
     }
 
-    P2PStyle.Background {
-        anchors.fill: parent
-        Component.onCompleted: setColors([[255,212,47], [15,191,255], [50,110,183], [15, 191, 255]], 40)
+    P2PStyle.Background
+    {
+        anchors.fill: {parent}
+        Component.onCompleted: setColors([[255,255,255],[255, 255, 255],[15, 191, 255],[41,86,122]], 30)
     }
 
     PropertyAnimation {
         target: logo;
-        property: "opacity";
+        property: {"opacity";}
         id: opacitymov;
         from: 0; to: 1;
         duration: 1400;
     }
     PropertyAnimation {
         target: logo;
-        property: ("scale");
+        property: {("scale");}
         id: zoomingmov;
         from:0.8;to: 1;
         duration: 1000;

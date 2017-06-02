@@ -17,9 +17,10 @@ Button {
             id: inerItem
             Row {
                 spacing: facade.toPx(30)
+                anchors.left: loader.source == "qrc:/chat.qml"? parent.left: undefined
+                anchors.leftMargin: loader.source == "qrc:/chat.qml"?facade.toPx(50):0
+                anchors.centerIn: (loader.source == "qrc:/chat.qml")? undefined:parent
                 anchors {
-                    left: loader.source == "qrc:/chat.qml"? parent.left: undefined;
-                    leftMargin: loader.source == "qrc:/chat.qml"? facade.toPx(50):0
                     verticalCenter: parent.verticalCenter
                     horizontalCenter: loader.source == "qrc:/chat.qml"?undefined: parent.horizontalCenter
                 }
@@ -71,7 +72,7 @@ Button {
                         width: Math.min(inerItem.width - bug.width - facade.toPx(90), this.implicitWidth)
                         text: {rootItem.text.replace("\n" , "");}
 
-                        font.pixelSize: facade.doPx(28)
+                        font.pixelSize: loader.source == "qrc:/chat.qml"? facade.doPx(28):facade.doPx(34)
                         font.family:trebu4etMsNorm.name
                     }
                     Text {
@@ -91,7 +92,7 @@ Button {
         }
 
         Button {
-        x: facade.toPx(20)
+        x: facade.toPx(40)
         id: hambrgrButton;
         visible: (loader.source != "qrc:/login.qml");
         width: Math.max(hambrgrButtonImage.width, facade.toPx(70))

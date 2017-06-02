@@ -18,13 +18,13 @@ Button {
     property int yPosition;
 
     DropShadow {
+        radius: 12
+        samples: 20
         anchors {
             fill: listText;
             bottomMargin: 7
         }
         verticalOffset: 10;
-        radius: 12
-        samples: 20
         color: "#80000000";
         source: {listText;}
     }

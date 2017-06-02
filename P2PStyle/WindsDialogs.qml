@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
+
 import QtGraphicalEffects 1.0
 
 //--------------------------------------------------dialogAndroid----------------------------------------------
@@ -9,24 +10,39 @@ Button {
     anchors.fill: parent
     visible: loader.dialog;
 
-    background: Rectangle {
-        opacity: 0.8; color: "#404040";
+    property var inputMode;
+    property var choseMode;
+
+    contentItem:Text{opacity:0}
+
+    function show(text, mode) {
+        loader.dialog = (true);
+        switch(mode) {
+            case 1: inputMode = "one"; break;
+            case 2: choseMode = "one"; break;
+            default:inputMode = choseMode= ""
+        }
+        dialogAndroid.text=text
     }
 
-    property string inputMode;
+    background: Rectangle {color:"#AC404040"}
 
+    DropShadow {
+        radius: 16
+        samples: 20
+        color: "#C0000000";
+        source:dialogWindow
+        anchors.fill: dialogWindow;
+    }
     Rectangle {
-        id: dialogWin
+        id: dialogWindow
         color: "#f7f7f7"
-        radius:facade.toPx(25)
+        radius: facade.toPx(25)
+        anchors.centerIn:parent
+        height: (dialogAndroid.height/25*10);
+        width: Math.min(22/10*avatardialogs.width/3, 400)
 
-        x: (parent.width /2 - width /2)
-        y: (parent.height/2 - height/2)
-
-        height:dialogAndroid.height/2.5
-        width:2.2*dialogAndroid.width/3
-
-        // Создаём горизонтальный разделитель
+        //создаём горизонтальный разделитель у всего окна
         Rectangle {
             id:dialogAndroidDividerHorizontal
             height: 1
@@ -38,77 +54,75 @@ Button {
             }
         }
 
-        // место отобажения сообщения для диалогового окна
+        //место отобажения сообщения для диалогового окна
         Rectangle {
             color: "#f7f7f7"
             radius: facade.toPx(25)
 
             anchors {
                 top: parent.top
-                left: parent.left
-                right: parent.right
-                bottom: dialogAndroidDividerHorizontal.top
+                horizontalCenter: parent.horizontalCenter
+                bottom:dialogAndroidDividerHorizontal.top
             }
 
+            width: (parent.width - 2*dialogWindow.radius)
+
             Column {
-                spacing: facade.toPx(20)
+                spacing:facade.toPx(20)
                 Label {
                     color: "#000000"
                     wrapMode: Text.Wrap
                     text: dialogAndroid.text
                     width: parent.parent.width
-                    font {
-                        pixelSize: facade.doPx(22);
-                        family: trebu4etMsNorm.name
-                    }
-                    horizontalAlignment: {Text.AlignHCenter}
+                    font.pixelSize: facade.doPx(27)
+                    font.family:trebu4etMsNorm.name
+                    horizontalAlignment:Text.AlignHCenter
                 }
 
                 anchors {
                     top: parent.top
-                    topMargin: facade.toPx(50)
-                    horizontalCenter:parent.horizontalCenter
-
-                    centerIn: inputMode != ""? none: parent;
+                    topMargin: facade.toPx(50);
+                    centerIn: inputMode != ""? undefined: parent;
+                    horizontalCenter: {(parent.horizontalCenter)}
                 }
 
                 Flickable {
                     id: flickable
-                    visible:inputMode!=""? 1:0
+                    visible:inputMode!=""? 1:0;
 
                     height: inputMode!=""? screenTextFieldPost.implicitHeight: 0;
 
                     anchors{
                         left: parent.left
                         right: parent.right
-                        leftMargin: 0.09 * parent.width
-                        rightMargin:0.09 * parent.width
+                        leftMargin : 9/100 * parent.width
+                        rightMargin: 9/100 * parent.width
                     }
-                    flickableDirection: Flickable.VerticalFlick
+                    flickableDirection: {Flickable.VerticalFlick}
                     TextArea.flickable: TextArea
                     {
                         id: screenTextFieldPost;
-                        placeholderText: "Написать...";
+                        placeholderText:qsTr("Написать.")
 
                         onLineCountChanged: {
                             if(lineCount < 4)
                             flickable.height = screenTextFieldPost.implicitHeight
                         }
-                        onFocusChanged: dialogWin.y = dialogAndroid.height * 0.1;
+                        onFocusChanged: dialogWindow.y = dialogAndroid.height*0.1
 
                         background: Rectangle {
                             border {
-                                color: "#E9E9E9";width:1
+                                color: "#E9E9E9"; width:1
                             }
                         }
                         color: "#000000"
                         wrapMode: TextEdit.Wrap
-                        font.family: trebu4etMsNorm.name
-                        font.pixelSize: facade.doPx(26);
+                        font.family: trebu4etMsNorm.name;
+                        font.pixelSize: (facade.doPx(26))
 
                         onTextChanged: {
                             if(length > 250)
-                            text = text.substring(0,250)
+                            text = text.substring(0,250);
                             loader.fields[0]=text
                             cursorPosition=length
                         }
@@ -121,10 +135,10 @@ Button {
                 }
                 Label {
                     visible: inputMode!=""? 1: 0;
-                    text: 250-screenTextFieldPost.length
+                    text: 250- screenTextFieldPost.length
                     anchors {
                         right: parent.right
-                        rightMargin:0.09 * parent.width;
+                        rightMargin: 0.09 * parent.width;
                     }
                 }
             }
@@ -133,22 +147,22 @@ Button {
         Rectangle {
             height: facade.toPx(25)
             color: dialogAndroidButtonOk.pressed == true? "#d7d7d7": "#f7f7f7"
-            width: dialogAndroid.text==newMessage? parent.width/2-0: parent.width
+            width: (choseMode != "") == true? parent.width/2- 0: parent.width;
             anchors {
                 right: parent.right
-                top: dialogAndroidDividerHorizontal.bottom
+                top:dialogAndroidDividerHorizontal.bottom
             }
         }
 
         Rectangle {
             anchors {
                 left: parent.left
-                top: dialogAndroidDividerHorizontal.bottom
+                top:dialogAndroidDividerHorizontal.bottom
             }
             width: parent.width / 2;
             height: facade.toPx(25);
             color: dialogAndroidButtonCancel.pressed == true? "#d7d7d7":"#f7f7f7"
-            visible: dialogAndroid.text == newMessage? 1:0
+            visible: choseMode !="";
         }
 
         Row {
@@ -162,12 +176,12 @@ Button {
             height: dialogAndroid.height<900?facade.toPx(100):100
 
             Button {
+                visible: choseMode !="";
+                id: dialogAndroidButtonCancel
+
                 width: parent.width/2-1;
                 anchors.top: parent.top;
                 anchors.bottom: parent.bottom
-
-                id: dialogAndroidButtonCancel
-                visible: (dialogAndroid.text == newMessage)? 1: 0
 
                 onClicked: {
                     inputMode = "";
@@ -176,13 +190,15 @@ Button {
                 }
 
                 contentItem: Text {
-                    verticalAlignment: Text.AlignVCenter;
-                    horizontalAlignment:Text.AlignHCenter
-                    color:"#34aadc"
-                    font {
-                        pixelSize: facade.doPx(24)
-                        family:trebu4etMsNorm.name
+                    verticalAlignment: {
+                        Text.AlignVCenter;
                     }
+                    horizontalAlignment: {
+                        Text.AlignHCenter;
+                    }
+                    color:"#34aadc"
+                    font.pixelSize: facade.doPx(27)
+                    font.family:trebu4etMsNorm.name
                     text: qsTr("Закрыть");
                 }
 
@@ -192,12 +208,12 @@ Button {
                 }
             }
 
-            //Создаю разделитель между кнопками шириной в 2 пикселя
+            //Создаю разделитель между кнопками шириной 2 пикселя
             Rectangle {
                 color: "#808080"
                 width: facade.toPx(2)
-                visible: (dialogAndroid.text == newMessage) ? 1: 0;
-                // Растягиваем разделитель по высоте объекта строки
+                visible: (choseMode != "")
+                //Растягиваю разделитель по высоте объекта строки
                 anchors {
                     top: parent.top
                     bottom: parent.bottom;
@@ -206,9 +222,10 @@ Button {
 
             Button {
                 id: dialogAndroidButtonOk;
-                width: dialogAndroid.text==newMessage?parent.width/2:parent.width
+                width: choseMode!=""? parent.width/2:parent.width
 
                 contentItem: Text {
+                    color:"#34aadc"
                     elide: Text.ElideRight
                     verticalAlignment: {
                         Text.AlignVCenter;
@@ -216,12 +233,9 @@ Button {
                     horizontalAlignment: {
                         Text.AlignHCenter;
                     }
-                    color:"#34aadc"
-                    font {
-                        bold: true;
-                        pixelSize: facade.doPx(24)
-                        family:trebu4etMsNorm.name
-                    }
+                    font.bold: true
+                    font.pixelSize: facade.doPx(27)
+                    font.family:trebu4etMsNorm.name
                     text: qsTr("Понятно");
                 }
 
@@ -235,7 +249,7 @@ Button {
                     loader.dialog = false;
                     dialogAndroid.text="";
                     switch(inputMode) {
-                     case "VK": postToVk(); break;
+                      case "VK": postToVk(); break;
                     }
                     inputMode = "";
                 }
@@ -249,7 +263,14 @@ Button {
 
         RadialGradient {
             opacity: 0.2
-            anchors.fill: parent
+            anchors {
+                fill: parent
+                topMargin: (dialogWindow.radius);
+                leftMargin: (dialogWindow.radius)
+                rightMargin: dialogWindow.radius;
+                bottomMargin: dialogWindow.radius
+            }
+
             gradient: Gradient {
                 GradientStop {
                     position: 0.0;
@@ -257,13 +278,10 @@ Button {
                 }
                 GradientStop {
                     position: 0.8;
-                    color: "black"
+                    color: "gray"
                 }
             }
         }
     }
-    property string newMessage: "Вам поступило сообщение. Открыть?"
-
-    contentItem: Text {opacity: 0}
 }
 //-------------------------------------------------------------------------------------------------------------

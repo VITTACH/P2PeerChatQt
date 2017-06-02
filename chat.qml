@@ -34,24 +34,6 @@ Item {
     }
 
     Connections {
-        target: contextDialog;
-        onActionChanged: {
-            if(contextDialog.action==1)
-            {
-                for(var i=0; i<select.length; i++)
-                    chatModel.remove(select[i]-i);
-                contextDialog.menu = 1;
-                contextDialog.action=0;
-                select=[];
-            }
-            if(contextDialog.action==4)
-            event_handler.copyText(chatModel.get(select[select.length-1]).someText)
-            if(contextDialog.action==8)
-                chatModel.clear()
-        }
-    }
-
-    Connections {
         target: event_handler;
         onReciving: {
             var i
@@ -63,6 +45,25 @@ Item {
                 appendMessage(response, 1)
                 chatScreenList.positionViewAtEnd()
             }
+        }
+    }
+
+    Connections {
+        target: contextDialog;
+        onActionChanged: {
+            if(contextDialog.action==1)
+            {
+                select.sort();
+                for(var i=0; i<select.length; i++)
+                    chatModel.remove(select[i]-i);
+                contextDialog.menu = 1;
+                contextDialog.action=0;
+                select=[];
+            }
+            if(contextDialog.action==4)
+            event_handler.copyText(chatModel.get(select[select.length-1]).someText)
+            if(contextDialog.action==8)
+                chatModel.clear()
         }
     }
 
