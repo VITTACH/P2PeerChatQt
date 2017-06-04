@@ -10,6 +10,9 @@ Drawer {
     width: Math.min(facade.toPx(708), 0.85 * parent.width);
     background: Rectangle {color: "transparent";}
 
+    function getMenuHeight() {
+        return listMenu.height
+    }
     function getCurPeerInd() {return listView.currentIndex}
     function getPeersModel(index, field) {
         var results =""
@@ -33,8 +36,14 @@ Drawer {
         onPositionChanged: {
             if (loader.source != "qrc:/chat.qml")
                 position = 0
-            else if (position==1)
+            else if (position == 1) {
+                settingDrawer.visible(true);
                 getMePeers()
+            }
+            if (position < 1) {
+                settingDrawer.visible(false)
+                settingDrawer.close()
+            }
         }
     }
 
@@ -422,14 +431,20 @@ Drawer {
 
                     onClicked: {
                         switch(index) {
+                        case 2:
+                            if(settingDrawer.position == 0)
+                                settingDrawer.open();
+                            else
+                                settingDrawer.close()
+                            break;
                         case 3:
-                            usersModel.clear();
-                            loader.goTo("qrc:/login.qml"); break;
+                            drawer.close()
+                            usersModel.clear()
+                            loader.goTo("qrc:/loginanDregister.qml");
                         }
                         if (index == 1)
                             myswitcher.checked = !myswitcher.checked;
                         else if (index > 1) {
-                            drawer.close();
                             if (index<=2)listMenu.currentIndex=index;
                         }
                     }

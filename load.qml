@@ -109,6 +109,8 @@ ApplicationWindow {
 
     P2PStyle.Avatardialogs {id: avatardialogs}
 
+    P2PStyle.Settingdrawei {id: settingDrawer}
+
     P2PStyle.WindsDialogs {id: windsDialogs}
 
     P2PStyle.ContextMenu {id: contextDialog}

@@ -8,7 +8,8 @@ Item {
 
     P2PStyle.Background {
         anchors.fill: {parent}
-        Component.onCompleted: {setColors([[50 , 110 , 183], [41 , 86 , 122]] , 400)}
+        Component.onCompleted:
+            setColors([[0,74,127], [120,120,120]], 100);
     }
 
     function registration(login, family, password, phone, email) {
@@ -51,7 +52,7 @@ Item {
         anchors {
             top: parent.top
             bottom: parent.bottom
-            topMargin: partnerHeader.height+facade.toPx(50)
+            topMargin: partnerHeader.height+facade.toPx(90)
         }
 
         delegate: Column {

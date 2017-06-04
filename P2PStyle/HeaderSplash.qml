@@ -9,9 +9,9 @@ Button {
     property string phot
 
     Rectangle {
-        color: "#3589E9"
         width: {parent.width}
-        height:facade.toPx(h-10)
+        height: facade.toPx(h - 10)
+        color: (loader.source=="qrc:/loginanDregister.qml")==true? "#3589E9":"#F6A204"
 
         Item {
             id: inerItem
@@ -91,6 +91,14 @@ Button {
             anchors.right: (loader.source != "qrc:/login.qml") == true? hamMoreButton.left: parent.right;
         }
 
+        DropShadow {
+            radius: 10
+            samples: 20
+            color: ("#CC000000")
+            source:hambrgrButton
+            anchors.fill: hambrgrButton
+            visible: loader.source=="qrc:/regin.qml";
+        }
         Button {
         x: facade.toPx(40)
         id: hambrgrButton;

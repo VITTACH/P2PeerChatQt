@@ -13,16 +13,16 @@ Item {
 
     Timer {
         running: true
-        interval:2500
+        interval:3000
         onTriggered: {
-            loader.goTo("qrc:/login.qml");
+            loader.goTo("qrc:/loginanDregister.qml");
         }
     }
 
     P2PStyle.Background
     {
         anchors.fill: {parent}
-        Component.onCompleted: setColors([[255,255,255],[255, 255, 255],[15, 191, 255],[41,86,122]], 30)
+        Component.onCompleted: setColors([[255,255,255], [255,255,255], [15,191,255], [120,120,120]],25)
     }
 
     PropertyAnimation {
@@ -30,7 +30,7 @@ Item {
         property: {"opacity";}
         id: opacitymov;
         from: 0; to: 1;
-        duration: 1400;
+        duration: 1900;
     }
     PropertyAnimation {
         target: logo;

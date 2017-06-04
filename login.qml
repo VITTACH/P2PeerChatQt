@@ -8,7 +8,8 @@ Item {
 
     P2PStyle.Background {
         anchors.fill: {parent}
-        Component.onCompleted: setColors([[15,191,255],[50,110,183],[41,86,122]],400)
+        Component.onCompleted:
+            setColors([[0,74,127], [120,120,120]], 100);
     }
 
     function login(phone,password) {
@@ -80,11 +81,13 @@ Item {
             }
         }
 
-        displayMarginBeginning: {parent.height*0.5 - 2*facade.toPx(100);}
+        displayMarginBeginning: {
+            parent.height*0.5-2*facade.toPx(100);
+        }
 
         delegate: Column {
             width: parent.width
-            height:{(index==2)==true? facade.toPx(110): facade.toPx(89);}
+            height: (index == 2)? facade.toPx(110): facade.toPx(89);
 
             DropShadow {
                 radius: 12
@@ -112,10 +115,10 @@ Item {
                     switch(index) {
                     case 2:
                         if (loader.fields[0].length <= 10) {
-                        windsDialogs.show("Укажите корректный телефон!");
+                        windsDialogs.show("Телефон не правильный",0)
                         }
                         else if(loader.fields[1].length<5) {
-                        windsDialogs.show("Пароль короче 5-ти символов");
+                        windsDialogs.show("Пароль < 5ти символов",0)
                         }
                         else {
                         var telephone = loader.fields[0]
@@ -153,35 +156,38 @@ Item {
                     rightMargin:0.09 * parent.width
                 }
                 Image {
-                    id: icon
+                    id: icon;
                     source: image
                     width: facade.toPx(sourceSize.width * 1.5);
                     height:facade.toPx(sourceSize.height* 1.5);
                 }
                 TextField {
-                    color:"white"
-                    height:facade.toPx(88)
-                    placeholderText: {plaseholder;}
+                color:"white"
+                height: facade.toPx(88)
+                placeholderText: {(plaseholder);}
 
-                    onTextChanged:{loader.fields[index] = text}
+                onTextChanged: {
+                    loader.fields[index] = (text)
+                }
 
-                    inputMethodHints:Qt.ImhFormattedNumbersOnly
+                inputMethodHints:
+                    index == 0?Qt.ImhFormattedNumbersOnly:Qt.ImhNone
 
-                    onFocusChanged:if(text.length==0&&index==0) text="8";
+                onFocusChanged: if(text.length==0&&index==0)text="8"
 
-                    echoMode:index==1?TextInput.Password:TextInput.Normal
+                echoMode:
+                    index == 1?TextInput.Password: TextInput.Normal;
 
-                    anchors {
-                        left: parent.left;
-                        right:parent.right
-                        rightMargin:0.09*parent.width
-                        leftMargin: (facade.toPx(80))
-                    }
-                    background:Rectangle {opacity: 0}
+                anchors {
+                    left: parent.left;
+                    right:parent.right
+                    rightMargin:0.09*parent.width
+                    leftMargin: (facade.toPx(80))
+                }
+                background:Rectangle {opacity: 0}
 
-                    font.family: trebu4etMsNorm.name;
-
-                    font.pixelSize:facade.doPx(38)
+                font.family: trebu4etMsNorm.name;
+                font.pixelSize:facade.doPx(38)
                 }
             }
 
@@ -204,7 +210,7 @@ Item {
                 contentItem: Text {
                     horizontalAlignment:Text.AlignHCenter
                     verticalAlignment : Text.AlignVCenter
-                    color: parent.down? "#100000":"white"
+                    color:parent.down?"lightgray":"white"
                     opacity:enabled?1:0.3
                     elide:Text.ElideRight
                     text: parent.text;
