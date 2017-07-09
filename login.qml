@@ -4,48 +4,12 @@ import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
 
 Item {
-    Component.onCompleted: {partnerHeader.text = qsTr("Вход")}
+    Component.onCompleted: partnerHeader.text = qsTr("Вход")
 
     P2PStyle.Background {
         anchors.fill: {parent}
         Component.onCompleted:
-            setColors([[0,74,127], [120,120,120]], 100);
-    }
-
-    function login(phone,password) {
-    var request = new XMLHttpRequest(), response;
-    request.open('POST',"http://hoppernet.hol.es/default.php")
-    request.onreadystatechange = function() {
-        if (request.readyState == XMLHttpRequest.DONE) {
-            if (request.status && request.status==200) {
-                if (request.responseText == "") response = -1;
-                else if (request.responseText != "no") {
-                    response = 1;
-                    var obj = JSON.parse(request.responseText)
-                    loader.famil = obj.family
-                    loader.login = obj.login;
-                    loader.tel = obj.name
-                }
-                else
-                    response = 0;
-            switch(response) {
-            case 1:
-                loader.goTo("qrc:/chat.qml");
-                event_handler.sendMsgs(phone)
-                break;
-            case 0:
-                windsDialogs.show("Вы не зарегистрированы!",0)
-                break;
-            case -1:
-                windsDialogs.show("Нет доступа к интернету",0)
-                break;
-                }
-                busyIndicator.visible =false;
-                }
-            }
-        }
-        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-        request.send("phone=" + phone + "&pass=" + password)
+            setColors([[0, 74, 127], [120, 120, 120]], 100);
     }
 
     ListView {
@@ -121,10 +85,10 @@ Item {
                         windsDialogs.show("Пароль < 5ти символов",0)
                         }
                         else {
-                        var telephone = loader.fields[0]
-                        var passwords = loader.fields[1]
+                        var telephone = loader.fields[0];
+                        var passwords = loader.fields[1];
                         busyIndicator.visible = true;
-                        login(telephone, passwords)
+                        loader.logon(telephone,passwords)
                         }
                         break;
                     }
@@ -204,8 +168,7 @@ Item {
                 font.pixelSize: {facade.doPx(26)}
                 font.family: trebu4etMsNorm.name;
 
-                onClicked:
-                    loader.goTo("qrc:/regin.qml")
+                onClicked: partnerHeader.page = 1
 
                 contentItem: Text {
                     horizontalAlignment:Text.AlignHCenter

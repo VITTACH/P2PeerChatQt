@@ -43,5 +43,15 @@
         <file>P2PStyle/ContextMenu.qml</file>
         <file>P2PStyle/Settingdrawei.qml</file>
         <file>loginanDregister.qml</file>
+        <file>ui/icons/imProfileBlue.png</file>
+        <file>ui/icons/imProfileLigh.png</file>
+        <file>ui/icons/manswerBlue.png</file>
+        <file>ui/icons/manswerLigh.png</file>
+        <file>ui/icons/myalgortBlue.png</file>
+        <file>ui/icons/myalgortLigh.png</file>
+        <file>ui/icons/mynotifyBlue.png</file>
+        <file>ui/icons/mynotifyLigh.png</file>
+        <file>ui/icons/goBackBlue.png</file>
+        <file>ui/icons/goBackLigh.png</file>
     </qresource>
 </RCC>

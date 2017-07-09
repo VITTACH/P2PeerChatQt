@@ -10,8 +10,14 @@ Drawer {
     width: Math.min(facade.toPx(708), 0.85 * parent.width);
     background: Rectangle {color: "transparent";}
 
+    function getPeersCount() {
+        return listView.count;
+    }
+    function getProfHeight() {
+        return profile.height + facade.toPx(25);
+    }
     function getMenuHeight() {
-        return listMenu.height
+        return listMenu.height + getProfHeight();
     }
     function getCurPeerInd() {return listView.currentIndex}
     function getPeersModel(index, field) {
@@ -25,11 +31,9 @@ Drawer {
         if(field == "phone")
             results = usersModel.get(index).phone
         if(field == "port")
-            results = usersModel.get(index).port
+            results = usersModel.get(index).port;
         return results
     }
-    function getPeersCount()
-    {return listView.count;}
 
     Connections {
         target: drawer;
@@ -40,8 +44,10 @@ Drawer {
                 settingDrawer.visible(true);
                 getMePeers()
             }
-            if (position < 1) {
+            else if (position == 0) {
                 settingDrawer.visible(false)
+            }
+            else if (position <= 1) {
                 settingDrawer.close()
             }
         }
@@ -105,16 +111,16 @@ Drawer {
         end:Qt.point(parent.width, 0)
         gradient: Gradient {
             GradientStop {
-                position: 0.0; color: "#FE29567A"
+                position: 0.9; color: "#FEBCBCBC"
             }
             GradientStop {
-                position: 1.0; color: "#CE326EB7"
+                position: 1.0; color: "#CEFFFFFF"
             }
         }
 
         Rectangle {
             id: glass
-            color: "#60FFFFFF";
+            color: "#606EBB3B";
             width: parent.width
             anchors {
                 top:profile.top
@@ -137,7 +143,7 @@ Drawer {
             }
             Item{
                 width: {parent.width}
-                height: facade.toPx(10)
+                height:facade.toPx(10)
             }
             Row {
                 id: firstRow
@@ -152,7 +158,7 @@ Drawer {
                         style: Text.Raised;
                         font.family: trebu4etMsNorm.name
                         font.pixelSize: facade.doPx(46);
-                        text: usersModel.count;
+                        text: {usersModel.count;}
                         anchors.horizontalCenter:parent.horizontalCenter
                     }
                     Text {
@@ -169,16 +175,16 @@ Drawer {
                     height:facade.toPx(225)
                     background: Rectangle {
                         radius: width * 0.5
-                        color: "transparent"
+                        color:"transparent"
                         border {
                           width: 1.2
-                          color: "#FFFFFFFF"
+                          color:"#FFFFFFFF"
                         }
                     }
 
                     onClicked: {
                         drawer.close()
-                        loader.avatar = true
+                        loader.avatar= true
                     }
 
                     Rectangle {
@@ -247,7 +253,9 @@ Drawer {
                     elide: Text.ElideRight
                     width: parent.width-scope1.implicitWidth-scope2.implicitWidth-image1.width
                 }
-                anchors.horizontalCenter: parent.horizontalCenter;
+                anchors.horizontalCenter: {
+                    parent.horizontalCenter
+                }
                 Text {
                     id: scope1
                     text: " ( "
@@ -297,7 +305,8 @@ Drawer {
             ListView {
                 spacing: 2
                 id: listView
-                anchors.fill: parent;
+                anchors.fill:parent
+                anchors.leftMargin: {facade.toPx(40);}
 
                 Component.onCompleted:{
                     usersModel.clear();
@@ -318,7 +327,7 @@ Drawer {
                 delegate: Rectangle {
                     visible: activity
                     width: parent.width
-                    color: myMouseArea.pressed==true? "lightgray": (ListView.isCurrentItem? "white":"#40FFFFFF")
+                    color: myMouseArea.pressed? "lightgray": (ListView.isCurrentItem? "#6EBB3B":"#FFFFFFFF")
                     height: activity == 1? facade.toPx(20) + Math.max(bug.height, fo.height):0
 
                     MouseArea {
@@ -326,7 +335,7 @@ Drawer {
                         anchors.fill:parent
                         onClicked: {
                             var json
-                            partnerHeader.text = usersModel.get(index).login + " " + usersModel.get(index).famil
+                            partnerHeader.text = usersModel.get(index).login+" "+usersModel.get(index).famil
                             json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
                             partnerHeader.stat = (json.port == 0) == true? "Offline": "Online"
                             partnerHeader.phot = usersModel.get(index).image
@@ -346,7 +355,7 @@ Drawer {
                         clip: true
                         smooth: true
                         visible: false
-                        x: facade.toPx(90) - (facade.toPx(708) - drawer.width)/facade.toPx(5);
+                        x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/facade.toPx(5);
                         width: facade.toPx(100)
                         height:facade.toPx(100)
                         anchors.verticalCenter: parent.verticalCenter
@@ -381,7 +390,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(24)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex ==index? "#10387F": "white"
+                            color:listView.currentIndex ==index? "white": "#10387F"
                         }
                         Text {
                             text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+": "+port
@@ -389,7 +398,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(24)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex ==index? "#10387F": "white"
+                            color:listView.currentIndex ==index? "white": "#10387F"
                         }
                     }
                 }
@@ -410,36 +419,38 @@ Drawer {
                     ListElement{image:"";target:""}
                     ListElement{
                         image: "qrc:/ui/icons/DevsIconBlue.png"
-                        target: "Information"
+                        target: qsTr("Настройки")
                     }
                     ListElement{
                         image: "qrc:/ui/icons/doorIconBlue.png"
-                        target: "Выйти"
+                        target: qsTr("Выйти")
                     }
                 }
             delegate: Rectangle {
                 width: parent.width;
                 height: facade.toPx(80)
-                color: ListView.isCurrentItem? "lightgrey": "#FFFFFF"
+                color: ListView.isCurrentItem? "lightgrey": "#F2F2F2"
                 MouseArea {
                     id: menMouseArea
                     anchors.fill:parent
-                    onExited: {listMenu.currentIndex = -1;}
+                    onExited: {listMenu.currentIndex=-1}
                     onEntered: {
                         if (index > 0) listMenu.currentIndex = index;
                     }
 
                     onClicked: {
+                        settingDrawer.close();
                         switch(index) {
                         case 2:
-                            if(settingDrawer.position == 0)
-                                settingDrawer.open();
-                            else
-                                settingDrawer.close()
+                            if(settingDrawer.position<1)
+                            settingDrawer.open()
                             break;
                         case 3:
                             drawer.close()
                             usersModel.clear()
+                            settingDrawer.visible(false)
+                            event_handler.saveSet("phone", "")
+                            event_handler.saveSet("passw", "")
                             loader.goTo("qrc:/loginanDregister.qml");
                         }
                         if (index == 1)

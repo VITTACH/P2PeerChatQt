@@ -1,6 +1,7 @@
 #ifndef EVENTHANDLER_H
 #define EVENTHANDLER_H
 
+#include <QSettings>
 #include "httpnetwork.h"
 
 using namespace std;
@@ -13,6 +14,7 @@ public:
 
     bool isPin = 0;
     int currentSys = 0;
+    QSettings *setting;
 
     QString PathFile = "p2pudpchat";
 
@@ -22,6 +24,8 @@ signals:
     void reciving(QString response);
 
 public slots:
+    QString loadValue(QString);
+    void saveSet(QString , QString);
     void display(QString , QString);
     bool relogin(QString , QString);
     int currentOSys();

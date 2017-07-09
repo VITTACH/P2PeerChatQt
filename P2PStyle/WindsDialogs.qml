@@ -1,6 +1,5 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
-
 import QtGraphicalEffects 1.0
 
 //--------------------------------------------------dialogAndroid----------------------------------------------
@@ -40,7 +39,7 @@ Button {
         radius: facade.toPx(25)
         anchors.centerIn:parent
         height: (dialogAndroid.height/25*10);
-        width: Math.min(22/10*avatardialogs.width/3, 400)
+        width: Math.min(22 / 10 * avatardialogs.width / 3, facade.toPx(666.6666))
 
         //создаём горизонтальный разделитель у всего окна
         Rectangle {
@@ -146,8 +145,8 @@ Button {
 
         Rectangle {
             height: facade.toPx(25)
-            color: dialogAndroidButtonOk.pressed == true? "#d7d7d7": "#f7f7f7"
-            width: (choseMode != "") == true? parent.width/2- 0: parent.width;
+            color: dialogAndroidButtonOk.pressed == true? "#ffd7d7d7": "#f7f7f7";
+            width: (choseMode != "") == true? parent.width / 2 - 0: parent.width;
             anchors {
                 right: parent.right
                 top:dialogAndroidDividerHorizontal.bottom
@@ -176,30 +175,32 @@ Button {
             height: dialogAndroid.height<900?facade.toPx(100):100
 
             Button {
-                visible: choseMode !="";
-                id: dialogAndroidButtonCancel
-
-                width: parent.width/2-1;
-                anchors.top: parent.top;
-                anchors.bottom: parent.bottom
-
-                onClicked: {
-                    inputMode = "";
-                    loader.dialog = false;
-                    dialogAndroid.text="";
-                }
-
                 contentItem: Text {
+                    color:"#34aadc"
                     verticalAlignment: {
                         Text.AlignVCenter;
                     }
                     horizontalAlignment: {
                         Text.AlignHCenter;
                     }
-                    color:"#34aadc"
-                    font.pixelSize: facade.doPx(27)
-                    font.family:trebu4etMsNorm.name
                     text: qsTr("Закрыть");
+                    font {
+                    pixelSize: facade.doPx(27)
+                    family:trebu4etMsNorm.name
+                    }
+                }
+
+                visible: choseMode !="";
+                id: dialogAndroidButtonCancel;
+
+                width: parent.width/2-1;
+                anchors.top: parent.top;
+                anchors.bottom: parent.bottom;
+
+                onClicked: {
+                    inputMode = "";
+                    loader.dialog=false;
+                    dialogAndroid.text = ("");
                 }
 
                 background: Rectangle {

@@ -10,18 +10,26 @@ int EventHandler::currentOSys() {
     return currentSys;
 }
 
-void EventHandler::sendMsgs(QString text) {
-    emit sendMessages(text);
+void EventHandler::sendMsgs(QString msgtext) {
+    emit sendMessages(msgtext);
+}
+
+QString EventHandler::loadValue(QString key) {
+    return setting->value(key).toString();
+}
+
+void EventHandler::saveSet(QString key, QString vals) {
+    setting->setValue(key, vals);
 }
 
 bool EventHandler::relogin(QString tel, QString pass) {
     return isPin;
 }
 
-void EventHandler::copyText(QString text) {
+void EventHandler::copyText(QString msgtext) {
      QClipboard *clipboard = QApplication::clipboard();
      clipboard->clear();
-     clipboard->setText(text);
+     clipboard->setText(msgtext);
 }
 
 void EventHandler::display(QString message, QString sender) {
@@ -30,6 +38,7 @@ void EventHandler::display(QString message, QString sender) {
 }
 
 EventHandler::EventHandler(QObject*parent): QObject(parent) {
+    setting = new QSettings("p2peerio",QSettings::IniFormat);
     if(!currentSys) {
     QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).value(0);
     QDir dir(path);

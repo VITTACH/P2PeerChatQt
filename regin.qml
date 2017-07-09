@@ -4,8 +4,6 @@ import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
 
 Item {
-    Component.onCompleted: partnerHeader.text = "Зарегистрировать"
-
     P2PStyle.Background {
         anchors.fill: {parent}
         Component.onCompleted:
@@ -24,6 +22,8 @@ Item {
                         loader.famil = family
                         loader.login = login;
                         windsDialogs.show("Вы зарегистрированы",0)
+                        event_handler.saveSet("passw", password)
+                        event_handler.saveSet("phone", phone)
                         loader.goTo("qrc:/chat.qml")
                     }
                     else if(request.responseText == "no") {

@@ -14,22 +14,6 @@ ApplicationWindow {
         onTriggered: loader.back()
     }
 
-    function strartPage() {privated.visitedPageList.push(loader.source="qrc:/start.qml")}
-
-    function listenBack(event) {
-        loader.focus = true
-        if (event.key === Qt.Key_Back || event.key === Qt.Key_Escape || event === true) {
-            event.accepted= true
-            if (loader.dialog==true) {
-            loader.dialog = !loader.dialog;
-            } else if(loader.avatar) {
-            loader.avatar = !loader.avatar;
-            } else if(loader.webvew) {
-            loader.webvew = !loader.webvew;
-            } else backTimer.restart()
-        }
-    }
-
     QtObject {
         id: facade
         function toPx(dp) {
@@ -46,6 +30,9 @@ ApplicationWindow {
         objectName: "loader"
         anchors.fill: parent
         property real dpi: 0
+
+        property var avatarPath: "qrc:/ui/profiles/default/Human.png"
+
         property bool avatar
         property bool dialog
         property bool webvew
@@ -56,8 +43,6 @@ ApplicationWindow {
         property bool context;
 
         property var chats:[];
-
-        property string avatarPath: "qrc:/ui/profiles/default/Human.png"
 
         Keys.onReleased: listenBack(event);
 
@@ -84,14 +69,79 @@ ApplicationWindow {
             else
                 strartPage();
         }
+        function logon(phone, password) {
+            var request = new XMLHttpRequest();var response;
+            request.open('POST',"http://hoppernet.hol.es/default.php")
+            request.onreadystatechange = function() {
+                if (request.readyState == XMLHttpRequest.DONE) {
+                    if (request.status && request.status==200) {
+                        if (request.responseText == "") response = -1;
+                        else if (request.responseText != "no") {
+                            response = 1;
+                            var obj = JSON.parse(request.responseText)
+                            loader.famil = obj.family
+                            loader.login = obj.login;
+                            loader.tel = obj.name
+                        }
+                        else
+                            response = 0;
+                        switch(response){
+                        case 1:
+                        loader.goTo("qrc:/chat.qml");
+                        event_handler.sendMsgs(phone)
+                        event_handler.saveSet("passw", password)
+                        event_handler.saveSet("phone", phone)
+                        break;
+                        case 0:
+                        windsDialogs.show("Вы не зарегистрированы!",0)
+                        break;
+                        case -1:
+                        windsDialogs.show("Нет доступа к интернету",0)
+                        break;
+                        }
+                        busyIndicator.visible =false;
+                    } else {
+                        windsDialogs.show("Нет доступа к интернету",0)
+                        loader.goTo("qrc:/loginanDregister.qml")
+                    }
+                }
+            }
+            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            request.send("phone=" + phone + "&pass=" + password)
+        }
     }
 
     Loader {
         id: imagePicker
-        source: event_handler.currentOSys()==0?"AndImagePicker.qml": "IOsImagesPicker.qml"
+        source: event_handler.currentOSys() == 1? "AndImagePicker.qml": (event_handler.currentOSys() == 2? "IOsImagesPicker.qml": "")
 
-        onLoaded:item.onChange=function(url) {
-            //TODO: set property new image url
+        onLoaded: {
+            item.onChange= function(urlimg) {
+                loader.avatarPath = urlimg
+                event_handler.sendAvatar(decodeURIComponent(urlimg));
+            }
+        }
+    }
+
+    function strartPage() {
+        var phone = event_handler.loadValue("phone");
+        var passw = event_handler.loadValue("passw");
+        if (passw != "" && phone != "") {loader.logon(phone, passw);}
+        else
+        privated.visitedPageList.push(loader.source="qrc:/start.qml")
+    }
+
+    function listenBack(event) {
+        loader.focus = true
+        if (event.key === Qt.Key_Back || event.key === Qt.Key_Escape || event === true) {
+            event.accepted= true
+            if (loader.dialog==true) {
+            loader.dialog = !loader.dialog;
+            } else if(loader.avatar) {
+            loader.avatar = !loader.avatar;
+            } else if(loader.webvew) {
+            loader.webvew = !loader.webvew;
+            } else backTimer.restart()
         }
     }
 

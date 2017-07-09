@@ -29,7 +29,8 @@ JNIEXPORT jint JNI_OnLoad(JavaVM * javm, void*) {
     Q_UNUSED(javm);
     currentSys = 1;
     QASystemDispatcher::registerNatives();
-    QAndroidJniObject::callStaticMethod <void>("org/qtproject/example/vittachpeer/PushService", "start", "()V");
+    QAndroidJniObject::callStaticMethod <void>("org/qtproject/example/vittachpeer/PushService","start","()V");
+    QAndroidJniObject::callStaticMethod <void>("org/qtproject/example/vittachpeer/Peerequest","start", "()V");
     return JNI_VERSION_1_6;
 }
 #endif
@@ -48,6 +49,7 @@ int main(int argc,char **argv)
     QQmlContext *context = engine.rootContext();
     context->setContextProperty("event_handler", &eventhandler);
 
+    #if !defined(Q_OS_ANDROID)
     Client client;
     httpnetwork httpBase;
     QUrl qurl("http://api.ipify.org");
@@ -67,6 +69,7 @@ int main(int argc,char **argv)
 
     eventhandler.connect(&eventhandler, SIGNAL(sendMessages(QString)), &client, SLOT(startTransfer(QString)));
     eventhandler.connect(&client, SIGNAL(recieved(QString, QString)), &eventhandler, SLOT(display(QString, QString)));
+    #endif
     /*----------------------------------------------------------------------------------------------------------------
     Client client;
     httpnetwork httpPost;

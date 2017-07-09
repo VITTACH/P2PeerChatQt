@@ -1,21 +1,32 @@
 import QtQuick 2.7
 import QtQuick.Dialogs  1.0
-import QtQuick.Controls 2.0
+import QtQuick.Controls  2.0
 import QtGraphicalEffects 1.0
 
 Button {
     id: avatardialog
     anchors.fill: {parent}
-    visible: loader.avatar
     contentItem:Text {opacity:0}
     background: Rectangle {color : "#AC404040";}
 
+    visible: loader.avatar
     Connections {
         target: loader;
         onAvatarChanged: {loader.focus = !false}
     }
 
     text: "Установите свою фотографию на аватар"
+
+    FileDialog {
+        id:fileDialog
+        folder: shortcuts.home
+        title: "Выберите изображение"
+        nameFilters:["Изображения (*.jpg *.png)","Все файлы (*)"]
+        onAccepted: {
+            loader.avatarPath = fileUrl
+            event_handler.sendAvatar(decodeURIComponent(fileUrl))
+        }
+    }
 
     DropShadow {
         radius: 16
@@ -27,10 +38,10 @@ Button {
     Rectangle {
         id: dialogWindow
         color: "#f7f7f7"
-        radius: facade.toPx(25)
+        radius: facade.toPx(25);
         anchors.centerIn: parent
         height:parent.height/2.5
-        width:Math.min(22/10*parent.width/3,400)
+        width:Math.min(0.73*parent.width,facade.toPx(666))
 
         //Область для сообщения для диалогового;
         Rectangle {
@@ -38,7 +49,7 @@ Button {
             radius:facade.toPx(25)
 
             anchors {
-                top: parent.top
+                top: parent.top;
                 bottom: picDialogAndroidrow.top;
                 horizontalCenter: parent.horizontalCenter
             }
@@ -165,30 +176,6 @@ Button {
                     color: "gray"
                 }
             }
-        }
-    }
-
-    Loader {
-        id: imagePicker
-        source: "qrc:/" + event_handler.currentOSys() == 1? "AndImagePicker.qml": "IOsImagesPicker.qml"
-
-        onLoaded: {
-            item.onChange=function(url)
-            {
-                loader.avatarPath = url
-                event_handler.sendAvatar(decodeURIComponent(url))
-            }
-        }
-    }
-
-    FileDialog {
-        id:fileDialog
-        folder: shortcuts.home
-        title: "Выберите изображение"
-        nameFilters:["Изображения (*.jpg *.png)","Все файлы (*)"]
-        onAccepted: {
-            loader.avatarPath = fileUrl
-            event_handler.sendAvatar(decodeURIComponent(fileUrl))
         }
     }
 }

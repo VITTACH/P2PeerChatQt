@@ -4,6 +4,7 @@ import QtGraphicalEffects 1.0
 
 Button {
     id: rootItem
+    property int page
     property int h: 150;
     property string stat
     property string phot
@@ -11,7 +12,7 @@ Button {
     Rectangle {
         width: {parent.width}
         height: facade.toPx(h - 10)
-        color: (loader.source=="qrc:/loginanDregister.qml")==true? "#3589E9":"#F6A204"
+        color: loader.source == "qrc:/loginanDregister.qml"? ("#3589E9"): ("#6EBB3B");
 
         Item {
             id: inerItem
@@ -87,8 +88,8 @@ Button {
                 }
             }
             height: parent.height
-            anchors.left: (loader.source != "qrc:/login.qml") === true? hambrgrButton.right: parent.left;
-            anchors.right: (loader.source != "qrc:/login.qml") == true? hamMoreButton.left: parent.right;
+            anchors.left: page != 0 || loader.source == ("qrc:/chat.qml")?hambrgrButton.right:parent.left
+            anchors.right:page != 0 || loader.source == ("qrc:/chat.qml")?hamMoreButton.left:parent.right
         }
 
         DropShadow {
@@ -96,52 +97,50 @@ Button {
             samples: 20
             color: ("#CC000000")
             source:hambrgrButton
-            anchors.fill: hambrgrButton
-            visible: loader.source=="qrc:/regin.qml";
+            anchors.fill:hambrgrButton
+            visible:page==1?true:false
         }
         Button {
-        x: facade.toPx(40)
-        id: hambrgrButton;
-        visible: (loader.source != "qrc:/login.qml");
-        width: Math.max(hambrgrButtonImage.width, facade.toPx(70))
-        height:Math.max(hambrgrButtonImage.height,facade.toPx(70))
-        background: Rectangle {opacity: 0}
-        anchors.verticalCenter: parent.verticalCenter
-        Image {
-            id: hambrgrButtonImage
-            anchors {
-                verticalCenter: parent.verticalCenter
+            x: facade.toPx(40)
+            id: hambrgrButton;
+            visible: (page != 0 || loader.source == ("qrc:/chat.qml"))
+            width: Math.max(hambrgrButtonImage.width, facade.toPx(70))
+            height:Math.max(hambrgrButtonImage.height,facade.toPx(70))
+            anchors.verticalCenter: parent.verticalCenter
+            background: Image{
+                id: hambrgrButtonImage
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                }
+                height:facade.toPx(sourceSize.height*1.2)
+                width: facade.toPx(sourceSize.width *1.2)
+                fillMode: Image.PreserveAspectFit;
+                source: "qrc:/ui/buttons/" + (page === 1? "back": "infor") + "Button.png";
             }
-            height:facade.toPx(sourceSize.height*1.2)
-            width: facade.toPx(sourceSize.width *1.2)
-            fillMode: Image.PreserveAspectFit;
-            source: "qrc:/ui/buttons/" + (loader.source=="qrc:/regin.qml"? "back":"infor") + "Button.png"
-        }
-        onClicked: loader.source == "qrc:/regin.qml"? loader.back(): menuDrawer.open()
+            onClicked: page==1? page--: menuDrawer.open()
         }
 
         Button {
-        id: hamMoreButton;
-        visible:loader.source == "qrc:/chat.qml";
-        width: Math.max(hamMoreButtonImage.width, facade.toPx(70))
-        height:Math.max(hamMoreButtonImage.height,facade.toPx(70))
-        background: Rectangle {opacity: 0}
-        x: parent.width-facade.toPx(20)-width;
-        anchors.verticalCenter: parent.verticalCenter
-        Image {
-            id: hamMoreButtonImage
-            source: "qrc:/ui/buttons/moreButton.png";
-            anchors {
-                verticalCenter: parent.verticalCenter
+            id: hamMoreButton;
+            visible:loader.source == "qrc:/chat.qml";
+            width: Math.max(hamMoreButtonImage.width, facade.toPx(70))
+            height:Math.max(hamMoreButtonImage.height,facade.toPx(70))
+            x: parent.width-facade.toPx(20)-width;
+            anchors.verticalCenter: parent.verticalCenter
+            background: Image{
+                id: hamMoreButtonImage
+                source: "qrc:/ui/buttons/moreButton.png";
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                }
+                height:facade.toPx(sourceSize.height*1.2)
+                width: facade.toPx(sourceSize.width *1.2)
+                fillMode: Image.PreserveAspectFit;
             }
-            height:facade.toPx(sourceSize.height*1.2)
-            width: facade.toPx(sourceSize.width *1.2)
-            fillMode: Image.PreserveAspectFit;
-        }
-        onClicked: {
-            contextDialog.xPosition = rootItem.width- contextDialog.w- facade.toPx(20)
-            contextDialog.yPosition = facade.toPx(20)
-            loader.context=true;
+            onClicked: {
+                contextDialog.xPosition = rootItem.width- contextDialog.w- facade.toPx(20)
+                contextDialog.yPosition = facade.toPx(20)
+                loader.context = true;
             }
         }
     }

@@ -57,7 +57,21 @@ DISTFILES += \
     android-sources/gradle/wrapper/gradle-wrapper.jar \
     android-sources/java/com/lasconic/QShareUtils.java\
     android-sources/java/quickandroid/PushService.java\
-    android-sources/gradle/wrapper/gradle-wrapper.properties
+    android-sources/gradle/wrapper/gradle-wrapper.properties \
+    android-sources/java/cling-21/cling-support-2.1.1.jar \
+    android-sources/java/cling-21/seamless-http-1.1.1.jar \
+    android-sources/java/cling-21/seamless-util-1.1.1.jar \
+    android-sources/java/cling-21/seamless-xml-1.1.1.jar \
+    android-sources/java/jsonl/jsons-1.1.1.jar \
+    android-sources/java/com/hoppers/Peerequest.java \
+    android-sources/java/com/hoppers/RsaEncrypt.java \
+    android-sources/java/com/hoppers/UpForward.java \
+    android-sources/libs/cling-core-2.1.1.jar \
+    android-sources/libs/cling-support-2.1.1.jar \
+    android-sources/libs/jsons-1.1.1.jar \
+    android-sources/libs/seamless-http-1.1.1.jar \
+    android-sources/libs/Seamless-UTil-1.1.1.jar \
+    android-sources/libs/Seamless-Xml-1.1.1.jar
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
