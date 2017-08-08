@@ -1,25 +1,25 @@
-// Author:  Ben Lau (https://github.com/benlau)
+// Author: Ben Lau (https://github.com/benlau)
 package quickandroid;
 import android.app.Activity;
 import org.qtproject.qt5.android.QtNative;
-import java.lang.String;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
+import java.lang.String;
+import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.lang.ClassLoader;
 import java.lang.reflect.Method;
 import java.lang.Thread;
 import android.util.Log;
-import android.os.Handler;
 import android.os.Looper;
+import android.os.Handler;
 import android.content.Intent;
 import java.util.concurrent.Semaphore;
-import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class SystemDispatcher {
 
@@ -40,8 +40,8 @@ public class SystemDispatcher {
 
             if (dispatching) {
                 payload = new Payload();
-                payload.type = type;
-                payload.message = message;
+                payload.type= type;
+                payload.message=message;
                 queue.add(payload);
                 mutex.release();
                 return;
@@ -52,7 +52,7 @@ public class SystemDispatcher {
 
             emit(type,message); // Emit
 
-            mutex.acquire(); // Process queued message
+            mutex.acquire();//Proces queued message
 
             while (queue.size() > 0 ) {
                 payload = queue.poll();
@@ -70,10 +70,10 @@ public class SystemDispatcher {
         }
     }
 
-    public static void addListener(Listener listener) {
+    public static void addListener(Listener list) {
         try {
             mutex.acquire();
-            listeners.add(listener);
+            listeners.add(list);
             mutex.release();
         }
         catch (Exception e) {
@@ -81,7 +81,8 @@ public class SystemDispatcher {
         }
     }
 
-    public static void removeListener(Listener listener) {
+    public
+    static void removeListener(Listener listener) {
         try {
             mutex.acquire();
             listeners.remove(listener);
@@ -98,18 +99,18 @@ public class SystemDispatcher {
 
     public static String SYSTEM_DISPATCHER_LOAD_CLASS_MESSAGE = "quickandroid.SystemDispatcher.loadClass";
 
-    /**helper function to dispatch a massage when onResume is invoked in the Activity class
+    /** helper function to dispatch a massage when onResume is invoked in the Activity class
      */
 
-    public static void onActivityResume() {
+    public static void onActivityResume(){
         dispatch(ACTIVITY_RESUME_MESSAGE);
     }
 
     public static void onActivityResult (int requestCode, int resultCode, Intent data) {
         Map message = new HashMap();
 
-        message.put("requestCode",requestCode);
-        message.put("resultCode",resultCode);
+        message.put("requestCode", requestCode);
+        message.put("resultCode", resultCode);
         message.put("data",data);
 
         dispatch(ACTIVITY_RESULT_MESSAGE,message);
@@ -122,7 +123,7 @@ public class SystemDispatcher {
 
     private static String TAG = "QuickAndroid";
 
-    private static final Semaphore mutex = new Semaphore(1);
+    private static final Semaphore mutex= new Semaphore(1);
 
     private static Queue<Payload> queue = new LinkedList();
 
@@ -151,7 +152,7 @@ public class SystemDispatcher {
         if (data == null)
             return;
         try {
-            for (Map.Entry entry : (Set<Map.Entry>) data.entrySet()) {
+            for (Map.Entry entry : (Set <Map.Entry> ) data.entrySet()) {
                 String key = (String) entry.getKey();
                 Object value = entry.getValue();
                 if (value == null)
@@ -165,7 +166,7 @@ public class SystemDispatcher {
                     Log.d(TAG,String.format("%s : %d",key,intValue));
                 } else if (value instanceof Boolean) {
                     Boolean booleanValue = (Boolean) value;
-                    Log.d(TAG,String.format("%s : %b",key,booleanValue));
+                    Log.d(TAG,String.format("%s: %b",key,booleanValue));
                 } else {
                     Log.d(TAG,String.format("%s : Non-supported data type[%s] is passed",key,value.getClass().getName()));
                 }

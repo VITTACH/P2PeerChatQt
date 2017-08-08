@@ -1,4 +1,4 @@
-package com.hoppers;
+package quickandroid;
 
 import java.net.*;
 import java.math.BigInteger;
@@ -7,17 +7,16 @@ import java.io.FileOutputStream;
 import org.json.simple.JSONObject;
 import java.nio.channels.SocketChannel;
 
+import android.app.Activity;
+import android.content.Context;
+import org.qtproject.qt5.android.QtNative;
+
 import java.util.Random;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.io.InputStream;
 import org.json.simple.parser.JSONParser;
 import java.nio.channels.ServerSocketChannel;
-
-import org.qtproject.qt5.android.QtNative;
-
-import android.app.Activity;
-import android.content.Context;
 
 /**
  * Created by VITTACH on 11.04.2017

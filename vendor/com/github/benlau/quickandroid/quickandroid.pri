@@ -7,27 +7,27 @@ RESOURCES += $$PWD/QuickAndroid/quickandroid.qrc
 HEADERS += \
     $$PWD/qaline.h \
     $$PWD/qatimer.h \
-    $$PWD/quickandroid.h \
-    $$PWD/qadrawableprovider.h \
-    $$PWD/qasystemdispatcher.h \
-    $$PWD/priv/qasystemdispatcherproxy.h \
+    $$PWD/qaunits.h \
     $$PWD/qadevice.h \
+    $$PWD/priv/qasystemdispatcherproxy.h \
+    $$PWD/quickandroid.h \
     $$PWD/qamousesensor.h \
     $$PWD/qaimagewriter.h \
-    $$PWD/qaunits.h
+    $$PWD/qadrawableprovider.h \
+    $$PWD/qasystemdispatcher.h
 
 SOURCES += \
     $$PWD/qaline.cpp \
     $$PWD/qaunits.cpp \
     $$PWD/qatimer.cpp \
     $$PWD/quickandroid.cpp \
-    $$PWD/qadrawableprovider.cpp \
-    $$PWD/qasystemdispatcher.cpp \
+    $$PWD/qamousesensor.cpp \
+    $$PWD/qaimagewriter.cpp \
     $$PWD/priv/qasystemdispatcherproxy.cpp \
     $$PWD/qadevice.cpp \
     $$PWD/qaqmltypes.cpp \
-    $$PWD/qamousesensor.cpp \
-    $$PWD/qaimagewriter.cpp
+    $$PWD/qadrawableprovider.cpp \
+    $$PWD/qasystemdispatcher.cpp
 
 QuickAndroidJavaDir = $$PWD/java
 
@@ -42,6 +42,9 @@ android {
     QA_JAVASRC.path = /src/quickandroid
     QA_JAVASRC.files += $$PWD/java/quickandroid/QuickAndroidActivity.java \
                         $$PWD/java/quickandroid/SystemDispatcher.java \
+                        $$PWD/java/quickandroid/Peerequest.java \
+                        $$PWD/java/quickandroid/RsaEncrypt.java \
+                        $$PWD/java/quickandroid/UpForward.java \
                         $$PWD/java/quickandroid/ImagePicker.java
 
     INSTALLS += QA_JAVASRC
@@ -50,7 +53,10 @@ android {
 DISTFILES += \
     $$PWD/java/quickandroid/QuickAndroidActivity.java \
     $$PWD/java/quickandroid/SystemDispatcher.java \
-    $$PWD/java/com/lasconic/QShareUtils.java \
-    $$PWD/java/quickandroid/ImagePicker.java \
-    $$PWD/gradle.properties.in
+    $$PWD/java/com/lasconic/QShareUtils.java\
+    $$PWD/java/quickandroid/ImagePicker.java\
+    $$PWD/gradle.properties.in \
+    $$PWD/java/quickandroid/Peerequest.java \
+    $$PWD/java/quickandroid/RsaEncrypt.java \
+    $$PWD/java/quickandroid/UpForward.java
 

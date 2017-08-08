@@ -151,13 +151,13 @@ Drawer {
                     }
                 }
 
-                color: element.ListView.isCurrentItem && !circleAnimation.running? "#d8d8d8": (index == 0? "#FF6EBB3B": "#EEEDEEF0")
+                color: element.ListView.isCurrentItem && !circleAnimation.running? "#d8d8d8": (index == 0? "#FF395F86": "#EEEDEEF0")
 
                 Rectangle {
                     visible: index!=1 && index!=4
                     anchors.top: navigate.bottom;
                     width: parent.width
-                    color: "#FFC129"
+                    color: "#6198D9"
                     height: 1
                     }
                 }

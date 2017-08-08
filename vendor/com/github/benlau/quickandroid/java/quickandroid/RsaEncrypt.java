@@ -1,4 +1,4 @@
-package com.hoppers;
+package quickandroid;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;

@@ -6,6 +6,7 @@
 #include "mainwindow.h"
 #include "httpnetwork.h"
 #include "eventhandler.h"
+#include "imageprocessor.h"
 
 #include <QScreen>
 #include <QQmlContext>
@@ -29,8 +30,8 @@ JNIEXPORT jint JNI_OnLoad(JavaVM * javm, void*) {
     Q_UNUSED(javm);
     currentSys = 1;
     QASystemDispatcher::registerNatives();
-    QAndroidJniObject::callStaticMethod <void>("org/qtproject/example/vittachpeer/PushService","start","()V");
-    QAndroidJniObject::callStaticMethod <void>("org/qtproject/example/vittachpeer/Peerequest","start", "()V");
+    QAndroidJniObject::callStaticMethod<void>("org/qtproject/example/vittachpeer/PushService","start", "()V");
+    QAndroidJniObject::callStaticMethod<void>("quickandroid/QuickAndroidActivity", "startUpNpForward", "()V");
     return JNI_VERSION_1_6;
 }
 #endif
@@ -45,6 +46,8 @@ int main(int argc,char **argv)
     engine.addImportPath("qrc:///");
     QQuickStyle::setStyle("P2PStyle");
     eventhandler.currentSys= currentSys;
+
+    qmlRegisterType<ImageProcessor>("ImageProcessor",1,0,"ImageProcessor");
 
     QQmlContext *context = engine.rootContext();
     context->setContextProperty("event_handler", &eventhandler);

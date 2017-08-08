@@ -53,5 +53,12 @@
         <file>ui/icons/mynotifyLigh.png</file>
         <file>ui/icons/goBackBlue.png</file>
         <file>ui/icons/goBackLigh.png</file>
+        <file>ui/buttons/social/fb.png</file>
+        <file>ui/buttons/social/gp.png</file>
+        <file>ui/buttons/social/tw.png</file>
+        <file>ui/buttons/social/vk.png</file>
+        <file>ibrowser.qml</file>
+        <file>webview.qml</file>
+        <file>qrscan.qml</file>
     </qresource>
 </RCC>

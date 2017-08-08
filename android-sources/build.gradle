@@ -1,19 +1,19 @@
 import groovy.json.JsonSlurper
 
-String getAndroidPackageSourceDir() {
+String getMeFullPathToAndroidPackageSourceDir() {
     String res = System.getProperty("user.dir");
 
     FileTree tree = fileTree(dir: res + '/..').include('android*deployment-settings.json');
 
     String json = tree[0];
-    def inputFile=new File(json);
-    def InputJSON=new JsonSlurper().parseText(inputFile.text);
+    def IF=new File(json);
+    def InputJSON=new JsonSlurper().parseText(IF.text);
     res = InputJSON["android-package-source-directory"]
 
     return res;
 }
 
-String androidPackageSourceDir = getAndroidPackageSourceDir();
+String path = getMeFullPathToAndroidPackageSourceDir();
 
 buildscript {
     repositories {
@@ -21,8 +21,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.google.gms:google-services:3.0.0'
-        classpath 'com.android.tools.build:gradle:1.1.0'
+        classpath'com.google.gms:google-services:3.0.0'
+        classpath'com.android.tools.build:gradle:1.1.0'
     }
 }
 
@@ -48,7 +48,7 @@ android {
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java', androidPackageSourceDir+ '/../../../java']
+            java.srcDirs = [qt5AndroidDir + '/src', 'src', 'java', path + '/../../../java']
             aidl.srcDirs = [qt5AndroidDir + '/src', 'src', 'aidl']
             res.srcDirs = [qt5AndroidDir + '/res', 'res']
             renderscript.srcDirs = ['src']

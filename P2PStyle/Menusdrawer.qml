@@ -120,7 +120,7 @@ Drawer {
 
         Rectangle {
             id: glass
-            color: "#606EBB3B";
+            color: "#AA395F86";
             width: parent.width
             anchors {
                 top:profile.top
@@ -327,7 +327,7 @@ Drawer {
                 delegate: Rectangle {
                     visible: activity
                     width: parent.width
-                    color: myMouseArea.pressed? "lightgray": (ListView.isCurrentItem? "#6EBB3B":"#FFFFFFFF")
+                    color: myMouseArea.pressed? "lightgray": (ListView.isCurrentItem? "#4F81B6":"#FFFFFFFF")
                     height: activity == 1? facade.toPx(20) + Math.max(bug.height, fo.height):0
 
                     MouseArea {

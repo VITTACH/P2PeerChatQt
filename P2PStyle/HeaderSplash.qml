@@ -9,10 +9,20 @@ Button {
     property string stat
     property string phot
 
+    DropShadow {
+        radius: 20
+        samples: 16
+        anchors {
+            fill:headerRect
+        }
+        color: "#60000000";
+        source: headerRect;
+    }
     Rectangle {
-        width: {parent.width}
+        id: headerRect
+        width: parent.width
         height: facade.toPx(h - 10)
-        color: loader.source == "qrc:/loginanDregister.qml"? ("#3589E9"): ("#6EBB3B");
+        color: loader.source == "qrc:/loginanDregister.qml"? ("#3589E9"): ("#4F81B6");
 
         Item {
             id: inerItem
@@ -141,26 +151,6 @@ Button {
                 contextDialog.xPosition = rootItem.width- contextDialog.w- facade.toPx(20)
                 contextDialog.yPosition = facade.toPx(20)
                 loader.context = true;
-            }
-        }
-    }
-
-    Rectangle {
-        color: "transparent"
-        width: parent.width
-        height: facade.toPx(10);
-        anchors.bottom: parent.bottom;
-        LinearGradient {
-            anchors.fill: parent
-            start:Qt.point(0, 0)
-            end:Qt.point(0, parent.height)
-            gradient: Gradient {
-                GradientStop {
-                    position: 0.0; color: "#60000000"
-                }
-                GradientStop {
-                    position: 1.0; color: "#10000000"
-                }
             }
         }
     }

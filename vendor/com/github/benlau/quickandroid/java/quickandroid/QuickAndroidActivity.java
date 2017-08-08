@@ -12,13 +12,17 @@ public class QuickAndroidActivity extends
     org.qtproject.qt5.android.bindings.QtActivity {
     private static Context myContext;
 
+    public static void startUpNpForward() {
+        Peerequest.start();
+    }
+
     public static void openingMap(String lat, String lon) {
         Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr=&daddr=" + lat + "," + lon);
 
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
 
-        if( (mapIntent.resolveActivity(myContext.getPackageManager()) != null) ) {
+        if((mapIntent.resolveActivity(myContext.getPackageManager()) != null)) {
         myContext.startActivity(mapIntent);
         }
     }
@@ -31,7 +35,7 @@ public class QuickAndroidActivity extends
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+    protected void onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         SystemDispatcher.onActivityResult(requestCode,resultCode,data);
     }

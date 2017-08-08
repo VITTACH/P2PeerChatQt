@@ -32,7 +32,7 @@ ApplicationWindow {
         property real dpi: 0
 
         property var avatarPath: "qrc:/ui/profiles/default/Human.png"
-
+        property string urlLink: "";
         property bool avatar
         property bool dialog
         property bool webvew
@@ -60,10 +60,15 @@ ApplicationWindow {
         }
         function back() {
             if (privated.visitedPageList.length > 0) {
-                if (source!= "qrc:/start.qml")
-                {
-                    privated.visitedPageList.pop()
-                    source = privated.visitedPageList[privated.visitedPageList.length - 1]
+                if (source != "qrc:/start.qml") {
+                    if (source == "qrc:/loginanDregister.qml") {
+                        if (partnerHeader.page == 1) {
+                            partnerHeader.page = partnerHeader.page-1;
+                        }
+                    } else {
+                        privated.visitedPageList.pop()
+                        source=privated.visitedPageList[privated.visitedPageList.length-1]
+                    }
                 }
             }
             else
@@ -99,11 +104,11 @@ ApplicationWindow {
                         windsDialogs.show("Нет доступа к интернету",0)
                         break;
                         }
-                        busyIndicator.visible =false;
                     } else {
                         windsDialogs.show("Нет доступа к интернету",0)
                         loader.goTo("qrc:/loginanDregister.qml")
                     }
+                    busyIndicator.visible =false;
                 }
             }
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -113,8 +118,7 @@ ApplicationWindow {
 
     Loader {
         id: imagePicker
-        source: event_handler.currentOSys() == 1? "AndImagePicker.qml": (event_handler.currentOSys() == 2? "IOsImagesPicker.qml": "")
-
+        source: event_handler.currentOSys()==1? "AndImagePicker.qml":(event_handler.currentOSys()==2? "IOsImagesPicker.qml":"")
         onLoaded: {
             item.onChange= function(urlimg) {
                 loader.avatarPath = urlimg
@@ -146,7 +150,7 @@ ApplicationWindow {
     }
 
     P2PStyle.HeaderSplash {
-        visible:loader.source!="qrc:/start.qml"
+        visible: loader.source != "qrc:/start.qml" && loader.source != "qrc:/qrscan.qml";
         id: partnerHeader;
     }
 
