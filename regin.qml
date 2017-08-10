@@ -138,7 +138,7 @@ Item {
                 }
 
                 TextField {
-                  id: textFieldInRow
+                  id: textRow
                   height: parent.height;
                   placeholderText: plaseholder;
 
@@ -146,11 +146,21 @@ Item {
                     left: parent.left;
                     right:parent.right
                     leftMargin: facade.toPx(80)
-                    rightMargin:0.09*parent.width
+                    rightMargin:0.09*parent.width;
                   }
 
                   color: "#FFFFFF"
-                  onTextChanged: loader.fields[index]=text;
+
+                  Connections {
+                      target: partnerHeader
+                      onPageChanged: {
+                          textRow.text=loader.fields[index]
+                      }
+                  }
+
+                  onTextChanged: {
+                      loader.fields[index] = text;
+                  }
 
                   inputMethodHints: index == 4? Qt.ImhFormattedNumbersOnly:Qt.ImhNone
 
@@ -158,10 +168,10 @@ Item {
 
                   echoMode:index==2? TextInput.Password: TextInput.Normal
 
-                  font.pixelSize: facade.doPx(28)
-                  font.family:trebu4etMsNorm.name
+                  font.pixelSize: facade.doPx(28);
+                  font.family: trebu4etMsNorm.name
 
-                  background:Rectangle{opacity:0}
+                  background: Rectangle{opacity:0}
                 }
             }
 

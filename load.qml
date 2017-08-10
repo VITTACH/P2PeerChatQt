@@ -1,6 +1,8 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import"P2PStyle"as P2PStyle
+import"js/xHRQuery.js" as XHRQuery
+import"js/URLQuery.js" as URLQuery
 
 ApplicationWindow {
     width: 500
@@ -31,7 +33,7 @@ ApplicationWindow {
         anchors.fill: parent
         property real dpi: 0
 
-        property var avatarPath: "qrc:/ui/profiles/default/Human.png"
+        property var avatarPath: "qrc:/ui/profiles/default/Human.png";
         property string urlLink: "";
         property bool avatar
         property bool dialog
@@ -40,6 +42,8 @@ ApplicationWindow {
         property string tel
         property string login;
         property string famil;
+        property string aToken
+        property string userId
         property bool context;
 
         property var chats:[];
@@ -70,9 +74,30 @@ ApplicationWindow {
                         source=privated.visitedPageList[privated.visitedPageList.length-1]
                     }
                 }
-            }
-            else
+            } else {
                 strartPage();
+            }
+        }
+        function loginByVk() {
+            function callback(request) {
+                if(request.status == 200) {
+                    var obj= JSON.parse(request.responseText)
+                    loader.login = obj.response[0].first_name
+                    loader.famil = obj.response[0].last_name;
+                    loader.avatarPath = obj.response[0].photo_100
+                    logon(loader.login, loader.famil)
+                }
+                else {
+                    console.log('BUG:',request.status,request.statusText)
+                }
+            }
+
+            var params = {
+                user_ids: loader.userId,
+                fields: 'photo_100',
+                name_case: 'Nom'
+            }
+            XHRQuery.sendXHR('POST', "https://api.vk.com/method/users.get?access_token=" + loader.aToken, callback, URLQuery.serializeParams(params))
         }
         function logon(phone, password) {
             var request = new XMLHttpRequest();var response;
@@ -87,9 +112,9 @@ ApplicationWindow {
                             loader.famil = obj.family
                             loader.login = obj.login;
                             loader.tel = obj.name
-                        }
-                        else
+                        } else {
                             response = 0;
+                        }
                         switch(response){
                         case 1:
                         loader.goTo("qrc:/chat.qml");
@@ -99,6 +124,19 @@ ApplicationWindow {
                         break;
                         case 0:
                         windsDialogs.show("Вы не зарегистрированы!",0)
+                        if(loader.source!="qrc:/loginanDregister.qml") {
+                            loader.goTo("qrc:/loginanDregister.qml")
+                        }
+                        if (loader.aToken != "") {
+                            loader.fields[0]=phone
+                            loader.fields[1]=password
+                        } else {
+                            loader.fields[0]=""
+                            loader.fields[1]=""
+                            loader.fields[2]=password
+                            loader.fields[4]=phone
+                        }
+                        partnerHeader.page=1;
                         break;
                         case -1:
                         windsDialogs.show("Нет доступа к интернету",0)
@@ -130,9 +168,9 @@ ApplicationWindow {
     function strartPage() {
         var phone = event_handler.loadValue("phone");
         var passw = event_handler.loadValue("passw");
-        if (passw != "" && phone != "") {loader.logon(phone, passw);}
+        if (passw != "" && phone != "") {loader.logon(phone , passw);}
         else
-        privated.visitedPageList.push(loader.source="qrc:/start.qml")
+        privated.visitedPageList.push(loader.source ="qrc:/start.qml")
     }
 
     function listenBack(event) {

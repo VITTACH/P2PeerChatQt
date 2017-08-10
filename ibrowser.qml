@@ -8,7 +8,7 @@ WebView {
     anchors.fill:parent
 
     property var authRegExpVK: {
-        /http:\/\/oauth.vk.com\/blank.html/;
+        /^https:\/\/oauth.vk.com\/blank.html/;
     }
     property var authRegExpFB: {
         /^https:\/\/www.facebook.com\/connect\/login_success.html/;
@@ -16,7 +16,7 @@ WebView {
 
     function successAuth(site) {
         loader.urlLink="about:blank"
-        loader.goTo("qrc:/chat.qml")
+        loader.loginByVk()
     }
 
     onLoadingChanged: {
