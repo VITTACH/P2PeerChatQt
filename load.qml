@@ -59,6 +59,10 @@ ApplicationWindow {
 
         property variant fields: ["", "", "", "", ""];
 
+        function restores() {
+            fields = ["", "", "" , "" , ""]
+            tel = login = famil = userId = aToken = ""
+        }
         function goTo(page) {
             privated.visitedPageList.push(source=page)
         }
@@ -82,10 +86,11 @@ ApplicationWindow {
             function callback(request) {
                 if(request.status == 200) {
                     var obj= JSON.parse(request.responseText)
+                    loader.tel = obj.response[0].mobile_phone
                     loader.login = obj.response[0].first_name
                     loader.famil = obj.response[0].last_name;
                     loader.avatarPath = obj.response[0].photo_100
-                    logon(loader.login, loader.famil)
+                    logon(loader.tel, userId)
                 }
                 else {
                     console.log('BUG:',request.status,request.statusText)
@@ -93,8 +98,8 @@ ApplicationWindow {
             }
 
             var params = {
+                fields: 'photo_100,contacts',
                 user_ids: loader.userId,
-                fields: 'photo_100',
                 name_case: 'Nom'
             }
             XHRQuery.sendXHR('POST', "https://api.vk.com/method/users.get?access_token=" + loader.aToken, callback, URLQuery.serializeParams(params))
@@ -124,19 +129,18 @@ ApplicationWindow {
                         break;
                         case 0:
                         windsDialogs.show("Вы не зарегистрированы!",0)
-                        if(loader.source!="qrc:/loginanDregister.qml") {
-                            loader.goTo("qrc:/loginanDregister.qml")
-                        }
+                        if(loader.source!="qrc:/loginanDregister.qml")
+                        loader.goTo("qrc:/loginanDregister.qml")
                         if (loader.aToken != "") {
-                            loader.fields[0]=phone
-                            loader.fields[1]=password
+                            loader.fields[0]=loader.login
+                            loader.fields[1]=loader.famil
                         } else {
                             loader.fields[0]=""
                             loader.fields[1]=""
                             loader.fields[2]=password
-                            loader.fields[4]=phone
                         }
-                        partnerHeader.page=1;
+                        loader.fields[4]=phone;
+                        partnerHeader.page = 1;
                         break;
                         case -1:
                         windsDialogs.show("Нет доступа к интернету",0)

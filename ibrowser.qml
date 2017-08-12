@@ -16,6 +16,7 @@ WebView {
 
     function successAuth(site) {
         loader.urlLink="about:blank"
+        busyIndicator.visible = true
         loader.loginByVk()
     }
 

@@ -408,13 +408,22 @@ Drawer {
         ListView {
             id: listMenu
             width: parent.width
-            height: facade.toPx(320)
+            property bool isShowed: false
+            height: {
+                var length = (parent.height - getProfHeight() - facade.toPx(540));
+                var count = Math.ceil(length / facade.toPx(80))
+                if (count >navigateDownModel.count)
+                   count = navigateDownModel.count;
+                if (count < 1) count = 1;
+                (count)*facade.toPx(80)
+            }
             anchors.bottom: parent.bottom
             boundsBehavior: Flickable.StopAtBounds;
 
             Component.onCompleted: currentIndex=-1;
 
             model:  ListModel {
+                    id: navigateDownModel
                     ListElement{image:"";target:""}
                     ListElement{image:"";target:""}
                     ListElement{
@@ -426,12 +435,12 @@ Drawer {
                         target: qsTr("Выйти")
                     }
                 }
-            delegate: Rectangle {
-                width: parent.width;
+            delegate: Rectangle{
+                width: parent.width
                 height: facade.toPx(80)
                 color: ListView.isCurrentItem? "lightgrey": "#F2F2F2"
                 MouseArea {
-                    id: menMouseArea
+                    id:menMouseArea
                     anchors.fill:parent
                     onExited: {listMenu.currentIndex=-1}
                     onEntered: {
@@ -439,7 +448,7 @@ Drawer {
                     }
 
                     onClicked: {
-                        settingDrawer.close();
+                        settingDrawer.close()
                         switch(index) {
                         case 2:
                             if(settingDrawer.position<1)
@@ -451,6 +460,7 @@ Drawer {
                             settingDrawer.visible(false)
                             event_handler.saveSet("phone", "")
                             event_handler.saveSet("passw", "")
+                            loader.restores()
                             loader.goTo("qrc:/loginanDregister.qml");
                         }
                         if (index == 1)
@@ -504,6 +514,7 @@ Drawer {
 
                             placeholderText: "Найти друзей";
                             onAccepted:filterList(text.toLowerCase())
+                            rightPadding: parent.parent.radius
                             font.bold: true
                             font.pixelSize: facade.doPx(20);
                             font.family: trebu4etMsNorm.name

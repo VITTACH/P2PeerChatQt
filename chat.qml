@@ -1,12 +1,11 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
-import"P2PStyle"as P2PStyle
+import QtGraphicalEffects 1.0
+import "P2PStyle" as P2PStyle
 
 Item {
     id: rootChat
-
     property var select: []
-
     property bool input: false
 
     TextArea {
@@ -17,6 +16,15 @@ Item {
         font {
             pixelSize: facade.doPx(26)
             family:trebu4etMsNorm.name
+        }
+    }
+
+    function checkMessage() {
+        if (screenTextFieldPost.text.length >= 1) {
+            buferText.text=screenTextFieldPost.text
+            appendMessage(buferText.text,0.0);
+            chatScreenList.positionViewAtEnd()
+            screenTextFieldPost.text = "";
         }
     }
 
@@ -93,7 +101,7 @@ Item {
         width:parent.width
         anchors {
             top:parent.top
-            bottom: flickableTextArea.top;
+            bottom:flickTextArea.top
             topMargin:partnerHeader.height+facade.toPx(10)
         }
 
@@ -108,43 +116,54 @@ Item {
                 source: image
                 width: facade.toPx(sourceSize.width * 1.2)
                 height:facade.toPx(sourceSize.width * 1.2)
-                y: parentText.y +parentText.height-sourceSize.height
+                y: parentText.y + parentText.height-height
                 x: (parentText.x == facade.toPx(30))?
                         parentText.x - width/2:
                             parentText.x +parentText.width - width/2
+            }
+            DropShadow {
+                radius: 30
+                samples: 30
+                anchors {
+                    fill:parentText
+                }
+                color: "#80000000";
+                source: parentText;
             }
             TextArea {
                 id: parentText
                 text: someText
                 readOnly: true
+                leftPadding: facade.toPx(25);
+                rightPadding:facade.toPx(25);
 
                 background: Rectangle {
                     color: backgroundColor
-                    radius:facade.toPx(25)
+                    radius: parentText.leftPadding;
 
                     MouseArea {
                     anchors.fill: {parent}
                     onClicked: {
                         var p= 0
                         if (select.length > 0) {
-                            p= select.indexOf(index)
+                            p=select.indexOf(index)
                             if (p >= 0)
                             select.splice(p,1)
                             else {
                             select.push(index)
-                            contextDialog.menu = 0;;
-                            parent.color = "#FFDC86"
+                            contextDialog.menu = 0;
+                            parent.color ="#FFDC86"
                             return
                             }
                         }
                         parent.color=backgroundColor
                         if (select.length < 1)
-                            contextDialog.menu = 1;;
+                            contextDialog.menu = 1;
                         }
                         onPressAndHold: {
                             select.push(index)
-                            contextDialog.menu = 0;;
-                            parent.color = "#FFDC86"
+                            contextDialog.menu = 0;
+                            parent.color ="#FFDC86"
                         }
                     }
                 }
@@ -170,7 +189,7 @@ Item {
         anchors {
             leftMargin: 0.02*parent.width;
             rightMargin:0.02*parent.width;
-            top: flickableTextArea.top
+            top:flickTextArea.top
             bottom:parent.bottom;
             right:parent.right
             left:parent.left
@@ -178,14 +197,24 @@ Item {
         radius:facade.toPx(25)
     }
 
+    DropShadow {
+        radius: 40
+        samples: 40
+        anchors {
+            fill:flickTextArea
+        }
+        color: "#80000000";
+        source: flickTextArea;
+    }
     Row {
-        id: flickableTextArea;
+        id: flickTextArea;
         spacing: facade.toPx(20);
         anchors {
             bottomMargin: input?rootChat.height*0.45:facade.toPx(25)
             horizontalCenter: parent.horizontalCenter
             bottom:parent.bottom;
         }
+
         Flickable {
             width: rootChat.width-chatScreenButton.width-facade.toPx(50)
             height: (screenTextFieldPost.lineCount < 5)? facade.toPx(70)+
@@ -196,23 +225,49 @@ Item {
 
             TextArea.flickable:TextArea
             {
+                property bool pressing;
+                id: screenTextFieldPost
+                wrapMode: TextEdit.Wrap
                 verticalAlignment: {Text.AlignVCenter;}
                 placeholderText: "Написать...";
+                leftPadding: (facade.toPx(25));
+                rightPadding:(facade.toPx(25));
                 font {
                     pixelSize: facade.doPx(26);
                     family: trebu4etMsNorm.name
                 }
-                id: screenTextFieldPost
-                wrapMode: TextEdit.Wrap
                 background: Rectangle {
                     border {
                         color:"#C8C8C8"
                         width:2
                     }
                 }
+                Keys.onReleased: {
+                    if (event.key === Qt.Key_Control) {
+                        if (pressing) {
+                            checkMessage()
+                            pressing = false
+                        } else {
+                            pressing = true;
+                        }
+                    } if (event.key == Qt.Key_Return) {
+                        pressing = false
+                    }
+                }
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_Control) {
+                        pressing = false
+                    } if (event.key == Qt.Key_Return) {
+                        if (pressing) {
+                            checkMessage()
+                            pressing = false
+                        } else {
+                            pressing = true;
+                        }
+                    }
+                }
             }
         }
-
         Button {
             contentItem: Text {
                 elide:Text.ElideRight
@@ -226,14 +281,7 @@ Item {
             height:facade.toPx(sourceSize.height* 1.5);
             width: facade.toPx(sourceSize.width * 1.5);
             }
-            onClicked: {
-            if (screenTextFieldPost.text.length >= 1) {
-                buferText.text=screenTextFieldPost.text
-                appendMessage(buferText.text,0.0);
-                chatScreenList.positionViewAtEnd()
-                screenTextFieldPost.text = "";
-                }
-            }
+            onClicked: checkMessage()
             background: Rectangle {opacity: 0}
             width: buttonImage.width;
             height:buttonImage.height
