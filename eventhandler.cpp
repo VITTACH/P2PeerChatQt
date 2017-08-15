@@ -5,6 +5,16 @@
 #include <QApplication>
 #include <QStandardPaths>
 #include <QCoreApplication>
+#ifdef Q_OS_ANDROID
+  #include <QtAndroidExtras/QAndroidJniObject>
+#endif
+
+
+QString EventHandler::myError() {
+#ifdef Q_OS_ANDROID
+     return QAndroidJniObject::callStaticObjectMethod("quickandroid/QuickAndroidActivity", "getMeLog", "()Ljava/lang/String;").toString();
+#endif
+}
 
 int EventHandler::currentOSys() {
     return currentSys;

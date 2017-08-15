@@ -10,6 +10,7 @@ Button {
     background: Rectangle {color : "#AC404040";}
 
     visible: loader.avatar
+    onClicked: loader.avatar = false;
     Connections {
         target: loader;
         onAvatarChanged: {loader.focus = !false}
@@ -23,7 +24,7 @@ Button {
         title: "Выберите изображение"
         nameFilters:["Изображения (*.jpg *.png)","Все файлы (*)"]
         onAccepted: {
-            loader.avatarPath = fileUrl
+            loader.avatarPath=fileUrl
             event_handler.sendAvatar(decodeURIComponent(fileUrl))
         }
     }

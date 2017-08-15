@@ -3,7 +3,6 @@ package quickandroid;
 import java.net.*;
 import java.math.BigInteger;
 import java.io.OutputStream;
-import java.io.FileOutputStream;
 import org.json.simple.JSONObject;
 import java.nio.channels.SocketChannel;
 
@@ -13,67 +12,66 @@ import org.qtproject.qt5.android.QtNative;
 
 import java.util.Random;
 import java.util.ArrayList;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import org.json.simple.parser.JSONParser;
 import java.nio.channels.ServerSocketChannel;
 
+import org.fourthline.cling.android.AndroidUpnpService;
 /**
  * Created by VITTACH on 11.04.2017
  */
 public class Peerequest {
-    static Integer port;
-    static boolean flag;
-    static FileOutputStream fos;
-    static Activity activ =QtNative.activity();
-    static String rmsg = new String ("");
-    static UpForward pf= new UpForward();
-    static BigInteger pbk =new BigInteger("1");
-    static BigInteger mod =new BigInteger("1");
-    static RsaEncrypt my_RSA =new RsaEncrypt();
-    static RsaEncrypt himRSA =new RsaEncrypt();
-    static JSONParser parser =new JSONParser();
-    static JSONObject jsonObj=new JSONObject();
+    static String stackTrace = "";
+    Integer port;
+    boolean flag;
+    Activity activ =QtNative.activity();
+    String rmsg = new String ("");
+    UpForward pf= new UpForward();
+    BigInteger pbk =new BigInteger("1");
+    BigInteger mod =new BigInteger("1");
+    RsaEncrypt my_RSA =new RsaEncrypt();
+    RsaEncrypt himRSA =new RsaEncrypt();
+    JSONParser parser =new JSONParser();
+    JSONObject jsonObj=new JSONObject();
 
-    static void start() {
+    private String adaptExceptionsToLog(Exception exception) {
+        StringWriter writer = new StringWriter();
+        PrintWriter printToWriter = new PrintWriter(writer);
+        exception.printStackTrace(printToWriter);
+        printToWriter.flush();
+        return writer.toString();
+    }
+
+    public void start(AndroidUpnpService androidUpnpService) {
         my_RSA.init(512);
         pbk = my_RSA.getPublic();
         mod = my_RSA.getModulu();
         himRSA.setPublic(BigInteger.ONE);
-        try {
-            fos = activ.openFileOutput("ip2p.txt", Context.MODE_APPEND);
-        } catch (Exception e) {}
 
         try {
-            startHoper();
+            startHoper(androidUpnpService);
         } catch (Exception exception) {
-            try {
-                fos.write(exception.toString().getBytes());
-            } catch (Exception e) {}
+            stackTrace += "only start res=" + adaptExceptionsToLog(exception);
         }
     }
 
-    static void sendPublicModuleKey() {
+    public void sendPublicModuleKey() {
         jsonObj.clear();
         jsonObj.put(("pubKey"),pbk.toString());
         jsonObj.put(("module"),mod.toString());
         try {
             pf.sendUdp(jsonObj.toJSONString());
         } catch (IOException exception) {
-            try {
-                fos.write(exception.toString().getBytes());
-            } catch (Exception e) {}
             exception.printStackTrace();
         }
     }
 
-    static void RSASending(String data) {
+    public void RSASending(String data) {
         try {
             if (data.contains("ip")) {
                 jsonObj=(JSONObject)parser.parse(data);
                 pf.port=Integer.valueOf((String)jsonObj.get("pt"));
-                pf.IPAddress = InetAddress.getByName((String)jsonObj.get("ip"));
-                System.out.println("port=" + pf.port + ", ip= " + pf.IPAddress);
+                pf.IPAddress=InetAddress.getByName((String)jsonObj.get("ip"));
 
                 // TODO this code need function
                 sendPublicModuleKey();
@@ -93,17 +91,14 @@ public class Peerequest {
             else pf.sendUdp(data);
         }
         catch (Exception except) {
-            try {
-                fos.write(except.toString().getBytes());
-            } catch (Exception e) {}
             //e.printStackTrace();
         }
     }
 
-    static void startHoper() throws Exception {
+    public void startHoper(AndroidUpnpService upnpServices) throws Exception {
         flag = true;
         try {
-            pf.runUPnP();
+            pf.runUPnP(upnpServices);
             while(flag) {
                 try {
                     String recv = (String)pf.recieve();
@@ -133,18 +128,14 @@ public class Peerequest {
                     //e.printStackTrace();
                 }
             }
-        } catch (IOException except1){
-            try {
-                fos.write(except1.toString().getBytes());
-            } catch (Exception e) {}
-            except1.printStackTrace();
+        } catch (Exception exception){
+            stackTrace += "startHoper res=" + adaptExceptionsToLog(exception);
         } finally {
-            fos.close();
             pf.closeAllUpnp();
         }
     }
 
-    static String RSARecive(){
+    public String RSARecive(){
         String tempResult= "";
         if(!rmsg.equals("")) {
             tempResult = rmsg;

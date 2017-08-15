@@ -5,13 +5,13 @@ import "P2PStyle" as P2PStyle
 
 Item {
     id: rootChat
-    property var select: []
-    property bool input: false
 
+    property var select:[]
+    property bool input:false
     TextArea {
         id: buferText;
         visible: false
-        wrapMode:TextEdit.Wrap
+        wrapMode: {TextEdit.Wrap}
         width: 3*rootChat.width/4
         font {
             pixelSize: facade.doPx(26)
@@ -19,10 +19,10 @@ Item {
         }
     }
 
-    function checkMessage() {
+    function checkMessage(flag) {
         if (screenTextFieldPost.text.length >= 1) {
             buferText.text=screenTextFieldPost.text
-            appendMessage(buferText.text,0.0);
+            appendMessage(buferText.text,flag)
             chatScreenList.positionViewAtEnd()
             screenTextFieldPost.text = "";
         }
@@ -64,11 +64,16 @@ Item {
                 select.sort();
                 for(var i=0; i<select.length; i++)
                     chatModel.remove(select[i]-i);
+                for(var i=1;i<chatModel.count;i++)
+                    chatModel.setProperty(i, "mySpacing",
+                            (chatModel.get(i-1).textColor == "#000000"&&chatModel.get(i).textColor == "#960f133d")||
+                            (chatModel.get(i).textColor == "#000000"&&chatModel.get(i-1).textColor == "#960f133d") ?
+                                facade.toPx(50): facade.toPx(20))
                 contextDialog.menu = 1;
                 contextDialog.action=0;
                 select=[];
             }
-            if(contextDialog.action==4)
+            if(contextDialog.action==3)
             event_handler.copyText(chatModel.get(select[select.length-1]).someText)
             if(contextDialog.action==8)
                 chatModel.clear()
@@ -84,8 +89,11 @@ Item {
         chatModel.append({
             someText: newmessage,
             myheight: buferText.contentHeight,
-            mySpacing:(flag==0)==true? 2: facade.toPx(20),
-            textColor:(flag==0)==true?"#960f133d":"black",
+            mySpacing: (chatModel.count > 0?
+                          ((chatModel.get(chatModel.count - 1).textColor == "#000000" && flag === 0)||
+                           (chatModel.get(chatModel.count - 1).textColor == "#960f133d" && flag == 1)?
+                               facade.toPx(50): facade.toPx(20)): facade.toPx(20)),
+            textColor: (flag == 0)? "#960f133d":"#000000",
             backgroundColor:(flag==0)?"#ECECEC":"#DBEEFC",
             HorizonPosition: facade.toPx(30)+flag*(parent.width/4-facade.toPx(60)),
             image: flag === 0? "ui/chat/leFtMessage.png": "ui/chat/rightMessag.png"
@@ -105,6 +113,8 @@ Item {
             topMargin:partnerHeader.height+facade.toPx(10)
         }
 
+        displayMarginBeginning: {parent.height/2}
+
         model: ListModel {
             id: chatModel;
         }
@@ -114,6 +124,7 @@ Item {
                      mySpacing + facade.doPx(26)+ myheight
             Image {
                 source: image
+                anchors.bottom: parent.bottom
                 width: facade.toPx(sourceSize.width * 1.2)
                 height:facade.toPx(sourceSize.width * 1.2)
                 y: parentText.y + parentText.height-height
@@ -179,6 +190,9 @@ Item {
                 }
 
                 verticalAlignment: Text.AlignVCenter
+                anchors.bottom: {
+                    parent.bottom
+                }
                 color: textColor;
                 x:HorizonPosition
             }
@@ -187,8 +201,6 @@ Item {
 
     Rectangle {
         anchors {
-            leftMargin: 0.02*parent.width;
-            rightMargin:0.02*parent.width;
             top:flickTextArea.top
             bottom:parent.bottom;
             right:parent.right
@@ -207,6 +219,7 @@ Item {
         source: flickTextArea;
     }
     Row {
+        clip:true
         id: flickTextArea;
         spacing: facade.toPx(20);
         anchors {
@@ -216,7 +229,7 @@ Item {
         }
 
         Flickable {
-            width: rootChat.width-chatScreenButton.width-facade.toPx(50)
+            width: rootChat.width-chatScreenButton.width-facade.toPx(50);
             height: (screenTextFieldPost.lineCount < 5)? facade.toPx(70)+
                     (screenTextFieldPost.lineCount - 1)* facade.doPx(33):
                      facade.toPx(70)+4*facade.doPx(33);
@@ -225,7 +238,8 @@ Item {
 
             TextArea.flickable:TextArea
             {
-                property bool pressing;
+                property bool pressCtrl
+                property bool pressEntr
                 id: screenTextFieldPost
                 wrapMode: TextEdit.Wrap
                 verticalAlignment: {Text.AlignVCenter;}
@@ -242,29 +256,23 @@ Item {
                         width:2
                     }
                 }
-                Keys.onReleased: {
-                    if (event.key === Qt.Key_Control) {
-                        if (pressing) {
-                            checkMessage()
-                            pressing = false
-                        } else {
-                            pressing = true;
-                        }
-                    } if (event.key == Qt.Key_Return) {
-                        pressing = false
-                    }
+                Keys.onReturnPressed: {
+                    pressCtrl = true;
+                    event.accepted = false;
                 }
                 Keys.onPressed: {
-                    if (event.key === Qt.Key_Control) {
-                        pressing = false
-                    } if (event.key == Qt.Key_Return) {
-                        if (pressing) {
-                            checkMessage()
-                            pressing = false
-                        } else {
-                            pressing = true;
+                    if (event.key == Qt.Key_Control)
+                        pressEntr =true
+                }
+                Keys.onReleased: {
+                    if (event.key == Qt.Key_Control
+                     || event.key == Qt.Key_Return) {
+                        if (pressCtrl && pressEntr) {
+                            checkMessage(0)
                         }
                     }
+                    pressCtrl = false
+                    pressEntr = false
                 }
             }
         }
@@ -281,8 +289,8 @@ Item {
             height:facade.toPx(sourceSize.height* 1.5);
             width: facade.toPx(sourceSize.width * 1.5);
             }
-            onClicked: checkMessage()
             background: Rectangle {opacity: 0}
+            onClicked:checkMessage(0)
             width: buttonImage.width;
             height:buttonImage.height
             id:chatScreenButton

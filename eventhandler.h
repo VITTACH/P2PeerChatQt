@@ -24,6 +24,7 @@ signals:
     void reciving(QString response);
 
 public slots:
+    QString myError();
     QString loadValue(QString);
     void saveSet(QString , QString);
     void display(QString , QString);

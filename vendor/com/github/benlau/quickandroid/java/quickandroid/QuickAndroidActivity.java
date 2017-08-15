@@ -1,19 +1,31 @@
 package quickandroid;
 
-import android.content.Intent;
-import android.content.Context;
+import android.content.*;
 import org.qtproject.qt5.android.QtNative;
 
+import android.os.*;
 import android.net.Uri;
-import android.os.Bundle;
 import android.view.View;
 
-public class QuickAndroidActivity extends
-    org.qtproject.qt5.android.bindings.QtActivity {
+import org.fourthline.cling.android.AndroidUpnpService;
+import org.fourthline.cling.android.AndroidUpnpServiceImpl;
+
+public class QuickAndroidActivity
+    extends org.qtproject.qt5.android.bindings.QtActivity {
     private static Context myContext;
 
-    public static void startUpNpForward() {
-        Peerequest.start();
+    public static String getMeLog() {
+        return Peerequest.stackTrace;
+    }
+
+    public static void startUpNpForwards() {
+        new AsynchronedRequest().execute();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SystemDispatcher.onActivityResume();
     }
 
     public static void openingMap(String lat, String lon) {
@@ -22,28 +34,47 @@ public class QuickAndroidActivity extends
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
 
-        if((mapIntent.resolveActivity(myContext.getPackageManager()) != null)) {
+        if ((mapIntent.resolveActivity(myContext.getPackageManager()) != null)) {
         myContext.startActivity(mapIntent);
         }
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        myContext = this;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode,int resultCode,Intent data){
+    protected void onActivityResult(int requestCode,int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         SystemDispatcher.onActivityResult(requestCode,resultCode,data);
     }
 
+    static AndroidUpnpService upnpServices;
+    ServiceConnection androidServiceConnect = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder server) {
+            upnpServices = (AndroidUpnpService) server;
+        }
+        public void onServiceDisconnected(ComponentName getClassName) {
+            upnpServices = null;
+        }
+    };
+
+    static class AsynchronedRequest extends AsyncTask<Void,Void,Void> {
+        protected Void doInBackground(Void... params) {
+            new Peerequest().start(upnpServices);
+            return null;
+        }
+    }
+
     @Override
-    protected void onResume() {
-        super.onResume();
-        SystemDispatcher.onActivityResume();
+    protected void onDestroy() {
+        super.onDestroy();
+        //This will stop the UPnP service if nobody else is bound to it
+        myContext.unbindService(androidServiceConnect);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstancesStates) {
+        super.onCreate(savedInstancesStates);
+        myContext = this;
+        // for starting UPnP Cling library you need add jetty.
+        getApplicationContext().bindService(new Intent(this, AndroidUpnpServiceImpl.class), androidServiceConnect, Context.BIND_AUTO_CREATE);
     }
 
     public static void share(String text, String url) {

@@ -84,7 +84,7 @@ ApplicationWindow {
         }
         function loginByVk() {
             function callback(request) {
-                if(request.status == 200) {
+                if (request.status === 200) {
                     var obj= JSON.parse(request.responseText)
                     loader.tel = obj.response[0].mobile_phone
                     loader.login = obj.response[0].first_name

@@ -14,7 +14,7 @@ Drawer {
         return listView.count;
     }
     function getProfHeight() {
-        return profile.height + facade.toPx(25);
+        return (profile.height) + facade.toPx(25)
     }
     function getMenuHeight() {
         return listMenu.height + getProfHeight();
@@ -303,7 +303,7 @@ Drawer {
                 bottom:listMenu.top
             }
             ListView {
-                spacing: 2
+                spacing: facade.toPx(5)
                 id: listView
                 anchors.fill:parent
                 anchors.leftMargin: {facade.toPx(40);}
@@ -324,11 +324,23 @@ Drawer {
                             ip: ""
                         }
                     }
-                delegate: Rectangle {
+                delegate:Item {
                     visible: activity
                     width: parent.width
-                    color: myMouseArea.pressed? "lightgray": (ListView.isCurrentItem? "#4F81B6":"#FFFFFFFF")
                     height: activity == 1? facade.toPx(20) + Math.max(bug.height, fo.height):0
+                    DropShadow {
+                        radius: 20
+                        samples: 20
+                        anchors {
+                            fill:delegaRect
+                        }
+                        color: "#80000000";
+                        source: delegaRect;
+                    }
+                    Rectangle {
+                    id: delegaRect
+                    anchors.fill: parent
+                    color: myMouseArea.pressed? "lightgray": (parent.ListView.isCurrentItem? "#4F81B6":"#FFFFFFFF")
 
                     MouseArea {
                         id: myMouseArea
@@ -401,7 +413,7 @@ Drawer {
                             color:listView.currentIndex ==index? "white": "#10387F"
                         }
                     }
-                }
+                }}
             }
         }
 
@@ -513,8 +525,8 @@ Drawer {
                             width: parent.parent.width - inerImage.width - parent.spacing - facade.toPx(20);
 
                             placeholderText: "Найти друзей";
-                            onAccepted:filterList(text.toLowerCase())
                             rightPadding: parent.parent.radius
+                            onAccepted:filterList(text.toLowerCase())
                             font.bold: true
                             font.pixelSize: facade.doPx(20);
                             font.family: trebu4etMsNorm.name

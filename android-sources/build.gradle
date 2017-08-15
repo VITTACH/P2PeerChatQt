@@ -32,9 +32,9 @@ allprojects {
     }
 }
 
-apply plugin: 'com.google.gms.google-services'
-
 apply plugin: 'com.android.application'
+
+apply plugin: 'com.google.gms.google-services'
 
 dependencies {
     compile 'com.google.firebase:firebase-messaging:9.8.0'

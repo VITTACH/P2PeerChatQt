@@ -29,7 +29,7 @@ Drawer {
         visible: vtate
         anchors.fill: parent;
         DropShadow {
-            radius: 12
+            radius: 20
             samples: 20
             color: ("#80000000");
             source: {background;}
@@ -52,10 +52,12 @@ Drawer {
             id: background
             height:parent.height-menuDrawer.getMenuHeight()
             width:facade.toPx(40)
+            color: "transparent";
             y: menuDrawer.getProfHeight()
             anchors.left: {back.right}
 
             Background {
+                opacity: 0.6
                 anchors.fill: {parent}
                 Component.onCompleted:setColors([[191,192,193],[255,255,255]],90)
             }

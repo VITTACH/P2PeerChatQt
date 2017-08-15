@@ -66,7 +66,16 @@ DISTFILES += \
     android-sources/libs/seamless-http-1.1.1.jar\
     android-sources/libs/Seamless-UTil-1.1.1.jar\
     android-sources/java/com/lasconic/QShareUtils.java\
-    android-sources/res/drawable/splash.xml
+    android-sources/res/drawable/splash.xml \
+    android-sources/libs/jetty-Client-8.22016.jar \
+    android-sources/libs/jetty-continuation.8.jar \
+    android-sources/libs/jetty-http.81121106.jar \
+    android-sources/libs/jetty-io.8.1.8121106.jar \
+    android-sources/libs/jetty-security.21106.jar \
+    android-sources/libs/jetty-SerVer.821106.jar \
+    android-sources/libs/jetty-servLet.1.1106.jar \
+    android-sources/libs/jetty-Util.8.1121106.jar \
+    android-sources/libs/servlet-api-3.0.jar
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
