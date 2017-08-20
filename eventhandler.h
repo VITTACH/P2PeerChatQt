@@ -9,7 +9,10 @@ using namespace std;
 class EventHandler: public QObject {
     Q_OBJECT
 
+private:
+    static EventHandler* __instance;
 public:
+    static EventHandler* Instance();
     explicit EventHandler (QObject *parent = 0);
 
     bool isPin = 0;

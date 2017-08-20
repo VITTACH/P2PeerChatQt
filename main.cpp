@@ -41,16 +41,16 @@ int main(int argc,char **argv)
     QApplication a(argc,argv);
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    EventHandler eventhandler;
+    EventHandler *eventhandler = EventHandler::Instance();
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:///");
     QQuickStyle::setStyle("P2PStyle");
-    eventhandler.currentSys= currentSys;
+    eventhandler->currentSys = currentSys;
 
     qmlRegisterType<ImageProcessor>("ImageProcessor",1,0,"ImageProcessor");
 
     QQmlContext *context = engine.rootContext();
-    context->setContextProperty("event_handler", &eventhandler);
+    context->setContextProperty("event_handler",  eventhandler);
 
     #if !defined(Q_OS_ANDROID)
     Client client;
@@ -70,8 +70,8 @@ int main(int argc,char **argv)
 
     client.connectedToIp(ip, pt);
 
-    eventhandler.connect(&eventhandler, SIGNAL(sendMessages(QString)), &client, SLOT(startTransfer(QString)));
-    eventhandler.connect(&client, SIGNAL(recieved(QString, QString)), &eventhandler, SLOT(display(QString, QString)));
+    eventhandler->connect(eventhandler, SIGNAL(sendMessages(QString)), &client, SLOT(startTransfer(QString)));
+    eventhandler->connect(&client, SIGNAL(recieved(QString, QString)), eventhandler, SLOT(display(QString, QString)));
     #endif
     /*----------------------------------------------------------------------------------------------------------------
     Client client;

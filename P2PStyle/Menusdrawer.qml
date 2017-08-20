@@ -8,6 +8,7 @@ Drawer {
     property bool find: true
     height: {parent.height;}
     width: Math.min(facade.toPx(708), 0.85 * parent.width);
+    property alias cindex: listView.currentIndex;
     background: Rectangle {color: "transparent";}
 
     function getPeersCount() {

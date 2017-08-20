@@ -17,13 +17,20 @@ import org.json.simple.parser.JSONParser;
 import java.nio.channels.ServerSocketChannel;
 
 import org.fourthline.cling.android.AndroidUpnpService;
+
+
+class UtilsToJavaNative {
+    public static native void sendEventReceiveMsg(String m);
+}
+
 /**
- * Created by VITTACH on 11.04.2017
+ *Created by VITTACH on 11.04.2017
  */
 public class Peerequest {
     static String stackTrace = "";
     Integer port;
     boolean flag;
+    boolean handsShakeDone = true;
     Activity activ =QtNative.activity();
     String rmsg = new String ("");
     UpForward pf= new UpForward();
@@ -34,22 +41,22 @@ public class Peerequest {
     JSONParser parser =new JSONParser();
     JSONObject jsonObj=new JSONObject();
 
-    private String adaptExceptionsToLog(Exception exception) {
-        StringWriter writer = new StringWriter();
+    private String adaptExceptionsToLog(Exception excepts) {
+        StringWriter writer=new StringWriter();
         PrintWriter printToWriter = new PrintWriter(writer);
-        exception.printStackTrace(printToWriter);
+        excepts.printStackTrace(printToWriter);
         printToWriter.flush();
         return writer.toString();
     }
 
-    public void start(AndroidUpnpService androidUpnpService) {
+    public void start(AndroidUpnpService androidsUpnpServ) {
         my_RSA.init(512);
         pbk = my_RSA.getPublic();
         mod = my_RSA.getModulu();
         himRSA.setPublic(BigInteger.ONE);
 
         try {
-            startHoper(androidUpnpService);
+            startHoper(androidsUpnpServ);
         } catch (Exception exception) {
             stackTrace += "only start res=" + adaptExceptionsToLog(exception);
         }
@@ -115,13 +122,18 @@ public class Peerequest {
                             pf.port = pf.RemPort;
                             pf.IPAddress = pf.RemIPAddress;
 
-                            sendPublicModuleKey();
+                            if (handsShakeDone) {
+                                sendPublicModuleKey();
+                                handsShakeDone= false;
+                            }
 
                             pf.IPAddress=oldAddr;
                             pf.port=oldPort;
                             continue;
                         }
                         rmsg=new String(my_RSA.decrypt(new BigInteger(recv)).toByteArray());
+                        // magical call c++ listener from java layer
+                        UtilsToJavaNative.sendEventReceiveMsg(rmsg);
                     }
                 }
                 catch (SocketTimeoutException except) {

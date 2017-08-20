@@ -21,28 +21,16 @@ Drawer {
     Connections {
         target: drawed;
         onPositionChanged: {
-            if (loader.source!="qrc:/chat.qml"||menuDrawer.position<1) position=0
+            if (loader.source != "qrc:/chat.qml" || menuDrawer.position < 1) position = 0
         }
     }
 
     Item {
         visible: vtate
-        anchors.fill: parent;
-        DropShadow {
-            radius: 20
-            samples: 20
-            color: ("#80000000");
-            source: {background;}
-            anchors {
-                fill: background;
-                topMargin: (radius/2)
-                bottomMargin: (radius/2);
-            }
-        }
-
+        anchors.fill: parent
         Rectangle {
             id: back
-            color: "#FEEDEEF0"
+            color:"#727273"
             width:parent.width
             y: menuDrawer.getProfHeight()
             height:parent.height-menuDrawer.getProfHeight()
@@ -52,27 +40,15 @@ Drawer {
             id: background
             height:parent.height-menuDrawer.getMenuHeight()
             width:facade.toPx(40)
-            color: "transparent";
+            color: "#90FFFFFF"
             y: menuDrawer.getProfHeight()
             anchors.left: {back.right}
-
-            Background {
-                opacity: 0.6
-                anchors.fill: {parent}
-                Component.onCompleted:setColors([[191,192,193],[255,255,255]],90)
-            }
         }
 
-        /*
-        Rectangle {
-            color:"#60FFFFFF"
-            anchors.fill:back
-        }
-        */
         ListView {
             clip: true
             id: listMenu
-            anchors.fill:back
+            anchors.fill: back
             delegate: Item {
                 id: element
                 width: parent.width;

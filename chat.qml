@@ -11,17 +11,19 @@ Item {
     TextArea {
         id: buferText;
         visible: false
-        wrapMode: {TextEdit.Wrap}
-        width: 3*rootChat.width/4
+        wrapMode: {TextEdit.Wrap;}
+        width: 3*rootChat.width/4;
         font {
-            pixelSize: facade.doPx(26)
-            family:trebu4etMsNorm.name
+        pixelSize: facade.doPx(26)
+        family:trebu4etMsNorm.name
         }
     }
 
     function checkMessage(flag) {
         if (screenTextFieldPost.text.length >= 1) {
             buferText.text=screenTextFieldPost.text
+            loader.chats[menuDrawer.cindex].message.push({text: buferText.text , flag: flag});
+
             appendMessage(buferText.text,flag)
             chatScreenList.positionViewAtEnd()
             screenTextFieldPost.text = "";
@@ -42,16 +44,35 @@ Item {
     }
 
     Connections {
+        target: menuDrawer
+        onCindexChanged: {
+            select = [];
+            busyIndicator.visible=true
+            chatModel.clear();
+            var i = menuDrawer.cindex;
+            for (var j=0; j < loader.chats[i].message.length; j++) {
+                buferText.text = loader.chats[i].message[j].text;
+                appendMessage(loader.chats[i].message[j].text,loader.chats[i].message[j].flag)
+            }
+            busyIndicator.visible=!busyIndicator.visible;
+        }
+    }
+
+    Connections {
         target: event_handler;
         onReciving: {
             var i
-            for(i=0; i<loader.chats.length; i++) {
-                if (response.phone === loader.chats[i].phone) break;
-            }
-            loader.chats[i].message.push(buferText.text = response);
-            if (i == menuDrawer.getCurPeerInd()) {
-                appendMessage(response, 1)
-                chatScreenList.positionViewAtEnd()
+            if(response!="") {
+                var obj = JSON.parse(response)
+                for (i=0; i < loader.chats.length; i++) {
+                    if (obj.phone==loader.chats[i].phone)
+                        break;
+                }
+                loader.chats[i].message.push({text: buferText.text = (obj.message) , flag: 1})
+                if ( i === menuDrawer.getCurPeerInd() ) {
+                    appendMessage(obj.message, 1)
+                    chatScreenList.positionViewAtEnd();
+                }
             }
         }
     }
@@ -62,9 +83,11 @@ Item {
             if(contextDialog.action==1)
             {
                 select.sort();
-                for(var i=0; i<select.length; i++)
-                    chatModel.remove(select[i]-i);
-                for(var i=1;i<chatModel.count;i++)
+                for(var i=0; i<select.length; i++) {
+                    chatModel.remove(select[i] - i);
+                    loader.chats[menuDrawer.cindex].message.splice(select[i] - i,1)
+                }
+                for(var i=1; i<chatModel.count; i++)
                     chatModel.setProperty(i, "mySpacing",
                             (chatModel.get(i-1).textColor == "#000000"&&chatModel.get(i).textColor == "#960f133d")||
                             (chatModel.get(i).textColor == "#000000"&&chatModel.get(i-1).textColor == "#960f133d") ?
@@ -75,14 +98,17 @@ Item {
             }
             if(contextDialog.action==3)
             event_handler.copyText(chatModel.get(select[select.length-1]).someText)
-            if(contextDialog.action==8)
+            if(contextDialog.action==8) {
+                loader.chats[menuDrawer.cindex].message=[]
                 chatModel.clear()
+                select=[];
+            }
         }
     }
 
     function parseToJSON(message, phone, ip) {
         var JSONobj
-        return JSON.stringify(JSONobj = {message: message, phone: phone , ip: ip});
+        return JSON.stringify(JSONobj = {message: message, phone:phone,/*ip:ip*/});
     }
 
     function appendMessage(newmessage, flag) {
@@ -101,7 +127,7 @@ Item {
         if(flag == 0) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0));
     }
 
-    Component.onCompleted: menuDrawer.getMePeers()
+    Component.onCompleted:menuDrawer.getMePeers()
 
     ListView {
         id: chatScreenList

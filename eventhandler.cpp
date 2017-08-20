@@ -5,14 +5,39 @@
 #include <QApplication>
 #include <QStandardPaths>
 #include <QCoreApplication>
+
 #ifdef Q_OS_ANDROID
+  #include <jni.h>
   #include <QtAndroidExtras/QAndroidJniObject>
+
+  #ifdef __cplusplus
+  extern "C" {
+  #endif
+
+  JNIEXPORT void JNICALL
+  Java_quickandroid_UtilsToJavaNative_sendEventReceiveMsg(JNIEnv *env, jobject obj, jstring msg)
+  {
+      QString messages(env->GetStringUTFChars(msg, 0));
+      EventHandler *instance =EventHandler::Instance();
+      emit instance->reciving(messages);
+  }
+
+  #ifdef __cplusplus
+  }
+  #endif
 #endif
 
+EventHandler* EventHandler::__instance = NULL;
+EventHandler* EventHandler::Instance() {
+  if(__instance==0){
+     __instance=new EventHandler;
+  }
+  return __instance;
+}
 
 QString EventHandler::myError() {
 #ifdef Q_OS_ANDROID
-     return QAndroidJniObject::callStaticObjectMethod("quickandroid/QuickAndroidActivity", "getMeLog", "()Ljava/lang/String;").toString();
+     return QAndroidJniObject::callStaticObjectMethod("quickandroid/QuickAndroidActivity", "getStacTrace", "()Ljava/lang/String;").toString();
 #endif
 }
 
@@ -21,7 +46,12 @@ int EventHandler::currentOSys() {
 }
 
 void EventHandler::sendMsgs(QString msgtext) {
+#ifdef Q_OS_ANDROID
+    QAndroidJniObject msg=QAndroidJniObject::fromString(msgtext);
+    QAndroidJniObject::callStaticMethod<void>("quickandroid/QuickAndroidActivity", "sendMsg", "(Ljava/lang/String;)V", msg.object<jstring>());
+#else
     emit sendMessages(msgtext);
+#endif
 }
 
 QString EventHandler::loadValue(QString key) {
@@ -49,13 +79,13 @@ void EventHandler::display(QString message, QString sender) {
 
 EventHandler::EventHandler(QObject*parent): QObject(parent) {
     setting = new QSettings("p2peerio",QSettings::IniFormat);
-    if(!currentSys) {
-    QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).value(0);
-    QDir dir(path);
-    if (!dir.exists())
-        dir.mkpath(path);
-    if (!path.isEmpty() && !path.endsWith("/"))
-        path += "/" + PathFile;
-        PathFile = path;
+    if (currentSys == 0) {
+        QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).value(0);
+        QDir dir(path);
+        if(!dir.exists())
+            dir.mkpath(path);
+        if(!path.isEmpty()&&!path.endsWith("/"))
+            path += "/" + PathFile;
+            PathFile = path;
     }
 }

@@ -55,8 +55,8 @@ public class UpForward {
 
     public String recieve() throws IOException {
         clientSoket.receive(receivePacket);
-        RemPort=(int)clientSoket.getPort();
-        this.RemIPAddress = (InetAddress) clientSoket.getInetAddress();
+        this.RemPort = receivePacket.getPort();
+        this.RemIPAddress= receivePacket.getAddress();
 
         String modifiedSentence = new String(receivePacket.getData(),0, receivePacket.getLength());
         System.out.println("From server:"+modifiedSentence);

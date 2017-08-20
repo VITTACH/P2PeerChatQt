@@ -13,8 +13,9 @@ import org.fourthline.cling.android.AndroidUpnpServiceImpl;
 public class QuickAndroidActivity
     extends org.qtproject.qt5.android.bindings.QtActivity {
     private static Context myContext;
+    static Peerequest androidUpnpInstance;
 
-    public static String getMeLog() {
+    public static String getStacTrace() {
         return Peerequest.stackTrace;
     }
 
@@ -26,6 +27,10 @@ public class QuickAndroidActivity
     protected void onResume() {
         super.onResume();
         SystemDispatcher.onActivityResume();
+    }
+
+    public static void sendMsg(String msg) {
+        androidUpnpInstance.RSASending(msg);
     }
 
     public static void openingMap(String lat, String lon) {
@@ -57,7 +62,7 @@ public class QuickAndroidActivity
 
     static class AsynchronedRequest extends AsyncTask<Void,Void,Void> {
         protected Void doInBackground(Void... params) {
-            new Peerequest().start(upnpServices);
+            (androidUpnpInstance=new Peerequest()).start(upnpServices);
             return null;
         }
     }
