@@ -62,7 +62,7 @@ Item {
         }
 
         delegate: Column {
-            width: parent.width
+            width: listView.width
             height: index == 3?
                         facade.toPx(110):
                         (index==0? pageWidth:facade.toPx(89))
@@ -153,10 +153,10 @@ Item {
                     switch(index) {
                     case 3:
                         if (loader.fields[0].length <= 10) {
-                        windsDialogs.show("Телефон не правильный",0)
+                            windowsDialogs.show("Телефон не правильный",0)
                         }
                         else if(loader.fields[1].length<5) {
-                        windsDialogs.show("Пароль < 5ти символов",0)
+                            windowsDialogs.show("Пароль < 5ти символов",0)
                         }
                         else {
                         var telephone = loader.fields[0];

@@ -10,12 +10,12 @@ Item {
     property bool input:false
     TextArea {
         id: buferText;
-        visible: false
         wrapMode: {TextEdit.Wrap;}
         width: 3*rootChat.width/4;
+        visible: false
         font {
-        pixelSize: facade.doPx(26)
-        family:trebu4etMsNorm.name
+            pixelSize: facade.doPx(26)
+            family:trebu4etMsNorm.name
         }
     }
 
@@ -27,19 +27,6 @@ Item {
             appendMessage(buferText.text,flag)
             chatScreenList.positionViewAtEnd()
             screenTextFieldPost.text = "";
-        }
-    }
-
-    Timer {
-        running: true
-        interval: 100
-        onTriggered:{
-            if(menuDrawer.getPeersCount()>0) {
-            partnerHeader.phot = menuDrawer.getPeersModel(0,"image")
-            partnerHeader.stat = menuDrawer.getPeersModel(0, "port") == 0? "Offline": "Online"
-            partnerHeader.text = menuDrawer.getPeersModel(0, "login") + " " + menuDrawer.getPeersModel(0, "famil")
-            }
-            else start()
         }
     }
 
@@ -89,8 +76,8 @@ Item {
                 }
                 for(var i=1; i<chatModel.count; i++)
                     chatModel.setProperty(i, "mySpacing",
-                            (chatModel.get(i-1).textColor == "#000000"&&chatModel.get(i).textColor == "#960f133d")||
-                            (chatModel.get(i).textColor == "#000000"&&chatModel.get(i-1).textColor == "#960f133d") ?
+                            (chatModel.get(i-1).textColor == "#000000"&&chatModel.get(i).textColor=="#960f133d")||
+                            (chatModel.get(i).textColor == "#000000"&&chatModel.get(i-1).textColor=="#960f133d") ?
                                 facade.toPx(50): facade.toPx(20))
                 contextDialog.menu = 1;
                 contextDialog.action=0;
@@ -158,15 +145,6 @@ Item {
                         parentText.x - width/2:
                             parentText.x +parentText.width - width/2
             }
-            DropShadow {
-                radius: 30
-                samples: 30
-                anchors {
-                    fill:parentText
-                }
-                color: "#80000000";
-                source: parentText;
-            }
             TextArea {
                 id: parentText
                 text: someText
@@ -226,13 +204,13 @@ Item {
     }
 
     Rectangle {
+        radius:facade.toPx(25)
         anchors {
             top:flickTextArea.top
             bottom:parent.bottom;
             right:parent.right
             left:parent.left
         }
-        radius:facade.toPx(25)
     }
 
     DropShadow {
@@ -249,46 +227,57 @@ Item {
         id: flickTextArea;
         spacing: facade.toPx(20);
         anchors {
-            bottomMargin: input?rootChat.height*0.45:facade.toPx(25)
+            bottomMargin: input? rootChat.height * 0.45: facade.toPx(25);
             horizontalCenter: parent.horizontalCenter
             bottom:parent.bottom;
         }
 
         Flickable {
-            width: rootChat.width-chatScreenButton.width-facade.toPx(50);
-            height: (screenTextFieldPost.lineCount < 5)? facade.toPx(70)+
-                    (screenTextFieldPost.lineCount - 1)* facade.doPx(33):
-                     facade.toPx(70)+4*facade.doPx(33);
+            TextArea.flickable:TextArea {
+                property bool pressCtrl: false;
+                property bool pressEntr: false;
 
-            flickableDirection:Flickable.VerticalFlick;
-
-            TextArea.flickable:TextArea
-            {
-                property bool pressCtrl
-                property bool pressEntr
-                id: screenTextFieldPost
-                wrapMode: TextEdit.Wrap
-                verticalAlignment: {Text.AlignVCenter;}
-                placeholderText: "Написать...";
-                leftPadding: (facade.toPx(25));
-                rightPadding:(facade.toPx(25));
-                font {
-                    pixelSize: facade.doPx(26);
-                    family: trebu4etMsNorm.name
-                }
+                verticalAlignment: Text.AlignVCenter;
                 background: Rectangle {
                     border {
-                        color:"#C8C8C8"
-                        width:2
+                        color: "#C8C8C8"
+                        width :2
                     }
                 }
+
+                id: screenTextFieldPost;
+                wrapMode: TextEdit.Wrap;
+
+                font.pixelSize: facade.doPx(26)
+                font.family:trebu4etMsNorm.name
+
+                placeholderText: event_handler.currentOSys() === 0? ("Ctrl+Enter для отправки..."): "Написать...";
+
+                leftPadding: (facade.toPx(25));
+                rightPadding:(facade.toPx(25));
+
+                onTextChanged: {
+                    if(length > 200)
+                    text =text.substring(0,200)
+                    cursorPosition = length
+                }
+
+                onActiveFocusChanged: {
+                    if (activeFocus && event_handler.currentOSys() ==1) {
+                        input = true;
+                    } else {
+                        input = false
+                    }
+                }
+
                 Keys.onReturnPressed: {
                     pressCtrl = true;
                     event.accepted = false;
                 }
                 Keys.onPressed: {
-                    if (event.key == Qt.Key_Control)
+                    if (event.key ==Qt.Key_Control) {
                         pressEntr =true
+                    }
                 }
                 Keys.onReleased: {
                     if (event.key == Qt.Key_Control
@@ -301,6 +290,11 @@ Item {
                     pressEntr = false
                 }
             }
+            width: rootChat.width-chatScreenButton.width-facade.toPx(50);
+            height: (screenTextFieldPost.lineCount < 5)? facade.toPx(70)+
+                    (screenTextFieldPost.lineCount - 1)* facade.doPx(33):
+                     facade.toPx(70)+4*facade.doPx(33);
+            flickableDirection:Flickable.VerticalFlick;
         }
         Button {
             contentItem: Text {

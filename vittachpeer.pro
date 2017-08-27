@@ -26,6 +26,7 @@ HEADERS += \
     mainwindow.h\
     httpnetwork.h\
     eventhandler.h \
+    phoneswrapper.h \
     imageprocessor.h
 
 SOURCES += \
@@ -35,6 +36,7 @@ SOURCES += \
     mainwindow.cpp\
     httpnetwork.cpp\
     eventhandler.cpp \
+    phoneswrapper.cpp \
     imageprocessor.cpp
 
 RESOURCES += \

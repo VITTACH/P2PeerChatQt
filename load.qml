@@ -8,7 +8,7 @@ ApplicationWindow {
     width: 500
     height: 700
     visible: true
-    title: qsTr("P2P Chat")
+    title: qsTr("p2peerIo")
 
     Timer {
         id: backTimer
@@ -33,19 +33,29 @@ ApplicationWindow {
         anchors.fill: parent
         property real dpi: 0
 
-        property var avatarPath: "qrc:/ui/profiles/default/Human.png";
-        property string urlLink: "";
-        property bool avatar
-        property bool dialog
-        property bool webvew
+        // visible popup windows
+        property bool avatar: false;
+        property bool dialog: false;
+        property bool webvew: false;
+        property bool context: false
 
+        // info about user
         property string tel
         property string login;
         property string famil;
+        property string avatarPath: "qrc:/ui/profiles/default/Human.png";
+
+        // login by social
         property string aToken
         property string userId
-        property bool context;
 
+        property bool isOnline: true
+        property bool isLogin;
+
+        // loading web page
+        property string urlLink: "";
+
+        // history of chats
         property var chats:[];
 
         Keys.onReleased: listenBack(event);
@@ -60,23 +70,26 @@ ApplicationWindow {
         property variant fields: ["", "", "", "", ""];
 
         function restores() {
-            fields = ["", "", "" , "" , ""]
-            tel = login = famil = userId = aToken = ""
+            loader.isLogin = false
+            loader.fields= ["","","","",""]
+            loader.tel = ""
+            loader.login = ""
+            loader.famil = ""
+            loader.userId= ""
+            loader.aToken= ""
         }
         function goTo(page) {
             privated.visitedPageList.push(source=page)
         }
         function back() {
-            if (privated.visitedPageList.length > 0) {
-                if (source != "qrc:/start.qml") {
-                    if (source == "qrc:/loginanDregister.qml") {
-                        if (partnerHeader.page == 1) {
-                            partnerHeader.page = partnerHeader.page-1;
-                        }
-                    } else {
-                        privated.visitedPageList.pop()
-                        source=privated.visitedPageList[privated.visitedPageList.length-1]
+            if (privated.visitedPageList.length > 1) {
+                if (source == "qrc:/loginanDregister.qml") {
+                    if (partnerHeader.page == 1) {
+                        partnerHeader.page = partnerHeader.page-1;
                     }
+                } else {
+                    privated.visitedPageList.pop()
+                    source = privated.visitedPageList[privated.visitedPageList.length - 1]
                 }
             } else {
                 strartPage();
@@ -89,11 +102,11 @@ ApplicationWindow {
                     loader.tel = obj.response[0].mobile_phone
                     loader.login = obj.response[0].first_name
                     loader.famil = obj.response[0].last_name;
-                    loader.avatarPath = obj.response[0].photo_100
+                    loader.avatarPath = obj.response[0].photo_100;
                     logon(loader.tel, userId)
                 }
                 else {
-                    console.log('BUG:',request.status,request.statusText)
+                    console.log(request.status,request.statusText)
                 }
             }
 
@@ -116,20 +129,22 @@ ApplicationWindow {
                             var obj = JSON.parse(request.responseText)
                             loader.famil = obj.family
                             loader.login = obj.login;
-                            loader.tel = obj.name
+                            loader.tel=obj.name;
                         } else {
                             response = 0;
                         }
                         switch(response){
                         case 1:
-                        loader.goTo("qrc:/chat.qml");
+                        loader.isLogin = !false;
+                        goTo("qrc:/profile.qml")
                         event_handler.sendMsgs(phone)
                         event_handler.saveSet("passw", password)
                         event_handler.saveSet("phone", phone)
                         break;
                         case 0:
-                        windsDialogs.show("Вы не зарегистрированы!",0)
-                        if(loader.source!="qrc:/loginanDregister.qml")
+                        loader.isLogin = false;
+                        windowsDialogs.show("Вы не зарегистрированы!",0)
+                        if(loader.source != "qrc:/loginanDregister.qml")
                         loader.goTo("qrc:/loginanDregister.qml")
                         if (loader.aToken != "") {
                             loader.fields[0]=loader.login
@@ -143,14 +158,15 @@ ApplicationWindow {
                         partnerHeader.page = 1;
                         break;
                         case -1:
-                        windsDialogs.show("Нет доступа к интернету",0)
+                        windowsDialogs.show("Нет доступа к интернету",0)
                         break;
                         }
                     } else {
-                        windsDialogs.show("Нет доступа к интернету",0)
+                        loader.isLogin = false;
+                        windowsDialogs.show("Нет доступа к интернету",0)
                         loader.goTo("qrc:/loginanDregister.qml")
                     }
-                    busyIndicator.visible =false;
+                    busyIndicator.visible=false
                 }
             }
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -172,9 +188,12 @@ ApplicationWindow {
     function strartPage() {
         var phone = event_handler.loadValue("phone");
         var passw = event_handler.loadValue("passw");
-        if (passw != "" && phone != "") {loader.logon(phone , passw);}
-        else
-        privated.visitedPageList.push(loader.source ="qrc:/start.qml")
+        if (passw != "" && phone!= "") {
+            loader.logon(phone, passw)
+        } else {
+            loader.source="qrc:/start.qml";
+            loader.goTo(loader.source)
+        }
     }
 
     function listenBack(event) {
@@ -201,15 +220,13 @@ ApplicationWindow {
         id: trebu4etMsNorm
     }
 
+    P2PStyle.Menusdrawer {id: menuDrawer}
+
     P2PStyle.BusyIndicator {id: busyIndicator}
 
     P2PStyle.Avatardialogs {id: avatardialogs}
 
-    P2PStyle.Settingdrawei {id: settingDrawer}
-
-    P2PStyle.WindsDialogs {id: windsDialogs}
+    P2PStyle.WindsDialogs {id: windowsDialogs}
 
     P2PStyle.ContextMenu {id: contextDialog}
-
-    P2PStyle.Menusdrawer {id: menuDrawer}
 }

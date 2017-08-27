@@ -4,51 +4,40 @@ import QtGraphicalEffects 1.0
 
 Drawer {
     id: drawed
-    property bool vtate:false
-    dragMargin: {this.vtate? facade.toPx(40): 0}
+    property var vtate:false;
 
-    function visible(state) {this.vtate = state}
+    dragMargin: {this.vtate? facade.toPx(40):0}
 
-    background: Rectangle {color: "transparent"}
+    function visible(state) {this.vtate =state}
 
-    height: parent.height
-    width: {Math.min(facade.toPx(617), 0.74*parent.width)}
-
-    MouseArea {
-        anchors.fill: parent
-    }
+    background: Rectangle {color:"transparent"}
 
     Connections {
-        target: drawed;
+        target: drawed
         onPositionChanged: {
-            if (loader.source != "qrc:/chat.qml" || menuDrawer.position < 1) position = 0
+            if (menuDrawer.position <= 0.100) {
+                position = 0
+            }
         }
     }
 
-    Item {
-        visible: vtate
-        anchors.fill: parent
-        Rectangle {
-            id: back
-            color:"#727273"
-            width:parent.width
-            y: menuDrawer.getProfHeight()
-            height:parent.height-menuDrawer.getProfHeight()
-        }
+    closePolicy:{
+        (Popup.CloseOnPressOutside | Popup.CloseOnEscape);
+    }
 
-        Rectangle {
-            id: background
-            height:parent.height-menuDrawer.getMenuHeight()
-            width:facade.toPx(40)
-            color: "#90FFFFFF"
-            y: menuDrawer.getProfHeight()
-            anchors.left: {back.right}
-        }
+    height: {parent.height;}
+    width: {Math.min(facade.toPx(647), 0.74*parent.width)}
+
+    Rectangle {
+        color: "#727273"
+        width: parent.width
+        y: {menuDrawer.getProfHeight()}
+        height: parent.height - menuDrawer.getProfHeight()
 
         ListView {
             clip: true
             id: listMenu
-            anchors.fill: back
+            anchors.fill: parent
             delegate: Item {
                 id: element
                 width: parent.width;
@@ -172,7 +161,6 @@ Drawer {
                     target: qsTr("Назад")
                 }
             }
-            // spacing: 2
         }
     }
 }

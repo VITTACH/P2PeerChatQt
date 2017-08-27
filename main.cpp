@@ -11,6 +11,7 @@
 #include <QScreen>
 #include <QQmlContext>
 #include <QQuickStyle>
+#include <phoneswrapper.h>
 #include <QQmlApplicationEngine>
 
 int currentSys = 0;
@@ -50,6 +51,8 @@ int main(int argc,char **argv)
     qmlRegisterType<ImageProcessor>("ImageProcessor",1,0,"ImageProcessor");
 
     QQmlContext *context = engine.rootContext();
+    Wrapper jwr;
+    context->setContextProperty("caller", &jwr);
     context->setContextProperty("event_handler",  eventhandler);
 
     #if !defined(Q_OS_ANDROID)

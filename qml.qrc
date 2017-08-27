@@ -60,5 +60,8 @@
         <file>ibrowser.qml</file>
         <file>webview.qml</file>
         <file>qrscan.qml</file>
+        <file>profile.qml</file>
+        <file>ui/buttons/trashButton.png</file>
+        <file>ui/buttons/dialerButton.png</file>
     </qresource>
 </RCC>

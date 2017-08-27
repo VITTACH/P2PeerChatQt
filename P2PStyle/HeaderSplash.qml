@@ -10,36 +10,37 @@ Button {
     property string phot
 
     DropShadow {
-        radius: 20
+        radius: 15
         samples: 16
         anchors {
             fill:headerRect
         }
+        verticalOffset: 10;
         color: "#60000000";
         source: headerRect;
     }
     Rectangle {
         id: headerRect
+        color: "#4F81B6"
         width: parent.width
         height: facade.toPx(h - 10)
-        color: loader.source == "qrc:/loginanDregister.qml"? ("#3589E9"): ("#4F81B6");
 
         Item {
             id: inerItem
             Row {
                 spacing: facade.toPx(30)
-                anchors.left: loader.source == "qrc:/chat.qml"? parent.left: undefined
-                anchors.leftMargin: loader.source == "qrc:/chat.qml"?facade.toPx(50):0
-                anchors.centerIn: (loader.source == "qrc:/chat.qml")? undefined:parent
                 anchors {
+                    left: (loader.isLogin)? parent.left:undefined
+                    leftMargin: loader.isLogin? facade.toPx(50):0
+                    centerIn: (loader.isLogin)? undefined: parent
                     verticalCenter: parent.verticalCenter
-                    horizontalCenter: loader.source == "qrc:/chat.qml"?undefined: parent.horizontalCenter
+                    horizontalCenter: loader.isLogin? undefined: parent.horizontalCenter
                 }
 
                 Item {
                     width: bug.width
                     height:parent.height
-                    visible: (loader.source == "qrc:/chat.qml" && rootItem.phot != "")==true? true: false
+                    visible: loader.isLogin && rootItem.phot !=""
 
                     OpacityMask {
                         source: bug
@@ -83,13 +84,14 @@ Button {
                         width: Math.min(inerItem.width - bug.width - facade.toPx(90), this.implicitWidth)
                         text: {rootItem.text.replace("\n" , "");}
 
-                        font.pixelSize: loader.source == "qrc:/chat.qml"? facade.doPx(28):facade.doPx(34)
+                        font.pixelSize: loader.isLogin? facade.doPx(28): facade.doPx(34)
                         font.family:trebu4etMsNorm.name
                     }
                     Text {
-                        color:"#FFFFFF"
-                        visible: loader.source == "qrc:/chat.qml"
-                        text: {rootItem.stat.replace("\n" , "");}
+                        text: str
+                        visible: loader.isLogin
+                        color: str == "Online"? "white":"darkgrey"
+                        property string str: rootItem.stat.replace("\n" , "")
 
                         font.bold: true
                         font.pixelSize: facade.doPx(20)
@@ -98,8 +100,8 @@ Button {
                 }
             }
             height: parent.height
-            anchors.left: page != 0 || loader.source == ("qrc:/chat.qml")?hambrgrButton.right:parent.left
-            anchors.right:page != 0 || loader.source == ("qrc:/chat.qml")?hamMoreButton.left:parent.right
+            anchors.left: page != 0 || loader.isLogin? hambrgrButton.right: parent.left;
+            anchors.right:page != 0 || loader.isLogin? hamMoreButton.left: parent.right;
         }
 
         DropShadow {
@@ -113,7 +115,7 @@ Button {
         Button {
             x: facade.toPx(40)
             id: hambrgrButton;
-            visible: (page != 0 || loader.source == ("qrc:/chat.qml"))
+            visible: (page != 0 || loader.isLogin)
             width: Math.max(hambrgrButtonImage.width, facade.toPx(70))
             height:Math.max(hambrgrButtonImage.height,facade.toPx(70))
             anchors.verticalCenter: parent.verticalCenter
@@ -125,14 +127,14 @@ Button {
                 height:facade.toPx(sourceSize.height*1.2)
                 width: facade.toPx(sourceSize.width *1.2)
                 fillMode: Image.PreserveAspectFit;
-                source: "qrc:/ui/buttons/" + (page === 1? "back": "infor") + "Button.png";
+                source: "qrc:/ui/buttons/" + (page == 1? "back": "infor") + "Button.png"
             }
             onClicked: page==1? page--: menuDrawer.open()
         }
 
         Button {
             id: hamMoreButton;
-            visible:loader.source == "qrc:/chat.qml";
+            visible: (loader.source == "qrc:/chat.qml");
             width: Math.max(hamMoreButtonImage.width, facade.toPx(70))
             height:Math.max(hamMoreButtonImage.height,facade.toPx(70))
             x: parent.width-facade.toPx(20)-width;
@@ -148,14 +150,14 @@ Button {
                 fillMode: Image.PreserveAspectFit;
             }
             onClicked: {
-                contextDialog.xPosition = rootItem.width- contextDialog.w- facade.toPx(20)
+                contextDialog.xPosition = rootItem.width-contextDialog.w-facade.toPx(20)
                 contextDialog.yPosition = facade.toPx(20)
                 loader.context = true;
             }
         }
     }
 
-    contentItem: Text{opacity:0}
+    contentItem: Text {opacity : 0.0;}
     width: parent.width
     height: facade.toPx(h)
     background: Rectangle {

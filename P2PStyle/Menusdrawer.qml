@@ -5,11 +5,32 @@ import QtGraphicalEffects 1.0
 Drawer {
     id: drawer
     clip: true
+
+    Connections {
+        target: drawer;
+        onPositionChanged: {
+            if (loader.isLogin!=true) {
+                position = 0
+            } else if (position == 1) {
+                settingDrawer.visible(true);
+                getMePeers()
+            } else if (position == 0) {
+                settingDrawer.visible(false)
+                loader.focus = !false
+            }
+        }
+    }
+
+    Connections {
+        target: loader
+        onIsLoginChanged: if(loader.isLogin) {getMePeers()}
+    }
+
     property bool find: true
-    height: {parent.height;}
-    width: Math.min(facade.toPx(708), 0.85 * parent.width);
     property alias cindex: listView.currentIndex;
     background: Rectangle {color: "transparent";}
+    height: {parent.height;}
+    width: Math.min(facade.toPx(738), 0.85 * parent.width);
 
     function getPeersCount() {
         return listView.count;
@@ -34,24 +55,6 @@ Drawer {
         if(field == "port")
             results = usersModel.get(index).port;
         return results
-    }
-
-    Connections {
-        target: drawer;
-        onPositionChanged: {
-            if (loader.source != "qrc:/chat.qml")
-                position = 0
-            else if (position == 1) {
-                settingDrawer.visible(true);
-                getMePeers()
-            }
-            else if (position == 0) {
-                settingDrawer.visible(false)
-            }
-            else if (position <= 1) {
-                settingDrawer.close()
-            }
-        }
     }
 
     function findPeer(phone)
@@ -81,7 +84,6 @@ Drawer {
                 if (request.status&&request.status==200) {
                     obj = JSON.parse(request.responseText)
                     for (var i = 0; i < obj.length; i++) {
-                        if (obj[i].name===loader.tel) continue
                         index = findPeer(obj[i].name)
                         if (usersModel.count<1||index<0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
@@ -94,6 +96,8 @@ Drawer {
                                 ip: obj[i].ip,
                                 activity: 1
                             });
+                            if (obj[i].name == loader.tel)
+                                listView.currentIndex=i
                         }else {
                             usersModel.setProperty(index, "port", obj[i].port)
                             usersModel.setProperty(index, "ip", obj[i].ip)
@@ -112,11 +116,13 @@ Drawer {
         end:Qt.point(parent.width, 0)
         gradient: Gradient {
             GradientStop {
-                position: 0.9; color: "#FEBCBCBC"
+                position: 1.0; color: "#FEE5E5E5"
             }
+            /*
             GradientStop {
                 position: 1.0; color: "#CEFFFFFF"
             }
+            */
         }
 
         Rectangle {
@@ -129,10 +135,64 @@ Drawer {
             }
         }
         Rectangle {
-            height: 1
+            height: 4
             color: "#FFFFC129";
             width: parent.width
             anchors.top: {glass.top;}
+        }
+
+        Rectangle {
+            id: rightRect
+            color: loader.isOnline? "#C16068": "lightgray"
+            width: (drawer.width-avatarButton.width)/2 + facade.toPx(14)
+            anchors {
+                top: profile.top
+                right: parent.right
+                bottom: profile.bottom
+                topMargin: 1*profile.height/4
+            }
+            Rectangle {
+                height: 3
+                width: parent.width
+            }
+        }
+        Rectangle {
+            id: leftRect;
+            color: loader.isOnline? "#C16068": "lightgray"
+            width: (drawer.width-avatarButton.width)/2 + facade.toPx(15)
+            anchors {
+                top: profile.top
+                bottom: profile.bottom
+                topMargin: 3*profile.height/4-myRow.height
+            }
+            Rectangle {
+                height: 3
+                width: parent.width
+            }
+        }
+        Canvas {
+            id: canva
+            anchors {
+                top: rightRect.top
+                left: leftRect.right
+                right: rightRect.left
+                bottom:profile.bottom
+            }
+            Connections {
+                target: loader
+                onIsOnlineChanged: {canva.requestPaint();}
+            }
+            onPaint: {
+                var context = getContext("2d")
+                context.reset();
+                context.fillStyle=loader.isOnline?"#C16068": "lightgray"
+                context.moveTo(0,height - leftRect.height)
+                context.lineTo(0,height)
+                context.lineTo(width, height);
+                context.lineTo(width, 0)
+                context.closePath();
+                context.fill();
+            }
         }
 
         Column {
@@ -140,7 +200,7 @@ Drawer {
             y: facade.toPx(25)
             spacing: facade.toPx(10);
             anchors{
-                horizontalCenter:parent.horizontalCenter
+                horizontalCenter: parent.horizontalCenter;
             }
             Item{
                 width: {parent.width}
@@ -151,7 +211,10 @@ Drawer {
                 anchors.horizontalCenter: parent.horizontalCenter;
                 spacing: {facade.toPx(30) - (facade.toPx(708) - drawer.width)/facade.toPx(10)}
                 Column {
-                    anchors.verticalCenter: parent.verticalCenter;
+                    anchors {
+                        top: parent.top
+                        topMargin: facade.toPx(10)
+                    }
                     Text {
                         color: "white"
                         font.bold: true
@@ -159,7 +222,7 @@ Drawer {
                         style: Text.Raised;
                         font.family: trebu4etMsNorm.name
                         font.pixelSize: facade.doPx(46);
-                        text: {usersModel.count;}
+                        text: usersModel.count > 0?usersModel.count-1: 0
                         anchors.horizontalCenter:parent.horizontalCenter
                     }
                     Text {
@@ -207,10 +270,18 @@ Drawer {
                         }
                     }
 
+                    DropShadow {
+                        radius: 15
+                        samples: 15
+                        source: big
+                        color:"#90000000"
+                        anchors.fill:big;
+                    }
                     OpacityMask {
+                        id: big
                         source: bag
-                        maskSource: misk
-                        anchors.fill:bag
+                        maskSource: misk;
+                        anchors.fill: bag
                     }
 
                     Image {
@@ -222,7 +293,10 @@ Drawer {
                     }
                 }
                 Column {
-                    anchors.verticalCenter: parent.verticalCenter;
+                    anchors {
+                        bottom: parent.bottom
+                        bottomMargin: facade.toPx(20)
+                    }
                     Text {
                         text: "0"
                         color: "white"
@@ -244,6 +318,7 @@ Drawer {
             }
 
             Row {
+                id: myRow
                 width:firstRow.width
                 Text {
                     text:loader.login+" "+loader.famil
@@ -303,12 +378,24 @@ Drawer {
                 top: profile.bottom
                 bottom:listMenu.top
             }
+            DropShadow {
+                radius: 15
+                samples: 15
+                source: listView
+                color: "#80000000"
+                verticalOffset: 15;
+                anchors {
+                    fill: listView;
+                }
+            }
             ListView {
-                spacing: facade.toPx(5)
                 id: listView
-                anchors.fill:parent
-                anchors.leftMargin: {facade.toPx(40);}
-
+                spacing:facade.toPx(20)
+                anchors {
+                    fill:parent
+                    leftMargin: leftSlider.width
+                }
+                
                 Component.onCompleted:{
                     usersModel.clear();
                 }
@@ -325,100 +412,214 @@ Drawer {
                             ip: ""
                         }
                     }
-                delegate:Item {
+                delegate: Item {
+                    id: baseItem
                     visible: activity
                     width: parent.width
-                    height: activity == 1? facade.toPx(20) + Math.max(bug.height, fo.height):0
-                    DropShadow {
-                        radius: 20
-                        samples: 20
-                        anchors {
-                            fill:delegaRect
-                        }
-                        color: "#80000000";
-                        source: delegaRect;
-                    }
-                    Rectangle {
-                    id: delegaRect
-                    anchors.fill: parent
-                    color: myMouseArea.pressed? "lightgray": (parent.ListView.isCurrentItem? "#4F81B6":"#FFFFFFFF")
-
-                    MouseArea {
-                        id: myMouseArea
-                        anchors.fill:parent
-                        onClicked: {
-                            var json
-                            partnerHeader.text = usersModel.get(index).login+" "+usersModel.get(index).famil
-                            json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
-                            partnerHeader.stat = (json.port == 0) == true? "Offline": "Online"
-                            partnerHeader.phot = usersModel.get(index).image
-                            if (index!=-1) listView.currentIndex = index
-                            event_handler.sendMsgs(JSON.stringify(json))
-                        }
-                    }
-
-                    OpacityMask {
-                        source: bug
-                        maskSource: mask
-                        anchors.fill:bug
-                    }
+                    height: activity==1? facade.toPx(20)+Math.max(bug.height,fo.height):0
 
                     Rectangle {
-                        id: bug
-                        clip: true
-                        smooth: true
-                        visible: false
-                        x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/facade.toPx(5);
-                        width: facade.toPx(100)
-                        height:facade.toPx(100)
-                        anchors.verticalCenter: parent.verticalCenter
+                        color: ("#FF8B0000")
+                        width: parent.height
+                        height:parent.height
                         Image {
-                            source: image
-                            anchors.centerIn: parent
-                            height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
-                            width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                            anchors.centerIn:parent
+                            width: facade.toPx(sourceSize.width)
+                            height: facade.toPx(sourceSize.height)
+                            source: "qrc:/ui/buttons/trashButton.png"
+                        }
+                    }
+                    Rectangle {
+                        color: ("#FF006400")
+                        width: parent.height
+                        height:parent.height
+                        anchors.right: parent.right
+                        Image {
+                            anchors.centerIn:parent
+                            width: facade.toPx(sourceSize.width)
+                            height: facade.toPx(sourceSize.height)
+                            source: "qrc:/ui/buttons/dialerButton.png"
                         }
                     }
 
-                    Image {
-                        id: mask
-                        smooth: true;
-                        visible:false
-                        source:"qrc:/ui/mask/round.png"
-                        sourceSize: {Qt.size(bug.width, bug.height);}
-                    }
-
-                    Column {
-                        id: fo
+                    Rectangle {
+                        clip: true
+                        id: delegaRect
                         width: parent.width
-                        anchors {
-                            left: bug.right
-                            leftMargin: facade.toPx(20)
+                        height: parent.height
+                        color: baseItem.ListView.isCurrentItem? "#547495": "#FFFFFF"
+
+                        Rectangle {
+                            width: 0
+                            height: 0
+                            id: coloresRect
+                            color: baseItem.ListView.isCurrentItem? "#4F81B6" : "#d8d8d8"
+
+                            transform: Translate {
+                                x: -coloresRect.width /2
+                                y: -coloresRect.height/2
+                            }
                         }
-                        anchors.verticalCenter: parent.verticalCenter
-                        Text {
-                            lineHeight: 1.3
-                            text: login+" "+famil;
-                            elide: Text.ElideRight
-                            font.family:trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(24)
-                            width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex ==index? "white": "#10387F"
+
+                        PropertyAnimation {
+                            duration: 500
+                            target: coloresRect;
+                            id: circleAnimation;
+                            properties:("width,height,radius")
+                            from: 0
+                            to: delegaRect.width * 3
+
+                            onStopped: {
+                                coloresRect.width =0
+                                coloresRect.height=0
+                            }
                         }
-                        Text {
-                            text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+": "+port
-                            elide: Text.ElideRight
-                            font.family:trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(24)
-                            width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex ==index? "white": "#10387F"
+
+                        MouseArea {
+                            id: myMouseArea
+                            anchors.fill:parent
+                            onClicked: {
+                                var json
+                                partnerHeader.text = usersModel.get(index).login+" "+usersModel.get(index).famil
+                                json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
+                                partnerHeader.stat = (json.port == 0) == true? "Offline": "Online"
+                                partnerHeader.phot = usersModel.get(index).image
+                                if (index!=-1) listView.currentIndex = index
+                                event_handler.sendMsgs(JSON.stringify(json))
+                                if (loader.source != "qrc:/chat.qml") {
+                                    loader.goTo("qrc:/chat.qml")
+                                }drawer.close()
+                            }
+                            drag.target: parent
+                            drag.axis: Drag.XAxis
+                            drag.minimumX:-height
+                            drag.maximumX: usersModel.get(index).phone != loader.tel? (height): 0;
+                            onExited: {
+                                circleAnimation.stop();
+                            }
+                            onEntered: {
+                                coloresRect.x = mouseX;
+                                coloresRect.y = mouseY;
+                                circleAnimation.start()
+                            }
+                            onReleased: {
+                                if (parent.x >= drag.maximumX) {
+                                    if (usersModel.get(index).phone != loader.tel) {
+                                        usersModel.remove(index)
+                                    }
+                                }
+                                if (parent.x <= drag.minimumX) {
+                                    if (event_handler.currentOSys() != 1)
+                                        Qt.openUrlExternally("tel:" + phone)
+                                    else
+                                        caller.directCall(phone)
+                                }
+                                parent.x=0
+                            }
+                        }
+
+                        OpacityMask {
+                            source: bug
+                            maskSource: mask
+                            anchors.fill:bug
+                        }
+
+                        Rectangle {
+                            id: bug
+                            clip: true
+                            smooth: true
+                            visible: false
+                            x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/facade.toPx(5);
+                            width: facade.toPx(100)
+                            height:facade.toPx(100)
+                            anchors.verticalCenter: parent.verticalCenter
+                            Image {
+                                source: image
+                                anchors.centerIn: parent
+                                height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
+                                width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                            }
+                        }
+
+                        Image {
+                            id: mask
+                            smooth: true;
+                            visible:false
+                            source:"qrc:/ui/mask/round.png"
+                            sourceSize: {Qt.size(bug.width, bug.height);}
+                        }
+
+                        Column {
+                            id: fo
+                            width: parent.width
+                            anchors {
+                                left: bug.right
+                                leftMargin: facade.toPx(20)
+                            }
+                            anchors.verticalCenter: parent.verticalCenter
+                            Text {
+                                lineHeight: 1.3
+                                text: login+" "+famil;
+                                elide: Text.ElideRight
+                                font.family:trebu4etMsNorm.name
+                                font.pixelSize: facade.doPx(24)
+                                width:fo.width-facade.toPx(100)-bug.width
+                                color:listView.currentIndex ==index? "white":"#10387F"
+                            }
+                            Text {
+                                text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+": "+port
+                                elide: Text.ElideRight
+                                font.family:trebu4etMsNorm.name
+                                font.pixelSize: facade.doPx(24)
+                                width:fo.width-facade.toPx(100)-bug.width
+                                color:listView.currentIndex ==index? "white":"#10387F"
+                            }
                         }
                     }
-                }}
+                }
+            }
+        }
+
+        Rectangle {
+            id: leftSlider
+            width: facade.toPx(40)
+            color: loader.isOnline? "#C16068": "darkgray"
+            x: settingDrawer.position == 0?0: settingDrawer.x+settingDrawer.width;
+            anchors.top: {profile.bottom}
+            anchors.bottom: listMenu.top;
+            MouseArea {
+                property int p
+                anchors.fill: parent
+                onPressed: p=mouse.x
+                onPositionChanged: {
+                    if (mouse.x > p)
+                    settingDrawer.open();
+                }
+            }
+            DropShadow {
+                radius: 10
+                samples: 10
+                anchors.fill:linesColumn;
+                color: "#80000000";
+                source: linesColumn
+            }
+            Row {
+                id: linesColumn
+                spacing: facade.toPx(6);
+                height: 0.3*parent.height
+                anchors.centerIn: parent;
+                Repeater {
+                    model: 2
+                    Rectangle {
+                        width: 3
+                        height: linesColumn.height;
+                    }
+                }
             }
         }
 
         ListView {
+            clip: true
             id: listMenu
             width: parent.width
             property bool isShowed: false
@@ -451,7 +652,7 @@ Drawer {
             delegate: Rectangle{
                 width: parent.width
                 height: facade.toPx(80)
-                color: ListView.isCurrentItem? "lightgrey": "#F2F2F2"
+                color: ListView.isCurrentItem? "lightgrey": "#E5E5E5"
                 MouseArea {
                     id:menMouseArea
                     anchors.fill:parent
@@ -469,11 +670,10 @@ Drawer {
                             break;
                         case 3:
                             drawer.close()
-                            usersModel.clear()
+                            loader.restores()
                             settingDrawer.visible(false)
                             event_handler.saveSet("phone", "")
                             event_handler.saveSet("passw", "")
-                            loader.restores()
                             loader.goTo("qrc:/loginanDregister.qml");
                         }
                         if (index == 1)
@@ -558,7 +758,7 @@ Drawer {
                         width: facade.toPx(64)
                         height:facade.toPx(80)
                         anchors.verticalCenter: parent.verticalCenter
-
+                        onCheckedChanged: {loader.isOnline = checked}
                         indicator: Rectangle {
                             radius:facade.toPx(25)
                             y: parent.height/2 - height/2;
@@ -596,5 +796,8 @@ Drawer {
                 }
             }
         }
+    }
+    Settingdrawei {
+        id: settingDrawer
     }
 }

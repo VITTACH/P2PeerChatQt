@@ -21,13 +21,14 @@ Item {
                         loader.tel = phone;
                         loader.famil = family
                         loader.login = login;
-                        windsDialogs.show("Вы зарегистрированы",0)
+                        windowsDialogs.show("Вы зарегистрированы",0)
                         event_handler.saveSet("passw", password)
                         event_handler.saveSet("phone", phone)
-                        loader.goTo("qrc:/chat.qml")
+                        loader.isLogin = true
+                        goTo("profile.qml")
                     }
                     else if(request.responseText == "no") {
-                        windsDialogs.show("Что-то пошло не так",0)
+                        windowsDialogs.show("Что-то пошло не так",0)
                     }
                     busyIndicator.visible = false
                 }
@@ -83,19 +84,19 @@ Item {
 
                 onClicked: {
                     if (loader.fields[0].length < 2) {
-                        windsDialogs.show("Имя короче чем 2 символа", 0);
+                        windowsDialogs.show("Имя короче чем 2 символа",0)
                     }
                     else
                     if (loader.fields[1].length < 2) {
-                        windsDialogs.show("Фамилия менее 2 символов", 0);
+                        windowsDialogs.show("Фамилия менее 2 символов",0)
                     }
                     else
                     if (loader.fields[2].length < 5) {
-                        windsDialogs.show("Пароль < 5 - ти символов", 0);
+                        windowsDialogs.show("Пароль < 5 - ти символов",0)
                     }
                     else
                     if (loader.fields[4].length <11) {
-                        windsDialogs.show("Укажите корректный номер", 0);
+                        windowsDialogs.show("Укажите корректный номер",0)
                     }
                     else {
                         busyIndicator.visible = true;
