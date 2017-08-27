@@ -143,7 +143,7 @@ Drawer {
 
         Rectangle {
             id: rightRect
-            color: loader.isOnline? "#C16068": "lightgray"
+            color: (loader.isOnline? "#BF7279": "#C6C6C6")
             width: (drawer.width-avatarButton.width)/2 + facade.toPx(14)
             anchors {
                 top: profile.top
@@ -158,7 +158,7 @@ Drawer {
         }
         Rectangle {
             id: leftRect;
-            color: loader.isOnline? "#C16068": "lightgray"
+            color: (loader.isOnline? "#BF7279": "#C6C6C6")
             width: (drawer.width-avatarButton.width)/2 + facade.toPx(15)
             anchors {
                 top: profile.top
@@ -185,7 +185,7 @@ Drawer {
             onPaint: {
                 var context = getContext("2d")
                 context.reset();
-                context.fillStyle=loader.isOnline?"#C16068": "lightgray"
+                context.fillStyle=loader.isOnline? "#BF7279": "#C6C6C6"
                 context.moveTo(0,height - leftRect.height)
                 context.lineTo(0,height)
                 context.lineTo(width, height);
@@ -530,8 +530,8 @@ Drawer {
                             smooth: true
                             visible: false
                             x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/facade.toPx(5);
-                            width: facade.toPx(100)
-                            height:facade.toPx(100)
+                            width: facade.toPx(140)
+                            height:facade.toPx(140)
                             anchors.verticalCenter: parent.verticalCenter
                             Image {
                                 source: image
@@ -574,6 +574,14 @@ Drawer {
                                 width:fo.width-facade.toPx(100)-bug.width
                                 color:listView.currentIndex ==index? "white":"#10387F"
                             }
+                            Text {
+                                text: "Статус: Offline с 13:45"
+                                elide: Text.ElideRight
+                                font.family:trebu4etMsNorm.name
+                                font.pixelSize: facade.doPx(24)
+                                width:fo.width-facade.toPx(100)-bug.width
+                                color:listView.currentIndex ==index? "white":"#10387F"
+                            }
                         }
                     }
                 }
@@ -583,7 +591,7 @@ Drawer {
         Rectangle {
             id: leftSlider
             width: facade.toPx(40)
-            color: loader.isOnline? "#C16068": "darkgray"
+            color: loader.isOnline? "#BF7279": "darkgray"
             x: settingDrawer.position == 0?0: settingDrawer.x+settingDrawer.width;
             anchors.top: {profile.bottom}
             anchors.bottom: listMenu.top;
