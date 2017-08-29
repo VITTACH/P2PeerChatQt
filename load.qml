@@ -1,14 +1,18 @@
 import QtQuick 2.7
+import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
 import"P2PStyle"as P2PStyle
 import"js/xHRQuery.js" as XHRQuery
 import"js/URLQuery.js" as URLQuery
 
 ApplicationWindow {
-    width: 500
-    height: 700
+    x: 0
+    y: 0
     visible: true
-    title: qsTr("p2peerIo")
+    title:qsTr("p2peer.io")
+
+    width: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 500: facade.toPx(1200)
+    height:event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 900: Screen.height - facade.toPx(100)
 
     Timer {
         id: backTimer
@@ -85,9 +89,9 @@ ApplicationWindow {
             if (privated.visitedPageList.length > 1) {
                 if (source == "qrc:/loginanDregister.qml") {
                     if (partnerHeader.page == 1) {
-                        partnerHeader.page = partnerHeader.page-1;
+                        partnerHeader.page = partnerHeader.page-1
                     }
-                } else {
+                } else if (loader.source != "qrc:/profile.qml") {
                     privated.visitedPageList.pop()
                     source = privated.visitedPageList[privated.visitedPageList.length - 1]
                 }
@@ -102,11 +106,8 @@ ApplicationWindow {
                     loader.tel = obj.response[0].mobile_phone
                     loader.login = obj.response[0].first_name
                     loader.famil = obj.response[0].last_name;
-                    loader.avatarPath = obj.response[0].photo_100;
+                    loader.avatarPath = obj.response[0].photo_100
                     logon(loader.tel, userId)
-                }
-                else {
-                    console.log(request.status,request.statusText)
                 }
             }
 
@@ -176,7 +177,11 @@ ApplicationWindow {
 
     Loader {
         id: imagePicker
-        source: event_handler.currentOSys()==1? "AndImagePicker.qml":(event_handler.currentOSys()==2? "IOsImagesPicker.qml":"")
+        source: {
+            if(event_handler.currentOSys()==1) {"AndImagePicker.qml"}
+            else if(event_handler.currentOSys()==2)"IOsImagesPicker.qml"
+            else ""
+        }
         onLoaded: {
             item.onChange= function(urlimg) {
                 loader.avatarPath = urlimg

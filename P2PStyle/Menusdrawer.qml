@@ -143,7 +143,7 @@ Drawer {
 
         Rectangle {
             id: rightRect
-            color: (loader.isOnline? "#BF7279": "#C6C6C6")
+            color: (loader.isOnline? "#71A1BC": "#B5B5B5")
             width: (drawer.width-avatarButton.width)/2 + facade.toPx(14)
             anchors {
                 top: profile.top
@@ -158,7 +158,7 @@ Drawer {
         }
         Rectangle {
             id: leftRect;
-            color: (loader.isOnline? "#BF7279": "#C6C6C6")
+            color: (loader.isOnline? "#71A1BC": "#B5B5B5")
             width: (drawer.width-avatarButton.width)/2 + facade.toPx(15)
             anchors {
                 top: profile.top
@@ -185,7 +185,7 @@ Drawer {
             onPaint: {
                 var context = getContext("2d")
                 context.reset();
-                context.fillStyle=loader.isOnline? "#BF7279": "#C6C6C6"
+                context.fillStyle=loader.isOnline? "#71A1BC": "#B5B5B5"
                 context.moveTo(0,height - leftRect.height)
                 context.lineTo(0,height)
                 context.lineTo(width, height);
@@ -379,22 +379,23 @@ Drawer {
                 bottom:listMenu.top
             }
             DropShadow {
-                radius: 15
-                samples: 15
+                radius: 10
+                samples: 10
                 source: listView
                 color: "#80000000"
-                verticalOffset: 15;
+                verticalOffset: 10;
                 anchors {
                     fill: listView;
                 }
             }
             ListView {
                 id: listView
-                spacing:facade.toPx(20)
+                spacing: facade.toPx(5)
                 anchors {
                     fill:parent
                     leftMargin: leftSlider.width
                 }
+                boundsBehavior: Flickable.StopAtBounds
                 
                 Component.onCompleted:{
                     usersModel.clear();
@@ -419,9 +420,10 @@ Drawer {
                     height: activity==1? facade.toPx(20)+Math.max(bug.height,fo.height):0
 
                     Rectangle {
-                        color: ("#FF8B0000")
-                        width: parent.height
-                        height:parent.height
+                        color: "#FF8B0000"
+                        width: parent.height+4
+                        height:parent.height-4
+                        anchors.verticalCenter: parent.verticalCenter
                         Image {
                             anchors.centerIn:parent
                             width: facade.toPx(sourceSize.width)
@@ -430,15 +432,16 @@ Drawer {
                         }
                     }
                     Rectangle {
-                        color: ("#FF006400")
-                        width: parent.height
-                        height:parent.height
+                        color: "#FF006400"
+                        width: parent.height+4
+                        height:parent.height-4
                         anchors.right: parent.right
+                        anchors.verticalCenter: parent.verticalCenter
                         Image {
                             anchors.centerIn:parent
                             width: facade.toPx(sourceSize.width)
                             height: facade.toPx(sourceSize.height)
-                            source: "qrc:/ui/buttons/dialerButton.png"
+                            source:"qrc:/ui/buttons/dialerButton.png"
                         }
                     }
 
@@ -465,7 +468,7 @@ Drawer {
                             duration: 500
                             target: coloresRect;
                             id: circleAnimation;
-                            properties:("width,height,radius")
+                            properties:("width, height, radius")
                             from: 0
                             to: delegaRect.width * 3
 
@@ -488,7 +491,8 @@ Drawer {
                                 event_handler.sendMsgs(JSON.stringify(json))
                                 if (loader.source != "qrc:/chat.qml") {
                                     loader.goTo("qrc:/chat.qml")
-                                }drawer.close()
+                                }
+                                drawer.close();
                             }
                             drag.target: parent
                             drag.axis: Drag.XAxis
@@ -518,7 +522,15 @@ Drawer {
                             }
                         }
 
+                        DropShadow {
+                            radius: 15
+                            samples: 15
+                            source: beg
+                            color:"#90000000"
+                            anchors.fill:beg;
+                        }
                         OpacityMask {
+                            id: beg
                             source: bug
                             maskSource: mask
                             anchors.fill:bug
@@ -553,21 +565,23 @@ Drawer {
                             id: fo
                             width: parent.width
                             anchors {
-                                left: bug.right
-                                leftMargin: facade.toPx(20)
+                                left: (bug.right)
+                                leftMargin: facade.toPx(40)
                             }
                             anchors.verticalCenter: parent.verticalCenter
                             Text {
-                                lineHeight: 1.3
+                                lineHeight: (1.3)
                                 text: login+" "+famil;
                                 elide: Text.ElideRight
+                                styleColor:"black"
+                                style: {Text.Outline;}
                                 font.family:trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(24)
                                 width:fo.width-facade.toPx(100)-bug.width
                                 color:listView.currentIndex ==index? "white":"#10387F"
                             }
                             Text {
-                                text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+": "+port
+                                text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
                                 elide: Text.ElideRight
                                 font.family:trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(24)
@@ -575,7 +589,7 @@ Drawer {
                                 color:listView.currentIndex ==index? "white":"#10387F"
                             }
                             Text {
-                                text: "Статус: Offline с 13:45"
+                                text: "Статус: offline с 13:45"
                                 elide: Text.ElideRight
                                 font.family:trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(24)
@@ -591,7 +605,7 @@ Drawer {
         Rectangle {
             id: leftSlider
             width: facade.toPx(40)
-            color: loader.isOnline? "#BF7279": "darkgray"
+            color: loader.isOnline? "#728BA5": "darkgray"
             x: settingDrawer.position == 0?0: settingDrawer.x+settingDrawer.width;
             anchors.top: {profile.bottom}
             anchors.bottom: listMenu.top;
@@ -626,6 +640,16 @@ Drawer {
             }
         }
 
+        DropShadow {
+            radius: 25
+            samples: 25
+            source: listMenu
+            color: "#90000000"
+            verticalOffset: -25
+            anchors {
+                fill: listMenu;
+            }
+        }
         ListView {
             clip: true
             id: listMenu

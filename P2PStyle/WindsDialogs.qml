@@ -6,40 +6,41 @@ import QtGraphicalEffects 1.0
 Button {
     z: 3
     id: dialogAndroid
-    anchors.fill: parent
     visible: loader.dialog;
+    anchors.fill: {parent;}
+    property string inputMode: "";
+    property string choseMode: "";
 
-    property var inputMode;
-    property var choseMode;
+    onClicked: loader.dialog=false
 
-    contentItem:Text{opacity:0}
+    background: Rectangle {color:"#AC404040"}
 
-    function show(text, mode) {
+    function show(text, powMode) {
         loader.dialog = (true);
-        switch(mode) {
+        switch (powMode) {
             case 1: inputMode = "one"; break;
             case 2: choseMode = "one"; break;
             default:inputMode = choseMode= ""
         }
-        dialogAndroid.text=text
+        dialogAndroid.text = text;
     }
 
-    background: Rectangle {color:"#AC404040"}
+    contentItem: Text {opacity: 0}
 
     DropShadow {
         radius: 16
         samples: 20
         color: "#C0000000";
         source:dialogWindow
-        anchors.fill: dialogWindow;
+        anchors.fill:dialogWindow;
     }
     Rectangle {
-        id: dialogWindow
+        id:dialogWindow;
+        radius: {facade.toPx(25);}
+        anchors.centerIn: {parent}
         color: "#f7f7f7"
-        radius: facade.toPx(25)
-        anchors.centerIn:parent
-        height: (dialogAndroid.height/25*10);
-        width: Math.min(22 / 10 * avatardialogs.width / 3, facade.toPx(666.6666))
+        height: {width;}
+        width: Math.min(0.73 * parent.width, facade.toPx(666.6));
 
         //создаём горизонтальный разделитель у всего окна
         Rectangle {
@@ -56,7 +57,7 @@ Button {
         //место отобажения сообщения для диалогового окна
         Rectangle {
             color: "#f7f7f7"
-            radius: facade.toPx(25)
+            radius:facade.toPx(25)
 
             anchors {
                 top: parent.top
@@ -122,8 +123,8 @@ Button {
                         onTextChanged: {
                             if(length > 250)
                             text = text.substring(0,250);
-                            loader.fields[0]=text
-                            cursorPosition=length
+                            loader.fields[0] =text
+                            cursorPosition =length
                         }
                         Keys.onReleased: {
                             if (event.key==Qt.Key_Back||event.key==Qt.Key_Escape)
@@ -170,26 +171,11 @@ Button {
             anchors {
                 left: parent.left
                 right: parent.right
-                bottom: parent.bottom
+                bottom:parent.bottom
             }
-            height: dialogAndroid.height<900?facade.toPx(100):100
+            height: facade.toPx(100)
 
             Button {
-                contentItem: Text {
-                    color:"#34aadc"
-                    verticalAlignment: {
-                        Text.AlignVCenter;
-                    }
-                    horizontalAlignment: {
-                        Text.AlignHCenter;
-                    }
-                    text: qsTr("Закрыть");
-                    font {
-                    pixelSize: facade.doPx(27)
-                    family:trebu4etMsNorm.name
-                    }
-                }
-
                 visible: choseMode !="";
                 id: dialogAndroidButtonCancel;
 
@@ -201,6 +187,21 @@ Button {
                     inputMode = "";
                     loader.dialog=false;
                     dialogAndroid.text = ("");
+                }
+
+                contentItem: Text {
+                    color: ("#34aadc")
+                    verticalAlignment: {
+                        Text.AlignVCenter;
+                    }
+                    horizontalAlignment: {
+                        Text.AlignHCenter;
+                    }
+                    text: qsTr("Закрыть");
+                    font {
+                        pixelSize: facade.doPx(27)
+                        family:trebu4etMsNorm.name
+                    }
                 }
 
                 background: Rectangle {
@@ -234,9 +235,11 @@ Button {
                     horizontalAlignment: {
                         Text.AlignHCenter;
                     }
-                    font.bold: true
-                    font.pixelSize: facade.doPx(27)
-                    font.family:trebu4etMsNorm.name
+                    font {
+                        bold: true
+                        pixelSize: facade.doPx(27)
+                        family:trebu4etMsNorm.name
+                    }
                     text: qsTr("Понятно");
                 }
 
@@ -250,7 +253,7 @@ Button {
                     loader.dialog = false;
                     dialogAndroid.text="";
                     switch(inputMode) {
-                      case "VK": postToVk(); break;
+                      case "VK":postToVk()
                     }
                     inputMode = "";
                 }
@@ -266,10 +269,10 @@ Button {
             opacity: 0.2
             anchors {
                 fill: parent
-                topMargin: (dialogWindow.radius);
+                topMargin: (dialogWindow.radius)
                 leftMargin: (dialogWindow.radius)
-                rightMargin: dialogWindow.radius;
-                bottomMargin: dialogWindow.radius
+                rightMargin: (dialogWindow.radius)
+                bottomMargin: dialogWindow.radius;
             }
 
             gradient: Gradient {

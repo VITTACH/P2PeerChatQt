@@ -5,9 +5,8 @@ import "P2PStyle" as P2PStyle
 
 Item {
     P2PStyle.Background {
-        anchors.fill: {parent}
-        Component.onCompleted:
-            setColors([[0,74,127], [120,120,120]], 100);
+    Component.onCompleted: setColors([[0,74,127],[120,120,120]],100)
+    anchors.fill: parent;
     }
 
     function registration(login, family, password, phone, email) {
@@ -99,13 +98,12 @@ Item {
                         windowsDialogs.show("Укажите корректный номер",0)
                     }
                     else {
-                        busyIndicator.visible = true;
+                        busyIndicator.visible = true
                         registration(loader.fields[0], loader.fields[1], loader.fields[2], loader.fields[4], loader.fields[3])
                     }
                 }
 
-                background: Rectangle
-                {
+                background: Rectangle {
                     radius:facade.toPx(40)
                     color: parent.down? "#FFC129":"#FFCC40"
                 }
@@ -116,58 +114,55 @@ Item {
                     verticalAlignment : {Text.AlignVCenter}
                     opacity: enabled?1:0.3
                     elide: Text.ElideRight
-                    text: parent.text
-                    font: parent.font
+                    text: {parent.text}
+                    font: {parent.font}
                 }
             }
 
             Item {
-                visible:index<5? 1:0;
-                height: parent.height
+                visible:index < 5? 1:0;
+                height: {parent.height}
 
                 anchors {
-                  left: {parent.left}
-                  right: parent.right
-                  leftMargin: 0.09*parent.width
-                  rightMargin:0.09*parent.width
+                    left: {parent.left}
+                    right:parent.right;
+                    leftMargin: 0.09*parent.width;
+                    rightMargin:0.09*parent.width;
                 }
 
                 Image {
                   width: facade.toPx(sourceSize.width *1.5)
                   height:facade.toPx(sourceSize.height*1.5)
-                  source: image
+                  source: image;
                 }
 
                 TextField {
                   id: textRow
-                  height: parent.height;
+                  color: "white"
+                  height: parent.height
                   placeholderText: plaseholder;
 
                   anchors {
-                    left: parent.left;
-                    right:parent.right
+                    left: {parent.left}
+                    right:parent.right;
                     leftMargin: facade.toPx(80)
                     rightMargin:0.09*parent.width;
                   }
 
-                  color: "#FFFFFF"
-
                   Connections {
                       target: partnerHeader
                       onPageChanged: {
-                          textRow.text=loader.fields[index]
+                          if(loader.aToken != "") textRow.text = loader.fields[index]
                       }
-                  }
-
-                  onTextChanged: {
-                      loader.fields[index] = text;
                   }
 
                   inputMethodHints: index == 4? Qt.ImhFormattedNumbersOnly:Qt.ImhNone
 
-                  onFocusChanged: if(text.length==0 && index==4) text="8"
+                  onFocusChanged: if(text.length==0 && index==4) text = "8"
 
-                  echoMode:index==2? TextInput.Password: TextInput.Normal
+                  echoMode: index == 2? TextInput.Password:TextInput.Normal
+
+                  onTextChanged: loader.fields[index]=text;
 
                   font.pixelSize: facade.doPx(28);
                   font.family: trebu4etMsNorm.name
@@ -177,9 +172,10 @@ Item {
             }
 
             Rectangle {
-                width: 0.82*parent.width;
-                anchors.horizontalCenter:
-                {parent.horizontalCenter}
+                anchors.horizontalCenter: {
+                    parent.horizontalCenter
+                }
+                width: 0.82 * parent.width;
                 visible: index<5
                 color: "#FFFFFF"
                 height: 1

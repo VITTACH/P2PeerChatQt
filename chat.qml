@@ -1,13 +1,12 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
+
 import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
-
 Item {
     id: rootChat
+    property variant select: []
 
-    property var select:[]
-    property bool input:false
     TextArea {
         id: buferText;
         wrapMode: {TextEdit.Wrap;}
@@ -114,23 +113,23 @@ Item {
         if(flag == 0) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0));
     }
 
+    property bool input
+
     Component.onCompleted:menuDrawer.getMePeers()
 
     ListView {
-        id: chatScreenList
+        id: chatScreenList;
 
-        width:parent.width
+        width: parent.width
         anchors {
-            top:parent.top
-            bottom:flickTextArea.top
+            top: parent.top
+            bottom: flickTextArea.top
             topMargin:partnerHeader.height+facade.toPx(10)
         }
 
         displayMarginBeginning: {parent.height/2}
 
-        model: ListModel {
-            id: chatModel;
-        }
+        model:ListModel{id:chatModel}
         delegate: Item {
             height: (facade.toPx(65) - myheight>= 0)?
                      mySpacing + facade.toPx(65):
@@ -233,7 +232,11 @@ Item {
         }
 
         Flickable {
-            TextArea.flickable:TextArea {
+            TextArea.flickable:TextArea{
+
+                id: screenTextFieldPost;
+                wrapMode: TextEdit.Wrap;
+
                 property bool pressCtrl: false;
                 property bool pressEntr: false;
 
@@ -244,10 +247,6 @@ Item {
                         width :2
                     }
                 }
-
-                id: screenTextFieldPost;
-                wrapMode: TextEdit.Wrap;
-
                 font.pixelSize: facade.doPx(26)
                 font.family:trebu4etMsNorm.name
 
@@ -260,14 +259,6 @@ Item {
                     if(length > 200)
                     text =text.substring(0,200)
                     cursorPosition = length
-                }
-
-                onActiveFocusChanged: {
-                    if (activeFocus && event_handler.currentOSys() ==1) {
-                        input = true;
-                    } else {
-                        input = false
-                    }
                 }
 
                 Keys.onReturnPressed: {
@@ -290,6 +281,7 @@ Item {
                     pressEntr = false
                 }
             }
+
             width: rootChat.width-chatScreenButton.width-facade.toPx(50);
             height: (screenTextFieldPost.lineCount < 5)? facade.toPx(70)+
                     (screenTextFieldPost.lineCount - 1)* facade.doPx(33):
@@ -314,6 +306,16 @@ Item {
             width: buttonImage.width;
             height:buttonImage.height
             id:chatScreenButton
+        }
+    }
+    MouseArea {
+        id: pressedArea
+        anchors.fill: flickTextArea
+        visible: event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2
+        onClicked: {
+            input =true
+            visible = false
+            screenTextFieldPost.focus = true
         }
     }
 }

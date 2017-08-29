@@ -5,12 +5,13 @@ import QtGraphicalEffects 1.0
 
 Button {
     id: avatardialog
+    visible: loader.avatar
     anchors.fill: {parent}
-    contentItem:Text {opacity:0}
     background: Rectangle {color : "#AC404040";}
 
-    visible: loader.avatar
-    onClicked: loader.avatar = false;
+    onClicked: loader.avatar=false
+
+    contentItem:Text {opacity: 0;}
     Connections {
         target: loader;
         onAvatarChanged: {loader.focus = !false}
@@ -34,15 +35,15 @@ Button {
         samples: 20
         color: "#C0000000";
         source:dialogWindow
-        anchors.fill: dialogWindow;
+        anchors.fill:dialogWindow;
     }
     Rectangle {
-        id: dialogWindow
+        id:dialogWindow;
+        radius: {facade.toPx(25);}
+        anchors.centerIn: {parent}
         color: "#f7f7f7"
-        radius: facade.toPx(25);
-        anchors.centerIn: parent
-        height:parent.height/2.5
-        width:Math.min(0.73*parent.width,facade.toPx(666))
+        height: {width;}
+        width: Math.min(0.73 * parent.width, facade.toPx(666.6));
 
         //Область для сообщения для диалогового;
         Rectangle {
@@ -162,7 +163,7 @@ Button {
             opacity: 0.2
             anchors {
                 fill: parent
-                topMargin: (dialogWindow.radius)
+                topMargin: dialogWindow.radius;
                 leftMargin: dialogWindow.radius;
                 rightMargin:dialogWindow.radius;
                 bottomMargin:dialogWindow.radius
