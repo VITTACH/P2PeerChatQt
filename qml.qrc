@@ -63,5 +63,6 @@
         <file>profile.qml</file>
         <file>ui/buttons/trashButton.png</file>
         <file>ui/buttons/dialerButton.png</file>
+        <file>feeds.qml</file>
     </qresource>
 </RCC>

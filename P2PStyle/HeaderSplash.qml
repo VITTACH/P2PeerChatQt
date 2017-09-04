@@ -2,19 +2,20 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
-Button {
+Item {
     id: rootItem
     property int page
     property int h: 150;
     property string stat
     property string phot
+    property string text
 
+    width: parent.width;
+    height: facade.toPx(h)
     DropShadow {
         radius: 15
         samples: 16
-        anchors {
-            fill:headerRect
-        }
+        anchors.fill: {headerRect;}
         verticalOffset: 10;
         color: "#60000000";
         source: headerRect;
@@ -127,9 +128,9 @@ Button {
                 height:facade.toPx(sourceSize.height*1.2)
                 width: facade.toPx(sourceSize.width *1.2)
                 fillMode: Image.PreserveAspectFit;
-                source: "qrc:/ui/buttons/" + (page == 1? "back": "infor") + "Button.png"
+                source: "qrc:/ui/buttons/" + (page == 1 || loader.source == "qrc:/chat.qml"? "back": "infor") + "Button.png"
             }
-            onClicked: page==1? page--: menuDrawer.open()
+            onClicked: page == 1? page--: (loader.source == "qrc:/chat.qml"?loader.back(): menuDrawer.open())
         }
 
         Button {
@@ -153,14 +154,8 @@ Button {
                 contextDialog.xPosition = rootItem.width-contextDialog.w-facade.toPx(20)
                 contextDialog.yPosition = facade.toPx(20)
                 loader.context = true;
+                loader.focus = true
             }
         }
-    }
-
-    contentItem: Text {opacity : 0.0;}
-    width: parent.width
-    height: facade.toPx(h)
-    background: Rectangle {
-        color:"transparent"
     }
 }

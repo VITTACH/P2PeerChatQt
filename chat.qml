@@ -1,11 +1,11 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.0
-
+import QtQuick.Controls   2.0
 import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
-Item {
+Rectangle {
     id: rootChat
-    property variant select: []
+    anchors.fill: parent
+    property var select : [];
 
     TextArea {
         id: buferText;
@@ -13,9 +13,21 @@ Item {
         width: 3*rootChat.width/4;
         visible: false
         font {
-            pixelSize: facade.doPx(26)
-            family:trebu4etMsNorm.name
+        pixelSize: facade.doPx(26)
+        family:trebu4etMsNorm.name
         }
+    }
+
+    function hideKeyboard(event) {
+        console.log("hideKeybord")
+        input = false
+        screenTextFieldPost.focus = false;
+        pressedArea.visible = true
+        if (event != 0) {
+            event.accepted = true;
+        }
+        Qt.inputMethod.hide()
+        loader.focus = true
     }
 
     function checkMessage(flag) {
@@ -118,13 +130,19 @@ Item {
     Component.onCompleted:menuDrawer.getMePeers()
 
     ListView {
-        id: chatScreenList;
-
+        id: chatScreenList
         width: parent.width
         anchors {
             top: parent.top
             bottom: flickTextArea.top
             topMargin:partnerHeader.height+facade.toPx(10)
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: hideKeyboard(mouse)
+            propagateComposedEvents: true;
+            visible: {event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2;}
         }
 
         displayMarginBeginning: {parent.height/2}
@@ -205,21 +223,27 @@ Item {
     Rectangle {
         radius:facade.toPx(25)
         anchors {
-            top:flickTextArea.top
+            left: parent.left;
+            right: parent.right;
             bottom:parent.bottom;
-            right:parent.right
-            left:parent.left
+            top:flickTextArea.top
+        }
+        MouseArea {
+            visible: {event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2;}
+            anchors.fill: parent
+            onClicked: hideKeyboard(mouse)
+            propagateComposedEvents: true;
         }
     }
 
     DropShadow {
-        radius: 40
-        samples: 40
+        radius: 30
+        samples: 30
         anchors {
             fill:flickTextArea
         }
-        color: "#80000000";
         source: flickTextArea;
+        color: "#80000000";
     }
     Row {
         clip:true
@@ -233,7 +257,6 @@ Item {
 
         Flickable {
             TextArea.flickable:TextArea{
-
                 id: screenTextFieldPost;
                 wrapMode: TextEdit.Wrap;
 
@@ -241,12 +264,7 @@ Item {
                 property bool pressEntr: false;
 
                 verticalAlignment: Text.AlignVCenter;
-                background: Rectangle {
-                    border {
-                        color: "#C8C8C8"
-                        width :2
-                    }
-                }
+                background: Rectangle {}
                 font.pixelSize: facade.doPx(26)
                 font.family:trebu4etMsNorm.name
 
@@ -277,6 +295,10 @@ Item {
                             checkMessage(0)
                         }
                     }
+                    else if(event.key==Qt.Key_Back) {
+                        hideKeyboard(event)
+                    }
+
                     pressCtrl = false
                     pressEntr = false
                 }
@@ -289,11 +311,14 @@ Item {
             flickableDirection:Flickable.VerticalFlick;
         }
         Button {
+            anchors {
+                verticalCenter: (parent.verticalCenter)
+            }
             contentItem: Text {
                 elide:Text.ElideRight
                 color:parent.down? "#0f133d": "#7680B1"
                 verticalAlignment: {Text.AlignVCenter;}
-                horizontalAlignment:Text.AlignHCenter;
+                horizontalAlignment:{Text.AlignHCenter}
             }
             Image {
             id: buttonImage
@@ -301,19 +326,23 @@ Item {
             height:facade.toPx(sourceSize.height* 1.5);
             width: facade.toPx(sourceSize.width * 1.5);
             }
+            onClicked: {
+                checkMessage(0)
+                hideKeyboard(0)
+            }
             background: Rectangle {opacity: 0}
-            onClicked:checkMessage(0)
             width: buttonImage.width;
             height:buttonImage.height
             id:chatScreenButton
         }
     }
+
     MouseArea {
-        id: pressedArea
-        anchors.fill: flickTextArea
-        visible: event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2
+        id: pressedArea;
+        anchors.fill: {flickTextArea}
+        visible: event_handler.currentOSys() == 1||event_handler.currentOSys() == 2
         onClicked: {
-            input =true
+            input = true
             visible = false
             screenTextFieldPost.focus = true
         }

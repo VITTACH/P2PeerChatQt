@@ -10,6 +10,8 @@ ApplicationWindow {
     y: 0
     visible: true
     title:qsTr("p2peer.io")
+    property var tempLogin;
+    property var tempPhone;
 
     width: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 500: facade.toPx(1200)
     height:event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 900: Screen.height - facade.toPx(100)
@@ -18,6 +20,13 @@ ApplicationWindow {
         id: backTimer
         interval: 500
         onTriggered: loader.back()
+    }
+
+    Timer {
+        id: connect
+        interval: 2000
+        onTriggered:loader.logon(tempPhone,
+                                 tempLogin)
     }
 
     QtObject {
@@ -37,7 +46,7 @@ ApplicationWindow {
         anchors.fill: parent
         property real dpi: 0
 
-        // visible popup windows
+        // some visible popup window
         property bool avatar: false;
         property bool dialog: false;
         property bool webvew: false;
@@ -146,7 +155,7 @@ ApplicationWindow {
                         loader.isLogin = false;
                         windowsDialogs.show("Вы не зарегистрированы!",0)
                         if(loader.source != "qrc:/loginanDregister.qml")
-                        loader.goTo("qrc:/loginanDregister.qml")
+                            loader.goTo("qrc:/loginanDregister.qml")
                         if (loader.aToken != "") {
                             loader.fields[0]=loader.login
                             loader.fields[1]=loader.famil
@@ -165,7 +174,11 @@ ApplicationWindow {
                     } else {
                         loader.isLogin = false;
                         windowsDialogs.show("Нет доступа к интернету",0)
-                        loader.goTo("qrc:/loginanDregister.qml")
+                        if(loader.source != "qrc:/loginanDregister.qml")
+                            loader.goTo("qrc:/loginanDregister.qml")
+                        tempLogin = password
+                        tempPhone = phone;
+                        connect.start()
                     }
                     busyIndicator.visible=false
                 }
@@ -207,6 +220,8 @@ ApplicationWindow {
             event.accepted= true
             if (loader.dialog==true) {
             loader.dialog = !loader.dialog;
+            } else if(loader.context) {
+            loader.context= !loader.context
             } else if(loader.avatar) {
             loader.avatar = !loader.avatar;
             } else if(loader.webvew) {

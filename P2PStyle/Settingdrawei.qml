@@ -118,7 +118,7 @@ Drawer {
                     }
                 }
 
-                color: element.ListView.isCurrentItem && !circleAnimation.running? "#d8d8d8": (index == 0? "#FF395F86": "#EEEDEEF0")
+                color: element.ListView.isCurrentItem && !circleAnimation.running? "#d8d8d8": (index == 0? (loader.isOnline? "#FF455869": "#999999"): "#EEEDEEF0")
 
                 Rectangle {
                     visible: index!=1 && index!=4
