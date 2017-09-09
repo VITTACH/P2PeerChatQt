@@ -2,12 +2,13 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
-//--------------------------------------------------dialogAndroid----------------------------------------------
+// ----------------------------------dialogAndroid------------------------------
 Button {
     z: 3
     id: dialogAndroid
     visible: loader.dialog;
     anchors.fill: {parent;}
+    property bool choose:true;
     property string inputMode: "";
     property string choseMode: "";
 
@@ -16,7 +17,7 @@ Button {
     background: Rectangle {color:"#AC404040"}
 
     function show(text, powMode) {
-        loader.dialog = (true);
+        choose=loader.dialog=true;
         switch (powMode) {
             case 1: inputMode = "one"; break;
             case 2: choseMode = "one"; break;
@@ -191,13 +192,9 @@ Button {
 
                 contentItem: Text {
                     color: ("#34aadc")
-                    verticalAlignment: {
-                        Text.AlignVCenter;
-                    }
-                    horizontalAlignment: {
-                        Text.AlignHCenter;
-                    }
-                    text: qsTr("Закрыть");
+                    verticalAlignment: Text.AlignVCenter;
+                    horizontalAlignment:Text.AlignHCenter
+                    text: {qsTr("Отмена")}
                     font {
                         pixelSize: facade.doPx(27)
                         family:trebu4etMsNorm.name
@@ -213,7 +210,7 @@ Button {
             //Создаю разделитель между кнопками шириной 2 пикселя
             Rectangle {
                 color: "#808080"
-                width: facade.toPx(2)
+                width: 1
                 visible: (choseMode != "")
                 //Растягиваю разделитель по высоте объекта строки
                 anchors {
@@ -228,19 +225,15 @@ Button {
 
                 contentItem: Text {
                     color:"#34aadc"
-                    elide: Text.ElideRight
-                    verticalAlignment: {
-                        Text.AlignVCenter;
-                    }
-                    horizontalAlignment: {
-                        Text.AlignHCenter;
-                    }
+                    elide:Text.ElideRight;
+                    verticalAlignment: Text.AlignVCenter;
+                    horizontalAlignment:Text.AlignHCenter
                     font {
-                        bold: true
+                        bold: true;
                         pixelSize: facade.doPx(27)
                         family:trebu4etMsNorm.name
                     }
-                    text: qsTr("Понятно");
+                    text:qsTr("Ок")
                 }
 
                 background: Rectangle {
@@ -255,6 +248,7 @@ Button {
                     switch(inputMode) {
                       case "VK":postToVk()
                     }
+                    choose = false;
                     inputMode = "";
                 }
 
@@ -288,4 +282,3 @@ Button {
         }
     }
 }
-//-------------------------------------------------------------------------------------------------------------

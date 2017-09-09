@@ -30,29 +30,44 @@ Rectangle {
         loader.focus = true
     }
 
+    Connections {
+        target: menuDrawer
+        onCindexChanged:loadChatsHistory()
+    }
+
+    function loadChatsHistory() {
+        var firstLaunch = true;
+        for (var j = 0; j<loader.chats.length; j++) {
+            if (loader.chats[j].message.length > 0) {
+                firstLaunch= false
+                break;
+            }
+        }
+
+        if (firstLaunch) {
+            loader.chats = JSON.parse(event_handler.loadValue("chats"));
+        }
+
+        select = [];
+        busyIndicator.visible=true
+        chatModel.clear();
+        var i = menuDrawer.cindex;
+        for (j = 0; j < loader.chats[i].message.length;j++) {
+            buferText.text = loader.chats[i].message[j].text;
+            appendMessage(loader.chats[i].message[j].text, (loader.chats[i].message[j].flag));
+        }
+        busyIndicator.visible=!busyIndicator.visible;
+    }
+
     function checkMessage(flag) {
         if (screenTextFieldPost.text.length >= 1) {
             buferText.text=screenTextFieldPost.text
             loader.chats[menuDrawer.cindex].message.push({text: buferText.text , flag: flag});
+            event_handler.saveSet("chats", JSON.stringify(loader.chats))
 
             appendMessage(buferText.text,flag)
             chatScreenList.positionViewAtEnd()
             screenTextFieldPost.text = "";
-        }
-    }
-
-    Connections {
-        target: menuDrawer
-        onCindexChanged: {
-            select = [];
-            busyIndicator.visible=true
-            chatModel.clear();
-            var i = menuDrawer.cindex;
-            for (var j=0; j < loader.chats[i].message.length; j++) {
-                buferText.text = loader.chats[i].message[j].text;
-                appendMessage(loader.chats[i].message[j].text,loader.chats[i].message[j].flag)
-            }
-            busyIndicator.visible=!busyIndicator.visible;
         }
     }
 
@@ -67,9 +82,10 @@ Rectangle {
                         break;
                 }
                 loader.chats[i].message.push({text: buferText.text = (obj.message) , flag: 1})
-                if ( i === menuDrawer.getCurPeerInd() ) {
-                    appendMessage(obj.message, 1)
-                    chatScreenList.positionViewAtEnd();
+                event_handler.saveSet("chats", JSON.stringify(loader.chats))
+                if (i == menuDrawer.getCurPeerInd()) {
+                    appendMessage((buferText.text), 1)
+                    chatScreenList.positionViewAtEnd()
                 }
             }
         }
@@ -85,6 +101,7 @@ Rectangle {
                     chatModel.remove(select[i] - i);
                     loader.chats[menuDrawer.cindex].message.splice(select[i] - i,1)
                 }
+                event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 for(var i=1; i<chatModel.count; i++)
                     chatModel.setProperty(i, "mySpacing",
                             (chatModel.get(i-1).textColor == "#000000"&&chatModel.get(i).textColor=="#960f133d")||
@@ -98,6 +115,7 @@ Rectangle {
             event_handler.copyText(chatModel.get(select[select.length-1]).someText)
             if(contextDialog.action==8) {
                 loader.chats[menuDrawer.cindex].message=[]
+                event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 chatModel.clear()
                 select=[];
             }
@@ -127,7 +145,7 @@ Rectangle {
 
     property bool input
 
-    Component.onCompleted:menuDrawer.getMePeers()
+    Component.onCompleted: loadChatsHistory()
 
     ListView {
         id: chatScreenList
@@ -328,6 +346,7 @@ Rectangle {
             }
             onClicked: {
                 checkMessage(0)
+                if (event_handler.currentOSys()==1||event_handler.currentOSys()==2)
                 hideKeyboard(0)
             }
             background: Rectangle {opacity: 0}

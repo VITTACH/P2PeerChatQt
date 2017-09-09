@@ -22,7 +22,11 @@ Item {
                         loader.login = login;
                         windowsDialogs.show("Вы зарегистрированы",0)
                         event_handler.saveSet("passw", password)
-                        event_handler.saveSet("phone", phone)
+                        event_handler.saveSet("phone", (loader.tel))
+                        var object= JSON.parse(loader.frienList)
+                        object.push(phone);
+                        loader.frienList= JSON.stringify(object)
+                        loader.addFriends()
                         loader.isLogin = true
                         goTo("profile.qml")
                     }

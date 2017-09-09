@@ -6,13 +6,13 @@ import QtQuick.XmlListModel 2.0
 Rectangle {
     id: rootPage;
     color: "#FFEDEDED";
-    property bool find: true;
+    property bool find:true
     ListView {
         spacing: facade.toPx(40);
         width: Math.min(0.9*parent.width,facade.toPx(900))
         anchors {
         top: parent.top
-        bottom: parent.bottom
+        bottom: downRow.top
         topMargin:facade.toPx(40)
         horizontalCenter:parent.horizontalCenter
         }
@@ -51,10 +51,11 @@ Rectangle {
                         humanModel.setProperty(i, "activity", 0)
                     }
                 }
-                if (succesFind)
+                if (succesFind == true)
                     feedsModel.setProperty(0, "activiti", 1);
                 else
                     feedsModel.setProperty(0, "activiti", 0);
+                listView.positionViewAtBeginning()
             }
 
             function getMePeers() {
@@ -86,7 +87,7 @@ Rectangle {
                     }
                 }
                 request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                request.send("READ=2")
+                request.send("READ=4")
             }
 
             Rectangle {
@@ -144,31 +145,35 @@ Rectangle {
 
             Rectangle {
                 clip: true
-                width: parent.width;
-                color: "transparent"
+                width: parent.width
+                color: "transparent";
+                property int counter;
                 height: {
-                    var counter = 0;
+                    var cunter = 0;
                     for (var i = 0; i<listView.count; i++){
                         if (humanModel.get(i).activity == 1 && visible) {
-                            counter++;
+                            cunter++;
                         }
                     }
-                    if (counter > 4) {
-                        counter = 4;
+                    if (cunter > 4) {
+                        cunter = 4;
                     }
-                    counter*facade.toPx(125) + counter*listView.spacing
+                    counter=cunter;
+                    cunter*facade.toPx(124)
                 }
                 visible: index==0&&activiti
                 ListView {
                     id: listView
                     anchors.fill:parent
-                    spacing: facade.toPx(2)
+                    spacing: parent.counter > 1? facade.toPx(10) :0;
                     snapMode: ListView.SnapToItem;
                     boundsBehavior: Flickable.StopAtBounds;
 
                     Component.onCompleted:{
                         humanModel.clear();
                     }
+
+                    property var friend
 
                     model:  ListModel {
                         id: humanModel;
@@ -242,9 +247,7 @@ Rectangle {
                                 drag.axis: Drag.XAxis;
                                 drag.minimumX:-height;
                                 drag.maximumX:0
-                                onExited: {
-                                    circleAnimation.stop();
-                                }
+                                onExited: {circleAnimation.stop();}
                                 onEntered: {
                                     coloresRect.x = mouseX;
                                     coloresRect.y = mouseY;
@@ -252,12 +255,29 @@ Rectangle {
                                 }
                                 onReleased: {
                                     if (parent.x <= drag.minimumX) {
-                                        if (event_handler.currentOSys() != 1)
-                                            Qt.openUrlExternally("tel:" + phone)
-                                        else
+                                        if (event_handler.currentOSys() != 1){
+                                            Qt.openUrlExternally("tel:"+phone)
+                                        } else {
                                             caller.directCall(phone)
+                                        }
                                     }
                                     parent.x=0
+                                }
+                                onClicked: {
+                                    listView.friend = phone
+                                    windowsDialogs.show("Отправить заявку в друзья для <strong>" + login + " " + famil + "</strong>?", 2)
+                                }
+                            }
+
+                            Connections {
+                                target: windowsDialogs
+                                onChooseChanged: {
+                                    var object = JSON.parse((loader.frienList))
+                                    if (object.indexOf(listView.friend) < 0 && !windowsDialogs.choose) {
+                                        object.push(listView.friend)
+                                        loader.frienList=JSON.stringify(object)
+                                        loader.addFriends()
+                                    }
                                 }
                             }
 
@@ -280,7 +300,7 @@ Rectangle {
                                 clip: true
                                 smooth: true
                                 visible: false
-                                x:facade.toPx(50)
+                                x:facade.toPx(30)
                                 width: facade.toPx(100)
                                 height:facade.toPx(100)
                                 anchors.verticalCenter: parent.verticalCenter
@@ -300,34 +320,48 @@ Rectangle {
                                 sourceSize: {Qt.size(bug.width, bug.height);}
                             }
 
-                            Column {
+                            Row {
                                 id: fo
-                                width: parent.width
+                                spacing: facade.toPx(20)
+                                height: Math.max(fullName.implicitHeight, telPhone.implicitHeight);
                                 anchors {
-                                    left: (bug.right)
-                                    leftMargin: facade.toPx(40)
+                                    left: bug.right
+                                    leftMargin: facade.toPx(30)
+                                    verticalCenter: {(parent.verticalCenter)}
                                 }
-                                anchors.verticalCenter: parent.verticalCenter
                                 Text {
-                                    lineHeight: (1.3)
-                                    elide: Text.ElideRight
+                                    id: fullName
                                     text: (login + " " + famil)
-                                    font.bold: true
                                     font.family:trebu4etMsNorm.name
                                     font.pixelSize: facade.doPx(24)
-                                    width:fo.width-facade.toPx(100)-bug.width
-                                    color:listView.currentIndex ==index? "white":"#10387F"
+                                    font.bold: true
+                                    color: listView.currentIndex==index? "white":"#404040"
+                                    anchors.verticalCenter: parent.verticalCenter
                                 }
                                 Text {
-                                    text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
+                                    id: telPhone
                                     elide: Text.ElideRight
+                                    text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
                                     font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(24)
-                                    width:fo.width-facade.toPx(100)-bug.width
+                                    font.pixelSize: facade.doPx(18)
+                                    width: delegaRect.width - bug.width - bug.x - fullName.implicitWidth - parent.spacing - 2 * facade.toPx(30);
                                     color:listView.currentIndex ==index? "white":"#10387F"
+                                    anchors.verticalCenter: parent.verticalCenter
                                 }
                             }
                         }
+                    }
+                }
+                LinearGradient {
+                    width: parent.width
+                    height: facade.toPx(30)
+                    end:  Qt.point(0, height)
+                    visible: parent.counter > 2
+                    anchors.bottom: parent.bottom
+                    start:Qt.point(0, 0)
+                    gradient: Gradient {
+                        GradientStop {position: 0.4; color: "#00000000"}
+                        GradientStop {position: 1.0; color: "#50000000"}
                     }
                 }
             }
@@ -335,6 +369,7 @@ Rectangle {
             XmlListModel {
                 id: xmlmodel
                 query: "/rss/channel/item"
+                XmlRole {name: "link"; query : "link/string()";}
                 XmlRole {name: "title"; query : "title/string()";}
                 XmlRole {name: "pDate"; query: "pubDate/string()"}
                 XmlRole {name: "pDesc"; query: "description/string()"}
@@ -347,7 +382,7 @@ Rectangle {
                 visible: index
                 color: ("transparent")
                 width: {parent.width;}
-                height:visible?2*facade.toPx(180):0
+                height: if (visible) {2*facade.toPx(180)}
                 DropShadow {
                     radius: 15
                     samples: 15
@@ -363,13 +398,13 @@ Rectangle {
                     height: parent.height
                     spacing: facade.toPx(20);
                     snapMode: {ListView.SnapToItem}
-                    boundsBehavior: Flickable.StopAtBounds;
+                    boundsBehavior:Flickable.StopAtBounds
                     delegate: Rectangle {
+                        clip: true;
                         radius: height/2;
                         width: {parent.width}
                         height: {(rssView.height/2) - (rssView.spacing)}
                         Rectangle {
-                            clip: true
                             color: parent.color
                             radius: parent.height/3
                             anchors {
@@ -377,23 +412,31 @@ Rectangle {
                                 leftMargin: parent.radius
                             }
                             Rectangle {
-                                width: 0
-                                height: 0
-                                id: coloresRect2
-                                color: "#EDEDED"
+                                clip:true
+                                color:"transparent"
+                                anchors {
+                                    fill: {parent;}
+                                    rightMargin:parent.radius
+                                }
+                                Rectangle {
+                                    width: 0
+                                    height: 0
+                                    id:coloresRect2
+                                    color:"#EDEDED"
 
-                                transform: Translate {
-                                x: -coloresRect2.width /2
-                                y: -coloresRect2.height/2
+                                    transform:Translate {
+                                        x: (-coloresRect2.width /2);
+                                        y: (-coloresRect2.height/2);
+                                    }
                                 }
                             }
                             PropertyAnimation {
                                 duration: 500
-                                target: coloresRect2
-                                id: circleAnimation2
+                                target:coloresRect2
+                                id:circleAnimation2
                                 properties:("width, height, radius")
                                 from: 0
-                                to: parent.width / 2
+                                to: parent.width/2;
 
                                 onStopped: {
                                     coloresRect2.width =0
@@ -404,11 +447,11 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill:parent
-                            onClicked: {Qt.openUrlExternally(image)}
+                            onClicked: {Qt.openUrlExternally(link);}
                             onEntered: {
-                                coloresRect2.x = mouseX;
-                                coloresRect2.y = mouseY;
-                                circleAnimation2.start()
+                                coloresRect2.x = (mouseX)
+                                coloresRect2.y = (mouseY)
+                                circleAnimation2.start();
                             }
                         }
 
@@ -478,6 +521,32 @@ Rectangle {
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    Rectangle {
+        id: downRow
+        width: parent.width
+        height:facade.toPx(80)
+        anchors.bottom: parent.bottom
+        Rectangle {
+            height: 1
+            width:parent.width
+            color: "lightgray"
+            anchors.top: {parent.top}
+        }
+        Row {
+            spacing: facade.toPx(50);
+            anchors.centerIn: parent;
+            Repeater {
+                model: ["Реклама", "Для бизнеса", "Все о P2P", "Конфиденциальность"];
+                Text {
+                    anchors.verticalCenter:parent.verticalCenter
+                    text: {modelData}
+                    font.family: trebu4etMsNorm.name;
+                    font.pixelSize: {facade.doPx(16)}
                 }
             }
         }

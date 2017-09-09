@@ -25,8 +25,7 @@ ApplicationWindow {
     Timer {
         id: connect
         interval: 2000
-        onTriggered:loader.logon(tempPhone,
-                                 tempLogin)
+        onTriggered: loader.logon(tempPhone,tempLogin)
     }
 
     QtObject {
@@ -70,6 +69,8 @@ ApplicationWindow {
 
         // history of chats
         property var chats:[];
+
+        property var frienList
 
         Keys.onReleased: listenBack(event);
 
@@ -186,6 +187,13 @@ ApplicationWindow {
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             request.send("phone=" + phone + "&pass=" + password)
         }
+
+        function addFriends() {
+            var request = new XMLHttpRequest()
+            request.open('POST',"http://www.hoppernet.hol.es")
+            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            request.send("name=" + loader.tel + "&friend=" +(frienList))
+        }
     }
 
     Loader {
@@ -196,9 +204,9 @@ ApplicationWindow {
             else ""
         }
         onLoaded: {
-            item.onChange= function(urlimg) {
-                loader.avatarPath = urlimg
-                event_handler.sendAvatar(decodeURIComponent(urlimg));
+            item.onChange=function(urlimage) {
+                loader.avatarPath = urlimage
+                event_handler.sendAvatar(decodeURIComponent((urlimage)))
             }
         }
     }

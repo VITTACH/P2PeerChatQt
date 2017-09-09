@@ -13,7 +13,7 @@ Drawer {
                 position = 0
             } else if (position == 1) {
                 settingDrawer.visible(true);
-                getMePeers()
+                getMePeers(loader.frienList)
             } else if (position == 0) {
                 settingDrawer.visible(false)
                 loader.focus = !false
@@ -24,7 +24,7 @@ Drawer {
 
     Connections {
         target: loader
-        onIsLoginChanged: if(loader.isLogin) {getMePeers()}
+        onIsLoginChanged: if(loader.isLogin)getFriendList()
     }
 
     property bool find: true
@@ -77,7 +77,21 @@ Drawer {
         }
     }
 
-    function getMePeers() {
+    function getFriendList() {
+        var request = new XMLHttpRequest()
+        request.open('POST',"http://www.hoppernet.hol.es")
+        request.onreadystatechange =function() {
+            if (request.readyState==XMLHttpRequest.DONE) {
+                if (request.status&&request.status==200) {
+                    getMePeers(loader.frienList=request.responseText)
+                }
+            }
+        }
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        request.send("READ=3&name="+loader.tel);
+    }
+
+    function getMePeers(name) {
         var request = new XMLHttpRequest(), obj,index
         request.open('POST',"http://www.hoppernet.hol.es")
         request.onreadystatechange =function() {
@@ -108,7 +122,14 @@ Drawer {
             }
         }
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        request.send("READ=2")
+        request.send("READ=2&name=" + name)
+    }
+
+    function updateFriends() {
+        var request = new XMLHttpRequest()
+        request.open('POST',"http://www.hoppernet.hol.es")
+        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        request.send("name=" + loader.tel + "&friend=" + loader.frienList)
     }
 
     LinearGradient {
@@ -493,6 +514,17 @@ Drawer {
                         onReleased: {
                             if (parent.x >= drag.maximumX) {
                                 if (usersModel.get(index).phone != loader.tel) {
+                                    var friendPhone=usersModel.get(index).phone;
+                                    var obj = JSON.parse(loader.frienList)
+                                    for (var i = 0; i<obj.length; i++) {
+                                        var friend = obj[i].replace('"', '')
+                                        if (friend === friendPhone) {
+                                            obj.splice(i, 1)
+                                            loader.frienList=JSON.stringify(obj)
+                                            updateFriends();
+                                            break;
+                                        }
+                                    }
                                     usersModel.remove(index)
                                 }
                             }
