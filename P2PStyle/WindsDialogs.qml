@@ -4,17 +4,17 @@ import QtGraphicalEffects 1.0
 
 // ----------------------------------dialogAndroid------------------------------
 Button {
-    z: 3
     id: dialogAndroid
     visible: loader.dialog;
     anchors.fill: {parent;}
+
     property bool choose:true;
     property string inputMode: "";
     property string choseMode: "";
 
     onClicked: loader.dialog=false
 
-    background: Rectangle {color:"#AC404040"}
+    contentItem: Text {opacity: 0}
 
     function show(text, powMode) {
         choose=loader.dialog=true;
@@ -26,7 +26,7 @@ Button {
         dialogAndroid.text = text;
     }
 
-    contentItem: Text {opacity: 0}
+    background: Rectangle {color:"#AC404040"}
 
     DropShadow {
         radius: 16
@@ -36,11 +36,11 @@ Button {
         anchors.fill:dialogWindow;
     }
     Rectangle {
-        id:dialogWindow;
+        id: dialogWindow;
         radius: {facade.toPx(25);}
         anchors.centerIn: {parent}
-        color: "#f7f7f7"
-        height: {width;}
+        color: "#f7f7f7";
+        height: 2*width/3
         width: Math.min(0.73 * parent.width, facade.toPx(666.6));
 
         //создаём горизонтальный разделитель у всего окна

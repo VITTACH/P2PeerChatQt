@@ -400,7 +400,7 @@ Drawer {
                 bottom:listMenu.top
                 leftMargin: leftSlider.width
             }
-            spacing: facade.toPx(2)
+            spacing: facade.toPx(8)
             boundsBehavior: {(Flickable.StopAtBounds)}
 
             snapMode: {ListView.SnapToItem;}

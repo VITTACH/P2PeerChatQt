@@ -54,7 +54,7 @@ Rectangle {
         var i = menuDrawer.cindex;
         for (j = 0; j < loader.chats[i].message.length;j++) {
             buferText.text = loader.chats[i].message[j].text;
-            appendMessage(loader.chats[i].message[j].text, (loader.chats[i].message[j].flag));
+            appendMessage(loader.chats[i].message[j].text, (loader.chats[i].message[j].flag))
         }
         busyIndicator.visible=!busyIndicator.visible;
     }
@@ -62,7 +62,7 @@ Rectangle {
     function checkMessage(flag) {
         if (screenTextFieldPost.text.length >= 1) {
             buferText.text=screenTextFieldPost.text
-            loader.chats[menuDrawer.cindex].message.push({text: buferText.text , flag: flag});
+            loader.chats[menuDrawer.cindex].message.push({text: buferText.text , flag: flag})
             event_handler.saveSet("chats", JSON.stringify(loader.chats))
 
             appendMessage(buferText.text,flag)
@@ -81,7 +81,7 @@ Rectangle {
                     if (obj.phone==loader.chats[i].phone)
                         break;
                 }
-                loader.chats[i].message.push({text: buferText.text = (obj.message) , flag: 1})
+                loader.chats[i].message.push({text: buferText.text = (obj.message), flag: 1})
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 if (i == menuDrawer.getCurPeerInd()) {
                     appendMessage((buferText.text), 1)
@@ -148,22 +148,24 @@ Rectangle {
     Component.onCompleted: loadChatsHistory()
 
     ListView {
-        id: chatScreenList
+        id: chatScreenList;
         width: parent.width
         anchors {
             top: parent.top
             bottom: flickTextArea.top
             topMargin:partnerHeader.height+facade.toPx(10)
         }
-
+        boundsBehavior:Flickable.StopAtBounds
         MouseArea {
-            anchors.fill: parent
-            onClicked: hideKeyboard(mouse)
-            propagateComposedEvents: true;
-            visible: {event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2;}
+            anchors.fill: {(parent);}
+            propagateComposedEvents: {(true)}
+            onClicked: {
+                hideKeyboard(mouse); mouse.accepted=false;
+            }
+            visible: {event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2}
         }
 
-        displayMarginBeginning: {parent.height/2}
+        displayMarginBeginning: {rootChat.height / 2}
 
         model:ListModel{id:chatModel}
         delegate: Item {
@@ -247,7 +249,7 @@ Rectangle {
             top:flickTextArea.top
         }
         MouseArea {
-            visible: {event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2;}
+            visible: {event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2}
             anchors.fill: parent
             onClicked: hideKeyboard(mouse)
             propagateComposedEvents: true;
@@ -320,6 +322,17 @@ Rectangle {
                     pressCtrl = false
                     pressEntr = false
                 }
+
+                MouseArea {
+                    id: pressedArea;
+                    anchors.fill: parent
+                    visible: event_handler.currentOSys()==1 || event_handler.currentOSys()==2
+                    onClicked: {
+                        input = true
+                        visible = false
+                        screenTextFieldPost.focus = true
+                    }
+                }
             }
 
             width: rootChat.width-chatScreenButton.width-facade.toPx(50);
@@ -346,24 +359,14 @@ Rectangle {
             }
             onClicked: {
                 checkMessage(0)
-                if (event_handler.currentOSys()==1||event_handler.currentOSys()==2)
+                if (event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2) {
                 hideKeyboard(0)
+                }
             }
             background: Rectangle {opacity: 0}
             width: buttonImage.width;
             height:buttonImage.height
             id:chatScreenButton
-        }
-    }
-
-    MouseArea {
-        id: pressedArea;
-        anchors.fill: {flickTextArea}
-        visible: event_handler.currentOSys() == 1||event_handler.currentOSys() == 2
-        onClicked: {
-            input = true
-            visible = false
-            screenTextFieldPost.focus = true
         }
     }
 }

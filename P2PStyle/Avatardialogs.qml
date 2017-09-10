@@ -38,11 +38,11 @@ Button {
         anchors.fill:dialogWindow;
     }
     Rectangle {
-        id:dialogWindow;
+        id: dialogWindow;
         radius: {facade.toPx(25);}
         anchors.centerIn: {parent}
-        color: "#f7f7f7"
-        height: {width;}
+        color: "#f7f7f7";
+        height: 2*width/3
         width: Math.min(0.73 * parent.width, facade.toPx(666.6));
 
         //Область для сообщения для диалогового;
