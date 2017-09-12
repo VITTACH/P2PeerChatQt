@@ -1,11 +1,13 @@
-import QtQuick 2.7
-import QtQuick.Controls   2.0
+import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
+import QtQml 2.0
+import QtQuick 2.7
+
 Rectangle {
     id: rootChat
     anchors.fill: parent
-    property var select : [];
+    property var select: [ ];
 
     TextArea {
         id: buferText;
@@ -19,15 +21,14 @@ Rectangle {
     }
 
     function hideKeyboard(event) {
-        console.log("hideKeybord")
-        input = false
         screenTextFieldPost.focus = false;
-        pressedArea.visible = true
-        if (event != 0) {
+        pressedArea.visible= true;
+        if (event !== 0) {
             event.accepted = true;
         }
         Qt.inputMethod.hide()
-        loader.focus = true
+        loader.focus= true
+        input = false
     }
 
     Connections {
@@ -47,25 +48,25 @@ Rectangle {
         if (firstLaunch) {
             loader.chats = JSON.parse(event_handler.loadValue("chats"));
         }
-
         select = [];
         busyIndicator.visible=true
         chatModel.clear();
         var i = menuDrawer.cindex;
-        for (j = 0; j < loader.chats[i].message.length;j++) {
-            buferText.text = loader.chats[i].message[j].text;
-            appendMessage(loader.chats[i].message[j].text, (loader.chats[i].message[j].flag))
+        for (j = 0; j<loader.chats[i].message.length; j++) {
+            buferText.text = loader.chats[i].message[j].text
+            appendMessage(loader.chats[i].message[j].text, (loader.chats[i].message[j].flag), loader.chats[i].message[j].time)
         }
         busyIndicator.visible=!busyIndicator.visible;
     }
 
     function checkMessage(flag) {
-        if (screenTextFieldPost.text.length >= 1) {
-            buferText.text=screenTextFieldPost.text
-            loader.chats[menuDrawer.cindex].message.push({text: buferText.text , flag: flag})
+        if ((screenTextFieldPost.text.length) >= 1) {
+            buferText.text = screenTextFieldPost.text
+            var time= new Date().toLocaleTimeString(Qt.locale(), Locale.LongFormat)
+            loader.chats[menuDrawer.cindex].message.push({text: buferText.text,flag: flag,time: time})
             event_handler.saveSet("chats", JSON.stringify(loader.chats))
 
-            appendMessage(buferText.text,flag)
+            appendMessage(buferText.text, flag, time)
             chatScreenList.positionViewAtEnd()
             screenTextFieldPost.text = "";
         }
@@ -77,14 +78,15 @@ Rectangle {
             var i
             if(response!="") {
                 var obj = JSON.parse(response)
-                for (i=0; i < loader.chats.length; i++) {
-                    if (obj.phone==loader.chats[i].phone)
-                        break;
+                for (i=0; i<loader.chats.length;i++) {
+                if(obj.phone==loader.chats[i].phone)
+                    break
                 }
-                loader.chats[i].message.push({text: buferText.text = (obj.message), flag: 1})
+                var time=new Date().toLocaleString(Qt.locale(), Locale.ShortFormat)
+                loader.chats[i].message.push({text: buferText.text = (obj.message),flag:1,time: time})
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 if (i == menuDrawer.getCurPeerInd()) {
-                    appendMessage((buferText.text), 1)
+                    appendMessage((buferText.text), 1, time)
                     chatScreenList.positionViewAtEnd()
                 }
             }
@@ -106,7 +108,7 @@ Rectangle {
                     chatModel.setProperty(i, "mySpacing",
                             (chatModel.get(i-1).textColor == "#000000"&&chatModel.get(i).textColor=="#960f133d")||
                             (chatModel.get(i).textColor == "#000000"&&chatModel.get(i-1).textColor=="#960f133d") ?
-                                facade.toPx(50): facade.toPx(20))
+                                facade.toPx(60): facade.toPx(30))
                 contextDialog.menu = 1;
                 contextDialog.action=0;
                 select=[];
@@ -127,17 +129,18 @@ Rectangle {
         return JSON.stringify(JSONobj = {message: message, phone:phone,/*ip:ip*/});
     }
 
-    function appendMessage(newmessage, flag) {
+    function appendMessage(newmessage, flag, timestamp) {
         chatModel.append({
-            someText: newmessage,
+            falg: flag,
             myheight: buferText.contentHeight,
-            mySpacing: (chatModel.count > 0?
+            mySpacing: (chatModel.count >= 1 ?
                           ((chatModel.get(chatModel.count - 1).textColor == "#000000" && flag === 0)||
                            (chatModel.get(chatModel.count - 1).textColor == "#960f133d" && flag == 1)?
-                               facade.toPx(50): facade.toPx(20)): facade.toPx(20)),
+                               facade.toPx(60): facade.toPx(30)): facade.toPx(20)),
+            someText: newmessage,
+            timeStamp: timestamp,
             textColor: (flag == 0)? "#960f133d":"#000000",
             backgroundColor:(flag==0)?"#ECECEC":"#DBEEFC",
-            HorizonPosition: facade.toPx(30)+flag*(parent.width/4-facade.toPx(60)),
             image: flag === 0? "ui/chat/leFtMessage.png": "ui/chat/rightMessag.png"
         });
         if(flag == 0) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0));
@@ -162,92 +165,106 @@ Rectangle {
             onClicked: {
                 hideKeyboard(mouse); mouse.accepted=false;
             }
-            visible: {event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2}
+            visible: event_handler.currentOSys()==1||event_handler.currentOSys()==2
         }
 
-        displayMarginBeginning: {rootChat.height / 2}
+        displayMarginBeginning: {(rootChat.height/2);}
 
-        model:ListModel{id:chatModel}
+        model: ListModel {id:chatModel}
         delegate: Item {
-            height: (facade.toPx(65) - myheight>= 0)?
-                     mySpacing + facade.toPx(65):
-                     mySpacing + facade.doPx(26)+ myheight
-            Image {
-                source: image
-                anchors.bottom: parent.bottom
-                width: facade.toPx(sourceSize.width * 1.2)
-                height:facade.toPx(sourceSize.width * 1.2)
-                y: parentText.y + parentText.height-height
-                x: (parentText.x == facade.toPx(30))?
-                        parentText.x - width/2:
-                            parentText.x +parentText.width - width/2
-            }
-            TextArea {
-                id: parentText
-                text: someText
-                readOnly: true
-                leftPadding: facade.toPx(25);
-                rightPadding:facade.toPx(25);
+            width: parent.width
+            height: (facade.toPx(65) - myheight >= 0)?
+                        (mySpacing) + facade.toPx(65):
+                        (mySpacing) + facade.doPx(26) + (myheight)
+            Column {
+                width: {(parent.width)}
+                anchors.bottom: {parent.bottom}
+                Text {
+                    color: {textColor;}
+                    anchors {
+                        right: {(parent.right)}
+                        rightMargin: {facade.toPx(20)}
+                    }
+                    font.family: {trebu4etMsNorm.name}
+                    font.pixelSize: {facade.doPx(16);}
+                    text: timeStamp? timeStamp: "NaN";
+                }
+                Item {
+                    width: parent.width
+                    height: {parentText.height}
+                    Image {
+                        source: {image}
+                        width: facade.toPx(sourceSize.width * 1.2)
+                        height:facade.toPx(sourceSize.width * 1.2)
+                        y: parentText.y + parentText.height-height
+                        x: (parentText.x == facade.toPx(30))?
+                                parentText.x- width/2:
+                                    parentText.x +parentText.width - width/2
+                    }
+                    TextArea {
+                        id: parentText;
+                        text: someText;
+                        readOnly: true;
+                        leftPadding: {facade.toPx(25)}
+                        rightPadding: facade.toPx(25);
+                        x:facade.toPx(30) + falg*(parent.width/4 - facade.toPx(60))
 
-                background: Rectangle {
-                    color: backgroundColor
-                    radius: parentText.leftPadding;
+                        background: Rectangle {
+                            color: backgroundColor
+                            radius: parent.leftPadding
 
-                    MouseArea {
-                    anchors.fill: {parent}
-                    onClicked: {
-                        var p= 0
-                        if (select.length > 0) {
-                            p=select.indexOf(index)
-                            if (p >= 0)
-                            select.splice(p,1)
-                            else {
-                            select.push(index)
-                            contextDialog.menu = 0;
-                            parent.color ="#FFDC86"
-                            return
+                            MouseArea {
+                                anchors.fill: {parent}
+                                onClicked: {
+                                    var p= 0
+                                    if (select.length>0) {
+                                        p=select.indexOf(index)
+                                        if (p >= 0)
+                                            select.splice(p, 1)
+                                        else {
+                                            contextDialog.menu = 0
+                                            parent.color="#FFDC86"
+                                            select.push(index);
+                                            return
+                                        }
+                                    }
+                                    parent.color = backgroundColor
+                                    if (select.length < 1)
+                                        contextDialog.menu = 1;
+                                }
+                                onPressAndHold: {
+                                    select.push(index)
+                                    contextDialog.menu = 0;
+                                    parent.color ="#FFDC86"
+                                }
                             }
                         }
-                        parent.color=backgroundColor
-                        if (select.length < 1)
-                            contextDialog.menu = 1;
-                        }
-                        onPressAndHold: {
-                            select.push(index)
-                            contextDialog.menu = 0;
-                            parent.color ="#FFDC86"
+
+                        verticalAlignment:Text.AlignVCenter
+                        color: {textColor}
+
+                        wrapMode: {TextEdit.Wrap}
+                        width: {parent.width*3/4}
+                        height:facade.toPx(65) - myheight>=0?facade.toPx(65): myheight+facade.doPx(26)
+
+                        font {
+                            family:trebu4etMsNorm.name
+                            pixelSize: facade.doPx(26)
                         }
                     }
                 }
-
-                wrapMode: {TextEdit.Wrap;}
-                width: 3*rootChat.width/4;
-                height: (facade.toPx(65)- myheight >= 0)?
-                         facade.toPx(65): myheight + facade.doPx(26)
-
-                font {
-                family:trebu4etMsNorm.name
-                pixelSize: facade.doPx(26)
-                }
-
-                verticalAlignment: Text.AlignVCenter
-                anchors.bottom: {
-                    parent.bottom
-                }
-                color: textColor;
-                x:HorizonPosition
             }
         }
     }
 
     Rectangle {
-        radius:facade.toPx(25)
         anchors {
             left: parent.left;
             right: parent.right;
-            bottom:parent.bottom;
+            bottom: parent.bottom
             top:flickTextArea.top
         }
+        radius: {facade.toPx(25)}
         MouseArea {
             visible: {event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2}
             anchors.fill: parent

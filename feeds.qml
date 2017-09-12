@@ -20,16 +20,16 @@ Rectangle {
         boundsBehavior: {Flickable.StopAtBounds}
         model : ListModel {
             id: feedsModel;
-            ListElement {activiti: 0}
-            ListElement {activiti: 1}
+            ListElement {activiti: 0;}
+            ListElement {activiti: 1;}
         }
 
         delegate: Column {
             width:parent.width
             Component.onCompleted: getMePeers();
 
-            function findPeer(phone){
-                for (var i = 0; i<humanModel.count; i++) {
+            function findPeer(phone) {
+                for (var i = 0; i < humanModel.count; i++) {
                     if (humanModel.get(i).phone === phone) {
                         return i;
                     }
@@ -195,7 +195,7 @@ Rectangle {
 
                         Rectangle {
                             color: "#FF006400"
-                            width: parent.height+4
+                            width: parent.height/2
                             height:parent.height-4
                             anchors.right: parent.right;
                             anchors.verticalCenter: parent.verticalCenter
@@ -244,8 +244,8 @@ Rectangle {
                                 id: myMouseArea
                                 anchors.fill:{parent;}
                                 drag.target: {parent;}
-                                drag.axis: Drag.XAxis;
-                                drag.minimumX:-height;
+                                drag.axis: {Drag.XAxis;}
+                                drag.minimumX:-height/2;
                                 drag.maximumX:0
                                 onExited: {circleAnimation.stop();}
                                 onEntered: {
@@ -284,16 +284,24 @@ Rectangle {
                             DropShadow {
                                 radius: 15
                                 samples: 15
-                                source: beg
+                                source: bug
                                 color:"#90000000"
-                                anchors.fill:beg;
+                                anchors.fill:bug;
                             }
+                            /*
                             OpacityMask {
                                 id: beg
                                 source: bug
                                 maskSource: mask;
                                 anchors.fill:bug;
                             }
+                            Image {
+                                id: mask
+                                smooth: true;
+                                visible:false
+                                source:"qrc:/ui/mask/round.png"
+                                sourceSize: {Qt.size(bug.width, bug.height);}
+                            }*/
 
                             Rectangle {
                                 id: bug
@@ -310,14 +318,6 @@ Rectangle {
                                     height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                                     width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                                 }
-                            }
-
-                            Image {
-                                id: mask
-                                smooth: true;
-                                visible:false
-                                source:"qrc:/ui/mask/round.png"
-                                sourceSize: {Qt.size(bug.width, bug.height);}
                             }
 
                             Row {
@@ -382,7 +382,7 @@ Rectangle {
                 visible: index
                 color: ("transparent")
                 width: {parent.width;}
-                height: if (visible) {2*facade.toPx(180)}
+                height: if (visible) {3*facade.toPx(220)}
                 DropShadow {
                     radius: 15
                     samples: 15
@@ -403,7 +403,7 @@ Rectangle {
                         clip: true;
                         radius: height/2;
                         width: {parent.width}
-                        height: {(rssView.height/2) - (rssView.spacing)}
+                        height: {(rssView.height/3) - (rssView.spacing)}
                         Rectangle {
                             color: parent.color
                             radius: parent.height/3
@@ -460,8 +460,8 @@ Rectangle {
                             clip: true
                             smooth: true
                             visible:false
-                            width: facade.toPx(130)
-                            height:facade.toPx(130)
+                            width: facade.toPx(160)
+                            height:facade.toPx(160)
                             x: (parent.height - height)/2;
                             anchors.verticalCenter:parent.verticalCenter
                             Image {
@@ -505,7 +505,7 @@ Rectangle {
                                 width: 2*parent.width/3;
                                 font.bold: true
                                 font.family:trebu4etMsNorm.name
-                                font.pixelSize: facade.doPx(18)
+                                font.pixelSize: facade.doPx(24)
                             }
                             Text {
                                 text: pDate
@@ -514,10 +514,11 @@ Rectangle {
                             }
                             Text {
                                 text: pDesc
+                                maximumLineCount: 3
                                 width: (parent.width - facade.toPx(20));
                                 wrapMode : {Text.WrapAnywhere;}
                                 font.family:trebu4etMsNorm.name
-                                font.pixelSize: facade.doPx(15)
+                                font.pixelSize: facade.doPx(20)
                             }
                         }
                     }

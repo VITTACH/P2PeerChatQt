@@ -165,7 +165,7 @@ Drawer {
 
         Rectangle {
             id: rightRect
-            color: (loader.isOnline? "#6998B2": "#95A1AB")
+            color: (loader.isOnline? "#95A1AB": "#95A1AB")
             width: (drawer.width-avatarButton.width)/2 + facade.toPx(14)
             anchors {
                 top: profile.top
@@ -180,7 +180,7 @@ Drawer {
         }
         Rectangle {
             id: leftRect;
-            color: (loader.isOnline? "#6998B2": "#95A1AB")
+            color: (loader.isOnline? "#95A1AB": "#95A1AB")
             width: (drawer.width-avatarButton.width)/2 + facade.toPx(15)
             anchors {
                 top: profile.top
@@ -207,7 +207,7 @@ Drawer {
             onPaint: {
                 var context = getContext("2d")
                 context.reset();
-                context.fillStyle=loader.isOnline? "#6998B2": "#95A1AB"
+                context.fillStyle=loader.isOnline? "#95A1AB": "#95A1AB"
                 context.moveTo(0,height - leftRect.height)
                 context.lineTo(0,height)
                 context.lineTo(width, height);
@@ -406,18 +406,7 @@ Drawer {
             snapMode: {ListView.SnapToItem;}
             Component.onCompleted: usersModel.clear();
 
-            model:  ListModel {
-                id: usersModel;
-                    ListElement {
-                        activity: 1
-                        image: ""
-                        famil: ""
-                        login: ""
-                        phone: ""
-                        port: ""
-                        ip: ""
-                    }
-                }
+            model:ListModel{id: usersModel;}
             delegate: Item {
                 id: baseItem
                 visible: activity
@@ -426,28 +415,28 @@ Drawer {
 
                 Rectangle {
                     color: "#FF8B0000"
-                    width: parent.height+4
+                    width: parent.height/2
                     height:parent.height-4
-                    anchors.verticalCenter: parent.verticalCenter
                     Image {
                         anchors.centerIn:parent
                         width: facade.toPx(sourceSize.width)
                         height: facade.toPx(sourceSize.height)
                         source: "qrc:/ui/buttons/trashButton.png"
                     }
+                    anchors.verticalCenter: parent.verticalCenter
                 }
                 Rectangle {
                     color: "#FF006400"
-                    width: parent.height+4
+                    width: parent.height/2
                     height:parent.height-4
                     anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
                     Image {
                         anchors.centerIn:parent
                         width: facade.toPx(sourceSize.width)
                         height: facade.toPx(sourceSize.height)
                         source:"qrc:/ui/buttons/dialerButton.png"
                     }
+                    anchors.verticalCenter: parent.verticalCenter
                 }
 
                 Rectangle {
@@ -455,13 +444,13 @@ Drawer {
                     id: delegaRect
                     width: parent.width
                     height: parent.height
-                    color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#527392": "#999999"): ("white")
+                    color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#999999": "#999999"): ("white")
 
                     Rectangle {
                         width: 0
                         height: 0
                         id: coloresRect
-                        color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#6E879E":"darkgray"):"#E5E5E5"
+                        color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#A9A9A9":"darkgray"):"#E5E5E5"
 
                         transform: Translate {
                         x: -coloresRect.width /2
@@ -501,8 +490,14 @@ Drawer {
                         }
                         drag.target: parent
                         drag.axis: Drag.XAxis
-                        drag.minimumX:-height
-                        drag.maximumX: usersModel.get(index).phone != loader.tel? (height): 0;
+                        drag.minimumX:-height/2
+                        drag.maximumX: {
+                            if (usersModel.count>=index+1) {
+                                if (usersModel.get(index).phone != loader.tel) {
+                                    -drag.minimumX;
+                                } else 0
+                            }
+                        }
                         onExited: {
                             circleAnimation.stop();
                         }
@@ -541,16 +536,24 @@ Drawer {
                     DropShadow {
                         radius: 15
                         samples: 15
-                        source: beg
+                        source: bug
                         color:"#90000000"
-                        anchors.fill:beg;
+                        anchors.fill:bug;
                     }
+                    /*
                     OpacityMask {
                         id: beg
                         source: bug
                         maskSource: mask;
                         anchors.fill:bug;
                     }
+                    Image {
+                        id: mask
+                        smooth: true;
+                        visible:false
+                        source:"qrc:/ui/mask/round.png"
+                        sourceSize: {Qt.size(bug.width, bug.height);}
+                    }*/
 
                     Rectangle {
                         id: bug
@@ -558,8 +561,8 @@ Drawer {
                         smooth: true
                         visible: false
                         x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/facade.toPx(5);
-                        width: facade.toPx(140)
-                        height:facade.toPx(140)
+                        width: facade.toPx(120)
+                        height:facade.toPx(120)
                         anchors.verticalCenter: parent.verticalCenter
                         Image {
                             source: image
@@ -567,14 +570,6 @@ Drawer {
                             height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                             width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                         }
-                    }
-
-                    Image {
-                        id: mask
-                        smooth: true;
-                        visible:false
-                        source:"qrc:/ui/mask/round.png"
-                        sourceSize: {Qt.size(bug.width, bug.height);}
                     }
 
                     Column {
@@ -591,7 +586,7 @@ Drawer {
                             text: (login + " " + famil)
                             font.bold: true
                             font.family:trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(24)
+                            font.pixelSize: facade.doPx(26)
                             width:fo.width-facade.toPx(100)-bug.width
                             color:listView.currentIndex ==index? "white":"#10387F"
                         }
@@ -599,7 +594,7 @@ Drawer {
                             text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
                             elide: Text.ElideRight
                             font.family:trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(24)
+                            font.pixelSize: facade.doPx(20)
                             width:fo.width-facade.toPx(100)-bug.width
                             color:listView.currentIndex ==index? "white":"#10387F"
                         }
@@ -607,7 +602,7 @@ Drawer {
                             text: "Статус: offline с 13:45"
                             elide: Text.ElideRight
                             font.family:trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(24)
+                            font.pixelSize: facade.doPx(16)
                             width:fo.width-facade.toPx(100)-bug.width
                             color:listView.currentIndex ==index? "white":"#10387F"
                         }
@@ -645,7 +640,7 @@ Drawer {
                 height: 0.3*parent.height
                 anchors.centerIn: parent;
                 Repeater {
-                    model: 2
+                    model: 1
                     Rectangle {
                         width: 3
                         height: linesColumn.height;
@@ -659,7 +654,7 @@ Drawer {
             samples: 40
             source: listMenu
             color: "#80000000"
-            verticalOffset: -20
+            verticalOffset: -10
             anchors {
                 fill: listMenu;
             }

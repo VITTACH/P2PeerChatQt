@@ -12,8 +12,6 @@ Button {
     property string inputMode: "";
     property string choseMode: "";
 
-    onClicked: loader.dialog=false
-
     contentItem: Text {opacity: 0}
 
     function show(text, powMode) {
@@ -28,10 +26,15 @@ Button {
 
     background: Rectangle {color:"#AC404040"}
 
+    onClicked: {
+        loader.focus = true
+        loader.dialog=false
+    }
+
     DropShadow {
         radius: 16
         samples: 20
-        color: "#C0000000";
+        color:("#C0000000")
         source:dialogWindow
         anchors.fill:dialogWindow;
     }
