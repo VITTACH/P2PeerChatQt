@@ -195,7 +195,7 @@ Rectangle {
 
                         Rectangle {
                             color: "#FF006400"
-                            width: parent.height/2
+                            width: parent.height*0.6
                             height:parent.height-4
                             anchors.right: parent.right;
                             anchors.verticalCenter: parent.verticalCenter
@@ -244,9 +244,9 @@ Rectangle {
                                 id: myMouseArea
                                 anchors.fill:{parent;}
                                 drag.target: {parent;}
-                                drag.axis: {Drag.XAxis;}
-                                drag.minimumX:-height/2;
-                                drag.maximumX:0
+                                drag.axis: Drag.XAxis;
+                                drag.minimumX: -height*0.6;
+                                drag.maximumX: 0
                                 onExited: {circleAnimation.stop();}
                                 onEntered: {
                                     coloresRect.x = mouseX;
@@ -382,9 +382,9 @@ Rectangle {
                 visible: index
                 color: ("transparent")
                 width: {parent.width;}
-                height: if (visible) {3*facade.toPx(220)}
+                height: if (visible) {3*facade.toPx(200)}
                 DropShadow {
-                    radius: 15
+                    radius: 12
                     samples: 15
                     source: rssView
                     color: "#90000000"
@@ -502,21 +502,22 @@ Rectangle {
                             Text {
                                 text: title
                                 elide: {Text.ElideRight}
-                                width: 2*parent.width/3;
+                                width: {parent.width - facade.toPx(30);}
                                 font.bold: true
                                 font.family:trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(24)
                             }
                             Text {
                                 text: pDate
+                                lineHeight: 1.4
                                 font.family:trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(15)
                             }
                             Text {
                                 text: pDesc
-                                maximumLineCount: 3
-                                width: (parent.width - facade.toPx(20));
-                                wrapMode : {Text.WrapAnywhere;}
+                                maximumLineCount: 2
+                                width: {parent.width - facade.toPx(30);}
+                                wrapMode:Text.Wrap;
                                 font.family:trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(20)
                             }
