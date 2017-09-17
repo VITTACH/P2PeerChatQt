@@ -156,6 +156,7 @@ Rectangle {
         anchors {
             top: parent.top
             bottom: flickTextArea.top
+            bottomMargin: facade.toPx(40)
             topMargin:partnerHeader.height+facade.toPx(10)
         }
         boundsBehavior:Flickable.StopAtBounds
@@ -262,12 +263,12 @@ Rectangle {
             left: parent.left;
             right: parent.right;
             bottom: parent.bottom
-            top:flickTextArea.top
+            top: flickTextArea.top
         }
-        radius: {facade.toPx(25)}
+        radius: facade.toPx(25)
         MouseArea {
             visible: {event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2}
-            anchors.fill: parent
+            anchors.fill:parent
             onClicked: hideKeyboard(mouse)
             propagateComposedEvents: true;
         }
@@ -275,7 +276,7 @@ Rectangle {
 
     DropShadow {
         radius: 30
-        samples: 30
+        samples: 40
         anchors {
             fill:flickTextArea
         }
@@ -287,7 +288,7 @@ Rectangle {
         id: flickTextArea;
         spacing: facade.toPx(20);
         anchors {
-            bottomMargin: input? rootChat.height * 0.45: facade.toPx(25);
+            bottomMargin: input?parent.height * 0.45: facade.toPx(10)
             horizontalCenter: parent.horizontalCenter
             bottom:parent.bottom;
         }
@@ -300,21 +301,15 @@ Rectangle {
                 property bool pressCtrl: false;
                 property bool pressEntr: false;
 
-                verticalAlignment: Text.AlignVCenter;
                 background: Rectangle {}
                 font.pixelSize: facade.doPx(26)
                 font.family:trebu4etMsNorm.name
+                verticalAlignment: Text.AlignVCenter;
 
                 placeholderText: event_handler.currentOSys() === 0? ("Ctrl+Enter для отправки..."): "Написать...";
 
                 leftPadding: (facade.toPx(25));
                 rightPadding:(facade.toPx(25));
-
-                onTextChanged: {
-                    if(length > 200)
-                    text =text.substring(0,200)
-                    cursorPosition = length
-                }
 
                 Keys.onReturnPressed: {
                     pressCtrl = true;
@@ -353,15 +348,12 @@ Rectangle {
             }
 
             width: rootChat.width-chatScreenButton.width-facade.toPx(50);
-            height: (screenTextFieldPost.lineCount < 5)? facade.toPx(70)+
-                    (screenTextFieldPost.lineCount - 1)* facade.doPx(33):
-                     facade.toPx(70)+4*facade.doPx(33);
+            height: (screenTextFieldPost.lineCount < 5)? facade.toPx(90)+
+                    (screenTextFieldPost.lineCount - 1)* facade.doPx(34):
+                     facade.toPx(90)+4*facade.doPx(34);
             flickableDirection:Flickable.VerticalFlick;
         }
         Button {
-            anchors {
-                verticalCenter: (parent.verticalCenter)
-            }
             contentItem: Text {
                 elide:Text.ElideRight
                 color:parent.down? "#0f133d": "#7680B1"

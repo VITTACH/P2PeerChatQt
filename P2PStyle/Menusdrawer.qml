@@ -12,10 +12,20 @@ Drawer {
             if (loader.isLogin!=true) {
                 position = 0
             } else if (position == 1) {
-                settingDrawer.visible(true);
-                getMePeers(loader.frienList)
+                settingDrawer.visible(true)
+                if (loader.frienList == "") {
+                    var friend
+                    friend = event_handler.loadValue("frd")
+                    if (friend != "") {
+                        var myfriend = (JSON.parse(friend))
+                        for(var i=0; i<myfriend.length;i++)
+                            usersModel.append({image:"", famil: myfriend[i].famil, login: myfriend[i].login, phone: myfriend[i].phone, port: myfriend[i].port, ip: myfriend[i].ip,activity:1})
+                    }
+                    loader.frienList="[\"\"]"
+                }
+                getMePeers(loader.frienList);
             } else if (position == 0) {
-                settingDrawer.visible(false)
+                settingDrawer.visible(false);
                 loader.focus = !false
                 find = true;
             }
@@ -24,7 +34,7 @@ Drawer {
 
     Connections {
         target: loader
-        onIsLoginChanged: if(loader.isLogin)getFriendList()
+        onIsOnlineChanged: if(loader.isOnline) getFriends()
     }
 
     property bool find: true
@@ -77,7 +87,7 @@ Drawer {
         }
     }
 
-    function getFriendList() {
+    function getFriends() {
         var request = new XMLHttpRequest()
         request.open('POST',"http://www.hoppernet.hol.es")
         request.onreadystatechange =function() {
@@ -118,6 +128,11 @@ Drawer {
                             usersModel.setProperty(index, "ip", obj[i].ip)
                         }
                     }
+                    var friends = []
+                    for (i = 0; i<usersModel.count; i++) {
+                        friends.push({famil: usersModel.get(i).famil, login: usersModel.get(i).login, phone: usersModel.get(i).phone, port: usersModel.get(i).port, ip: usersModel.get(i).ip})
+                    }
+                    event_handler.saveSet("frd" , JSON.stringify(friends))
                 }
             }
         }
@@ -804,7 +819,7 @@ Drawer {
                     }
                     Switch {
                         id: myswitcher
-                        checked: true;
+                        checked: {loader.isOnline}
                         visible: index == 1
                         width: facade.toPx(64)
                         height:facade.toPx(80)

@@ -9,12 +9,9 @@ ApplicationWindow {
     x: 0
     y: 0
     visible: true
-    title:qsTr("p2peer.io")
-    property var tempLogin;
-    property var tempPhone;
-
-    width: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 500: facade.toPx(1200)
-    height:event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 900: Screen.height - facade.toPx(100)
+    title:"p2peer.io"
+    property var tmpLogin
+    property var tmpPhone
 
     Timer {
         id: backTimer
@@ -24,8 +21,30 @@ ApplicationWindow {
 
     Timer {
         id: connect
-        interval: 2000
-        onTriggered: loader.logon(tempPhone,tempLogin)
+        interval: 4000
+        onTriggered: {
+            console.log("try connect")
+            loader.logon(tmpPhone,tmpLogin)
+        }
+    }
+
+    width: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 500: facade.toPx(1200)
+    height:event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 900: Screen.height - facade.toPx(100)
+
+    function strartPage() {
+        var usa
+        usa=event_handler.loadValue("user")
+        if (usa != "") {
+            var obj = JSON.parse(usa);
+            loader.avatarPath = (obj.image)
+            loader.famil = obj.family;
+            loader.login = obj.login
+            loader.logon(obj.tel, obj.pass)
+            loader.tel = obj.tel
+        } else {
+            loader.source="qrc:/start.qml";
+            loader.goTo(loader.source)
+        }
     }
 
     QtObject {
@@ -61,16 +80,15 @@ ApplicationWindow {
         property string aToken
         property string userId
 
-        property bool isOnline: true
-        property bool isLogin;
-
-        // loading web page
-        property string urlLink: "";
+        property bool isLogin: false
+        property bool isOnline:false
 
         // history of chats
         property var chats:[];
+        property var frienList: ""
 
-        property var frienList
+        // loading web page
+        property string urlLink: "";
 
         Keys.onReleased: listenBack(event);
 
@@ -92,9 +110,11 @@ ApplicationWindow {
             loader.userId= ""
             loader.aToken= ""
         }
+
         function goTo(page) {
             privated.visitedPageList.push(source=page)
         }
+
         function back() {
             if (privated.visitedPageList.length > 1) {
                 if (source == "qrc:/loginanDregister.qml") {
@@ -109,6 +129,7 @@ ApplicationWindow {
                 strartPage();
             }
         }
+
         function loginByVk() {
             function callback(request) {
                 if (request.status === 200) {
@@ -126,8 +147,10 @@ ApplicationWindow {
                 user_ids: loader.userId,
                 name_case: 'Nom'
             }
-            XHRQuery.sendXHR('POST', "https://api.vk.com/method/users.get?access_token=" + loader.aToken, callback, URLQuery.serializeParams(params))
+            XHRQuery.sendXHR('POST', "https://api.vk.com/method/users.get?access_token=" +
+                             loader.aToken, callback, URLQuery.serializeParams(params))
         }
+
         function logon(phone, password) {
             var request = new XMLHttpRequest();var response;
             request.open('POST',"http://hoppernet.hol.es/default.php")
@@ -145,43 +168,49 @@ ApplicationWindow {
                             response = 0;
                         }
                         switch(response){
-                        case 1:
-                        loader.isLogin = !false;
-                        goTo("qrc:/profile.qml")
-                        event_handler.sendMsgs(phone)
-                        event_handler.saveSet("passw", password)
-                        event_handler.saveSet("phone", phone)
-                        break;
-                        case 0:
-                        loader.isLogin = false;
-                        windowsDialogs.show("Вы не зарегистрированы!",0)
-                        if(loader.source != "qrc:/loginanDregister.qml")
-                            loader.goTo("qrc:/loginanDregister.qml")
-                        if (loader.aToken != "") {
-                            loader.fields[0]=loader.login
-                            loader.fields[1]=loader.famil
-                        } else {
-                            loader.fields[0]=""
-                            loader.fields[1]=""
-                            loader.fields[2]=password
-                        }
-                        loader.fields[4]=phone;
-                        partnerHeader.page = 1;
-                        break;
-                        case -1:
-                        windowsDialogs.show("Нет доступа к интернету",0)
-                        break;
+                            case 1:
+                                loader.isOnline = !false
+                                if (loader.source != "qrc:/profile.qml") {
+                                    loader.isLogin= !(false);
+                                    goTo("qrc:/profile.qml");
+                                }
+                                event_handler.sendMsgs(phone)
+                                var u
+                                u = {tel:phone,pass:password,login:loader.login,
+                                    family:loader.famil,image:loader.avatarPath}
+                                event_handler.saveSet("user", JSON.stringify(u))
+                                break;
+                            case 0:
+                                loader.isLogin = false;
+                                windowsDialogs.show("Вы не зарегистрированы!",0)
+                                if(loader.source != "qrc:/loginanDregister.qml")
+                                    loader.goTo("qrc:/loginanDregister.qml")
+                                if(loader.aToken!="") {
+                                    loader.fields[0]=loader.login;
+                                    loader.fields[1]=loader.famil;
+                                } else {
+                                    loader.fields[0]=""
+                                    loader.fields[1]=""
+                                    loader.fields[2]=password
+                                }
+                                loader.fields[4]=phone;
+                                partnerHeader.page = 1;
+                                break;
+                            case -1:
+                                windowsDialogs.show("Нет доступа к интернету",0)
+                                break;
                         }
                     } else {
-                        loader.isLogin = false;
-                        windowsDialogs.show("Нет доступа к интернету",0)
-                        if(loader.source != "qrc:/loginanDregister.qml")
-                            loader.goTo("qrc:/loginanDregister.qml")
-                        tempLogin = password
-                        tempPhone = phone;
+                        if (loader.source!="qrc:/profile.qml") {
+                            event_handler.sendMsgs(loader.tel)
+                            goTo("qrc:/profile.qml")
+                            loader.isLogin = true;
+                            tmpLogin = (password);
+                            tmpPhone = (phone)
+                        }
                         connect.start()
                     }
-                    busyIndicator.visible=false
+                    busyIndicator.visible = 0;
                 }
             }
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -211,35 +240,24 @@ ApplicationWindow {
         }
     }
 
-    function strartPage() {
-        var phone = event_handler.loadValue("phone");
-        var passw = event_handler.loadValue("passw");
-        if (passw != "" && phone!= "") {
-            loader.logon(phone, passw)
-        } else {
-            loader.source="qrc:/start.qml";
-            loader.goTo(loader.source)
-        }
-    }
-
     function listenBack(event) {
         loader.focus = true
         if (event.key === Qt.Key_Back || event.key === Qt.Key_Escape || event === true) {
             event.accepted= true
             if (loader.dialog==true) {
-            loader.dialog = !loader.dialog;
+                loader.dialog = !loader.dialog
             } else if(loader.context) {
-            loader.context= !loader.context
+                loader.context=!loader.context
             } else if(loader.avatar) {
-            loader.avatar = !loader.avatar;
+                loader.avatar = !loader.avatar
             } else if(loader.webvew) {
-            loader.webvew = !loader.webvew;
+                loader.webvew = !loader.webvew
             } else backTimer.restart()
         }
     }
 
     P2PStyle.HeaderSplash {
-        visible: loader.source != "qrc:/start.qml" && loader.source != "qrc:/qrscan.qml";
+        visible: (loader.source != "qrc:/start.qml" && loader.source != "qrc:/qrscan.qml")
         id: partnerHeader;
     }
 

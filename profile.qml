@@ -9,14 +9,12 @@ Item {
     }
 
     function changeState() {
-        partnerHeader.stat = loader.isOnline? "Online": "Offline"
-    }
-
-    Component.onCompleted: {
-        changeState()
         partnerHeader.phot = loader.avatarPath
+        partnerHeader.stat = loader.isOnline? "Online": "Offline"
         partnerHeader.text = (loader.login + " " + loader.famil);
     }
+
+    Component.onCompleted: changeState()
 
     Item {
         anchors.fill: parent

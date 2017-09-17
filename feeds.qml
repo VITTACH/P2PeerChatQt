@@ -26,7 +26,16 @@ Rectangle {
 
         delegate: Column {
             width:parent.width
-            Component.onCompleted: getMePeers();
+            Component.onCompleted: {
+                getMePeers();
+                var rssNews = event_handler.loadValue("rss")
+                if (rssNews != "") {
+                    var rssOld = JSON.parse(rssNews)
+                    for (var i = 0; i < rssOld.length;i++) {
+                        rssmodel.append({title: rssOld[i].title , image: rssOld[i].image , pDate: rssOld[i].pDate , pDesc: rssOld[i].pDesc})
+                    }
+                }
+            }
 
             function findPeer(phone) {
                 for (var i = 0; i < humanModel.count; i++) {
@@ -150,7 +159,7 @@ Rectangle {
                 property int counter;
                 height: {
                     var cunter = 0;
-                    for (var i = 0; i<listView.count; i++){
+                    for (var i = 0; i < listView.count; i ++) {
                         if (humanModel.get(i).activity == 1 && visible) {
                             cunter++;
                         }
@@ -165,28 +174,13 @@ Rectangle {
                 ListView {
                     id: listView
                     anchors.fill:parent
-                    spacing: parent.counter > 1? facade.toPx(10) :0;
-                    snapMode: ListView.SnapToItem;
-                    boundsBehavior: Flickable.StopAtBounds;
-
-                    Component.onCompleted:{
-                        humanModel.clear();
-                    }
+                    spacing: parent.counter>1?facade.toPx(10):0
+                    snapMode: {ListView.SnapToItem;}
+                    boundsBehavior: {(Flickable.StopAtBounds);}
 
                     property var friend
 
-                    model:  ListModel {
-                        id: humanModel;
-                            ListElement {
-                                activity: 1
-                                image: ""
-                                famil: ""
-                                login: ""
-                                phone: ""
-                                port: ""
-                                ip: ""
-                            }
-                        }
+                    model:ListModel{id: humanModel;}
                     delegate: Item {
                         id: baseItem
                         visible: activity
@@ -194,15 +188,15 @@ Rectangle {
                         height: activity==1? facade.toPx(20)+Math.max(bug.height,fo.height):0
 
                         Rectangle {
-                            color: "#FF006400"
                             width: parent.height*0.6
-                            height:parent.height-4
+                            height:{parent.height-4}
                             anchors.right: parent.right;
                             anchors.verticalCenter: parent.verticalCenter
+                            color: ("#FF006400")
                             Image {
-                                anchors.centerIn: parent
+                                anchors.centerIn:parent;
                                 width: facade.toPx(sourceSize.width)
-                                height: facade.toPx(sourceSize.height)
+                                height: {facade.toPx(sourceSize.height);}
                                 source:"qrc:/ui/buttons/dialerButton.png"
                             }
                         }
@@ -360,8 +354,8 @@ Rectangle {
                     anchors.bottom: parent.bottom
                     start:Qt.point(0, 0)
                     gradient: Gradient {
-                        GradientStop {position: 0.4; color: "#00000000"}
-                        GradientStop {position: 1.0; color: "#50000000"}
+                        GradientStop {position: (0.40); color: ("#00000000");}
+                        GradientStop {position: (1.00); color: ("#50000000");}
                     }
                 }
             }
@@ -376,26 +370,37 @@ Rectangle {
                 XmlRole {name: "image"; query: "media:content/@url/string()";}
                 source:"http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
                 namespaceDeclarations: "declare namespace media=\"http://search.yahoo.com/mrss/\";"
+                onStatusChanged: {
+                    if ((status == XmlListModel.Ready) && (rssRect.visible)) {
+                        var RssCache = []
+                        for (var i = 0; i < xmlmodel.count; i++) {
+                            RssCache.push({title: xmlmodel.get(i).title, image: xmlmodel.get(i).image, pDate: xmlmodel.get(i).pDate, pDesc: xmlmodel.get(i).pDesc})
+                        }
+                        event_handler.saveSet("rss", JSON.stringify(RssCache))
+                        rssView.model = (xmlmodel)
+                    }
+                }
             }
 
             Rectangle {
+                id: rssRect;
                 visible: index
                 color: ("transparent")
                 width: {parent.width;}
                 height: if (visible) {3*facade.toPx(200)}
                 DropShadow {
                     radius: 12
-                    samples: 15
-                    source: rssView
-                    color: "#90000000"
+                    samples:15
+                    source: {rssView;}
+                    color: "#50000000"
                     anchors.fill: rssView
                 }
                 ListView {
                     clip:true
                     id: rssView
-                    model: xmlmodel
+                    model: ListModel {id: rssmodel}
                     width: {parent.width}
-                    height: parent.height
+                    height: {parent.height}
                     spacing: facade.toPx(20);
                     snapMode: {ListView.SnapToItem}
                     boundsBehavior:Flickable.StopAtBounds
@@ -403,7 +408,7 @@ Rectangle {
                         clip: true;
                         radius: height/2;
                         width: {parent.width}
-                        height: {(rssView.height/3) - (rssView.spacing)}
+                        height: {rssView.height/3 - rssView.spacing}
                         Rectangle {
                             color: parent.color
                             radius: parent.height/3
