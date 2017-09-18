@@ -8,13 +8,12 @@ Rectangle {
     color: "#FFEDEDED";
     property bool find:true
     ListView {
-        spacing: facade.toPx(40);
-        width: Math.min(0.9*parent.width,facade.toPx(900))
+        width: parent.width
+        spacing:facade.toPx(40)
         anchors {
-        top: parent.top
-        bottom: downRow.top
-        topMargin:facade.toPx(40)
-        horizontalCenter:parent.horizontalCenter
+            top: parent.top
+            bottom: downRow.top
+            topMargin: facade.toPx(40)
         }
 
         boundsBehavior: {Flickable.StopAtBounds}
@@ -25,7 +24,8 @@ Rectangle {
         }
 
         delegate: Column {
-            width:parent.width
+            anchors.horizontalCenter:parent.horizontalCenter
+            width: Math.min(0.9 * parent.width,facade.toPx(900))
             Component.onCompleted: {
                 getMePeers();
                 var rssNews = event_handler.loadValue("rss")
@@ -188,9 +188,9 @@ Rectangle {
                         height: activity==1? facade.toPx(20)+Math.max(bug.height,fo.height):0
 
                         Rectangle {
-                            width: parent.height*0.6
-                            height:{parent.height-4}
-                            anchors.right: parent.right;
+                            width: (0.7*parent.height);
+                            height:(parent.height - 4);
+                            anchors.right:parent.right;
                             anchors.verticalCenter: parent.verticalCenter
                             color: ("#FF006400")
                             Image {
@@ -215,8 +215,8 @@ Rectangle {
                                 color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#6E879E":"darkgray"):"#E5E5E5"
 
                                 transform: Translate {
-                                x: -coloresRect.width /2
-                                y: -coloresRect.height/2
+                                    x:-coloresRect.width /2
+                                    y:-coloresRect.height/2
                                 }
                             }
 
@@ -226,11 +226,11 @@ Rectangle {
                                 id: circleAnimation;
                                 properties:("width, height, radius")
                                 from: 0
-                                to: delegaRect.width * 3
+                                to: (delegaRect.width * 3)
 
                                 onStopped: {
-                                    coloresRect.width =0
-                                    coloresRect.height=0
+                                    coloresRect.width = 0;
+                                    coloresRect.height= 0;
                                 }
                             }
 
@@ -239,9 +239,9 @@ Rectangle {
                                 anchors.fill:{parent;}
                                 drag.target: {parent;}
                                 drag.axis: Drag.XAxis;
-                                drag.minimumX: -height*0.6;
+                                drag.minimumX: -height*0.7;
                                 drag.maximumX: 0
-                                onExited: {circleAnimation.stop();}
+                                onExited: {(circleAnimation.stop())}
                                 onEntered: {
                                     coloresRect.x = mouseX;
                                     coloresRect.y = mouseY;
@@ -266,10 +266,10 @@ Rectangle {
                             Connections {
                                 target: windowsDialogs
                                 onChooseChanged: {
-                                    var object = JSON.parse((loader.frienList))
-                                    if (object.indexOf(listView.friend) < 0 && !windowsDialogs.choose) {
-                                        object.push(listView.friend)
-                                        loader.frienList=JSON.stringify(object)
+                                    var objct = JSON.parse((loader.frienList))
+                                    if (objct.indexOf(listView.friend) < 0 && !windowsDialogs.choose) {
+                                        objct.push(listView.friend)
+                                        loader.frienList=JSON.stringify(objct)
                                         loader.addFriends()
                                     }
                                 }
@@ -294,7 +294,7 @@ Rectangle {
                                 smooth: true;
                                 visible:false
                                 source:"qrc:/ui/mask/round.png"
-                                sourceSize: {Qt.size(bug.width, bug.height);}
+                                sourceSize: {Qt.size(bug.width , bug.height);}
                             }*/
 
                             Rectangle {
@@ -305,7 +305,7 @@ Rectangle {
                                 x:facade.toPx(30)
                                 width: facade.toPx(100)
                                 height:facade.toPx(100)
-                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.verticalCenter: parent.verticalCenter;
                                 Image {
                                     source: image
                                     anchors.centerIn: parent
@@ -321,7 +321,7 @@ Rectangle {
                                 anchors {
                                     left: bug.right
                                     leftMargin: facade.toPx(30)
-                                    verticalCenter: {(parent.verticalCenter)}
+                                    verticalCenter: {(parent.verticalCenter);}
                                 }
                                 Text {
                                     id: fullName

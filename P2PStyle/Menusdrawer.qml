@@ -124,6 +124,9 @@ Drawer {
                             if (obj[i].name == loader.tel)
                                 listView.currentIndex=i
                         }else {
+                            if (usersModel.get(index).image == "") {
+                                usersModel.setProperty(index, "image", "http://lorempixel.com/200/20" + i + "/sports")
+                            }
                             usersModel.setProperty(index, "port", obj[i].port)
                             usersModel.setProperty(index, "ip", obj[i].ip)
                         }
@@ -430,8 +433,8 @@ Drawer {
 
                 Rectangle {
                     color: "#FF8B0000"
-                    width: parent.height/2
-                    height:parent.height-4
+                    width: (0.7*parent.height);
+                    height:(parent.height - 4);
                     Image {
                         anchors.centerIn:parent
                         width: facade.toPx(sourceSize.width)
@@ -442,13 +445,13 @@ Drawer {
                 }
                 Rectangle {
                     color: "#FF006400"
-                    width: parent.height/2
-                    height:parent.height-4
+                    width: (0.7*parent.height);
+                    height:(parent.height - 4);
                     anchors.right: parent.right
                     Image {
                         anchors.centerIn:parent
-                        width: facade.toPx(sourceSize.width)
-                        height: facade.toPx(sourceSize.height)
+                        width: facade.toPx(sourceSize.width);
+                        height:facade.toPx(sourceSize.height)
                         source:"qrc:/ui/buttons/dialerButton.png"
                     }
                     anchors.verticalCenter: parent.verticalCenter
@@ -459,7 +462,7 @@ Drawer {
                     id: delegaRect
                     width: parent.width
                     height: parent.height
-                    color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#999999": "#999999"): ("white")
+                    color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#455869": "#999999"): ("white")
 
                     Rectangle {
                         width: 0
@@ -468,8 +471,8 @@ Drawer {
                         color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#A9A9A9":"darkgray"):"#E5E5E5"
 
                         transform: Translate {
-                        x: -coloresRect.width /2
-                        y: -coloresRect.height/2
+                            x:-coloresRect.width /2
+                            y:-coloresRect.height/2
                         }
                     }
 
@@ -479,11 +482,11 @@ Drawer {
                         id: circleAnimation;
                         properties:("width, height, radius")
                         from: 0
-                        to: delegaRect.width * 3
+                        to: (delegaRect.width * 3)
 
                         onStopped: {
-                            coloresRect.width =0
-                            coloresRect.height=0
+                            coloresRect.width = 0;
+                            coloresRect.height= 0;
                         }
                     }
 
@@ -505,7 +508,7 @@ Drawer {
                         }
                         drag.target: parent
                         drag.axis: Drag.XAxis
-                        drag.minimumX:-height/2
+                        drag.minimumX: -height*0.7;
                         drag.maximumX: {
                             if (usersModel.count>=index+1) {
                                 if (usersModel.get(index).phone != loader.tel) {
@@ -631,7 +634,7 @@ Drawer {
             width: facade.toPx(40)
             anchors.top: {profile.bottom}
             anchors.bottom: listMenu.top;
-            color: loader.isOnline? "#FF455869": "#6F7584"
+            color: loader.isOnline? "#FF455869": "#999999"
             x: settingDrawer.position==0?0: settingDrawer.x+settingDrawer.width-1;
             MouseArea {
                 property int p
@@ -807,14 +810,14 @@ Drawer {
                     spacing:facade.toPx(25)
                     anchors {
                         fill: parent;
-                        leftMargin: facade.toPx(20)
+                        leftMargin:facade.toPx(20)
                     }
                     Image {
                         id: icon
                         visible: index >= 2
                         source:image;
-                        width: facade.toPx(sourceSize.width *1.5)
-                        height:facade.toPx(sourceSize.height*1.5)
+                        width: {facade.toPx(sourceSize.width * 1.5);}
+                        height:{facade.toPx(sourceSize.height * 1.5)}
                         anchors.verticalCenter: parent.verticalCenter
                     }
                     Switch {
@@ -827,16 +830,16 @@ Drawer {
                         onCheckedChanged: {loader.isOnline = checked}
                         indicator: Rectangle {
                             radius:facade.toPx(25)
-                            y: parent.height/2 - height/2;
-                            implicitWidth: facade.toPx(60)
-                            implicitHeight:facade.toPx(30)
+                            y: (parent.height/2 - height/2);
+                            implicitWidth: (facade.toPx(60))
+                            implicitHeight:(facade.toPx(30))
                             color: parent.checked==true? "#C5D9FB": "#B1B1B1"
 
                             Rectangle {
                                 x: parent.parent.checked? parent.width - width - (parent.height - height)/2: (parent.height - height)/2;
                                 anchors.verticalCenter: parent.verticalCenter
-                                width: myswitcher.height/2
-                                height:myswitcher.height/2
+                                width: (myswitcher.height/2)
+                                height:(myswitcher.height/2)
                                 radius:width/2
                                 color: "#76CCCCCC"
                             }
@@ -852,16 +855,16 @@ Drawer {
                     }
                     Text {
                         text: index == 1? (myswitcher.checked == true? "В сети": qsTr("Невидимый")): target;
-                        width:parent.width-icon.width-facade.toPx(40)
+                        width: {parent.width - icon.width - facade.toPx(40);}
                         anchors.verticalCenter: parent.verticalCenter
                         color: "#FF51587F"
-                        elide: Text.ElideRight;
-                        font.family: {trebu4etMsNorm.name}
-                        font.pixelSize: {facade.doPx(20);}
+                        elide: Text.ElideRight
+                        font.family: {(trebu4etMsNorm.name)}
+                        font.pixelSize: {(facade.doPx(20));}
                     }
                 }
             }
         }
     }
-    Settingdrawei {id: settingDrawer;}
+    Settingdrawei {id:settingDrawer}
 }

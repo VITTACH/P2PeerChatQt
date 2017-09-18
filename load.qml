@@ -31,22 +31,6 @@ ApplicationWindow {
     width: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 500: facade.toPx(1200)
     height:event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 900: Screen.height - facade.toPx(100)
 
-    function strartPage() {
-        var usa
-        usa=event_handler.loadValue("user")
-        if (usa != "") {
-            var obj = JSON.parse(usa);
-            loader.avatarPath = (obj.image)
-            loader.famil = obj.family;
-            loader.login = obj.login
-            loader.logon(obj.tel, obj.pass)
-            loader.tel = obj.tel
-        } else {
-            loader.source="qrc:/start.qml";
-            loader.goTo(loader.source)
-        }
-    }
-
     QtObject {
         id: facade
         function toPx(dp) {
@@ -54,6 +38,22 @@ ApplicationWindow {
         }
         function doPx(dp) {
             return dp*(loader.dpi/160)*1.5;
+        }
+    }
+
+    Loader {
+        id: imagePicker
+        source: {
+            if (event_handler.currentOSys() == 1) {"AndImagePicker.qml"}
+            else
+            if (event_handler.currentOSys() == 2) "IOsImagesPicker.qml";
+            else ""
+        }
+        onLoaded: {
+            item.onChange=function(urlimage) {
+                loader.avatarPath = urlimage
+                event_handler.sendAvatar(decodeURIComponent((urlimage)))
+            }
         }
     }
 
@@ -176,8 +176,7 @@ ApplicationWindow {
                                 }
                                 event_handler.sendMsgs(phone)
                                 var u
-                                u = {tel:phone,pass:password,login:loader.login,
-                                    family:loader.famil,image:loader.avatarPath}
+                                u = {tel:phone,pass:password,login:loader.login,family:loader.famil,image:loader.avatarPath}
                                 event_handler.saveSet("user", JSON.stringify(u))
                                 break;
                             case 0:
@@ -201,20 +200,27 @@ ApplicationWindow {
                                 break;
                         }
                     } else {
-                        if (loader.source!="qrc:/profile.qml") {
-                            event_handler.sendMsgs(loader.tel)
-                            goTo("qrc:/profile.qml")
+                        var findResult = false
+                        for (var i = 0; i < privated.visitedPageList.length; i++) {
+                            if (privated.visitedPageList[i].search("profile.qml") != -1) {
+                                findResult = true;
+                                break;
+                            }
+                        }
+                        if (!findResult) {
+                            event_handler.sendMsgs(phone)
+                            goTo("profile.qml")
                             loader.isLogin = true;
-                            tmpLogin = (password);
-                            tmpPhone = (phone)
+                            tmpLogin = password
+                            tmpPhone = phone
                         }
                         connect.start()
                     }
-                    busyIndicator.visible = 0;
+                    busyIndicator.visible = false;
                 }
             }
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            request.send("phone=" + phone + "&pass=" + password)
+            request.send("phone=" + phone + "&pass="+password)
         }
 
         function addFriends() {
@@ -225,18 +231,19 @@ ApplicationWindow {
         }
     }
 
-    Loader {
-        id: imagePicker
-        source: {
-            if(event_handler.currentOSys()==1) {"AndImagePicker.qml"}
-            else if(event_handler.currentOSys()==2)"IOsImagesPicker.qml"
-            else ""
-        }
-        onLoaded: {
-            item.onChange=function(urlimage) {
-                loader.avatarPath = urlimage
-                event_handler.sendAvatar(decodeURIComponent((urlimage)))
-            }
+    function strartPage() {
+        var usa
+        usa = event_handler.loadValue("user");
+        if (usa != "") {
+            var objct = JSON.parse(usa);
+            loader.avatarPath = (objct.image);
+            loader.famil = objct.family;
+            loader.login = objct.login
+            loader.logon(objct.tel,objct.pass)
+            loader.tel = objct.tel
+        } else {
+            loader.source = ("qrc:/start.qml")
+            loader.goTo(loader.source)
         }
     }
 

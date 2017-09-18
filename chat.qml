@@ -46,7 +46,10 @@ Rectangle {
         }
 
         if (firstLaunch) {
-            loader.chats = JSON.parse(event_handler.loadValue("chats"));
+            var historics = event_handler.loadValue("chats")
+            if (historics != "") {
+                loader.chats = JSON.parse(historics);
+            }
         }
         select = [];
         busyIndicator.visible=true
