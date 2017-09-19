@@ -4,7 +4,6 @@ import QtGraphicalEffects 1.0
 
 Drawer {
     id: drawer
-    clip: true
 
     Connections {
         target: drawer;
@@ -18,10 +17,13 @@ Drawer {
                     friend = event_handler.loadValue("frd")
                     if (friend != "") {
                         var myfriend = (JSON.parse(friend))
-                        for(var i=0; i<myfriend.length;i++)
+                        var triend = []
+                        for(var i=0;i<myfriend.length;i++){
                             usersModel.append({image:"", famil: myfriend[i].famil, login: myfriend[i].login, phone: myfriend[i].phone, port: myfriend[i].port, ip: myfriend[i].ip,activity:1})
+                            triend.push(myfriend[i].phone);
+                        }
                     }
-                    loader.frienList="[\"\"]"
+                    loader.frienList=JSON.stringify(triend)
                 }
                 getMePeers(loader.frienList);
             } else if (position == 0) {
@@ -166,24 +168,28 @@ Drawer {
         }
 
         Rectangle {
-            id: glass
-            color: "#FF6F7584";
-            width: parent.width
+            id: bottomRect
+            color: ("#FF777777")
+            width: parent.width;
             anchors {
-                top:profile.top
-                bottom:profile.bottom
+                top: profile.top
+                bottom: profile.bottom
             }
         }
         Rectangle {
             height: 4
-            color: "#FFFFC129";
-            width: parent.width
-            anchors.top: {glass.top;}
+            color: ("#FFFFC129")
+            width: parent.width;
+            anchors.top:bottomRect.top
         }
 
         Rectangle {
             id: rightRect
-            color: (loader.isOnline? "#95A1AB": "#95A1AB")
+            Rectangle {
+                height: 3
+                width: parent.width
+            }
+            color: (loader.isOnline? "#8E857D": "#999694")
             width: (drawer.width-avatarButton.width)/2 + facade.toPx(14)
             anchors {
                 top: profile.top
@@ -191,23 +197,19 @@ Drawer {
                 bottom: profile.bottom
                 topMargin: 1*profile.height/4
             }
+        }
+        Rectangle {
+            id: leftRect;
             Rectangle {
                 height: 3
                 width: parent.width
             }
-        }
-        Rectangle {
-            id: leftRect;
-            color: (loader.isOnline? "#95A1AB": "#95A1AB")
+            color: (loader.isOnline? "#8E857D": "#999694")
             width: (drawer.width-avatarButton.width)/2 + facade.toPx(15)
             anchors {
                 top: profile.top
                 bottom: profile.bottom
                 topMargin: 3*profile.height/4-myRow.height
-            }
-            Rectangle {
-                height: 3
-                width: parent.width
             }
         }
         Canvas {
@@ -219,13 +221,13 @@ Drawer {
                 bottom:profile.bottom
             }
             Connections {
-                target: loader
+                target: loader;
                 onIsOnlineChanged: {canva.requestPaint();}
             }
             onPaint: {
                 var context = getContext("2d")
-                context.reset();
-                context.fillStyle=loader.isOnline? "#95A1AB": "#95A1AB"
+                context.reset()
+                context.fillStyle=loader.isOnline? "#8E857D": "#999694"
                 context.moveTo(0,height - leftRect.height)
                 context.lineTo(0,height)
                 context.lineTo(width, height);
@@ -237,7 +239,7 @@ Drawer {
 
         Column {
             id: profile
-            y: facade.toPx(25)
+            y: facade.toPx(20);
             spacing: facade.toPx(10);
             anchors{
                 horizontalCenter: parent.horizontalCenter;
@@ -410,7 +412,6 @@ Drawer {
 
         ListView {
             id: listView
-            clip:true
             anchors {
                 left: parent.left
                 right: parent.right
@@ -429,7 +430,7 @@ Drawer {
                 id: baseItem
                 visible: activity
                 width: parent.width
-                height: activity==1? facade.toPx(20)+Math.max(bug.height,fo.height):0
+                height: (activity === 1)? facade.toPx(20) + Math.max(bug.height, fo.height): 0
 
                 Rectangle {
                     color: "#FF8B0000"
@@ -462,13 +463,13 @@ Drawer {
                     id: delegaRect
                     width: parent.width
                     height: parent.height
-                    color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#455869": "#999999"): ("white")
+                    color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#777777": "#999694"): ("white")
 
                     Rectangle {
                         width: 0
                         height: 0
                         id: coloresRect
-                        color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#A9A9A9":"darkgray"):"#E5E5E5"
+                        color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#6B6B6B":"darkgray"):"#E5E5E5"
 
                         transform: Translate {
                             x:-coloresRect.width /2
@@ -495,7 +496,7 @@ Drawer {
                         anchors.fill:parent
                         onClicked: {
                             var json
-                            partnerHeader.text = usersModel.get(index).login+" "+usersModel.get(index).famil
+                            partnerHeader.text = usersModel.get(index).login+" "+usersModel.get(index).famil;
                             json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
                             partnerHeader.stat = (json.port == 0) == true? "Offline": "Online"
                             partnerHeader.phot = usersModel.get(index).image
@@ -529,11 +530,11 @@ Drawer {
                                 if (usersModel.get(index).phone != loader.tel) {
                                     var friendPhone=usersModel.get(index).phone;
                                     var obj = JSON.parse(loader.frienList)
-                                    for (var i = 0; i<obj.length; i++) {
-                                        var friend = obj[i].replace('"', '')
+                                    for (var i = 0; i < obj.length; i++) {
+                                        var friend=obj[i].replace('"', '')
                                         if (friend === friendPhone) {
                                             obj.splice(i, 1)
-                                            loader.frienList=JSON.stringify(obj)
+                                            event_handler.saveSet("frd",loader.frienList=JSON.stringify(obj))
                                             updateFriends();
                                             break;
                                         }
@@ -543,7 +544,7 @@ Drawer {
                             }
                             if (parent.x <= drag.minimumX) {
                                 if (event_handler.currentOSys() != 1)
-                                    Qt.openUrlExternally("tel:" + phone)
+                                   Qt.openUrlExternally("tel:"+phone)
                                 else
                                     caller.directCall(phone)
                             }
@@ -634,7 +635,7 @@ Drawer {
             width: facade.toPx(40)
             anchors.top: {profile.bottom}
             anchors.bottom: listMenu.top;
-            color: loader.isOnline? "#FF455869": "#999999"
+            color: loader.isOnline? "#FF777777": "#999694"
             x: settingDrawer.position==0?0: settingDrawer.x+settingDrawer.width-1;
             MouseArea {
                 property int p
@@ -732,8 +733,7 @@ Drawer {
                             drawer.close()
                             loader.restores()
                             settingDrawer.visible(false)
-                            event_handler.saveSet("phone", "")
-                            event_handler.saveSet("passw", "")
+                            event_handler.saveSet("user", "");
                             loader.goTo("qrc:/loginanDregister.qml");
                         }
                         if (index == 1)

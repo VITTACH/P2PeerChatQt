@@ -22,7 +22,7 @@ Item {
     }
     Rectangle {
         id: headerRect
-        color: "#4F81B6"
+        color: (loader.isLogin == true)? ("#777777"): ("#4F81B6")
         width: parent.width
         height: facade.toPx(h - 10)
 

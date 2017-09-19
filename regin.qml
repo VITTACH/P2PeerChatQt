@@ -59,6 +59,8 @@ Item {
             topMargin: partnerHeader.height+facade.toPx(90)
         }
 
+        displayMarginBeginning: facade.toPx(100);
+
         delegate: Column {
             width: parent.width
             height: index === 6? facade.toPx(150): (index === 5? 0: facade.toPx(90));

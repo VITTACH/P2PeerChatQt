@@ -206,13 +206,13 @@ Rectangle {
                             id: delegaRect
                             width: parent.width
                             height: parent.height;
-                            color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#527392": "#999999"): ("white")
+                            color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#777777": "#999694"): ("white")
 
                             Rectangle {
                                 width: 0
                                 height: 0
                                 id: coloresRect
-                                color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#6E879E":"darkgray"):"#E5E5E5"
+                                color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#6B6B6B":"darkgray"):"#E5E5E5"
 
                                 transform: Translate {
                                     x:-coloresRect.width /2
@@ -267,9 +267,10 @@ Rectangle {
                                 target: windowsDialogs
                                 onChooseChanged: {
                                     var objct = JSON.parse((loader.frienList))
-                                    if (objct.indexOf(listView.friend) < 0 && !windowsDialogs.choose) {
-                                        objct.push(listView.friend)
+                                    if (objct.indexOf(listView.friend) < 0 && windowsDialogs.choose ==false && listView.friend != null) {
+                                        objct.push((listView.friend));
                                         loader.frienList=JSON.stringify(objct)
+                                        console.log(loader.frienList);
                                         loader.addFriends()
                                     }
                                 }

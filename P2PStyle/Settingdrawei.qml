@@ -60,7 +60,6 @@ Drawer {
                 Row {
                     id: navigate
                     anchors.fill:parent
-                    anchors.bottomMargin: 1
                     Image {
                         id: icon
                         source:index>0||element.ListView.isCurrentItem? (image1):(image2)
@@ -118,7 +117,7 @@ Drawer {
                     }
                 }
 
-                color: element.ListView.isCurrentItem && !circleAnimation.running? "#d8d8d8": (index == 0? (loader.isOnline? "#FF455869": "#999999"): "#EEEDEEF0")
+                color: element.ListView.isCurrentItem && !circleAnimation.running? "#d8d8d8": (index == 0? (loader.isOnline? "#FF777777": "#999999"): "#EEEDEEF0")
 
                 Rectangle {
                     visible: index!=1 && index!=4

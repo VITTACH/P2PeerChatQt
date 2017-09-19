@@ -147,8 +147,8 @@ ApplicationWindow {
                 user_ids: loader.userId,
                 name_case: 'Nom'
             }
-            XHRQuery.sendXHR('POST', "https://api.vk.com/method/users.get?access_token=" +
-                             loader.aToken, callback, URLQuery.serializeParams(params))
+            XHRQuery.sendXHR('POST', "https://api.vk.com/method/users.get?access_token=" + loader.aToken, callback,
+                             URLQuery.serializeParams(params))
         }
 
         function logon(phone, password) {
@@ -156,6 +156,7 @@ ApplicationWindow {
             request.open('POST',"http://hoppernet.hol.es/default.php")
             request.onreadystatechange = function() {
                 if (request.readyState == XMLHttpRequest.DONE) {
+                    busyIndicator.visible=false;
                     if (request.status && request.status==200) {
                         if (request.responseText == "") response = -1;
                         else if (request.responseText != "no") {
@@ -169,58 +170,51 @@ ApplicationWindow {
                         }
                         switch(response){
                             case 1:
-                                loader.isOnline = !false
-                                if (loader.source != "qrc:/profile.qml") {
-                                    loader.isLogin= !(false);
+                                loader.isOnline = !false;
+                                if (loader.source!="qrc:/profile.qml")
                                     goTo("qrc:/profile.qml");
-                                }
                                 event_handler.sendMsgs(phone)
                                 var u
                                 u = {tel:phone,pass:password,login:loader.login,family:loader.famil,image:loader.avatarPath}
-                                event_handler.saveSet("user", JSON.stringify(u))
+                                event_handler.saveSet("user", JSON.stringify(u));
                                 break;
                             case 0:
-                                loader.isLogin = false;
-                                windowsDialogs.show("Вы не зарегистрированы!",0)
-                                if(loader.source != "qrc:/loginanDregister.qml")
-                                    loader.goTo("qrc:/loginanDregister.qml")
-                                if(loader.aToken!="") {
-                                    loader.fields[0]=loader.login;
-                                    loader.fields[1]=loader.famil;
+                                windowsDialogs.show("Вы не зарегистрированы!", 0)
+                                if (loader.source != "qrc:/loginanDregister.qml") {loader.goTo("qrc:/loginanDregister.qml")}
+                                if (loader.aToken != ""){
+                                    loader.fields[0] = (loader.login);
+                                    loader.fields[1] = (loader.famil);
                                 } else {
-                                    loader.fields[0]=""
-                                    loader.fields[1]=""
+                                    loader.fields[0] = ""
+                                    loader.fields[1] = ""
                                     loader.fields[2]=password
                                 }
-                                loader.fields[4]=phone;
+                                loader.fields[4] = phone;
                                 partnerHeader.page = 1;
                                 break;
                             case -1:
-                                windowsDialogs.show("Нет доступа к интернету",0)
+                                windowsDialogs.show("Нет доступа к интернету", 0)
                                 break;
                         }
                     } else {
-                        var findResult = false
-                        for (var i = 0; i < privated.visitedPageList.length; i++) {
+                        var findResult = false;
+                        for (var i = 0; i < privated.visitedPageList.length; i++)
                             if (privated.visitedPageList[i].search("profile.qml") != -1) {
-                                findResult = true;
+                                findResult=true
                                 break;
                             }
-                        }
                         if (!findResult) {
-                            event_handler.sendMsgs(phone)
-                            goTo("profile.qml")
-                            loader.isLogin = true;
+                            loader.goTo(("qrc:/profile.qml"));
                             tmpLogin = password
                             tmpPhone = phone
                         }
-                        connect.start()
+                        connect.restart();
                     }
-                    busyIndicator.visible = false;
                 }
             }
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             request.send("phone=" + phone + "&pass="+password)
+            loader.isLogin=true
         }
 
         function addFriends() {
