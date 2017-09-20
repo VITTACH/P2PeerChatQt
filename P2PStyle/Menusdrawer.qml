@@ -49,7 +49,7 @@ Drawer {
         return listView.count;
     }
     function getProfHeight() {
-        return (profile.height) + facade.toPx(25)
+        return profile.height + profile.y;
     }
     function getMenuHeight() {
         return listMenu.height + getProfHeight();
@@ -189,7 +189,7 @@ Drawer {
                 height: 3
                 width: parent.width
             }
-            color: (loader.isOnline? "#8E857D": "#999694")
+            color: (loader.isOnline? "#606060": "#999694")
             width: (drawer.width-avatarButton.width)/2 + facade.toPx(14)
             anchors {
                 top: profile.top
@@ -204,7 +204,7 @@ Drawer {
                 height: 3
                 width: parent.width
             }
-            color: (loader.isOnline? "#8E857D": "#999694")
+            color: (loader.isOnline? "#606060": "#999694")
             width: (drawer.width-avatarButton.width)/2 + facade.toPx(15)
             anchors {
                 top: profile.top
@@ -227,7 +227,7 @@ Drawer {
             onPaint: {
                 var context = getContext("2d")
                 context.reset()
-                context.fillStyle=loader.isOnline? "#8E857D": "#999694"
+                context.fillStyle=loader.isOnline? "#606060": "#999694"
                 context.moveTo(0,height - leftRect.height)
                 context.lineTo(0,height)
                 context.lineTo(width, height);
@@ -463,13 +463,13 @@ Drawer {
                     id: delegaRect
                     width: parent.width
                     height: parent.height
-                    color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#777777": "#999694"): ("white")
+                    color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#606060": "#999694"): ("white")
 
                     Rectangle {
                         width: 0
                         height: 0
                         id: coloresRect
-                        color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#6B6B6B":"darkgray"):"#E5E5E5"
+                        color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#606060":"darkgray"):"#E5E5E5"
 
                         transform: Translate {
                             x:-coloresRect.width /2
@@ -607,7 +607,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(26)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex ==index? "white":"#10387F"
+                            color:listView.currentIndex ==index? "white":"#333333"
                         }
                         Text {
                             text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
@@ -615,7 +615,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(20)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex ==index? "white":"#10387F"
+                            color:listView.currentIndex ==index? "white":"#606060"
                         }
                         Text {
                             text: "Статус: offline с 13:45"
@@ -623,7 +623,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(16)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex ==index? "white":"#10387F"
+                            color:listView.currentIndex ==index? "white":"#606060"
                         }
                     }
                 }
@@ -635,7 +635,7 @@ Drawer {
             width: facade.toPx(40)
             anchors.top: {profile.bottom}
             anchors.bottom: listMenu.top;
-            color: loader.isOnline? "#FF777777": "#999694"
+            color: loader.isOnline? "#FF606060": "#999694";
             x: settingDrawer.position==0?0: settingDrawer.x+settingDrawer.width-1;
             MouseArea {
                 property int p
@@ -746,7 +746,7 @@ Drawer {
 
                 Rectangle {
                     visible: index==0;
-                    color: "#80225895"
+                    color: "#FFA0A0A0"
                     width: firstRow.width
                     height: facade.toPx(50)
                     radius: facade.toPx(25)

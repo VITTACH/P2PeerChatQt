@@ -4,7 +4,7 @@ import QtGraphicalEffects 1.0
 
 Drawer {
     id: drawed
-    property var vtate:false;
+    property var vtate: false
 
     dragMargin: {this.vtate? facade.toPx(40):0}
 
@@ -21,16 +21,16 @@ Drawer {
         }
     }
 
-    closePolicy:{
+    closePolicy: {
         (Popup.CloseOnPressOutside | Popup.CloseOnEscape);
     }
 
-    height: {parent.height;}
+    height:{(parent.height)}
     width: {Math.min(facade.toPx(647), 0.74*parent.width)}
 
     Rectangle {
         color: "#727273"
-        width: parent.width
+        width: parent.width;
         y: {menuDrawer.getProfHeight()}
         height: parent.height - menuDrawer.getProfHeight()
 
@@ -39,7 +39,7 @@ Drawer {
             id: listMenu
             anchors.fill: parent
             delegate: Item {
-                id: element
+                id: element;
                 width: parent.width;
                 height:facade.toPx(123)
                 Rectangle {
