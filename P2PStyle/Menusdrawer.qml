@@ -215,24 +215,25 @@ Drawer {
         Canvas {
             id: canva
             anchors {
+                bottomMargin: -1
                 top: rightRect.top
                 left: leftRect.right
                 right: rightRect.left
-                bottom:profile.bottom
+                bottom: profile.bottom
             }
             Connections {
                 target: loader;
                 onIsOnlineChanged: {canva.requestPaint();}
             }
             onPaint: {
-                var context = getContext("2d")
+                var context =getContext("2d");
                 context.reset()
                 context.fillStyle=loader.isOnline? "#606060": "#999694"
                 context.moveTo(0,height - leftRect.height)
                 context.lineTo(0,height)
                 context.lineTo(width, height);
                 context.lineTo(width, 0)
-                context.closePath();
+                context.closePath()
                 context.fill();
             }
         }
@@ -240,12 +241,12 @@ Drawer {
         Column {
             id: profile
             y: facade.toPx(20);
-            spacing: facade.toPx(10);
+            spacing: {facade.toPx(10)}
             anchors{
                 horizontalCenter: parent.horizontalCenter;
             }
             Item{
-                width: {parent.width}
+                width: {parent.width;}
                 height:facade.toPx(10)
             }
             Row {
@@ -377,7 +378,7 @@ Drawer {
                 Text {
                     id: scope1
                     text: " ( "
-                    color: "#FFFFFF"
+                    color: "white"
                     font.family: {trebu4etMsNorm.name}
                     font.pixelSize: {facade.doPx(28);}
                 }
@@ -398,21 +399,23 @@ Drawer {
                 Text {
                     id: scope2
                     text: " 0 )"
-                    color: "#FFFFFF"
+                    color: "white"
                     font.family: {trebu4etMsNorm.name}
                     font.pixelSize: {facade.doPx(28);}
                 }
             }
 
             Item{
-                width: {parent.width}
+                width: {(parent.width)}
                 height: facade.toPx(10)
             }
         }
 
         ListView {
+            clip: true
             id: listView
             anchors {
+                topMargin: -1
                 left: parent.left
                 right: parent.right
                 top: profile.bottom
@@ -433,7 +436,7 @@ Drawer {
                 height: (activity === 1)? facade.toPx(20) + Math.max(bug.height, fo.height): 0
 
                 Rectangle {
-                    color: "#FF8B0000"
+                    color: baseItem.ListView.isCurrentItem? "#5A9AA8": "#8B0000"
                     width: (0.7*parent.height);
                     height:(parent.height - 4);
                     Image {
@@ -445,7 +448,7 @@ Drawer {
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Rectangle {
-                    color: "#FF006400"
+                    color: baseItem.ListView.isCurrentItem? "#70B77B": "#70B77B"
                     width: (0.7*parent.height);
                     height:(parent.height - 4);
                     anchors.right: parent.right
@@ -469,7 +472,7 @@ Drawer {
                         width: 0
                         height: 0
                         id: coloresRect
-                        color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#606060":"darkgray"):"#E5E5E5"
+                        color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#505050":"darkgray"):"#E5E5E5"
 
                         transform: Translate {
                             x:-coloresRect.width /2
@@ -508,7 +511,7 @@ Drawer {
                             drawer.close();
                         }
                         drag.target: parent
-                        drag.axis: Drag.XAxis
+                        drag.axis: {Drag.XAxis}
                         drag.minimumX: -height*0.7;
                         drag.maximumX: {
                             if (usersModel.count>=index+1) {
@@ -642,8 +645,7 @@ Drawer {
                 anchors.fill: parent
                 onPressed: p=mouse.x
                 onPositionChanged: {
-                    if (mouse.x > p)
-                    settingDrawer.open();
+                    if (mouse.x>p&&settingDrawer.position==0) settingDrawer.open()
                 }
             }
             DropShadow {
@@ -751,7 +753,7 @@ Drawer {
                     height: facade.toPx(50)
                     radius: facade.toPx(25)
                     anchors {
-                        verticalCenter: parent.verticalCenter;
+                        verticalCenter: {(parent.verticalCenter)}
                         horizontalCenter: parent.horizontalCenter
                     }
 
@@ -820,9 +822,12 @@ Drawer {
                         height:{facade.toPx(sourceSize.height * 1.5)}
                         anchors.verticalCenter: parent.verticalCenter
                     }
+                    Connections {
+                        target: loader
+                        onIsOnlineChanged: myswitcher.checked=loader.isOnline
+                    }
                     Switch {
                         id: myswitcher
-                        checked: {loader.isOnline}
                         visible: index == 1
                         width: facade.toPx(64)
                         height:facade.toPx(80)

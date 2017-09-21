@@ -206,13 +206,13 @@ Rectangle {
                             id: delegaRect
                             width: parent.width
                             height: parent.height;
-                            color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#777777": "#999694"): ("white")
+                            color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#7F7875": "#999694"): ("white")
 
                             Rectangle {
                                 width: 0
                                 height: 0
                                 id: coloresRect
-                                color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#6B6B6B":"darkgray"):"#E5E5E5"
+                                color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#8E8784":"darkgray"):"#E5E5E5"
 
                                 transform: Translate {
                                     x:-coloresRect.width /2
@@ -330,7 +330,7 @@ Rectangle {
                                     font.family:trebu4etMsNorm.name
                                     font.pixelSize: facade.doPx(24)
                                     font.bold: true
-                                    color: listView.currentIndex==index? "white":"#404040"
+                                    color: listView.currentIndex==index? "white":"#10387F"
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                                 Text {
@@ -340,7 +340,7 @@ Rectangle {
                                     font.family:trebu4etMsNorm.name
                                     font.pixelSize: facade.doPx(18)
                                     width: delegaRect.width - bug.width - bug.x - fullName.implicitWidth - parent.spacing - 2 * facade.toPx(30);
-                                    color:listView.currentIndex ==index? "white":"#10387F"
+                                    color:listView.currentIndex ==index? "white": "gray"
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                             }

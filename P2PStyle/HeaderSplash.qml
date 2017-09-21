@@ -43,7 +43,16 @@ Item {
                     height:parent.height
                     visible: loader.isLogin && rootItem.phot !=""
 
+                    DropShadow {
+                        radius: 15
+                        samples: 15
+                        source: big
+                        opacity: 0.56;
+                        color: "black"
+                        anchors.fill:big
+                    }
                     OpacityMask {
+                        id: big
                         source: bug
                         maskSource: mask
                         anchors.fill:bug

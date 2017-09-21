@@ -62,13 +62,14 @@ ApplicationWindow {
         focus: true
         objectName: "loader"
         anchors.fill: parent
+
         property real dpi: 0
 
         // some visible popup window
         property bool avatar: false;
         property bool dialog: false;
         property bool webvew: false;
-        property bool context: false
+        property bool context:false;
 
         // info about user
         property string tel
@@ -84,11 +85,12 @@ ApplicationWindow {
         property bool isOnline:false
 
         // history of chats
-        property var chats:[];
-        property var frienList: ""
+        property variant chats: []
+        property string frienList:""
 
         // loading web page
         property string urlLink: "";
+
 
         Keys.onReleased: listenBack(event);
 
@@ -147,8 +149,7 @@ ApplicationWindow {
                 user_ids: loader.userId,
                 name_case: 'Nom'
             }
-            XHRQuery.sendXHR('POST', "https://api.vk.com/method/users.get?access_token=" + loader.aToken, callback,
-                             URLQuery.serializeParams(params))
+            XHRQuery.sendXHR('POST', "https://api.vk.com/method/users.get?access_token=" + loader.aToken, callback, URLQuery.serializeParams(params))
         }
 
         function logon(phone, password) {
@@ -208,6 +209,7 @@ ApplicationWindow {
                             tmpLogin = password
                             tmpPhone = phone
                         }
+                        loader.isOnline = false
                         connect.restart();
                     }
                 }
