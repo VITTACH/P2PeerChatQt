@@ -486,11 +486,11 @@ Drawer {
                         id: circleAnimation;
                         properties:("width, height, radius")
                         from: 0
-                        to: (delegaRect.width * 3)
+                        to: (delegaRect.width * 3);
 
                         onStopped: {
-                            coloresRect.width = 0;
-                            coloresRect.height= 0;
+                            coloresRect.width  = 0;
+                            coloresRect.height = 0;
                         }
                     }
 

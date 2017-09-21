@@ -126,8 +126,8 @@ Item {
             x: facade.toPx(40)
             id: hambrgrButton;
             visible: (page != 0 || loader.isLogin)
-            width: Math.max(hambrgrButtonImage.width, facade.toPx(70))
-            height:Math.max(hambrgrButtonImage.height,facade.toPx(70))
+            width: Math.max(hambrgrButtonImage.width, facade.toPx(90))
+            height:Math.max(hambrgrButtonImage.height,facade.toPx(90))
             anchors.verticalCenter: parent.verticalCenter
             background: Image{
                 id: hambrgrButtonImage
@@ -145,8 +145,8 @@ Item {
         Button {
             id: hamMoreButton;
             visible: (loader.source == "qrc:/chat.qml");
-            width: Math.max(hamMoreButtonImage.width, facade.toPx(70))
-            height:Math.max(hamMoreButtonImage.height,facade.toPx(70))
+            width: Math.max(hamMoreButtonImage.width, facade.toPx(90))
+            height:Math.max(hamMoreButtonImage.height,facade.toPx(90))
             x: parent.width-facade.toPx(20)-width;
             anchors.verticalCenter: parent.verticalCenter
             background: Image{

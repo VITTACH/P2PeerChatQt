@@ -6,8 +6,6 @@ import QtQuick 2.7
 
 Rectangle {
     id: rootChat
-    anchors.fill: parent
-    property var select: [ ];
 
     TextArea {
         id: buferText;
@@ -15,17 +13,17 @@ Rectangle {
         width: 3*rootChat.width/4;
         visible: false
         font {
-        pixelSize: facade.doPx(26)
-        family:trebu4etMsNorm.name
+            pixelSize: {facade.doPx((26))}
+            family: {trebu4etMsNorm.name;}
         }
     }
 
     function hideKeyboard(event) {
-        screenTextFieldPost.focus = false;
         pressedArea.visible= true;
         if (event !== 0) {
             event.accepted = true;
         }
+        screenTextFieldPost.focus = false;
         Qt.inputMethod.hide()
         loader.focus= true
         input = false
@@ -177,9 +175,7 @@ Rectangle {
         model: ListModel {id:chatModel}
         delegate: Item {
             width: parent.width
-            height: (facade.toPx(65) - myheight >= 0)?
-                        (mySpacing) + facade.toPx(65):
-                        (mySpacing) + facade.doPx(26) + (myheight)
+            height: facade.toPx(65) - myheight >= 0? mySpacing+facade.toPx(65): mySpacing+facade.doPx(26)+myheight
             Column {
                 width: {(parent.width)}
                 anchors.bottom: {parent.bottom}
@@ -193,67 +189,114 @@ Rectangle {
                     font.pixelSize: {facade.doPx(16);}
                     text: timeStamp? timeStamp: "NaN";
                 }
-                Item {
+                Rectangle {
+                    id: baseRect
+                    x: facade.toPx(30);
                     width: parent.width
+                    color:"transparent"
+                    radius: facade.toPx(25)
                     height: {parentText.height}
                     Image {
-                        source: {image}
-                        width: facade.toPx(sourceSize.width * 1.2)
-                        height:facade.toPx(sourceSize.width * 1.2)
-                        y: parentText.y + parentText.height-height
-                        x: (parentText.x == facade.toPx(30))?
-                                parentText.x- width/2:
-                                    parentText.x +parentText.width - width/2
+                        source:{image;}
+                        width: {facade.toPx(sourceSize.width * (1.2))}
+                        height:{facade.toPx(sourceSize.width * (1.2))}
+                        y: parentText.y + parentText.height - (height)
+                        x: parentText.x === 0? parentText.x - width/2: (parentText.x + parentText.width - width/2)
                     }
-                    TextArea {
+                    Row {
                         id: parentText;
-                        text: someText;
-                        readOnly: true;
-                        leftPadding: {facade.toPx(25)}
-                        rightPadding: facade.toPx(25);
-                        x:facade.toPx(30) + falg*(parent.width/4 - facade.toPx(60))
+                        spacing:facade.toPx(20)
+                        x:falg*(parent.parent.width/4-facade.toPx(60))
+                        TextArea {
+                            text: someText;
+                            readOnly: true;
+                            leftPadding: {baseRect.radius}
+                            rightPadding: facade.toPx(25);
 
-                        background: Rectangle {
-                            color: backgroundColor
-                            radius: parent.leftPadding
+                            background: Rectangle {
+                                color:backgroundColor
+                                radius: parent.leftPadding
 
-                            MouseArea {
-                                anchors.fill: {parent}
-                                onClicked: {
-                                    var p= 0
-                                    if (select.length>0) {
-                                        p=select.indexOf(index)
-                                        if (p >= 0)
-                                            select.splice(p, 1)
-                                        else {
-                                            contextDialog.menu = 0
-                                            parent.color="#FFDC86"
-                                            select.push(index);
-                                            return
+                                Item {
+                                    clip: true;
+                                    height: parent.height;
+                                    width:parent.width-2*parent.radius
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    Rectangle {
+                                        width: 0
+                                        height: 0
+                                        id: coloresRect;
+                                        color: "#FFF3E0"
+
+                                        transform: Translate {
+                                            x: -coloresRect.width / 2;
+                                            y: -coloresRect.height/ 2;
                                         }
                                     }
-                                    parent.color = backgroundColor
-                                    if (select.length < 1)
-                                        contextDialog.menu = 1;
                                 }
-                                onPressAndHold: {
-                                    select.push(index)
-                                    contextDialog.menu = 0;
-                                    parent.color ="#FFDC86"
+
+                                PropertyAnimation {
+                                    duration: 500
+                                    target: coloresRect;
+                                    id: circleAnimation;
+                                    properties:("width,height,radius")
+                                    from: 0
+                                    to: parent.width* 3;
+
+                                    onStopped: {
+                                        coloresRect.width  = 0;
+                                        coloresRect.height = 0;
+                                    }
+                                }
+
+                                MouseArea {
+                                    anchors.fill: {parent}
+                                    onClicked: {
+                                        var p= 0
+                                        if (select.length>0) {
+                                            p=select.indexOf(index)
+                                            if (p >= 0)
+                                                select.splice(p, 1)
+                                            else {
+                                                contextDialog.menu = 0
+                                                parent.color="#FFE9BF"
+                                                select.push(index);
+                                                return
+                                            }
+                                        }
+                                        baseRect.color = "transparent"
+                                        parent.color = backgroundColor
+                                        if (select.length === 0) {
+                                            contextDialog.menu = 1;
+                                        }
+                                    }
+                                    onPressAndHold: {
+                                        select.push(index)
+                                        contextDialog.menu = 0;
+                                        parent.color ="#FFE9BF"
+                                        baseRect.color = "#FFF3E0";
+                                        coloresRect.x = mouseX;
+                                        coloresRect.y = mouseY;
+                                        circleAnimation.start()
+                                    }
                                 }
                             }
+
+                            verticalAlignment:Text.AlignVCenter
+                            color:textColor
+
+                            wrapMode: {TextEdit.Wrap}
+                            width: {parent.parent.width * 3/4;}
+                            height:(facade.toPx(65) - myheight >= 0)? facade.toPx(65): myheight + facade.doPx(26);
+
+                            font.family: {trebu4etMsNorm.name;}
+                            font.pixelSize: {facade.doPx((26))}
                         }
-
-                        verticalAlignment:Text.AlignVCenter
-                        color: {textColor}
-
-                        wrapMode: {TextEdit.Wrap}
-                        width: {parent.width*3/4}
-                        height:facade.toPx(65) - myheight>=0?facade.toPx(65): myheight+facade.doPx(26)
-
-                        font {
-                            family:trebu4etMsNorm.name
-                            pixelSize: facade.doPx(26)
+                        Image {
+                            smooth: true
+                            source: ("/ui/chat/unreadMsgs.png")
+                            height: facade.toPx(sourceSize.height)
+                            width:facade.toPx(sourceSize.width)
                         }
                     }
                 }
@@ -261,12 +304,13 @@ Rectangle {
         }
     }
 
+    /*
     Rectangle {
         anchors {
-            left: parent.left;
-            right: parent.right;
+            left: parent.left
+            right: parent.right
             bottom: parent.bottom
-            top: flickTextArea.top
+            top: flickTextArea.top;
         }
         radius: facade.toPx(25)
         MouseArea {
@@ -276,24 +320,23 @@ Rectangle {
             propagateComposedEvents: true;
         }
     }
+    */
 
     DropShadow {
         radius: 30
         samples: 40
-        anchors {
-            fill:flickTextArea
-        }
-        source: flickTextArea;
-        color: "#80000000";
+        anchors.fill:flickTextArea
+        source: flickTextArea
+        color: "#80000000"
     }
     Row {
         clip:true
         id: flickTextArea;
-        spacing: facade.toPx(20);
+        spacing: {facade.toPx(20)}
         anchors {
             bottomMargin: input?parent.height * 0.45: facade.toPx(10)
             horizontalCenter: parent.horizontalCenter
-            bottom:parent.bottom;
+            bottom: parent.bottom;
         }
 
         Flickable {
@@ -340,12 +383,12 @@ Rectangle {
 
                 MouseArea {
                     id: pressedArea;
-                    anchors.fill: parent
+                    anchors.fill:parent
                     visible: event_handler.currentOSys()==1 || event_handler.currentOSys()==2
                     onClicked: {
                         input = true
                         visible = false
-                        screenTextFieldPost.focus = true
+                        screenTextFieldPost.focus=true;
                     }
                 }
             }
@@ -372,7 +415,7 @@ Rectangle {
             onClicked: {
                 checkMessage(0)
                 if (event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2) {
-                hideKeyboard(0)
+                    hideKeyboard(0)
                 }
             }
             background: Rectangle {opacity: 0}
@@ -381,4 +424,6 @@ Rectangle {
             id:chatScreenButton
         }
     }
+    anchors.fill: (parent);
+    property var select: []
 }
