@@ -14,7 +14,7 @@ Item {
     P2PStyle.Background {
         anchors.fill: {parent}
         Component.onCompleted:
-            setColors([[0, 74, 127], [120, 120, 120]], 100);
+            setColors([[40, 40, 40], [120, 120, 120]], 100);
     }
 
     ListView {

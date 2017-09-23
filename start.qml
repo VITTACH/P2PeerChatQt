@@ -22,7 +22,7 @@ Item {
     P2PStyle.Background
     {
         anchors.fill: {parent}
-        Component.onCompleted: setColors([[255,255,255], [255,255,255], [15,191,255], [120,120,120]],25)
+        Component.onCompleted: setColors([[255,255,255], [255,255,255], [40,40,40], [120,120,120]], 25)
     }
 
     PropertyAnimation {
@@ -42,8 +42,8 @@ Item {
 
     /* if i will want use background image
     Image {
-        height:parent.width<parent.height? parent.height: ((width/sourceSize.width) * sourceSize.height)
-        width: parent.width<parent.height? sourceSize.width*parent.height/sourceSize.height:parent.width
+        height:parent.width<parent.height?parent.height: ((width/sourceSize.width) * sourceSize.height)
+        width: parent.width<parent.height?sourceSize.width*parent.height/sourceSize.height:parent.width
         y: (parent.height/ 2 - height/ 2);
         x: (parent.width / 2 - width / 2);
     }
@@ -53,9 +53,9 @@ Item {
         id: logo
         scale: 0.8
         opacity: 0
+        width: facade.toPx(sourceSize.width *1.5)
+        height:facade.toPx(sourceSize.height*1.5)
         source:("qrc:/ui/logos/logo.png");
-        width: sourceSize.width/ 1.2*(parent.width < 600? parent.width: 600)/500
-        height:sourceSize.height/1.2*(parent.width < 600? parent.width: 600)/500
         x: (parent.width / 2 - width / 2);
         y: (parent.height/ 2 - height/ 2);
     }

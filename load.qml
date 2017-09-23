@@ -1,4 +1,5 @@
 import QtQuick 2.7
+import StatusBar 0.1
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
 import"P2PStyle"as P2PStyle
@@ -12,6 +13,8 @@ ApplicationWindow {
     title:"p2peer.io"
     property var tmpLogin
     property var tmpPhone
+
+    StatusBar {color: ("#5D5A58")}
 
     Timer {
         id: backTimer
@@ -230,6 +233,8 @@ ApplicationWindow {
         property string menu2Color: "#FFC129";
         property string menu3Color: "#6D6D6D";
         property string menu4Color: "#999694";
+        property string menu5Color: "#FFB900";
+        property string menu6Color: "#FF8C00";
         property string menu8Color: "#5D5D5D";
         property string menu9Color: "#E5E5E5";
 

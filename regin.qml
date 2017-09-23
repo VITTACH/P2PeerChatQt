@@ -5,7 +5,7 @@ import "P2PStyle" as P2PStyle
 
 Item {
     P2PStyle.Background {
-    Component.onCompleted: setColors([[0,74,127],[120,120,120]],100)
+    Component.onCompleted: setColors([[40,40,40],[120,120,120]],100)
     anchors.fill: parent;
     }
 
@@ -49,21 +49,22 @@ Item {
             ListElement {image:"ui/icons/passWIconWhite.png"; plaseholder: "Пароль";}
             ListElement {image:"ui/icons/phoneIconWhite.png"; plaseholder: "э-почта"}
             ListElement {image:"ui/icons/phoneIconWhite.png"; plaseholder: "Телефон"}
-            ListElement {image: ""; plaseholder: ""}
-            ListElement {image: ""; plaseholder: qsTr("Присоединиться")}
+            ListElement {image: "-"; plaseholder: ""}
+            ListElement {image: "_"; plaseholder: "Присоединиться"}
+            ListElement {image: "_"; plaseholder: "Правила"}
         }
 
         anchors {
             top: parent.top
             bottom: parent.bottom
-            topMargin: partnerHeader.height+facade.toPx(90)
+            topMargin: partnerHeader.height+facade.toPx(90);
         }
 
         displayMarginBeginning: facade.toPx(100);
 
         delegate: Column {
             width: parent.width
-            height: index === 6? facade.toPx(150): (index === 5? 0: facade.toPx(90));
+            height: index == 7? facade.toPx(150): (image == "-"? 0: facade.toPx(90));
 
             DropShadow {
                 radius: 12
@@ -71,7 +72,7 @@ Item {
                 anchors {
                     fill:reginButon
                 }
-                visible: index == 6
+                visible: image=="_"
                 color: "#80000000";
                 source: reginButon;
             }
@@ -80,7 +81,7 @@ Item {
                 text: plaseholder
                 height: facade.toPx(100)
                 width: Math.min(0.76*parent.width, facade.toPx(800))
-                visible: index == 6? true: false;
+                visible: image == "_"
 
                 font.pixelSize: {facade.doPx(28)}
                 font.family: trebu4etMsNorm.name;
@@ -88,30 +89,32 @@ Item {
                 anchors.horizontalCenter: {parent.horizontalCenter;}
 
                 onClicked: {
-                    if (loader.fields[0].length < 2) {
-                        windowsDialogs.show("Имя короче чем 2 символа",0)
-                    }
-                    else
-                    if (loader.fields[1].length < 2) {
-                        windowsDialogs.show("Фамилия менее 2 символов",0)
-                    }
-                    else
-                    if (loader.fields[2].length < 5) {
-                        windowsDialogs.show("Пароль < 5 - ти символов",0)
-                    }
-                    else
-                    if (loader.fields[4].length <11) {
-                        windowsDialogs.show("Укажите корректный номер",0)
-                    }
-                    else {
-                        busyIndicator.visible = true
-                        registration(loader.fields[0], loader.fields[1], loader.fields[2], loader.fields[4], loader.fields[3])
+                    if (index == 6) {
+                        if (loader.fields[0].length < 2) {
+                            windowsDialogs.show("Имя короче чем 2 символа",0)
+                        }
+                        else
+                        if (loader.fields[1].length < 2) {
+                            windowsDialogs.show("Фамилия менее 2 символов",0)
+                        }
+                        else
+                        if (loader.fields[2].length < 5) {
+                            windowsDialogs.show("Пароль < 5 - ти символов",0)
+                        }
+                        else
+                        if (loader.fields[4].length <11) {
+                            windowsDialogs.show("Укажите корректный номер",0)
+                        }
+                        else {
+                            busyIndicator.visible = true
+                            registration(loader.fields[0], loader.fields[1], loader.fields[2], loader.fields[4], loader.fields[3])
+                        }
                     }
                 }
 
                 background: Rectangle {
                     radius:facade.toPx(40)
-                    color: parent.down? "#FFC129":"#FFCC40"
+                    color: parent.down? (index === 6? "#FFC129": "#CD463E"): (index === 6? "#FFCC40": "#F15852")
                 }
 
                 contentItem: Text {
@@ -132,56 +135,57 @@ Item {
                 anchors {
                     left: {parent.left}
                     right:parent.right;
-                    leftMargin: 0.09*parent.width;
-                    rightMargin:0.09*parent.width;
+                    leftMargin: 0.09*parent.width
+                    rightMargin:0.09*parent.width
                 }
 
                 Image {
-                  width: facade.toPx(sourceSize.width *1.5)
-                  height:facade.toPx(sourceSize.height*1.5)
-                  source: image;
+                    width: facade.toPx(sourceSize.width *1.5)
+                    height:facade.toPx(sourceSize.height*1.5)
+                    source: index < 5? image: "";
                 }
 
                 TextField {
-                  id: textRow
-                  color: "white"
-                  height: parent.height
-                  placeholderText: plaseholder;
+                    id: textRow
+                    color: "white"
+                    height: parent.height
+                    placeholderText: plaseholder;
 
-                  anchors {
-                    left: {parent.left}
-                    right:parent.right;
-                    leftMargin: facade.toPx(80)
-                    rightMargin:0.09*parent.width;
-                  }
+                    anchors.left: parent.left
+                    anchors.right: {parent.right}
+                    anchors.leftMargin: facade.toPx(80)
+                    anchors.rightMargin: 0.09 * parent.width;
 
-                  Connections {
-                      target: partnerHeader
-                      onPageChanged: {
-                          if(loader.aToken != "") textRow.text = loader.fields[index]
-                      }
-                  }
-
-                  inputMethodHints: index == 4? Qt.ImhFormattedNumbersOnly:Qt.ImhNone
-
-                  onFocusChanged: if(text.length==0 && index==4) text = "8"
-
-                  echoMode: index == 2? TextInput.Password:TextInput.Normal
-
-                  onTextChanged: loader.fields[index]=text;
-
-                  font.pixelSize: facade.doPx(28);
-                  font.family: trebu4etMsNorm.name
-
-                  background: Rectangle{opacity:0}
+                    Connections {
+                        target: partnerHeader
+                        onPageChanged: {
+                            if (loader.aToken != "") {
+                            textRow.text=loader.fields[index]
+                            }
+                        }
+                    }
+                    inputMethodHints: {
+                    if(index == 4) Qt.ImhFormattedNumbersOnly
+                    else Qt.ImhNone
+                    }
+                    onFocusChanged: {
+                    if(text.length==0 && index==4) text = "8"
+                    }
+                    echoMode: {
+                        if (index == 2) {TextInput.Password;}
+                        else TextInput.Normal
+                    }
+                    onTextChanged: loader.fields[index]=text;
+                    font.pixelSize: {facade.doPx(28);}
+                    font.family: {trebu4etMsNorm.name}
+                    background: Rectangle {opacity: 0}
                 }
             }
 
             Rectangle {
-                anchors.horizontalCenter: {
-                    parent.horizontalCenter
-                }
-                width: 0.82 * parent.width;
+                anchors.horizontalCenter:
+                {parent.horizontalCenter}
+                width: 0.82*parent.width;
                 visible: index<5
                 color: "#FFFFFF"
                 height: 1

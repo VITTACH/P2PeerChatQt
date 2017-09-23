@@ -27,7 +27,8 @@ HEADERS += \
     httpnetwork.h\
     eventhandler.h \
     phoneswrapper.h \
-    imageprocessor.h
+    imageprocessor.h \
+    statusbar.h
 
 SOURCES += \
     main.cpp\
@@ -37,7 +38,8 @@ SOURCES += \
     httpnetwork.cpp\
     eventhandler.cpp \
     phoneswrapper.cpp \
-    imageprocessor.cpp
+    imageprocessor.cpp \
+    statusbar.cpp
 
 RESOURCES += \
     qml.qrc

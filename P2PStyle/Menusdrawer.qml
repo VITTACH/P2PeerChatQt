@@ -176,16 +176,14 @@ Drawer {
                 bottom:profile.bottom
             }
         }
-        /*
         Rectangle {
-            height: 4
             width: parent.width;
+            height: facade.toPx(10)
             color: loader.menu2Color;
             anchors {
                 top: (bottomRect.top)
             }
         }
-        */
 
         Rectangle {
             id: rightRect
@@ -209,7 +207,7 @@ Drawer {
                 width: (parent.width)
             }
             color: (loader.isOnline?loader.menu3Color:loader.menu4Color)
-            width: (drawer.width-avatarButton.width)/2 + facade.toPx(15)
+            width: (drawer.width-avatarButton.width)/2 + facade.toPx(19)
             anchors {
                 top: profile.top
                 bottom:profile.bottom
@@ -244,7 +242,6 @@ Drawer {
 
         Column {
             id: profile
-            y: facade.toPx(20);
             spacing: {facade.toPx(10);}
             anchors{
                 horizontalCenter: parent.horizontalCenter;
@@ -288,7 +285,7 @@ Drawer {
                         radius: width * 0.5
                         color:"transparent"
                         border {
-                          width: 1.2
+                          width: 1.4
                           color: "#FFFFFF";
                         }
                     }
@@ -440,7 +437,7 @@ Drawer {
                 height: (activity === 1)? facade.toPx(20) + Math.max(bug.height, fo.height): 0
 
                 Rectangle {
-                    color: baseItem.ListView.isCurrentItem?loader.feed2Color:loader.menu3Color
+                    color: baseItem.ListView.isCurrentItem?loader.menu5Color:loader.menu5Color
                     width: (0.7*parent.height);
                     height:(parent.height - 4);
                     Image {
@@ -452,7 +449,7 @@ Drawer {
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Rectangle {
-                    color: baseItem.ListView.isCurrentItem?loader.menu1Color:loader.menu1Color
+                    color: baseItem.ListView.isCurrentItem?loader.menu6Color:loader.menu6Color
                     width: (0.7*parent.height);
                     height:(parent.height - 4);
                     anchors.right: parent.right

@@ -11,6 +11,7 @@
 #include <QScreen>
 #include <QQmlContext>
 #include <QQuickStyle>
+#include <statusbar.h>
 #include <phoneswrapper.h>
 #include <QQmlApplicationEngine>
 
@@ -48,6 +49,7 @@ int main(int argc,char **argv)
     QQuickStyle::setStyle("P2PStyle");
     eventhandler->currentSys = currentSys;
 
+    qmlRegisterType<StatusBar>("StatusBar", 0 , 1, "StatusBar");
     qmlRegisterType<ImageProcessor>("ImageProcessor",1,0,"ImageProcessor");
 
     QQmlContext *context = engine.rootContext();

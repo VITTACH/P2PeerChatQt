@@ -24,7 +24,7 @@ Item {
         id: headerRect
         width: parent.width
         height: facade.toPx(h - 10)
-        color: loader.isLogin?loader.head1Color:loader.head2Color
+        color: {loader.head1Color;}
 
         Item {
             id: inerItem
