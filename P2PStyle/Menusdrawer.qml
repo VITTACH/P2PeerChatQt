@@ -49,7 +49,7 @@ Drawer {
         return listView.count;
     }
     function getProfHeight() {
-        return profile.height + profile.y;
+        return profile.height + profile.y - 1;
     }
     function getMenuHeight() {
         return listMenu.height + getProfHeight();
@@ -169,32 +169,36 @@ Drawer {
 
         Rectangle {
             id: bottomRect
-            color: ("#FF777777")
             width: parent.width;
+            color: loader.menu1Color;
             anchors {
                 top: profile.top
-                bottom: profile.bottom
+                bottom:profile.bottom
             }
         }
+        /*
         Rectangle {
             height: 4
-            color: ("#FFFFC129")
             width: parent.width;
-            anchors.top:bottomRect.top
+            color: loader.menu2Color;
+            anchors {
+                top: (bottomRect.top)
+            }
         }
+        */
 
         Rectangle {
             id: rightRect
             Rectangle {
                 height: 3
-                width: parent.width
+                width: (parent.width)
             }
-            color: (loader.isOnline? "#606060": "#999694")
+            color: (loader.isOnline?loader.menu3Color:loader.menu4Color)
             width: (drawer.width-avatarButton.width)/2 + facade.toPx(14)
             anchors {
                 top: profile.top
                 right: parent.right
-                bottom: profile.bottom
+                bottom:profile.bottom
                 topMargin: 1*profile.height/4
             }
         }
@@ -202,13 +206,13 @@ Drawer {
             id: leftRect;
             Rectangle {
                 height: 3
-                width: parent.width
+                width: (parent.width)
             }
-            color: (loader.isOnline? "#606060": "#999694")
+            color: (loader.isOnline?loader.menu3Color:loader.menu4Color)
             width: (drawer.width-avatarButton.width)/2 + facade.toPx(15)
             anchors {
                 top: profile.top
-                bottom: profile.bottom
+                bottom:profile.bottom
                 topMargin: 3*profile.height/4-myRow.height
             }
         }
@@ -216,10 +220,10 @@ Drawer {
             id: canva
             anchors {
                 bottomMargin: -1
-                top: rightRect.top
-                left: leftRect.right
+                top: (rightRect.top);
+                left: leftRect.right;
                 right: rightRect.left
-                bottom: profile.bottom
+                bottom:profile.bottom
             }
             Connections {
                 target: loader;
@@ -228,11 +232,11 @@ Drawer {
             onPaint: {
                 var context =getContext("2d");
                 context.reset()
-                context.fillStyle=loader.isOnline? "#606060": "#999694"
+                context.fillStyle=loader.isOnline == true? loader.menu3Color:loader.menu4Color
                 context.moveTo(0,height - leftRect.height)
                 context.lineTo(0,height)
                 context.lineTo(width, height);
-                context.lineTo(width, 0)
+                context.lineTo(width,0)
                 context.closePath()
                 context.fill();
             }
@@ -241,17 +245,17 @@ Drawer {
         Column {
             id: profile
             y: facade.toPx(20);
-            spacing: {facade.toPx(10)}
+            spacing: {facade.toPx(10);}
             anchors{
                 horizontalCenter: parent.horizontalCenter;
             }
             Item{
-                width: {parent.width;}
-                height:facade.toPx(10)
+                width: {(parent.width)}
+                height: facade.toPx(10)
             }
             Row {
                 id: firstRow
-                anchors.horizontalCenter: parent.horizontalCenter;
+                anchors.horizontalCenter: parent.horizontalCenter
                 spacing: {facade.toPx(30) - (facade.toPx(708) - drawer.width)/facade.toPx(10)}
                 Column {
                     anchors {
@@ -259,7 +263,7 @@ Drawer {
                         topMargin: facade.toPx(10)
                     }
                     Text {
-                        color: "white"
+                        color:"#FFFFFF"
                         font.bold: true
                         styleColor:"black";
                         style: Text.Raised;
@@ -269,8 +273,8 @@ Drawer {
                         anchors.horizontalCenter:parent.horizontalCenter
                     }
                     Text {
-                        text: "Друзья"
-                        color: "white"
+                        text: "Друзья";
+                        color: "white";
                         font.family: trebu4etMsNorm.name
                         font.pixelSize: facade.doPx(24);
                         anchors.horizontalCenter:parent.horizontalCenter
@@ -285,7 +289,7 @@ Drawer {
                         color:"transparent"
                         border {
                           width: 1.2
-                          color:"#FFFFFFFF"
+                          color: "#FFFFFF";
                         }
                     }
 
@@ -299,10 +303,10 @@ Drawer {
                         clip: true
                         smooth: true
                         visible: false
-                        width: {parent.width - facade.toPx(45.0);}
-                        height: {parent.height - facade.toPx(45);}
+                        width: {parent.width - facade.toPx(45.0)}
+                        height: {parent.height - facade.toPx(45)}
                         anchors {
-                            verticalCenter: parent.verticalCenter;
+                            verticalCenter: parent.verticalCenter
                             horizontalCenter: (parent.horizontalCenter);
                         }
                         Image {
@@ -332,7 +336,7 @@ Drawer {
                         smooth: true;
                         visible:false
                         source: "qrc:/ui/mask/round.png"
-                        sourceSize: Qt.size(bag.width,bag.height);
+                        sourceSize: Qt.size(bag.width,bag.height)
                     }
                 }
                 Column {
@@ -362,14 +366,14 @@ Drawer {
 
             Row {
                 id: myRow
-                width:firstRow.width
+                width: firstRow.width;
                 Text {
                     text:loader.login+" "+loader.famil
-                    color: "white"
+                    color: "white";
                     font.bold: true
                     font.family: {trebu4etMsNorm.name}
                     font.pixelSize: {facade.doPx(28);}
-                    elide: Text.ElideRight
+                    elide: Text.ElideRight;
                     width: parent.width-scope1.implicitWidth-scope2.implicitWidth-image1.width
                 }
                 anchors.horizontalCenter: {
@@ -407,13 +411,13 @@ Drawer {
 
             Item{
                 width: {(parent.width)}
-                height: facade.toPx(10)
+                height: facade.toPx(20)
             }
         }
 
         ListView {
-            clip: true
-            id: listView
+            clip:true
+            id: listView;
             anchors {
                 topMargin: -1
                 left: parent.left
@@ -436,7 +440,7 @@ Drawer {
                 height: (activity === 1)? facade.toPx(20) + Math.max(bug.height, fo.height): 0
 
                 Rectangle {
-                    color: baseItem.ListView.isCurrentItem? "#5A9AA8": "#8B0000"
+                    color: baseItem.ListView.isCurrentItem?loader.feed2Color:loader.menu3Color
                     width: (0.7*parent.height);
                     height:(parent.height - 4);
                     Image {
@@ -448,7 +452,7 @@ Drawer {
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Rectangle {
-                    color: baseItem.ListView.isCurrentItem? "#70B77B": "#70B77B"
+                    color: baseItem.ListView.isCurrentItem?loader.menu1Color:loader.menu1Color
                     width: (0.7*parent.height);
                     height:(parent.height - 4);
                     anchors.right: parent.right
@@ -466,13 +470,13 @@ Drawer {
                     id: delegaRect
                     width: parent.width
                     height: parent.height
-                    color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#606060": "#999694"): ("white")
+                    color: baseItem.ListView.isCurrentItem? (loader.isOnline? loader.menu3Color: loader.menu4Color): ("white")
 
                     Rectangle {
                         width: 0
                         height: 0
                         id: coloresRect
-                        color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#505050":"darkgray"):"#E5E5E5"
+                        color:baseItem.ListView.isCurrentItem?(loader.isOnline?loader.menu8Color:"darkgray"):loader.menu9Color
 
                         transform: Translate {
                             x:-coloresRect.width /2
@@ -505,7 +509,7 @@ Drawer {
                             partnerHeader.phot = usersModel.get(index).image
                             if (index!=-1) listView.currentIndex = index
                             event_handler.sendMsgs(JSON.stringify(json))
-                            if (loader.source != "qrc:/chat.qml") {
+                            if (loader.source!="qrc:/chat.qml") {
                                 loader.goTo("qrc:/chat.qml")
                             }
                             drawer.close();
@@ -515,7 +519,7 @@ Drawer {
                         drag.minimumX: -height*0.7;
                         drag.maximumX: {
                             if (usersModel.count>=index+1) {
-                                if (usersModel.get(index).phone != loader.tel) {
+                                if (usersModel.get(index).phone !== loader.tel) {
                                     -drag.minimumX;
                                 } else 0
                             }
@@ -530,8 +534,8 @@ Drawer {
                         }
                         onReleased: {
                             if (parent.x >= drag.maximumX) {
-                                if (usersModel.get(index).phone != loader.tel) {
-                                    var friendPhone=usersModel.get(index).phone;
+                                if (usersModel.get(index).phone !== loader.tel) {
+                                    var friendPhone = usersModel.get(index).phone
                                     var obj = JSON.parse(loader.frienList)
                                     for (var i = 0; i < obj.length; i++) {
                                         var friend=obj[i].replace('"', '')
@@ -610,15 +614,15 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(26)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex ==index? "white":"#333333"
+                            color:listView.currentIndex === index? "white": loader.menu10Color
                         }
                         Text {
                             text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
                             elide: Text.ElideRight
                             font.family:trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(20)
+                            font.pixelSize: facade.doPx(22)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex ==index? "white":"#606060"
+                            color:listView.currentIndex === index? "white": loader.menu11Color
                         }
                         Text {
                             text: "Статус: offline с 13:45"
@@ -626,7 +630,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(16)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex ==index? "white":"#606060"
+                            color:listView.currentIndex === index? "white": loader.menu11Color
                         }
                     }
                 }
@@ -636,9 +640,10 @@ Drawer {
         Rectangle {
             id: leftSlider
             width: facade.toPx(40)
+            anchors.topMargin: -1;
             anchors.top: {profile.bottom}
             anchors.bottom: listMenu.top;
-            color: loader.isOnline? "#FF606060": "#999694";
+            color: loader.isOnline === true? loader.menu3Color: loader.menu4Color;
             x: settingDrawer.position==0?0: settingDrawer.x+settingDrawer.width-1;
             MouseArea {
                 property int p
@@ -674,7 +679,7 @@ Drawer {
             radius: 40
             samples: 40
             source: listMenu
-            color: "#80000000"
+            color: "#80000000";
             verticalOffset: -10
             anchors {
                 fill: listMenu;
@@ -705,17 +710,17 @@ Drawer {
                     ListElement{image:"";target:""}
                     ListElement{
                         image: "qrc:/ui/icons/DevsIconBlue.png"
-                        target: qsTr("Настройки")
+                        target: "Настройки"
                     }
                     ListElement{
                         image: "qrc:/ui/icons/doorIconBlue.png"
-                        target: qsTr("Выйти")
+                        target: "Выйти"
                     }
                 }
             delegate: Rectangle{
                 width: parent.width
                 height: facade.toPx(80)
-                color: ListView.isCurrentItem? "lightgrey": "#E5E5E5"
+                color: ListView.isCurrentItem==true?"lightgrey":loader.menu9Color
                 MouseArea {
                     id:menMouseArea
                     anchors.fill:parent
@@ -752,18 +757,14 @@ Drawer {
                     width: firstRow.width
                     height: facade.toPx(50)
                     radius: facade.toPx(25)
-                    anchors {
-                        verticalCenter: {(parent.verticalCenter)}
-                        horizontalCenter: parent.horizontalCenter
-                    }
+                    anchors.verticalCenter: {(parent.verticalCenter)}
+                    anchors.horizontalCenter: parent.horizontalCenter
 
                     Row {
-                        spacing:facade.toPx(10)
-                        anchors {
-                            left: {parent.left}
-                            leftMargin: facade.toPx(20);
-                            verticalCenter: parent.verticalCenter
-                        }
+                        spacing: {facade.toPx(10);}
+                        anchors.left: {parent.left}
+                        anchors.leftMargin: facade.toPx(20);
+                        anchors.verticalCenter: parent.verticalCenter
                         Button {
                             id: inerImage
                             width: facade.toPx(40);
@@ -781,11 +782,12 @@ Drawer {
                             }
                         }
                         Connections {
-                            target: drawer
-                            onFindChanged: {
-                                if(find) {
+                            target: drawer;
+                            onFindChanged:{
+                                if (find) {
                                     inerText.focus = (false)
-                                    inerText.clear(); filterList("");
+                                    inerText.clear();
+                                    filterList("");
                                 }
                             }
                         }
@@ -838,7 +840,7 @@ Drawer {
                             y: (parent.height/2 - height/2);
                             implicitWidth: (facade.toPx(60))
                             implicitHeight:(facade.toPx(30))
-                            color: parent.checked==true? "#C5D9FB": "#B1B1B1"
+                            color: parent.checked==true? loader.menu12Color: loader.menu13Color
 
                             Rectangle {
                                 x: parent.parent.checked? parent.width - width - (parent.height - height)/2: (parent.height - height)/2;
@@ -861,11 +863,13 @@ Drawer {
                     Text {
                         text: index == 1? (myswitcher.checked == true? "В сети": qsTr("Невидимый")): target;
                         width: {parent.width - icon.width - facade.toPx(40);}
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: "#FF51587F"
-                        elide: Text.ElideRight
+                        color: loader.menu11Color;
+                        elide: {(Text.ElideRight)}
                         font.family: {(trebu4etMsNorm.name)}
                         font.pixelSize: {(facade.doPx(20));}
+                        anchors.verticalCenter : {
+                            parent.verticalCenter;
+                        }
                     }
                 }
             }

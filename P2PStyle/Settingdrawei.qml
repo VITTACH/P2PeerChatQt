@@ -29,10 +29,10 @@ Drawer {
     width: {Math.min(facade.toPx(647), 0.74*parent.width)}
 
     Rectangle {
-        color: "#727273"
         width: parent.width;
         y: {menuDrawer.getProfHeight()}
         height: parent.height - menuDrawer.getProfHeight()
+        color: loader.sets1Color
 
         ListView {
             clip: true
@@ -50,11 +50,11 @@ Drawer {
                         width: 0
                         height: 0
                         id: coloresRect
-                        color:"#d8d8d8"
+                        color: loader.sets2Color
 
                         transform: Translate {
-                            x: -coloresRect.width /2
-                            y: -coloresRect.height/2
+                            x: -coloresRect.width /2;
+                            y: -coloresRect.height/2;
                         }
                     }
                 Row {
@@ -62,14 +62,14 @@ Drawer {
                     anchors.fill:parent
                     Image {
                         id: icon
-                        source:index>0||element.ListView.isCurrentItem? (image1):(image2)
+                        source:index > 0 || element.ListView.isCurrentItem == true? image1: image2
                         anchors.verticalCenter: parent.verticalCenter;
                         width: ((facade.toPx(sourceSize.width *1.5)));
                         height:((facade.toPx(sourceSize.height*1.5)));
                     }
                     Text {
                         text: target;
-                        color:index>0||element.ListView.isCurrentItem? "#51587F": "white"
+                        color:index>0||element.ListView.isCurrentItem? loader.menu11Color: "white"
                         width: parent.width-icon.width-facade.toPx(40)
                         anchors.verticalCenter: parent.verticalCenter;
                         font.family: {trebu4etMsNorm.name}
@@ -117,7 +117,7 @@ Drawer {
                     }
                 }
 
-                color: element.ListView.isCurrentItem && !circleAnimation.running? "#d8d8d8": (index == 0? (loader.isOnline? "#FF777777": "#999999"): "#EEEDEEF0")
+                color: element.ListView.isCurrentItem && !circleAnimation.running? loader.sets2Color: (index == 0? (loader.isOnline? loader.head1Color: loader.menu4Color): "#EEEDEEF0")
 
                 Rectangle {
                     visible: index!=1 && index!=4

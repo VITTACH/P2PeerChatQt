@@ -3,10 +3,9 @@
     <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="vittachpeer" android:icon="@drawable/icon">
         <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="quickandroid.QuickAndroidActivity" android:label="vittachpeer" android:icon="@drawable/icon" android:screenOrientation="unspecified" android:launchMode="singleTop">
 
-    android:theme=&quot;@android:style/Theme.Black.NoTitleBar&quot;
             <meta-data android:name="android.app.repository" android:value="default"/>
             <meta-data android:name="android.app.lib_name" android:value="vittachpeer"/>
-            <meta-data android:name="android.app.background_running" android:value="false"/>
+            <meta-data android:name="android.app.background_running" android:value="true"/>
             <meta-data android:name="android.app.extract_android_style" android:value="full"/>
             <meta-data android:name="android.app.auto_screen_scale_factor" android:value="false"/>
             <meta-data android:name="android.app.libs_prefix" android:value="/data/local/tmp/qt/"/>
@@ -17,20 +16,21 @@
             <meta-data android:name="android.app.qt_sources_resource_id" android:resource="@array/qt_sources"/>
             <meta-data android:name="android.app.use_local_qt_libs" android:value="-- %%USE_LOCAL_QT_LIBS%% --"/>
             <meta-data android:name="android.app.bundled_libs_resource_id" android:resource="@array/bundled_libs"/>
-            <meta-data android:value="@string/ministro_needed_msg" android:name="android.app.ministro_needed_msg"/>
             <meta-data android:name="android.app.static_init_classes" android:value="-- %%INSERT_INIT_CLASSES%% --"/>
             <meta-data android:name="android.app.bundle_local_qt_libs" android:value="-- %%BUNDLE_LOCAL_QT_LIBS%% --"/>
             <meta-data android:name="android.app.bundled_in_lib_resource_id" android:resource="@array/bundled_in_lib"/>
-            <meta-data android:value="@string/ministro_not_found_msg" android:name="android.app.ministro_not_found_msg"/>
             <meta-data android:name="android.app.bundled_in_assets_resource_id" android:resource="@array/bundled_in_assets"/>
             <intent-filter>
-              <action android:name="android.intent.action.MAIN"/> <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <!-- For adding service(s) please, check this: https://wiki.qt.io/AndroidServices -->
         <service android:name="org.qtproject.example.vittachpeer.MyFirebaseMessagingService">
-            <intent-filter> <action android:name="com.google.firebase.MESSAGING_EVENT"/> </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
         </service>
         <service android:name="org.qtproject.example.vittachpeer.MyFirebaseInstanceIDService">
             <intent-filter>
@@ -46,16 +46,16 @@
 
     <!-- The following comment will be replaced upon deployment with default permissions based on the dependencies of the application.
          Remove the comments, if you do not require these default permissions. -->
-        <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
-        <uses-permission android:name="android.permission.CAMERA"/>
-        <uses-permission android:name="android.permission.INTERNET"/>
-        <uses-permission android:name="android.permission.WAKE_LOCK"/>
-        <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-        <uses-permission android:name="android.hardware.camera.flash"/>
-        <uses-permission android:name="android.permission.CALL_PHONE"/>
-        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.hardware.camera.flash"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <!-- The following comment will allbe replaced upon deployment with default features based on the dependencies of the application.
          Remove the comment if you do not require these default features. -->

@@ -206,13 +206,13 @@ Rectangle {
                             id: delegaRect
                             width: parent.width
                             height: parent.height;
-                            color: baseItem.ListView.isCurrentItem? (loader.isOnline? "#7F7875": "#999694"): ("white")
+                            color: baseItem.ListView.isCurrentItem? (loader.isOnline==true? loader.feed1Color: loader.menu4Color):"white"
 
                             Rectangle {
                                 width: 0
                                 height: 0
                                 id: coloresRect
-                                color:baseItem.ListView.isCurrentItem?(loader.isOnline?"#8E8784":"darkgray"):"#E5E5E5"
+                                color:baseItem.ListView.isCurrentItem? (loader.isOnline?loader.feed2Color: "darkgray"): loader.menu9Color
 
                                 transform: Translate {
                                     x:-coloresRect.width /2

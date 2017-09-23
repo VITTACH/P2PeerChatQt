@@ -91,7 +91,6 @@ ApplicationWindow {
         // loading web page
         property string urlLink: "";
 
-
         Keys.onReleased: listenBack(event);
 
         Component.onCompleted: strartPage()
@@ -225,6 +224,30 @@ ApplicationWindow {
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             request.send("name=" + loader.tel + "&friend=" +(frienList))
         }
+
+        // colors variables
+        property string menu1Color: "#818181";
+        property string menu2Color: "#FFC129";
+        property string menu3Color: "#6D6D6D";
+        property string menu4Color: "#999694";
+        property string menu8Color: "#5D5D5D";
+        property string menu9Color: "#E5E5E5";
+
+        property string menu10Color:"#333333";
+        property string menu11Color:"#606060";
+        property string menu12Color:"#C5D9FB";
+        property string menu13Color:"#B1B1B1";
+        property string menu14Color:"#51587F";
+
+        property string head1Color: "#777777";
+        property string head2Color: "#4F81B6";
+
+        property string sets1Color: "#727273";
+        property string sets2Color: "#D8D8D8";
+
+        property string feed1Color: "#7F7875";
+        property string feed2Color: "#8E8784";
+        // colors variables
     }
 
     function strartPage() {

@@ -22,9 +22,9 @@ Item {
     }
     Rectangle {
         id: headerRect
-        color: (loader.isLogin == true)? ("#777777"): ("#4F81B6")
         width: parent.width
         height: facade.toPx(h - 10)
+        color: loader.isLogin?loader.head1Color:loader.head2Color
 
         Item {
             id: inerItem
