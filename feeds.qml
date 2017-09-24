@@ -8,6 +8,7 @@ Rectangle {
     color: "#FFEDEDED";
     property bool find:true
     ListView {
+        id: basView
         width: parent.width
         spacing:facade.toPx(40)
         anchors {
@@ -25,7 +26,7 @@ Rectangle {
 
         delegate: Column {
             anchors.horizontalCenter:parent.horizontalCenter
-            width: Math.min(0.9 * parent.width,facade.toPx(900))
+            width:Math.min(0.9*parent.width,facade.toPx(900))
             Component.onCompleted: {
                 getMePeers();
                 var rssNews = event_handler.loadValue("rss")
@@ -375,10 +376,21 @@ Rectangle {
                     if ((status == XmlListModel.Ready) && (rssRect.visible)) {
                         var RssCache = []
                         for (var i = 0; i < xmlmodel.count; i++) {
-                            RssCache.push({title: xmlmodel.get(i).title, image: xmlmodel.get(i).image, pDate: xmlmodel.get(i).pDate, pDesc: xmlmodel.get(i).pDesc})
+                            var obj = {title: xmlmodel.get(i).title,
+                                          image: xmlmodel.get(i).image,
+                                              pDate: xmlmodel.get(i).pDate,
+                                                 pDesc: xmlmodel.get(i).pDesc}
+                            RssCache.push(obj)
+                            for (var j = 0; j < rssView.model.count; j++) {
+                                if (rssView.model.get(j).title == obj.title) {
+                                    break;
+                                }
+                            }
+                            if(j == rssView.model.count){
+                                rssView.model.append(obj)
+                            }
                         }
                         event_handler.saveSet("rss", JSON.stringify(RssCache))
-                        rssView.model = (xmlmodel)
                     }
                 }
             }
@@ -399,17 +411,27 @@ Rectangle {
                 ListView {
                     clip:true
                     id: rssView
-                    model: ListModel {id: rssmodel}
                     width: {parent.width}
-                    height: {parent.height}
+                    height: parent.height
                     spacing: facade.toPx(20);
+                    onContentYChanged : {
+                        if (contentY < - 200)
+                            xmlmodel.reload()
+                    }
+                    Connections {
+                        target: basView
+                        onContentYChanged : {
+                            if(basView.contentY==0)
+                                rssView.positionViewAtBeginning()
+                        }
+                    }
+                    model: ListModel {id: rssmodel}
                     snapMode: {ListView.SnapToItem}
-                    boundsBehavior:Flickable.StopAtBounds
                     delegate: Rectangle {
                         clip: true;
                         radius: height/2;
                         width: {parent.width}
-                        height: {rssView.height/3 - rssView.spacing}
+                        height: rssView.height/3-rssView.spacing;
                         Rectangle {
                             color: parent.color
                             radius: parent.height/3
@@ -422,7 +444,7 @@ Rectangle {
                                 color:"transparent"
                                 anchors {
                                     fill: {parent;}
-                                    rightMargin:parent.radius
+                                    rightMargin: {parent.radius;}
                                 }
                                 Rectangle {
                                     width: 0
@@ -431,8 +453,8 @@ Rectangle {
                                     color:"#EDEDED"
 
                                     transform:Translate {
-                                        x: (-coloresRect2.width /2);
-                                        y: (-coloresRect2.height/2);
+                                        x:-coloresRect2.width /2
+                                        y:-coloresRect2.height/2
                                     }
                                 }
                             }
@@ -440,7 +462,7 @@ Rectangle {
                                 duration: 500
                                 target:coloresRect2
                                 id:circleAnimation2
-                                properties:("width, height, radius")
+                                properties:"width,height,radius"
                                 from: 0
                                 to: parent.width/2;
 
@@ -453,7 +475,7 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill:parent
-                            onClicked: {Qt.openUrlExternally(link);}
+                            onClicked:Qt.openUrlExternally(link)
                             onEntered: {
                                 coloresRect2.x = (mouseX)
                                 coloresRect2.y = (mouseY)
@@ -534,27 +556,53 @@ Rectangle {
         }
     }
 
+    Button {
+        text:qsTr("Наверх")
+        anchors {
+            top: parent.top
+            bottom: downRow.top
+            right: parent.right
+        }
+        visible: basView.contentY > 0;
+        font {
+            pixelSize: facade.doPx(20)
+            family:trebu4etMsNorm.name
+        }
+        onClicked: basView.positionViewAtBeginning()
+        contentItem: Text {
+            verticalAlignment: Text.AlignBottom
+            horizontalAlignment: {Text.AlignHCenter}
+            font: (parent.font)
+            text: (parent.text)
+        }
+        width: (parent.width - Math.min(0.9 * parent.width, facade.toPx(900)))/2-facade.toPx(10)
+        background: Rectangle {
+            color: "#BBFFFFFF";
+            anchors.fill:parent
+        }
+    }
+
     Rectangle {
         id: downRow
         width: parent.width
         height:facade.toPx(80)
-        anchors.bottom: parent.bottom
+        anchors.bottom: parent.bottom;
         Rectangle {
             height: 1
             width:parent.width
             color: "lightgray"
-            anchors.top: {parent.top}
+            anchors.top: {parent.top;}
         }
         Row {
-            spacing: facade.toPx(50);
-            anchors.centerIn: parent;
+            spacing: {facade.toPx(50)}
+            anchors.centerIn: {parent}
             Repeater {
-                model: ["Реклама", "Для бизнеса", "Все о P2P", "Конфиденциальность"];
+                model: [qsTr("Реклама"), qsTr("Для бизнеса"), "Все о P2P", "Конфиденциальность"]
                 Text {
+                    text: {modelData;}
                     anchors.verticalCenter:parent.verticalCenter
-                    text: {modelData}
-                    font.family: trebu4etMsNorm.name;
-                    font.pixelSize: {facade.doPx(16)}
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize:{facade.doPx(16)}
                 }
             }
         }

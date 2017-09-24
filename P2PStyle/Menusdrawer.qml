@@ -176,14 +176,6 @@ Drawer {
                 bottom:profile.bottom
             }
         }
-        Rectangle {
-            width: parent.width;
-            height: facade.toPx(10)
-            color: loader.menu2Color;
-            anchors {
-                top: (bottomRect.top)
-            }
-        }
 
         Rectangle {
             id: rightRect
@@ -871,6 +863,12 @@ Drawer {
                 }
             }
         }
+    }
+    Rectangle {
+        width:4
+        height:parent.height
+        color: loader.menu2Color
+        anchors.left: {parent.right}
     }
     Settingdrawei {id:settingDrawer}
 }
