@@ -91,7 +91,7 @@ Item {
                         styleColor: "black"
                         style: Text.Raised;
                         elide: Text.ElideLeft
-                        width: Math.min(inerItem.width - bug.width - facade.toPx(90), this.implicitWidth)
+                        width: Math.min(inerItem.width - bug.width - facade.toPx(30), this.implicitWidth)
                         text: {rootItem.text.replace("\n" , "");}
 
                         font.pixelSize: loader.isLogin? facade.doPx(28): facade.doPx(34)
@@ -119,42 +119,37 @@ Item {
             samples: 20
             color: ("#CC000000")
             source:hambrgrButton
-            anchors.fill:hambrgrButton
-            visible:page==1?true:false
+            anchors.fill: hambrgrButton
+            visible: page==1?true:false
         }
         Button {
-            x: facade.toPx(40)
             id: hambrgrButton;
-            visible: (page != 0 || loader.isLogin)
-            width: Math.max(hambrgrButtonImage.width, facade.toPx(90))
-            height:Math.max(hambrgrButtonImage.height,facade.toPx(90))
+            visible: page!=0||loader.isLogin? true: false
+            width: facade.toPx(150)
+            height: {parent.height}
             anchors.verticalCenter: parent.verticalCenter
             background: Image{
-                id: hambrgrButtonImage
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                }
+                id: hambrgrButtonImage;
+                source: "qrc:/ui/buttons/" + (page == 1 || loader.source == "qrc:/chat.qml"? "back": "infor") + "Button.png"
+                anchors.centerIn:parent
                 height:facade.toPx(sourceSize.height*1.2)
                 width: facade.toPx(sourceSize.width *1.2)
                 fillMode: Image.PreserveAspectFit;
-                source: "qrc:/ui/buttons/" + (page == 1 || loader.source == "qrc:/chat.qml"? "back": "infor") + "Button.png"
             }
             onClicked: page == 1? page--: (loader.source == "qrc:/chat.qml"?loader.back(): menuDrawer.open())
         }
 
         Button {
             id: hamMoreButton;
-            visible: (loader.source == "qrc:/chat.qml");
-            width: Math.max(hamMoreButtonImage.width, facade.toPx(90))
-            height:Math.max(hamMoreButtonImage.height,facade.toPx(90))
+            visible: (loader.source === "qrc:/chat.qml");
+            width: facade.toPx(150)
+            height: {parent.height}
             x: parent.width-facade.toPx(20)-width;
             anchors.verticalCenter: parent.verticalCenter
             background: Image{
-                id: hamMoreButtonImage
+                id: hamMoreButtonImage;
                 source: "qrc:/ui/buttons/moreButton.png";
-                anchors {
-                    verticalCenter: parent.verticalCenter
-                }
+                anchors.centerIn:parent
                 height:facade.toPx(sourceSize.height*1.2)
                 width: facade.toPx(sourceSize.width *1.2)
                 fillMode: Image.PreserveAspectFit;

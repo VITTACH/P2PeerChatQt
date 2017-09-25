@@ -33,7 +33,7 @@ Rectangle {
                 if (rssNews != "") {
                     var rssOld = JSON.parse(rssNews)
                     for (var i = 0; i < rssOld.length;i++) {
-                        rssmodel.append({title: rssOld[i].title , image: rssOld[i].image , pDate: rssOld[i].pDate , pDesc: rssOld[i].pDesc})
+                        rssmodel.append({title: rssOld[i].title, image: rssOld[i].image, pDate: rssOld[i].pDate, pDesc: rssOld[i].pDesc, link: rssOld[i].link})
                     }
                 }
             }
@@ -144,7 +144,7 @@ Rectangle {
                         onAccepted: filterList(text.toLowerCase())
                         onTextChanged: if (event_handler.currentOSys()!=1 && event_handler.currentOSys()!=2) filterList(text.toLowerCase());
                         placeholderText: "Найти друзей";
-                        font.bold: true
+                        font.bold: true;
                         font.pixelSize: facade.doPx(20);
                         font.family: trebu4etMsNorm.name
                         onActiveFocusChanged:find=false;
@@ -366,7 +366,7 @@ Rectangle {
                 id: xmlmodel
                 query: "/rss/channel/item"
                 XmlRole {name: "link"; query : "link/string()";}
-                XmlRole {name: "title"; query : "title/string()";}
+                XmlRole {name: "title"; query: "title/string()";}
                 XmlRole {name: "pDate"; query: "pubDate/string()"}
                 XmlRole {name: "pDesc"; query: "description/string()"}
                 XmlRole {name: "image"; query: "media:content/@url/string()";}
@@ -376,10 +376,11 @@ Rectangle {
                     if ((status == XmlListModel.Ready) && (rssRect.visible)) {
                         var RssCache = []
                         for (var i = 0; i < xmlmodel.count; i++) {
-                            var obj = {title: xmlmodel.get(i).title,
+                            var obj = {link: xmlmodel.get(i).link,
+                                        title: xmlmodel.get(i).title,
                                           image: xmlmodel.get(i).image,
-                                              pDate: xmlmodel.get(i).pDate,
-                                                 pDesc: xmlmodel.get(i).pDesc}
+                                            pDate: xmlmodel.get(i).pDate,
+                                              pDesc: xmlmodel.get(i).pDesc}
                             RssCache.push(obj)
                             for (var j = 0; j < rssView.model.count; j++) {
                                 if (rssView.model.get(j).title == obj.title) {

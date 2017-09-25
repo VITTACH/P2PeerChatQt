@@ -13,8 +13,7 @@ Item {
 
     P2PStyle.Background {
         anchors.fill: {parent}
-        Component.onCompleted:
-            setColors([[40, 40, 40], [120, 120, 120]], 100);
+        Component.onCompleted: setColors([[40, 40, 40],[120, 120, 120],[0, 74, 127]],500)
     }
 
     ListView {
@@ -267,7 +266,7 @@ Item {
                 anchors.horizontalCenter:
                 {parent.horizontalCenter}
                 color: "#FFFFFF"
-                height: 1
+                height: 4
             }
         }
     }

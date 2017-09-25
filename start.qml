@@ -22,7 +22,7 @@ Item {
     P2PStyle.Background
     {
         anchors.fill: {parent}
-        Component.onCompleted: setColors([[255,255,255], [255,255,255], [40,40,40], [120,120,120]], 25)
+        Component.onCompleted: setColors([[255,255,255], [255,255,255], [40,40,40], [120,120,120]], 50)
     }
 
     PropertyAnimation {
@@ -53,8 +53,8 @@ Item {
         id: logo
         scale: 0.8
         opacity: 0
-        width: facade.toPx(sourceSize.width *1.5)
-        height:facade.toPx(sourceSize.height*1.5)
+        width: facade.toPx(sourceSize.width *1.3)
+        height:facade.toPx(sourceSize.height*1.3)
         source:("qrc:/ui/logos/logo.png");
         x: (parent.width / 2 - width / 2);
         y: (parent.height/ 2 - height/ 2);

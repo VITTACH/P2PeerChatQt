@@ -88,7 +88,7 @@ Button {
             }
 
             Rectangle {
-                height: 1.2
+                height: 1
                 color: "#808080"
                 width: parent.width;
                 id: picDialogDividerHorizontal1;
@@ -123,7 +123,7 @@ Button {
             }
 
             Rectangle {
-                height: 1.2
+                height: 1
                 color: "#808080"
                 width: parent.width
                 id: picDialogDividerHorizontal2;

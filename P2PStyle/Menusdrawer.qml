@@ -407,6 +407,7 @@ Drawer {
         ListView {
             clip:true
             id: listView;
+            property int memIndex:0
             anchors {
                 topMargin: -1
                 left: parent.left
@@ -524,18 +525,9 @@ Drawer {
                         onReleased: {
                             if (parent.x >= drag.maximumX) {
                                 if (usersModel.get(index).phone !== loader.tel) {
-                                    var friendPhone = usersModel.get(index).phone
-                                    var obj = JSON.parse(loader.frienList)
-                                    for (var i = 0; i < obj.length; i++) {
-                                        var friend=obj[i].replace('"', '')
-                                        if (friend === friendPhone) {
-                                            obj.splice(i, 1)
-                                            event_handler.saveSet("frd",loader.frienList=JSON.stringify(obj))
-                                            updateFriends();
-                                            break;
-                                        }
-                                    }
-                                    usersModel.remove(index)
+                                    drawer.close();
+                                    listView.memIndex=index;
+                                    windowsDialogs.show("Хотите удалить <strong>" + login + " " + famil + "</strong> из друзей?", 2)
                                 }
                             }
                             if (parent.x <= drag.minimumX) {
@@ -545,6 +537,28 @@ Drawer {
                                     caller.directCall(phone)
                             }
                             parent.x=0
+                        }
+                    }
+
+                    Connections {
+                        target: windowsDialogs
+                        onChooseChanged: {
+                            if (listView.memIndex ==index) {
+                                if (windowsDialogs.choose == false) {
+                                    var friendPhone = usersModel.get(index).phone
+                                    var obj =JSON.parse(loader.frienList)
+                                    for (var i = 0; i < obj.length;i++) {
+                                        var friend=obj[i].replace('"','')
+                                        if (friend === friendPhone) {
+                                            obj.splice(i, 1)
+                                            event_handler.saveSet("frd", loader.frienList = JSON.stringify(obj))
+                                            updateFriends();
+                                            break;
+                                        }
+                                    }
+                                    usersModel.remove(index)
+                                }
+                            }
                         }
                     }
 
@@ -707,33 +721,34 @@ Drawer {
                     }
                 }
             delegate: Rectangle{
-                width: parent.width
+                width: parent.width;
                 height: facade.toPx(80)
                 color: ListView.isCurrentItem==true?"lightgrey":loader.menu9Color
                 MouseArea {
-                    id:menMouseArea
+                    id: menMouseArea
                     anchors.fill:parent
-                    onExited: {listMenu.currentIndex=-1}
+                    onExited: listMenu.currentIndex = -1
                     onEntered: {
                         if (index > 0) listMenu.currentIndex = index;
                     }
-
                     onClicked: {
                         settingDrawer.close()
                         switch(index) {
-                        case 2:
-                            if(settingDrawer.position<1)
-                            settingDrawer.open()
+                            case 2:
+                            if(settingDrawer.position < 1.0) {
+                                settingDrawer.open()
+                            }
                             break;
-                        case 3:
+                            case 3:
                             drawer.close()
-                            loader.restores()
                             settingDrawer.visible(false)
                             event_handler.saveSet("user", "");
                             loader.goTo("qrc:/loginanDregister.qml");
+                            loader.restores()
                         }
-                        if (index == 1)
+                        if (index==1) {
                             myswitcher.checked = !myswitcher.checked;
+                        }
                         else if (index > 1) {
                             if (index<=2)listMenu.currentIndex=index;
                         }
@@ -856,19 +871,17 @@ Drawer {
                         elide: {(Text.ElideRight)}
                         font.family: {(trebu4etMsNorm.name)}
                         font.pixelSize: {(facade.doPx(20));}
-                        anchors.verticalCenter : {
-                            parent.verticalCenter;
-                        }
+                        anchors.verticalCenter: parent.verticalCenter
                     }
                 }
             }
         }
     }
+    Settingdrawei {id:settingDrawer}
     Rectangle {
-        width:4
         height:parent.height
         color: loader.menu2Color
         anchors.left: {parent.right}
+        width:4
     }
-    Settingdrawei {id:settingDrawer}
 }

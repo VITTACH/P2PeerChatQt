@@ -26,7 +26,6 @@ ApplicationWindow {
         id: connect
         interval: 4000
         onTriggered: {
-            console.log("try connect")
             loader.logon(tmpPhone,tmpLogin)
         }
     }
@@ -88,7 +87,7 @@ ApplicationWindow {
         property bool isOnline:false
 
         // history of chats
-        property variant chats: []
+        property variant chats:[];
         property string frienList:""
 
         // loading web page
@@ -106,13 +105,16 @@ ApplicationWindow {
         property variant fields: ["", "", "", "", ""];
 
         function restores() {
-            loader.isLogin = false
+            privated.visitedPageList=[];
             loader.fields= ["","","","",""]
             loader.tel = ""
             loader.login = ""
             loader.famil = ""
             loader.userId= ""
             loader.aToken= ""
+            connect.stop()
+            loader.isLogin = false
+            loader.isOnline= false
         }
 
         function goTo(page) {

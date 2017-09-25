@@ -5,7 +5,7 @@ import "P2PStyle" as P2PStyle
 
 Item {
     P2PStyle.Background {
-    Component.onCompleted: setColors([[40,40,40],[120,120,120]],100)
+    Component.onCompleted: setColors([[40, 40, 40],[120, 120, 120],[0, 74, 127]],500)
     anchors.fill: parent;
     }
 
@@ -114,17 +114,15 @@ Item {
 
                 background: Rectangle {
                     radius:facade.toPx(40)
-                    color: parent.down? (index === 6? "#FFC129": "#CD463E"): (index === 6? "#FFCC40": "#F15852")
+                    color: parent.down? (index === 6? "#3B569F": "#1494CC"): (index === 6? "#4F6CBD": "#16A8E7")
                 }
 
                 contentItem: Text {
-                    color: parent.down? "black":"#960f133d"
-                    horizontalAlignment:{Text.AlignHCenter}
-                    verticalAlignment : {Text.AlignVCenter}
-                    opacity: enabled?1:0.3
-                    elide: Text.ElideRight
-                    text: {parent.text}
-                    font: {parent.font}
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: {Text.AlignHCenter;}
+                    color: ("#FFFFFF");
+                    text: (parent.text)
+                    font: (parent.font)
                 }
             }
 
@@ -183,12 +181,12 @@ Item {
             }
 
             Rectangle {
+                visible: index<5
                 anchors.horizontalCenter:
                 {parent.horizontalCenter}
                 width: 0.82*parent.width;
-                visible: index<5
                 color: "#FFFFFF"
-                height: 1
+                height: 2
             }
         }
     }
