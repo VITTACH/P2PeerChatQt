@@ -91,7 +91,7 @@ Item {
                         styleColor: "black"
                         style: Text.Raised;
                         elide: Text.ElideLeft
-                        width: Math.min(inerItem.width - bug.width - facade.toPx(30), this.implicitWidth)
+                        width: Math.min((inerItem.width - bug.width - facade.toPx(90)), (this.implicitWidth))
                         text: {rootItem.text.replace("\n" , "");}
 
                         font.pixelSize: loader.isLogin? facade.doPx(28): facade.doPx(34)
@@ -141,8 +141,8 @@ Item {
 
         Button {
             id: hamMoreButton;
-            visible: (loader.source === "qrc:/chat.qml");
-            width: facade.toPx(150)
+            visible: (loader.source == "qrc:/chat.qml");
+            width: facade.toPx(90);
             height: {parent.height}
             x: parent.width-facade.toPx(20)-width;
             anchors.verticalCenter: parent.verticalCenter
