@@ -7,6 +7,9 @@ import QtQuick 2.7
 Rectangle {
     id: rootChat
 
+    property bool input
+    property int pageWidth
+
     TextArea {
         id: buferText;
         wrapMode: {TextEdit.Wrap;}
@@ -133,7 +136,6 @@ Rectangle {
     function appendMessage(newmessage, flag, timestamp) {
         chatModel.append({
             falg: flag,
-            myheight: buferText.contentHeight,
             mySpacing: (chatModel.count >= 1 ?
                           ((chatModel.get(chatModel.count - 1).textColor == "#000000" && flag === 0)||
                            (chatModel.get(chatModel.count - 1).textColor == "#960f133d" && flag == 1)?
@@ -146,8 +148,6 @@ Rectangle {
         });
         if(flag == 0) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0));
     }
-
-    property bool input
 
     Component.onCompleted: loadChatsHistory()
 
@@ -173,255 +173,303 @@ Rectangle {
         displayMarginBeginning: {(rootChat.height/2);}
 
         model: ListModel {id:chatModel}
-        delegate: Item {
-            width: parent.width
-            height: facade.toPx(65) - myheight >= 0? mySpacing+facade.toPx(65): mySpacing+facade.doPx(26)+myheight
-            Column {
-                width: {(parent.width)}
-                anchors.bottom: {parent.bottom}
-                Text {
-                    color: {textColor;}
-                    anchors {
-                        right: {(parent.right)}
-                        rightMargin: {facade.toPx(20)}
-                    }
-                    font.family: {trebu4etMsNorm.name}
-                    font.pixelSize: {facade.doPx(16);}
-                    text: timeStamp? timeStamp: "NaN";
+        delegate: Column {
+            width: {(parent.width)}
+            Text {
+                color: {textColor;}
+                anchors {
+                    right: {(parent.right)}
+                    rightMargin: {facade.toPx(20)}
                 }
-                Rectangle {
-                    id: baseRect
-                    x: facade.toPx(30);
-                    width: parent.width
-                    color:"transparent"
-                    radius: facade.toPx(25)
-                    height: {parentText.height}
-                    Image {
-                        source:{image;}
-                        width: {facade.toPx(sourceSize.width * (1.2))}
-                        height:{facade.toPx(sourceSize.width * (1.2))}
-                        y: parentText.y + parentText.height - (height)
-                        x: parentText.x === 0? parentText.x - width/2: (parentText.x + parentText.width - width/2)
-                    }
-                    Row {
-                        id: parentText;
-                        spacing:facade.toPx(20)
-                        x:falg*(parent.parent.width/4-facade.toPx(60))
-                        TextArea {
-                            text: someText;
-                            readOnly: true;
-                            leftPadding: {baseRect.radius}
-                            rightPadding: facade.toPx(25);
+                font.family: {trebu4etMsNorm.name}
+                font.pixelSize: {facade.doPx(16);}
+                text: timeStamp? timeStamp: "NaN";
+            }
+            Rectangle {
+                id: baseRect
+                x: facade.toPx(30);
+                width: parent.width
+                color:"transparent"
+                radius: facade.toPx(25)
+                height: {parentText.height}
+                Image {
+                    source:{image;}
+                    width: {facade.toPx(sourceSize.width * (1.2))}
+                    height:{facade.toPx(sourceSize.width * (1.2))}
+                    y: parentText.y + parentText.height - (height)
+                    x: parentText.x === 0? parentText.x - width/2: (parentText.x + parentText.width - width/2)
+                }
+                Row {
+                    id: parentText;
+                    spacing:facade.toPx(20)
+                    x:falg*(parent.parent.width/4-facade.toPx(60))
+                    TextArea {
+                        text: someText;
+                        readOnly: true;
+                        leftPadding: {baseRect.radius}
+                        rightPadding: facade.toPx(25);
 
-                            background: Rectangle {
-                                color:backgroundColor
-                                radius: parent.leftPadding
+                        background: Rectangle {
+                            color:backgroundColor
+                            radius: parent.leftPadding
 
-                                Item {
-                                    clip: true;
-                                    height: parent.height;
-                                    width:parent.width-2*parent.radius
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    Rectangle {
-                                        width: 0
-                                        height: 0
-                                        id: coloresRect;
-                                        color: "#FFF3E0"
+                            Item {
+                                clip: true;
+                                height: parent.height;
+                                width:parent.width-2*parent.radius
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                Rectangle {
+                                    width: 0
+                                    height: 0
+                                    id: coloresRect;
+                                    color: "#FFF3E0"
 
-                                        transform: Translate {
-                                            x: -coloresRect.width / 2;
-                                            y: -coloresRect.height/ 2;
-                                        }
-                                    }
-                                }
-
-                                PropertyAnimation {
-                                    duration: 500
-                                    target: coloresRect;
-                                    id: circleAnimation;
-                                    properties:("width,height,radius")
-                                    from: 0
-                                    to: parent.width* 3;
-
-                                    onStopped: {
-                                        coloresRect.width  = 0;
-                                        coloresRect.height = 0;
-                                    }
-                                }
-
-                                MouseArea {
-                                    anchors.fill: {parent}
-                                    onClicked: {
-                                        var p= 0
-                                        if (select.length>0) {
-                                            p=select.indexOf(index)
-                                            if (p >= 0)
-                                                select.splice(p, 1)
-                                            else {
-                                                contextDialog.menu = 0
-                                                parent.color="#FFE9BF"
-                                                select.push(index);
-                                                return
-                                            }
-                                        }
-                                        baseRect.color = "transparent"
-                                        parent.color = backgroundColor
-                                        if (select.length === 0) {
-                                            contextDialog.menu = 1;
-                                        }
-                                    }
-                                    onPressAndHold: {
-                                        select.push(index)
-                                        contextDialog.menu = 0;
-                                        parent.color ="#FFE9BF"
-                                        baseRect.color = "#FFF3E0";
-                                        coloresRect.x = mouseX;
-                                        coloresRect.y = mouseY;
-                                        circleAnimation.start()
+                                    transform: Translate {
+                                        x: -coloresRect.width / 2;
+                                        y: -coloresRect.height/ 2;
                                     }
                                 }
                             }
 
-                            verticalAlignment:Text.AlignVCenter
-                            color:textColor
+                            PropertyAnimation {
+                                duration: 500
+                                target: coloresRect;
+                                id: circleAnimation;
+                                properties:("width,height,radius")
+                                from: 0
+                                to: parent.width* 3;
 
-                            wrapMode: {TextEdit.Wrap}
-                            width: {parent.parent.width * 3/4;}
-                            height:(facade.toPx(65) - myheight >= 0)? facade.toPx(65): myheight + facade.doPx(26);
+                                onStopped: {
+                                    coloresRect.width  = 0;
+                                    coloresRect.height = 0;
+                                }
+                            }
 
-                            font.family: {trebu4etMsNorm.name;}
-                            font.pixelSize: {facade.doPx((26))}
+                            MouseArea {
+                                anchors.fill: {parent}
+                                onClicked: {
+                                    var p= 0
+                                    if (select.length>0) {
+                                        p=select.indexOf(index)
+                                        if (p >= 0)
+                                            select.splice(p, 1)
+                                        else {
+                                            contextDialog.menu = 0
+                                            parent.color="#FFE9BF"
+                                            select.push(index);
+                                            return
+                                        }
+                                    }
+                                    baseRect.color = "transparent"
+                                    parent.color = backgroundColor
+                                    if (select.length === 0) {
+                                        contextDialog.menu = 1;
+                                    }
+                                }
+                                onPressAndHold: {
+                                    select.push(index)
+                                    contextDialog.menu = 0;
+                                    parent.color ="#FFE9BF"
+                                    baseRect.color = "#FFF3E0";
+                                    coloresRect.x = mouseX;
+                                    coloresRect.y = mouseY;
+                                    circleAnimation.start()
+                                }
+                            }
                         }
-                        Image {
-                            smooth: true
-                            source: ("/ui/chat/unreadMsgs.png")
-                            height: facade.toPx(sourceSize.height)
-                            width:facade.toPx(sourceSize.width)
-                        }
+
+                        verticalAlignment:Text.AlignVCenter
+                        color:textColor
+
+                        wrapMode: {TextEdit.Wrap}
+                        width: {parent.parent.width * 3/4;}
+
+                        font.family: {trebu4etMsNorm.name;}
+                        font.pixelSize: {facade.doPx((26))}
+                    }
+                    Image {
+                        smooth: true
+                        source: ("/ui/chat/unreadMsgs.png")
+                        height: facade.toPx(sourceSize.height)
+                        width:facade.toPx(sourceSize.width)
                     }
                 }
             }
         }
     }
-
-    /*
-    Rectangle {
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-            top: flickTextArea.top;
-        }
-        radius: facade.toPx(25)
-        MouseArea {
-            visible: {event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2}
-            anchors.fill:parent
-            onClicked: hideKeyboard(mouse)
-            propagateComposedEvents: true;
-        }
-    }
-    */
 
     DropShadow {
         radius: 30
-        samples: 40
-        anchors.fill:flickTextArea
-        source: flickTextArea
+        samples:40
         color: "#80000000"
+        source: flickTextArea
+        anchors.fill: flickTextArea;
     }
-    Row {
+    Column {
         clip:true
-        id: flickTextArea;
-        spacing: {facade.toPx(20)}
+        id: flickTextArea
+        width: parent.width
         anchors {
             bottomMargin: input?parent.height * 0.45: facade.toPx(10)
-            horizontalCenter: parent.horizontalCenter
-            bottom: parent.bottom;
+            bottom: {parent.bottom;}
         }
 
-        Flickable {
-            TextArea.flickable:TextArea{
-                id: screenTextFieldPost;
-                wrapMode: TextEdit.Wrap;
+        Row {
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+            }
+            spacing: facade.toPx(20)
+            Flickable {
+                TextArea.flickable: TextArea {
+                    property bool pressCtrl: false;
+                    property bool pressEntr: false;
 
-                property bool pressCtrl: false;
-                property bool pressEntr: false;
+                    id: screenTextFieldPost;
+                    wrapMode: TextEdit.Wrap;
+                    background: Rectangle {}
+                    leftPadding: (facade.toPx(25));
+                    rightPadding:(facade.toPx(25));
 
-                background: Rectangle {}
-                font.pixelSize: facade.doPx(26)
-                font.family:trebu4etMsNorm.name
-                verticalAlignment: Text.AlignVCenter;
+                    font.pixelSize: facade.doPx(26)
+                    font.family:trebu4etMsNorm.name
 
-                placeholderText: event_handler.currentOSys() === 0? ("Ctrl+Enter для отправки..."): "Написать...";
+                    placeholderText: event_handler.currentOSys() === 0? ("Ctrl+Enter для отправки..."): "Написать...";
 
-                leftPadding: (facade.toPx(25));
-                rightPadding:(facade.toPx(25));
-
-                Keys.onReturnPressed: {
-                    pressCtrl = true;
-                    event.accepted = false;
-                }
-                Keys.onPressed: {
-                    if (event.key ==Qt.Key_Control) {
-                        pressEntr =true
+                    verticalAlignment: Text.AlignVCenter;
+                    Keys.onReturnPressed: {
+                        pressCtrl = true;
+                        event.accepted = false;
                     }
-                }
-                Keys.onReleased: {
-                    if (event.key == Qt.Key_Control
-                     || event.key == Qt.Key_Return) {
-                        if (pressCtrl && pressEntr) {
-                            checkMessage(0)
+                    Keys.onPressed: {
+                        if (event.key ==Qt.Key_Control) {
+                            pressEntr =true
                         }
                     }
-                    else if(event.key==Qt.Key_Back) {
-                        hideKeyboard(event)
+                    Keys.onReleased: {
+                        if (event.key == Qt.Key_Control
+                         || event.key == Qt.Key_Return) {
+                            if (pressCtrl && pressEntr) {
+                                checkMessage(0)
+                            }
+                        }
+                        else if(event.key==Qt.Key_Back) {
+                            hideKeyboard(event)
+                        }
+                        pressCtrl = (false)
+                        pressEntr = (false)
                     }
 
-                    pressCtrl = false
-                    pressEntr = false
-                }
-
-                MouseArea {
-                    id: pressedArea;
-                    anchors.fill:parent
-                    visible: event_handler.currentOSys()==1 || event_handler.currentOSys()==2
-                    onClicked: {
-                        input = true
-                        visible = false
-                        screenTextFieldPost.focus=true;
+                    MouseArea {
+                        id: pressedArea;
+                        anchors.fill:parent
+                        visible: event_handler.currentOSys()==1 || event_handler.currentOSys()==2
+                        onClicked: {
+                            input = !(visible = false)
+                            screenTextFieldPost.focus = true;
+                        }
                     }
                 }
+
+                width: rootChat.width-chatScreenButton.width-facade.toPx(50);
+                height: (screenTextFieldPost.lineCount < 5)? facade.toPx(90)+
+                        (screenTextFieldPost.lineCount - 1)* facade.doPx(34):
+                         facade.toPx(90) + 4*facade.doPx(34);
+                flickableDirection: {Flickable.VerticalFlick}
             }
-
-            width: rootChat.width-chatScreenButton.width-facade.toPx(50);
-            height: (screenTextFieldPost.lineCount < 5)? facade.toPx(90)+
-                    (screenTextFieldPost.lineCount - 1)* facade.doPx(34):
-                     facade.toPx(90)+4*facade.doPx(34);
-            flickableDirection:Flickable.VerticalFlick;
+            Button {
+                background: Image {
+                    id: buttonImage
+                    source:"ui/buttons/sendButton.png"
+                    height:facade.toPx(sourceSize.height*1.5)
+                    width: facade.toPx(sourceSize.width *1.5)
+                }
+                onClicked: {
+                    checkMessage(0)
+                    if (event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2) {
+                        hideKeyboard(0)
+                    }
+                }
+                width: {buttonImage.width;}
+                height:{buttonImage.height}
+                id:chatScreenButton
+            }
         }
-        Button {
-            contentItem: Text {
-                elide:Text.ElideRight
-                color:parent.down? "#0f133d": "#7680B1"
-                verticalAlignment: {Text.AlignVCenter;}
-                horizontalAlignment:{Text.AlignHCenter}
-            }
-            Image {
-            id: buttonImage
-            source:"ui/buttons/sendButton.png"
-            height:facade.toPx(sourceSize.height* 1.5);
-            width: facade.toPx(sourceSize.width * 1.5);
-            }
-            onClicked: {
-                checkMessage(0)
-                if (event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2) {
-                    hideKeyboard(0)
+
+        Rectangle {
+            height:pageWidth
+            width: parent.width
+            ListView {
+                id: navButtons;
+                orientation: Qt.Horizontal;
+                anchors.horizontalCenter: {
+                    parent.horizontalCenter
+                }
+
+                height:parent.height
+                width: {
+                    if (parent.width >= 4*facade.toPx(180)) {
+                        4*pageWidth;
+                    } else {
+                        parent.width
+                    }
+                }
+
+                model:  ListModel {
+                        ListElement {
+                            image: "ui/buttons/social/fb.png"
+                            target1: "Поиск"
+                        }
+                        ListElement {
+                            image: "ui/buttons/social/gp.png"
+                            target1: "Партнеры"
+                        }
+                        ListElement {
+                            image: "ui/buttons/social/tw.png"
+                            target1: "Поделись"
+                        }
+                        ListElement {
+                            image: "ui/buttons/social/vk.png"
+                            target1: "Еще"
+                        }
+                    }
+                delegate: Button {
+                    onClicked: {
+                        switch (index) {
+                            case 0: break
+                        }
+                    }
+                    height: parent.height
+                    background: Rectangle {
+                        color:parent.down?"#D8D8D8":"#FFFFFF"
+                    }
+                    width: {
+                        pageWidth = facade.toPx(600)/4;
+                        pageWidth - (index<3 ? navButtons.spacing: 0)
+                    }
+
+                    Column {
+                        Image {
+                            source: {image}
+                            width: facade.toPx(sourceSize.width /2.0)
+                            height:facade.toPx(sourceSize.height/2.0)
+                            anchors.horizontalCenter: {
+                                parent.horizontalCenter
+                            }
+                        }
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: facade.toPx(10);
+                        Text {
+                            text: {target1}
+                            elide:Text.ElideRight
+                            horizontalAlignment: {Text.AlignHCenter;}
+                            font.family: trebu4etMsNorm.name;
+                            font.pixelSize: {facade.doPx(20)}
+                            width: parent.parent.width
+                            color:"#247FE5"
+                        }
+                    }
                 }
             }
-            background: Rectangle {opacity: 0}
-            width: buttonImage.width;
-            height:buttonImage.height
-            id:chatScreenButton
         }
     }
     anchors.fill: (parent);
