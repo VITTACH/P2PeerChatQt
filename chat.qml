@@ -6,9 +6,11 @@ import QtQuick 2.7
 
 Rectangle {
     id: rootChat
-
-    property bool input
+    property var input
     property int pageWidth
+    property var select:[]
+
+    anchors.fill: (parent)
 
     TextArea {
         id: buferText;
@@ -109,10 +111,7 @@ Rectangle {
                 }
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 for(var i=1; i<chatModel.count; i++)
-                    chatModel.setProperty(i, "mySpacing",
-                            (chatModel.get(i-1).textColor == "#000000"&&chatModel.get(i).textColor=="#960f133d")||
-                            (chatModel.get(i).textColor == "#000000"&&chatModel.get(i-1).textColor=="#960f133d") ?
-                                facade.toPx(60): facade.toPx(30))
+                chatModel.setProperty(i,"mySpacing",(chatModel.get(i-1).textColor=="#000000"&&chatModel.get(i).textColor=="#960f133d")||(chatModel.get(i).textColor=="#000000"&&chatModel.get(i-1).textColor=="#960f133d")? facade.toPx(60): facade.toPx(30));
                 contextDialog.menu = 1;
                 contextDialog.action=0;
                 select=[];
@@ -133,13 +132,10 @@ Rectangle {
         return JSON.stringify(JSONobj = {message: message, phone:phone,/*ip:ip*/});
     }
 
-    function appendMessage(newmessage, flag, timestamp) {
+    function appendMessage(newmessage, flag , timestamp) {
         chatModel.append({
             falg: flag,
-            mySpacing: (chatModel.count >= 1 ?
-                          ((chatModel.get(chatModel.count - 1).textColor == "#000000" && flag === 0)||
-                           (chatModel.get(chatModel.count - 1).textColor == "#960f133d" && flag == 1)?
-                               facade.toPx(60): facade.toPx(30)): facade.toPx(20)),
+            mySpacing: (chatModel.count >= 1 ? ((chatModel.get(chatModel.count - 1).textColor == "#000000" && flag === 0) || (chatModel.get(chatModel.count - 1).textColor == "#960f133d" && flag == 1)? facade.toPx(60): facade.toPx(30)): facade.toPx(20)),
             someText: newmessage,
             timeStamp: timestamp,
             textColor: (flag == 0)? "#960f133d":"#000000",
@@ -149,36 +145,36 @@ Rectangle {
         if(flag == 0) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0));
     }
 
-    Component.onCompleted: loadChatsHistory()
+    Component.onCompleted: loadChatsHistory();
 
     ListView {
         id: chatScreenList;
         width: parent.width
         anchors {
             top: parent.top
-            bottom: flickTextArea.top
+            bottom:flickTextArea.top
             bottomMargin: facade.toPx(40)
             topMargin:partnerHeader.height+facade.toPx(10)
         }
-        boundsBehavior:Flickable.StopAtBounds
         MouseArea {
-            anchors.fill: {(parent);}
-            propagateComposedEvents: {(true)}
+            anchors.fill: {(parent)}
+            propagateComposedEvents: true
             onClicked: {
                 hideKeyboard(mouse); mouse.accepted=false;
             }
             visible: event_handler.currentOSys()==1||event_handler.currentOSys()==2
         }
 
-        displayMarginBeginning: {(rootChat.height/2);}
+        boundsBehavior: Flickable.StopAtBounds
+        displayMarginBeginning: rootChat.height/2;
 
-        model: ListModel {id:chatModel}
+        model: ListModel {id: chatModel;}
         delegate: Column {
-            width: {(parent.width)}
+            width: parent.width
             Text {
-                color: {textColor;}
+                color: {(textColor)}
                 anchors {
-                    right: {(parent.right)}
+                    right: {parent.right}
                     rightMargin: {facade.toPx(20)}
                 }
                 font.family: {trebu4etMsNorm.name}
@@ -187,11 +183,11 @@ Rectangle {
             }
             Rectangle {
                 id: baseRect
-                x: facade.toPx(30);
-                width: parent.width
-                color:"transparent"
-                radius: facade.toPx(25)
-                height: {parentText.height}
+                x: facade.toPx(30)
+                width: parent.width;
+                color: "transparent"
+                radius: facade.toPx((20))
+                height: parentText.height
                 Image {
                     source:{image;}
                     width: {facade.toPx(sourceSize.width * (1.2))}
@@ -201,21 +197,20 @@ Rectangle {
                 }
                 Row {
                     id: parentText;
-                    spacing:facade.toPx(20)
+                    spacing: facade.toPx(20)
                     x:falg*(parent.parent.width/4-facade.toPx(60))
                     TextArea {
                         text: someText;
                         readOnly: true;
-                        leftPadding: {baseRect.radius}
-                        rightPadding: facade.toPx(25);
+                        padding:baseRect.radius
 
                         background: Rectangle {
-                            color:backgroundColor
-                            radius: parent.leftPadding
+                            color: backgroundColor
+                            radius: {parent.padding}
 
                             Item {
                                 clip: true;
-                                height: parent.height;
+                                height:parent.height
                                 width:parent.width-2*parent.radius
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 Rectangle {
@@ -278,9 +273,7 @@ Rectangle {
                             }
                         }
 
-                        verticalAlignment:Text.AlignVCenter
                         color:textColor
-
                         wrapMode: {TextEdit.Wrap}
                         width: {parent.parent.width * 3/4;}
 
@@ -290,7 +283,7 @@ Rectangle {
                     Image {
                         smooth: true
                         source: ("/ui/chat/unreadMsgs.png")
-                        height: facade.toPx(sourceSize.height)
+                        height: facade.toPx(sourceSize.height);
                         width:facade.toPx(sourceSize.width)
                     }
                 }
@@ -310,84 +303,69 @@ Rectangle {
         id: flickTextArea
         width: parent.width
         anchors {
-            bottomMargin: input?parent.height * 0.45: facade.toPx(10)
             bottom: {parent.bottom;}
+            bottomMargin: input==true? parent.height*0.43: 0
         }
-
         Row {
-            anchors {
-                horizontalCenter: parent.horizontalCenter
-            }
             spacing: facade.toPx(20)
+            anchors.horizontalCenter:parent.horizontalCenter
             Flickable {
                 TextArea.flickable: TextArea {
+                    property var memHeight
+                    id: screenTextFieldPost;
+                    padding: facade.toPx(25)
+                    wrapMode: TextEdit.Wrap;
                     property bool pressCtrl: false;
                     property bool pressEntr: false;
-
-                    id: screenTextFieldPost;
-                    wrapMode: TextEdit.Wrap;
-                    background: Rectangle {}
-                    leftPadding: (facade.toPx(25));
-                    rightPadding:(facade.toPx(25));
-
-                    font.pixelSize: facade.doPx(26)
-                    font.family:trebu4etMsNorm.name
-
-                    placeholderText: event_handler.currentOSys() === 0? ("Ctrl+Enter для отправки..."): "Написать...";
-
-                    verticalAlignment: Text.AlignVCenter;
-                    Keys.onReturnPressed: {
-                        pressCtrl = true;
-                        event.accepted = false;
+                    placeholderText: {
+                        if (event_handler.currentOSys() < 1) "Ctrl+Enter для отправки..."
+                        else {"Написать..."}
                     }
-                    Keys.onPressed: {
-                        if (event.key ==Qt.Key_Control) {
-                            pressEntr =true
-                        }
+                    background: Rectangle {color: "#FFFFFF"}
+
+                    Keys.onReturnPressed: {pressCtrl = !false; event.accepted = (false);}
+                    Keys.onPressed: if (event.key === Qt.Key_Control) pressEntr = !false;
+                    font {
+                        pixelSize: facade.doPx(26);
+                        family:trebu4etMsNorm.name;
                     }
                     Keys.onReleased: {
-                        if (event.key == Qt.Key_Control
-                         || event.key == Qt.Key_Return) {
-                            if (pressCtrl && pressEntr) {
-                                checkMessage(0)
-                            }
-                        }
-                        else if(event.key==Qt.Key_Back) {
-                            hideKeyboard(event)
-                        }
-                        pressCtrl = (false)
-                        pressEntr = (false)
+                        if (event.key == Qt.Key_Control || event.key === Qt.Key_Return) {
+                            if (pressCtrl == true && pressEntr == true) {checkMessage(0)}
+                        } else if(event.key==Qt.Key_Back) hideKeyboard(event)
+                        pressCtrl = (false);
+                        pressEntr = (false);
                     }
-
                     MouseArea {
-                        id: pressedArea;
-                        anchors.fill:parent
-                        visible: event_handler.currentOSys()==1 || event_handler.currentOSys()==2
+                        id: pressedArea
+                        anchors.fill: parent
+                        visible:event_handler.currentOSys()>0
                         onClicked: {
-                            input = !(visible = false)
+                            input = true;
+                            visible = false;
                             screenTextFieldPost.focus = true;
                         }
                     }
                 }
-
-                width: rootChat.width-chatScreenButton.width-facade.toPx(50);
-                height: (screenTextFieldPost.lineCount < 5)? facade.toPx(90)+
-                        (screenTextFieldPost.lineCount - 1)* facade.doPx(34):
-                         facade.toPx(90) + 4*facade.doPx(34);
                 flickableDirection: {Flickable.VerticalFlick}
+                width: rootChat.width-chatScreenButton.width-facade.toPx(50);
+                height: {
+                    if (screenTextFieldPost.lineCount <= 1) {facade.toPx(96)}
+                    else if (screenTextFieldPost.lineCount<6)
+                        screenTextFieldPost.memHeight=screenTextFieldPost.contentHeight
+                    else screenTextFieldPost.memHeight
+                }
             }
             Button {
                 background: Image {
-                    id: buttonImage
+                    id:buttonImage;
                     source:"ui/buttons/sendButton.png"
                     height:facade.toPx(sourceSize.height*1.5)
                     width: facade.toPx(sourceSize.width *1.5)
                 }
                 onClicked: {
                     checkMessage(0)
-                    if (event_handler.currentOSys() === 1 || event_handler.currentOSys() === 2) {
-                        hideKeyboard(0)
-                    }
+                    if (event_handler.currentOSys() >= 1) {(hideKeyboard(0))}
                 }
                 width: {buttonImage.width;}
                 height:{buttonImage.height}
@@ -400,53 +378,45 @@ Rectangle {
             width: parent.width
             ListView {
                 id: navButtons;
+                height:parent.height
+                width: {
+                    if (parent.width >= 4*facade.toPx(180)) {(4 * pageWidth)}
+                    else {
+                        parent.width
+                    }
+                }
                 orientation: Qt.Horizontal;
                 anchors.horizontalCenter: {
                     parent.horizontalCenter
                 }
-
-                height:parent.height
-                width: {
-                    if (parent.width >= 4*facade.toPx(180)) {
-                        4*pageWidth;
-                    } else {
-                        parent.width
+                model:ListModel {
+                    ListElement {
+                        image: "ui/buttons/social/fb.png"; target1: "Реклама"
+                    }
+                    ListElement {
+                        image: "ui/buttons/social/gp.png"; target1: "Партнер"
+                    }
+                    ListElement {
+                        image: "ui/buttons/social/tw.png"; target1: "Общайся"
+                    }
+                    ListElement {
+                        image: "ui/buttons/social/vk.png"; target1: "Новости"
                     }
                 }
-
-                model:  ListModel {
-                        ListElement {
-                            image: "ui/buttons/social/fb.png"
-                            target1: "Поиск"
-                        }
-                        ListElement {
-                            image: "ui/buttons/social/gp.png"
-                            target1: "Партнеры"
-                        }
-                        ListElement {
-                            image: "ui/buttons/social/tw.png"
-                            target1: "Поделись"
-                        }
-                        ListElement {
-                            image: "ui/buttons/social/vk.png"
-                            target1: "Еще"
-                        }
-                    }
-                delegate: Button {
+                delegate:Button {
                     onClicked: {
                         switch (index) {
-                            case 0: break
+                            case 0: break;
                         }
                     }
-                    height: parent.height
-                    background: Rectangle {
+                    height: parent.height;
+                    background:Rectangle {
                         color:parent.down?"#D8D8D8":"#FFFFFF"
                     }
                     width: {
                         pageWidth = facade.toPx(600)/4;
                         pageWidth - (index<3 ? navButtons.spacing: 0)
                     }
-
                     Column {
                         Image {
                             source: {image}
@@ -463,7 +433,7 @@ Rectangle {
                             elide:Text.ElideRight
                             horizontalAlignment: {Text.AlignHCenter;}
                             font.family: trebu4etMsNorm.name;
-                            font.pixelSize: {facade.doPx(20)}
+                            font.pixelSize: {facade.doPx(16)}
                             width: parent.parent.width
                             color:"#247FE5"
                         }
@@ -472,6 +442,4 @@ Rectangle {
             }
         }
     }
-    anchors.fill: (parent);
-    property var select: []
 }
