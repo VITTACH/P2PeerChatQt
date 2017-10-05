@@ -93,20 +93,20 @@ ApplicationWindow {
         // loading web page
         property string urlLink: "";
 
-        Keys.onReleased: listenBack(event);
+        Keys.onReleased: {listenBack(event)}
 
-        Component.onCompleted: strartPage()
+        Component.onCompleted: strartPage();
 
         QtObject {
             id: privated
-            property var visitedPageList:[]
+            property var visitedPageList: []
         }
 
-        property variant fields: ["", "", "", "", ""];
+        property var fields:["","","","",""]
 
         function restores() {
             privated.visitedPageList=[];
-            loader.fields= ["","","","",""]
+            loader.fields = ["","","","",""]
             loader.tel = ""
             loader.login = ""
             loader.famil = ""
@@ -161,7 +161,7 @@ ApplicationWindow {
             request.open('POST',"http://hoppernet.hol.es/default.php")
             request.onreadystatechange = function() {
                 if (request.readyState == XMLHttpRequest.DONE) {
-                    busyIndicator.visible=false;
+                    busyCircle.visible=false;
                     if (request.status && request.status==200) {
                         if (request.responseText == "") response = -1;
                         else if (request.responseText != "no") {
@@ -236,7 +236,7 @@ ApplicationWindow {
         property string menu3Color: "#6D6D6D";
         property string menu4Color: "#999694";
         property string menu5Color: "#FFB900";
-        property string menu6Color: "#FF8C00";
+        property string menu6Color: "#B12F1C";
         property string menu8Color: "#5D5D5D";
         property string menu9Color: "#E5E5E5";
 
@@ -299,11 +299,11 @@ ApplicationWindow {
         id: trebu4etMsNorm
     }
 
-    P2PStyle.Menusdrawer {id: menuDrawer}
+    P2PStyle.MenuvDrawei {id: basicMenuDrawer}
 
-    P2PStyle.BusyIndicator {id: busyIndicator}
+    P2PStyle.BusyCircle {id: busyCircle}
 
-    P2PStyle.Avatardialogs {id: avatardialogs}
+    P2PStyle.AvatarDialogs {id: avatardialogs}
 
     P2PStyle.WindsDialogs {id: windowsDialogs}
 

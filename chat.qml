@@ -35,7 +35,7 @@ Rectangle {
     }
 
     Connections {
-        target: menuDrawer
+        target: basicMenuDrawer
         onCindexChanged:loadChatsHistory()
     }
 
@@ -55,21 +55,21 @@ Rectangle {
             }
         }
         select = [];
-        busyIndicator.visible=true
+        busyCircle.visible=true
         chatModel.clear();
-        var i = menuDrawer.cindex;
+        var i = basicMenuDrawer.cindex;
         for (j = 0; j<loader.chats[i].message.length; j++) {
             buferText.text = loader.chats[i].message[j].text
             appendMessage(loader.chats[i].message[j].text, (loader.chats[i].message[j].flag), loader.chats[i].message[j].time)
         }
-        busyIndicator.visible=!busyIndicator.visible;
+        busyCircle.visible=!busyCircle.visible;
     }
 
     function checkMessage(flag) {
         if ((screenTextFieldPost.text.length) >= 1) {
             buferText.text = screenTextFieldPost.text
             var time= new Date().toLocaleTimeString(Qt.locale(), Locale.LongFormat)
-            loader.chats[menuDrawer.cindex].message.push({text: buferText.text,flag: flag,time: time})
+            loader.chats[basicMenuDrawer.cindex].message.push({text: buferText.text,flag: flag,time: time})
             event_handler.saveSet("chats", JSON.stringify(loader.chats))
 
             appendMessage(buferText.text, flag, time)
@@ -91,7 +91,7 @@ Rectangle {
                 var time=new Date().toLocaleString(Qt.locale(), Locale.ShortFormat)
                 loader.chats[i].message.push({text: buferText.text = (obj.message),flag:1,time: time})
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
-                if (i == menuDrawer.getCurPeerInd()) {
+                if (i == basicMenuDrawer.getCurPeerInd()) {
                     appendMessage((buferText.text), 1, time)
                     chatScreenList.positionViewAtEnd()
                 }
@@ -107,7 +107,7 @@ Rectangle {
                 select.sort();
                 for(var i=0; i<select.length; i++) {
                     chatModel.remove(select[i] - i);
-                    loader.chats[menuDrawer.cindex].message.splice(select[i] - i,1)
+                    loader.chats[basicMenuDrawer.cindex].message.splice(select[i] - i,1)
                 }
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 for(var i=1; i<chatModel.count; i++)
@@ -119,7 +119,7 @@ Rectangle {
             if(contextDialog.action==3)
             event_handler.copyText(chatModel.get(select[select.length-1]).someText)
             if(contextDialog.action==8) {
-                loader.chats[menuDrawer.cindex].message=[]
+                loader.chats[basicMenuDrawer.cindex].message=[]
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 chatModel.clear()
                 select=[];
@@ -244,11 +244,11 @@ Rectangle {
                                 anchors.fill: {parent}
                                 onClicked: {
                                     var p= 0
-                                    if (select.length>0) {
+                                    if(select.length > 0) {
                                         p=select.indexOf(index)
-                                        if (p >= 0)
+                                        if (p >= 0) {
                                             select.splice(p, 1)
-                                        else {
+                                        } else {
                                             contextDialog.menu = 0
                                             parent.color="#FFE9BF"
                                             select.push(index);
@@ -262,6 +262,7 @@ Rectangle {
                                     }
                                 }
                                 onPressAndHold: {
+                                    if(select.indexOf(index)<0)
                                     select.push(index)
                                     contextDialog.menu = 0;
                                     parent.color ="#FFE9BF"

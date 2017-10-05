@@ -1,13 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>fonts/TrebuchetMSn.ttf</file>
-        <file>P2PStyle/BusyIndicator.qml</file>
         <file>P2PStyle/HeaderSplash.qml</file>
         <file>ui/buttons/backButton.png</file>
         <file>ui/buttons/sendButton.png</file>
         <file>chat.qml</file>
         <file>load.qml</file>
-        <file>P2PStyle/Menusdrawer.qml</file>
         <file>P2PStyle/Background.qml</file>
         <file>start.qml</file>
         <file>login.qml</file>
@@ -27,7 +25,6 @@
         <file>ui/profiles/default/Human.png</file>
         <file>ui/profiles/default/woman.png</file>
         <file>ui/profiles/lin.png</file>
-        <file>P2PStyle/Avatardialogs.qml</file>
         <file>AndImagePicker.qml</file>
         <file>IOsImagesPicker.qml</file>
         <file>ui/apkIcon/iconMaxim.png</file>
@@ -66,5 +63,8 @@
         <file>feeds.qml</file>
         <file>ui/chat/readedMsgs.png</file>
         <file>ui/chat/unreadMsgs.png</file>
+        <file>P2PStyle/MenuvDrawei.qml</file>
+        <file>P2PStyle/AvatarDialogs.qml</file>
+        <file>P2PStyle/BusyCircle.qml</file>
     </qresource>
 </RCC>

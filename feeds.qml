@@ -132,8 +132,8 @@ Rectangle {
                         }
                     }
                     Connections {
-                        target: menuDrawer
-                        onPositionChanged: if((menuDrawer.position == 1) == true) {inerText.focus = (false)}
+                        target: basicMenuDrawer
+                        onPositionChanged: if((basicMenuDrawer.position == 1) == true) {inerText.focus = (false)}
                     }
                     TextField {
                         id: inerText
@@ -476,7 +476,14 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill:parent
-                            onClicked:Qt.openUrlExternally(link)
+                            onClicked: {
+                                if(event_handler.currentOSys()>0) {
+                                    loader.urlLink = link
+                                    loader.goTo("qrc:/webview.qml")
+                                } else {
+                                    Qt.openUrlExternally(link);
+                                }
+                            }
                             onEntered: {
                                 coloresRect2.x = (mouseX)
                                 coloresRect2.y = (mouseY)

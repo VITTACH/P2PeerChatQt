@@ -136,7 +136,7 @@ Item {
                 width: facade.toPx(sourceSize.width *1.2)
                 fillMode: Image.PreserveAspectFit;
             }
-            onClicked: page == 1? page--: (loader.source == "qrc:/chat.qml"?loader.back(): menuDrawer.open())
+            onClicked: page == 1? page--: (loader.source == "qrc:/chat.qml"?loader.back(): basicMenuDrawer.open())
         }
 
         Button {

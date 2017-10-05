@@ -33,7 +33,7 @@ Item {
                     else if(request.responseText == "no") {
                         windowsDialogs.show("Что-то пошло не так",0)
                     }
-                    busyIndicator.visible = false
+                    busyCircle.visible = false
                 }
             }
         }
@@ -66,63 +66,65 @@ Item {
             width: parent.width
             height: index == 7? facade.toPx(150): (image == "-"? 0: facade.toPx(90));
 
-            DropShadow {
-                radius: 12
-                samples: 20
-                anchors {
-                    fill:reginButon
-                }
+            Item {
                 visible: image=="_"
-                color: "#80000000";
-                source: reginButon;
-            }
-            Button {
-                id: reginButon
-                text: plaseholder
                 height: facade.toPx(100)
-                width: Math.min(0.76*parent.width, facade.toPx(800))
-                visible: image == "_"
+                width: Math.min(0.76*parent.width,facade.toPx(800))
+                anchors.horizontalCenter: {parent.horizontalCenter}
 
-                font.pixelSize: {facade.doPx(28)}
-                font.family: trebu4etMsNorm.name;
+                DropShadow {
+                    radius: 12
+                    samples: 20
+                    anchors.fill: reginButon
+                    color: "#80000000";
+                    source: reginButon;
+                }
+                Button {
+                    id: reginButon
+                    text: {plaseholder}
+                    anchors.fill: parent;
 
-                anchors.horizontalCenter: {parent.horizontalCenter;}
+                    font {
+                        pixelSize: facade.doPx(28)
+                        family:trebu4etMsNorm.name
+                    }
 
-                onClicked: {
-                    if (index == 6) {
-                        if (loader.fields[0].length < 2) {
-                            windowsDialogs.show("Имя короче чем 2 символа",0)
-                        }
-                        else
-                        if (loader.fields[1].length < 2) {
-                            windowsDialogs.show("Фамилия менее 2 символов",0)
-                        }
-                        else
-                        if (loader.fields[2].length < 5) {
-                            windowsDialogs.show("Пароль < 5 - ти символов",0)
-                        }
-                        else
-                        if (loader.fields[4].length <11) {
-                            windowsDialogs.show("Укажите корректный номер",0)
-                        }
-                        else {
-                            busyIndicator.visible = true
-                            registration(loader.fields[0], loader.fields[1], loader.fields[2], loader.fields[4], loader.fields[3])
+                    onClicked: {
+                        if (index == 6) {
+                            if (loader.fields[0].length < 2) {
+                                windowsDialogs.show("Имя короче чем 2 символа",0)
+                            }
+                            else
+                            if (loader.fields[1].length < 2) {
+                                windowsDialogs.show("Фамилия менее 2 символов",0)
+                            }
+                            else
+                            if (loader.fields[2].length < 5) {
+                                windowsDialogs.show("Пароль < 5 - ти символов",0)
+                            }
+                            else
+                            if (loader.fields[4].length <11) {
+                                windowsDialogs.show("Укажите корректный номер",0)
+                            }
+                            else {
+                                busyCircle.visible = true
+                                registration(loader.fields[0], loader.fields[1], loader.fields[2], loader.fields[4], loader.fields[3])
+                            }
                         }
                     }
-                }
 
-                background: Rectangle {
-                    radius:facade.toPx(40)
-                    color: parent.down? (index === 6? "#3B569F": "#1494CC"): (index === 6? "#4F6CBD": "#16A8E7")
-                }
+                    background: Rectangle {
+                        radius:facade.toPx(40)
+                        color: parent.down? (index === 6? "#3B569F": "#1494CC"): (index === 6? "#4F6CBD": "#16A8E7")
+                    }
 
-                contentItem: Text {
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: {Text.AlignHCenter;}
-                    color: ("#FFFFFF");
-                    text: (parent.text)
-                    font: (parent.font)
+                    contentItem: Text {
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: {Text.AlignHCenter;}
+                        color: ("#FFFFFF");
+                        text: (parent.text)
+                        font: (parent.font)
+                    }
                 }
             }
 
@@ -167,7 +169,8 @@ Item {
                     else Qt.ImhNone
                     }
                     onFocusChanged: {
-                    if(text.length==0 && index==4) text = "8"
+                        if(text.length==0 && index==4)
+                            text="8";
                     }
                     echoMode: {
                         if (index == 2) {TextInput.Password;}
@@ -181,11 +184,11 @@ Item {
             }
 
             Rectangle {
-                visible: index<5
-                anchors.horizontalCenter:
-                {parent.horizontalCenter}
-                width: 0.82*parent.width;
-                color: "#FFFFFF"
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                }
+                width: {0.82 * parent.width;}
+                visible:{index<5?true:false;}
                 height: 2
             }
         }

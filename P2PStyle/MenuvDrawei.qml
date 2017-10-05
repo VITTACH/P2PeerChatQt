@@ -184,7 +184,7 @@ Drawer {
                 width: (parent.width)
             }
             color: (loader.isOnline?loader.menu3Color:loader.menu4Color)
-            width: (drawer.width-avatarButton.width)/2 + facade.toPx(14)
+            width: (drawer.width-avatarButton.width)/2 + facade.toPx(13)
             anchors {
                 top: profile.top
                 right: parent.right
@@ -199,7 +199,7 @@ Drawer {
                 width: (parent.width)
             }
             color: (loader.isOnline?loader.menu3Color:loader.menu4Color)
-            width: (drawer.width-avatarButton.width)/2 + facade.toPx(19)
+            width: (drawer.width-avatarButton.width)/2 + facade.toPx(20)
             anchors {
                 top: profile.top
                 bottom:profile.bottom
@@ -430,7 +430,7 @@ Drawer {
                 height: (activity === 1)? facade.toPx(20) + Math.max(bug.height, fo.height): 0
 
                 Rectangle {
-                    color: baseItem.ListView.isCurrentItem?loader.menu5Color:loader.menu5Color
+                    color: baseItem.ListView.isCurrentItem?loader.menu6Color:loader.menu6Color
                     width: (0.7*parent.height);
                     height:(parent.height - 4);
                     Image {
@@ -442,7 +442,7 @@ Drawer {
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Rectangle {
-                    color: baseItem.ListView.isCurrentItem?loader.menu6Color:loader.menu6Color
+                    color: baseItem.ListView.isCurrentItem?loader.menu5Color:loader.menu5Color
                     width: (0.7*parent.height);
                     height:(parent.height - 4);
                     anchors.right: parent.right
@@ -543,7 +543,7 @@ Drawer {
                     Connections {
                         target: windowsDialogs
                         onChooseChanged: {
-                            if (listView.memIndex ==index) {
+                            if (listView.memIndex===index) {
                                 if (windowsDialogs.choose == false) {
                                     var friendPhone = usersModel.get(index).phone
                                     var obj =JSON.parse(loader.frienList)

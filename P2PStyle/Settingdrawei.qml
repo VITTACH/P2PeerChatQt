@@ -15,7 +15,7 @@ Drawer {
     Connections {
         target: drawed
         onPositionChanged: {
-            if (menuDrawer.position <= 0.100) {
+            if (basicMenuDrawer.position <= 0.100) {
                 position = 0
             }
         }
@@ -30,8 +30,8 @@ Drawer {
 
     Rectangle {
         width: parent.width;
-        y: {menuDrawer.getProfHeight()}
-        height: parent.height - menuDrawer.getProfHeight()
+        y: {basicMenuDrawer.getProfHeight()}
+        height: parent.height - basicMenuDrawer.getProfHeight()
         color: loader.sets1Color
 
         ListView {
