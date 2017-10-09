@@ -1,4 +1,4 @@
-import QtQuick   2.0
+import QtQuick 2.0
 import QtWebView 1.1
 
 import "js/URLQuery.js" as URLQuery
@@ -15,8 +15,8 @@ WebView {
     }
 
     function successAuth(site) {
-        loader.urlLink="about:blank"
-        busyCircle.visible = true
+        loader.urlLink = "about:blank"
+        busyCircle.visible =true
         loader.loginByVk()
     }
 

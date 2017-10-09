@@ -43,7 +43,7 @@ Drawer {
     property alias cindex: listView.currentIndex;
     background: Rectangle {color: "transparent";}
     height: {parent.height;}
-    width: Math.min(facade.toPx(738), 0.85 * parent.width);
+    width: {Math.min(facade.toPx(780), 0.9 * parent.width)}
 
     function getPeersCount() {
         return listView.count;

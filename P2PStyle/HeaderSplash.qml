@@ -5,17 +5,16 @@ import QtGraphicalEffects 1.0
 Item {
     id: rootItem
     property int page
-    property int h: 150;
     property string stat
     property string phot
     property string text
 
     width: parent.width;
-    height: facade.toPx(h)
+    height:facade.toPx(150)
     DropShadow {
         radius: 15
         samples: 16
-        anchors.fill: {headerRect;}
+        anchors.fill: headerRect
         verticalOffset: 10;
         color: "#60000000";
         source: headerRect;
@@ -23,8 +22,8 @@ Item {
     Rectangle {
         id: headerRect
         width: parent.width
-        height: facade.toPx(h - 10)
-        color: {loader.head1Color;}
+        height: facade.toPx(140)
+        color: loader.head1Color
 
         Item {
             id: inerItem
@@ -128,15 +127,25 @@ Item {
             width: facade.toPx(150)
             height: {parent.height}
             anchors.verticalCenter: parent.verticalCenter
-            background: Image{
+            background:Image {
                 id: hambrgrButtonImage;
-                source: "qrc:/ui/buttons/" + (page == 1 || loader.source == "qrc:/chat.qml"? "back": "infor") + "Button.png"
+                fillMode: Image.PreserveAspectFit;
+                source: "qrc:/ui/buttons/" + (page == 1 || loader.source == "qrc:/chat.qml" || loader.urlLink != "" ? "back" : "infor") + "Button.png"
                 anchors.centerIn:parent
                 height:facade.toPx(sourceSize.height*1.2)
                 width: facade.toPx(sourceSize.width *1.2)
-                fillMode: Image.PreserveAspectFit;
             }
-            onClicked: page == 1? page--: (loader.source == "qrc:/chat.qml"?loader.back(): basicMenuDrawer.open())
+            onClicked: {
+                if (page === 1) {
+                    page = page-1
+                } else if (loader.source == ("qrc:/chat.qml") || loader.urlLink != "") {
+                    if(loader.urlLink !="")
+                        loader.urlLink ="";
+                    loader.back()
+                } else {
+                    basicMenuDrawer.open();
+                }
+            }
         }
 
         Button {
@@ -148,11 +157,11 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             background: Image{
                 id: hamMoreButtonImage;
+                fillMode: Image.PreserveAspectFit;
                 source: "qrc:/ui/buttons/moreButton.png";
                 anchors.centerIn:parent
                 height:facade.toPx(sourceSize.height*1.2)
                 width: facade.toPx(sourceSize.width *1.2)
-                fillMode: Image.PreserveAspectFit;
             }
             onClicked: {
                 contextDialog.xPosition = rootItem.width-contextDialog.w-facade.toPx(20)

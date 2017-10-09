@@ -8,12 +8,14 @@ Rectangle {
         width: parent.width
         anchors {
             top: parent.top
-            bottom: parent.bottom
-            topMargin: partnerHeader.height
+            bottom: {parent.bottom}
+            topMargin: {(partnerHeader.height)}
         }
         source: {
-            event_handler.currentOSys()> 0?
-                    "qrc:/ibrowser.qml": ""
+            var c = event_handler.currentOSys()
+            if (c > 0) {
+                "qrc:/ibrowser.qml"
+            } else ""
         }
     }
 }

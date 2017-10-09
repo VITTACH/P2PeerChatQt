@@ -568,8 +568,8 @@ Rectangle {
         text:qsTr("Наверх")
         anchors {
             top: parent.top
-            bottom: downRow.top
-            right: parent.right
+            bottom: downRow.top;
+            right: parent.right;
         }
         visible: basView.contentY > 0;
         font {
@@ -580,25 +580,25 @@ Rectangle {
         contentItem: Text {
             verticalAlignment: Text.AlignBottom
             horizontalAlignment: {Text.AlignHCenter}
-            font: (parent.font)
-            text: (parent.text)
+            font: (parent.font);
+            text: (parent.text);
         }
         width: (parent.width - Math.min(0.9 * parent.width, facade.toPx(900)))/2-facade.toPx(10)
         background: Rectangle {
-            color: "#BBFFFFFF";
-            anchors.fill:parent
+            color: ("#BBFFFFFF")
+            anchors.fill: parent
         }
     }
 
     Rectangle {
         id: downRow
         width: parent.width
-        height:facade.toPx(80)
+        height: facade.toPx(100)
         anchors.bottom: parent.bottom;
         Rectangle {
             height: 1
-            width:parent.width
-            color: "lightgray"
+            width: parent.width;
+            color: ("lightgray")
             anchors.top: {parent.top;}
         }
         Row {
