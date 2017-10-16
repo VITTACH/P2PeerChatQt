@@ -10,7 +10,7 @@ ApplicationWindow {
     x: 0
     y: 0
     visible: true
-    title:"p2peer.io"
+    title: "p2peer.io"
     property var tmpLogin
     property var tmpPhone
 
@@ -70,7 +70,7 @@ ApplicationWindow {
         // some visible popup window
         property bool avatar: false;
         property bool dialog: false;
-        property bool webvew: false;
+        property bool webview:false;
         property bool context:false;
 
         // info about user
@@ -277,14 +277,14 @@ ApplicationWindow {
         loader.focus = true
         if (event.key === Qt.Key_Back || event.key === Qt.Key_Escape || event === true) {
             event.accepted= true
-            if (loader.dialog==true) {
+            if (loader.dialog ==true) {
                 loader.dialog = !loader.dialog
             } else if(loader.context) {
                 loader.context=!loader.context
             } else if(loader.avatar) {
                 loader.avatar = !loader.avatar
-            } else if(loader.webvew) {
-                loader.webvew = !loader.webvew
+            } else if(loader.webview) {
+                loader.webview=!loader.webview
             } else backTimer.restart()
         }
     }

@@ -130,21 +130,21 @@ Item {
             background:Image {
                 id: hambrgrButtonImage;
                 fillMode: Image.PreserveAspectFit;
-                source: "qrc:/ui/buttons/" + (page == 1 || loader.source == "qrc:/chat.qml" || loader.urlLink != "" ? "back" : "infor") + "Button.png"
+                source: "qrc:/ui/buttons/" + (page == 1 || loader.source == "qrc:/chat.qml" || loader.webview ? "back" : "infor") + "Button.png"
                 anchors.centerIn:parent
                 height:facade.toPx(sourceSize.height*1.2)
                 width: facade.toPx(sourceSize.width *1.2)
             }
             onClicked: {
-                if (page === 1) {
-                    page = page-1
-                } else if (loader.source == ("qrc:/chat.qml") || loader.urlLink != "") {
-                    if(loader.urlLink !="")
-                        loader.urlLink ="";
+                if (page == 1) {page -= 1}
+                else if(loader.source == "qrc:/chat.qml")
                     loader.back()
+                else if (loader.webview) {
+                    loader.webview = false
                 } else {
-                    basicMenuDrawer.open();
+                    basicMenuDrawer.open()
                 }
+                loader.focus = true
             }
         }
 

@@ -26,7 +26,7 @@ Rectangle {
 
         delegate: Column {
             anchors.horizontalCenter:parent.horizontalCenter
-            width:Math.min(0.9*parent.width,facade.toPx(900))
+            width: Math.min(0.9*parent.width, facade.toPx(900))
             Component.onCompleted: {
                 getMePeers();
                 var rssNews = event_handler.loadValue("rss")
@@ -477,9 +477,9 @@ Rectangle {
                         MouseArea {
                             anchors.fill:parent
                             onClicked: {
-                                if(event_handler.currentOSys()>0) {
+                                if (event_handler.currentOSys() > 0) {
                                     loader.urlLink = link
-                                    loader.goTo("qrc:/webview.qml")
+                                    loader.webview = true
                                 } else {
                                     Qt.openUrlExternally(link);
                                 }
@@ -614,5 +614,11 @@ Rectangle {
                 }
             }
         }
+    }
+
+    Loader {
+        source: event_handler.currentOSys()>0? "ibrowser.qml":""
+        visible: loader.webview
+        anchors.fill: {parent;}
     }
 }
