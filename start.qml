@@ -13,16 +13,14 @@ Item {
 
     Timer {
         running: true
-        interval:3000
-        onTriggered: {
-            loader.goTo("qrc:/loginanDregister.qml");
-        }
+        interval:2200
+        onTriggered: loader.goTo("loginanDregister.qml")
     }
 
     P2PStyle.Background
     {
         anchors.fill: {parent}
-        Component.onCompleted: setColors([[255,255,255], [255,255,255], [40,40,40], [120,120,120]], 50)
+        Component.onCompleted: setColors([[255,255,255], [255,255,255], [40,40,40], [120,120,120]], 20)
     }
 
     PropertyAnimation {
@@ -30,24 +28,15 @@ Item {
         property: {"opacity";}
         id: opacitymov;
         from: 0; to: 1;
-        duration: 1900;
+        duration: 1500;
     }
     PropertyAnimation {
         target: logo;
         property: {("scale");}
         id: zoomingmov;
         from:0.8;to: 1;
-        duration: 1000;
+        duration: 1100;
     }
-
-    /* if i will want use background image
-    Image {
-        height:parent.width<parent.height?parent.height: ((width/sourceSize.width) * sourceSize.height)
-        width: parent.width<parent.height?sourceSize.width*parent.height/sourceSize.height:parent.width
-        y: (parent.height/ 2 - height/ 2);
-        x: (parent.width / 2 - width / 2);
-    }
-    */
 
     Image {
         id: logo
@@ -55,8 +44,8 @@ Item {
         opacity: 0
         width: facade.toPx(sourceSize.width *1.3)
         height:facade.toPx(sourceSize.height*1.3)
-        source:("qrc:/ui/logos/logo.png");
-        x: (parent.width / 2 - width / 2);
-        y: (parent.height/ 2 - height/ 2);
+        source:"/ui/logos/logo.png"
+        x: parent.width /2-width /2
+        y: parent.height/2-height/2
     }
 }

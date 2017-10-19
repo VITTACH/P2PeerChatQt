@@ -8,7 +8,8 @@ Drawer {
     Connections {
         target: drawer;
         onPositionChanged: {
-            if (loader.isLogin!=true) {
+            if (loader.isLogin != true || loader.webview) {
+                close()
                 position = 0
             } else if (position == 1) {
                 settingDrawer.visible(true)
@@ -199,7 +200,7 @@ Drawer {
                 width: (parent.width)
             }
             color: (loader.isOnline?loader.menu3Color:loader.menu4Color)
-            width: (drawer.width-avatarButton.width)/2 + facade.toPx(20)
+            width: (drawer.width-avatarButton.width)/2 + facade.toPx(14)
             anchors {
                 top: profile.top
                 bottom:profile.bottom
@@ -400,7 +401,7 @@ Drawer {
 
             Item{
                 width: {(parent.width)}
-                height: facade.toPx(20)
+                height: facade.toPx(10)
             }
         }
 
@@ -430,29 +431,37 @@ Drawer {
                 height: (activity === 1)? facade.toPx(20) + Math.max(bug.height, fo.height): 0
 
                 Rectangle {
+                    anchors.verticalCenter: parent.verticalCenter
                     color: baseItem.ListView.isCurrentItem?loader.menu6Color:loader.menu6Color
-                    width: (0.7*parent.height);
-                    height:(parent.height - 4);
                     Image {
-                        anchors.centerIn:parent
-                        width: facade.toPx(sourceSize.width)
-                        height: facade.toPx(sourceSize.height)
+                        anchors.top: parent.top;
+                        anchors.left: {parent.left}
+                        anchors.bottom: parent.bottom
+                        anchors.leftMargin: facade.toPx(30)
+                        fillMode: {Image.PreserveAspectFit}
+                        width:facade.toPx(sourceSize.width)
+                        height: {facade.toPx(sourceSize.height);}
                         source: "qrc:/ui/buttons/trashButton.png"
                     }
-                    anchors.verticalCenter: parent.verticalCenter
+                    width: 0.50*parent.width
+                    height: parent.height-4;
                 }
                 Rectangle {
-                    color: baseItem.ListView.isCurrentItem?loader.menu5Color:loader.menu5Color
-                    width: (0.7*parent.height);
-                    height:(parent.height - 4);
                     anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: baseItem.ListView.isCurrentItem?loader.menu5Color:loader.menu5Color
                     Image {
-                        anchors.centerIn:parent
-                        width: facade.toPx(sourceSize.width);
-                        height:facade.toPx(sourceSize.height)
+                        anchors.top: parent.top;
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        anchors.rightMargin: facade.toPx(30)
+                        fillMode: {Image.PreserveAspectFit;}
+                        width: facade.toPx(sourceSize.width)
+                        height: {facade.toPx(sourceSize.height);}
                         source:"qrc:/ui/buttons/dialerButton.png"
                     }
-                    anchors.verticalCenter: parent.verticalCenter
+                    width: 0.50*parent.width
+                    height: parent.height-4;
                 }
 
                 Rectangle {
@@ -506,7 +515,7 @@ Drawer {
                         }
                         drag.target: parent
                         drag.axis: {Drag.XAxis}
-                        drag.minimumX: -height*0.7;
+                        drag.minimumX: -width*0.40;
                         drag.maximumX: {
                             if (usersModel.count>=index+1) {
                                 if (usersModel.get(index).phone !== loader.tel) {

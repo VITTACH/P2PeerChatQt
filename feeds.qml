@@ -7,6 +7,11 @@ Rectangle {
     id: rootPage;
     color: "#FFEDEDED";
     property bool find:true
+
+    property int curInd: 0;
+    property int oldContentY: 0
+    property int newsCardHgt: 0
+
     ListView {
         id: basView
         width: parent.width
@@ -33,7 +38,7 @@ Rectangle {
                 if (rssNews != "") {
                     var rssOld = JSON.parse(rssNews)
                     for (var i = 0; i < rssOld.length;i++) {
-                        rssmodel.append({title: rssOld[i].title, image: rssOld[i].image, pDate: rssOld[i].pDate, pDesc: rssOld[i].pDesc, link: rssOld[i].link})
+                        rssmodel.append({title: rssOld[i].title, image: rssOld[i].image, pDate: rssOld[i].pDate, pDesc: rssOld[i].pDesc, link: rssOld[i].link, enable: true})
                     }
                 }
             }
@@ -189,17 +194,21 @@ Rectangle {
                         height: activity==1? facade.toPx(20)+Math.max(bug.height,fo.height):0
 
                         Rectangle {
-                            width: (0.7*parent.height);
-                            height:(parent.height - 4);
-                            anchors.right:parent.right;
+                            color: loader.menu5Color
+                            anchors.right: parent.right
                             anchors.verticalCenter: parent.verticalCenter
-                            color: ("#FF006400")
                             Image {
-                                anchors.centerIn:parent;
+                                anchors.top: parent.top;
+                                anchors.right: parent.right
+                                anchors.bottom: parent.bottom
+                                anchors.rightMargin: facade.toPx(30)
+                                fillMode: {Image.PreserveAspectFit;}
                                 width: facade.toPx(sourceSize.width)
                                 height: {facade.toPx(sourceSize.height);}
                                 source:"qrc:/ui/buttons/dialerButton.png"
                             }
+                            width: 0.5*parent.width;
+                            height: parent.height-4;
                         }
 
                         Rectangle {
@@ -240,7 +249,7 @@ Rectangle {
                                 anchors.fill:{parent;}
                                 drag.target: {parent;}
                                 drag.axis: Drag.XAxis;
-                                drag.minimumX: -height*0.7;
+                                drag.minimumX: -width*0.40;
                                 drag.maximumX: 0
                                 onExited: {(circleAnimation.stop())}
                                 onEntered: {
@@ -415,29 +424,42 @@ Rectangle {
                     width: {parent.width}
                     height: parent.height
                     spacing: facade.toPx(20);
-                    onContentYChanged : {
-                        if (contentY < - 200)
+                    onContentYChanged: {
+                        if (contentY < -200){
                             xmlmodel.reload()
+                        }
+                        curInd=Math.floor((contentY-1)/(newsCardHgt+spacing));
+                        if (contentY > oldContentY && curInd>=0) {
+                            rssmodel.get(curInd).enable = false;
+                        } else if (curInd >= -1) {
+                            rssmodel.get(curInd + 1).enable = true
+                        }
+                        oldContentY=contentY
                     }
                     Connections {
                         target: basView
-                        onContentYChanged : {
-                            if(basView.contentY==0)
-                                rssView.positionViewAtBeginning()
+                        onContentYChanged: {
+                            if (basView.contentY === 0) {
+                                rssView.positionViewAtBeginning();
+                                for (var i = 0; i < rssmodel.count; i = i+1) {
+                                    rssmodel.get(i).enable = true;
+                                }
+                            }
                         }
                     }
                     model: ListModel {id: rssmodel}
                     snapMode: {ListView.SnapToItem}
                     delegate: Rectangle {
                         clip: true;
+                        visible: enable
                         radius: height/2;
-                        width: {parent.width}
-                        height: rssView.height/3-rssView.spacing;
+                        width: parent.width;
+                        height: newsCardHgt = rssView.height/3-rssView.spacing
                         Rectangle {
                             color: parent.color
                             radius: parent.height/3
                             anchors {
-                                fill: parent;
+                                fill: parent
                                 leftMargin: parent.radius
                             }
                             Rectangle {
@@ -445,7 +467,7 @@ Rectangle {
                                 color:"transparent"
                                 anchors {
                                     fill: {parent;}
-                                    rightMargin: {parent.radius;}
+                                    rightMargin: {(parent.radius)}
                                 }
                                 Rectangle {
                                     width: 0
@@ -454,8 +476,8 @@ Rectangle {
                                     color:"#EDEDED"
 
                                     transform:Translate {
-                                        x:-coloresRect2.width /2
-                                        y:-coloresRect2.height/2
+                                        x: -coloresRect2.width /2;
+                                        y: -coloresRect2.height/2;
                                     }
                                 }
                             }
@@ -463,7 +485,7 @@ Rectangle {
                                 duration: 500
                                 target:coloresRect2
                                 id:circleAnimation2
-                                properties:"width,height,radius"
+                                properties: "width,height,radius";
                                 from: 0
                                 to: parent.width/2;
 
@@ -477,7 +499,7 @@ Rectangle {
                         MouseArea {
                             anchors.fill:parent
                             onClicked: {
-                                if (event_handler.currentOSys() > 0) {
+                                if (event_handler.currentOSys() >= 1) {
                                     loader.urlLink = link
                                     loader.webview = true
                                 } else {

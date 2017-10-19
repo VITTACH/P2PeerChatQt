@@ -18,7 +18,7 @@ ApplicationWindow {
 
     Timer {
         id: backTimer
-        interval: 500
+        interval: 100
         onTriggered: loader.back()
     }
 
@@ -236,7 +236,7 @@ ApplicationWindow {
         property string menu3Color: "#6D6D6D";
         property string menu4Color: "#999694";
         property string menu5Color: "#FFB900";
-        property string menu6Color: "#B12F1C";
+        property string menu6Color: "#007F46";
         property string menu8Color: "#5D5D5D";
         property string menu9Color: "#E5E5E5";
 

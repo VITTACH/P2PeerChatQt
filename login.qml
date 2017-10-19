@@ -9,11 +9,13 @@ Item {
     property real pageWidth
     property real limsWidth: facade.toPx(1080)
 
-    Component.onCompleted: partnerHeader.text = qsTr("Вход")
+    Component.onCompleted: {partnerHeader.text = "Вход"}
 
     P2PStyle.Background {
         anchors.fill: {parent}
-        Component.onCompleted: setColors([[40, 40, 40],[120, 120, 120],[0, 74, 127]],500)
+        Component.onCompleted: {
+            setColors([[40, 40, 40], [120, 120, 120], [0, 74, 127]], 500)
+        }
     }
 
     ListView {
@@ -56,7 +58,7 @@ Item {
 
         delegate: Column {
             width: listView.width
-            height: index==3? facade.toPx(110):(index==0?pageWidth:facade.toPx(89))
+            height: index==3? facade.toPx(110): (index<1?pageWidth:facade.toPx(89))
 
             ListView {
                 height: pageWidth
@@ -192,7 +194,7 @@ Item {
                 TextField {
                     color:"white"
                     height: facade.toPx(88)
-                    placeholderText: {(plaseHolder);}
+                    placeholderText: plaseHolder;
 
                     onTextChanged: loader.fields[index-1]=text;
 
@@ -246,7 +248,7 @@ Item {
                     horizontalCenter:parent.horizontalCenter
                 }
                 visible: index == 1 || index == 2
-                width: 0.82*parent.width;
+                width:0.82*parent.width
                 height: 4
             }
         }
