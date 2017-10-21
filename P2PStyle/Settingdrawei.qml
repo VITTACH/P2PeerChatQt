@@ -26,7 +26,7 @@ Drawer {
     }
 
     height:{(parent.height)}
-    width: {Math.min(facade.toPx(647), 0.74*parent.width)}
+    width: {Math.min(facade.toPx(520), 0.60*parent.width)}
 
     Rectangle {
         width: parent.width;

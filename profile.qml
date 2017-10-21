@@ -30,6 +30,10 @@ Item {
                 id: feedPage
                 Component.onCompleted: source = "qrc:/feeds.qml";
             }
+            Loader {
+                id: musPage
+                Component.onCompleted: source = "";
+            }
         }
     }
 }

@@ -133,14 +133,15 @@ Rectangle {
     }
 
     function appendMessage(newmessage, flag , timestamp) {
+        var sp;
         chatModel.append({
             falg: flag,
-            mySpacing: (chatModel.count >= 1 ? ((chatModel.get(chatModel.count - 1).textColor == "#000000" && flag === 0) || (chatModel.get(chatModel.count - 1).textColor == "#960f133d" && flag == 1)? facade.toPx(60): facade.toPx(30)): facade.toPx(20)),
+            mySpacing:sp = (chatModel.count>0 ? ((chatModel.get(chatModel.count - 1).textColor == "#000000" && flag == 0) || (chatModel.get(chatModel.count - 1).textColor == "#960f133d" && flag == 1)? facade.toPx(60): facade.toPx(30)): facade.toPx(20)),
             someText: newmessage,
             timeStamp: timestamp,
             textColor: (flag == 0)? "#960f133d":"#000000",
-            backgroundColor:(flag==0)?"#ECECEC":"#DBEEFC",
-            image: flag === 0? "ui/chat/leFtMessage.png": "ui/chat/rightMessag.png"
+            backgroundColor:flag == 0?"#ECECEC":"#DBEEFC",
+            image: flag == 0? (sp == facade.toPx(30)?"":"ui/chat/leFtMessage.png"): (sp == facade.toPx(30)? "": "ui/chat/rightMessag.png")
         });
         if(flag == 0) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0));
     }
@@ -311,19 +312,18 @@ Rectangle {
             spacing: facade.toPx(20)
             anchors.horizontalCenter:parent.horizontalCenter
             Flickable {
-                TextArea.flickable: TextArea {
-                    property var memHeight
+                TextArea.flickable:TextArea{
                     id: screenTextFieldPost;
-                    padding: facade.toPx(25)
-                    wrapMode: TextEdit.Wrap;
+                    property var memHeight
                     property bool pressCtrl: false;
                     property bool pressEntr: false;
+                    padding: facade.toPx(25)
+                    wrapMode: TextEdit.Wrap;
                     placeholderText: {
                         if (event_handler.currentOSys() < 1) "Ctrl+Enter для отправки..."
                         else {"Написать..."}
                     }
-                    background: Rectangle {color: "#FFFFFF"}
-
+                    background: Rectangle {color:"#A0FFFFFF"}
                     Keys.onReturnPressed: {pressCtrl = !false; event.accepted = (false);}
                     Keys.onPressed: if (event.key === Qt.Key_Control) pressEntr = !false;
                     font {
@@ -358,39 +358,38 @@ Rectangle {
                 }
             }
             Button {
+                onClicked: {
+                    checkMessage(0)
+                    if (event_handler.currentOSys() >= 1) {(hideKeyboard(0))}
+                }
                 background: Image {
                     id:buttonImage;
                     source:"ui/buttons/sendButton.png"
                     height:facade.toPx(sourceSize.height*1.5)
                     width: facade.toPx(sourceSize.width *1.5)
                 }
-                onClicked: {
-                    checkMessage(0)
-                    if (event_handler.currentOSys() >= 1) {(hideKeyboard(0))}
+                anchors {
+                    bottomMargin: facade.toPx(20)
+                    bottom: parent.bottom;
                 }
-                width: {buttonImage.width;}
-                height:{buttonImage.height}
+                width: {buttonImage.width}
+                height: buttonImage.height
                 id:chatScreenButton
             }
         }
 
         Rectangle {
-            height:pageWidth
             width: parent.width
+            height:facade.toPx(90)
             ListView {
-                id: navButtons;
-                height:parent.height
-                width: {
-                    if (parent.width >= 4*facade.toPx(180)) {(4 * pageWidth)}
-                    else {
-                        parent.width
-                    }
-                }
-                orientation: Qt.Horizontal;
-                anchors.horizontalCenter: {
-                    parent.horizontalCenter
-                }
+                x: facade.toPx(30)
+                width: parent.width-x
+                height: parent.height-x
+                spacing: {facade.toPx(20)}
+                orientation: Qt.Horizontal
+                anchors.verticalCenter: parent.verticalCenter
                 model:ListModel {
+                    id:stickModel
                     ListElement {
                         image: "ui/buttons/social/fb.png"; target1: "Реклама"
                     }
@@ -404,41 +403,10 @@ Rectangle {
                         image: "ui/buttons/social/vk.png"; target1: "Новости"
                     }
                 }
-                delegate:Button {
-                    onClicked: {
-                        switch (index) {
-                            case 0: break;
-                        }
-                    }
-                    height: parent.height;
-                    background:Rectangle {
-                        color:parent.down?"#D8D8D8":"#FFFFFF"
-                    }
-                    width: {
-                        pageWidth = facade.toPx(600)/4;
-                        pageWidth - (index<3 ? navButtons.spacing: 0)
-                    }
-                    Column {
-                        Image {
-                            source: {image}
-                            width: facade.toPx(sourceSize.width /2.0)
-                            height:facade.toPx(sourceSize.height/2.0)
-                            anchors.horizontalCenter: {
-                                parent.horizontalCenter
-                            }
-                        }
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: facade.toPx(10);
-                        Text {
-                            text: {target1}
-                            elide:Text.ElideRight
-                            horizontalAlignment: {Text.AlignHCenter;}
-                            font.family: trebu4etMsNorm.name;
-                            font.pixelSize: {facade.doPx(16)}
-                            width: parent.parent.width
-                            color:"#247FE5"
-                        }
-                    }
+                delegate: Image {
+                    source: image
+                    width: pageWidth = facade.toPx(sourceSize.width/3.0)
+                    height:facade.toPx(sourceSize.height/3.0)
                 }
             }
         }

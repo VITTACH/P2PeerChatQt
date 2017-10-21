@@ -356,18 +356,14 @@ Drawer {
 
             Row {
                 id: myRow
-                width: firstRow.width;
+                width: firstRow.width
                 Text {
-                    text:loader.login+" "+loader.famil
-                    color: "white";
-                    font.bold: true
+                    color: "#FFFFFF";
+                    elide: Text.ElideRight
                     font.family: {trebu4etMsNorm.name}
                     font.pixelSize: {facade.doPx(28);}
-                    elide: Text.ElideRight;
+                    text:loader.login+" "+loader.famil
                     width: parent.width-scope1.implicitWidth-scope2.implicitWidth-image1.width
-                }
-                anchors.horizontalCenter: {
-                    parent.horizontalCenter
                 }
                 Text {
                     id: scope1
@@ -415,15 +411,15 @@ Drawer {
                 right: parent.right
                 top: profile.bottom
                 bottom:listMenu.top
-                leftMargin: leftSlider.width
+                leftMargin:leftSlider.width
             }
             spacing: facade.toPx(8)
             boundsBehavior: {(Flickable.StopAtBounds)}
 
-            snapMode: {ListView.SnapToItem;}
+            snapMode: {ListView.SnapToItem}
             Component.onCompleted: usersModel.clear();
 
-            model:ListModel{id: usersModel;}
+            model:ListModel{id: usersModel}
             delegate: Item {
                 id: baseItem
                 visible: activity
@@ -443,8 +439,8 @@ Drawer {
                         height: {facade.toPx(sourceSize.height);}
                         source: "qrc:/ui/buttons/trashButton.png"
                     }
-                    width: 0.50*parent.width
-                    height: parent.height-4;
+                    width: 0.5*parent.width
+                    height: parent.height-4
                 }
                 Rectangle {
                     anchors.right: parent.right
@@ -460,8 +456,8 @@ Drawer {
                         height: {facade.toPx(sourceSize.height);}
                         source:"qrc:/ui/buttons/dialerButton.png"
                     }
-                    width: 0.50*parent.width
-                    height: parent.height-4;
+                    width: 0.5*parent.width
+                    height: parent.height-4
                 }
 
                 Rectangle {
@@ -485,8 +481,8 @@ Drawer {
 
                     PropertyAnimation {
                         duration: 500
-                        target: coloresRect;
-                        id: circleAnimation;
+                        target: coloresRect
+                        id: circleAnimation
                         properties:("width, height, radius")
                         from: 0
                         to: (delegaRect.width * 3);
@@ -500,6 +496,7 @@ Drawer {
                     MouseArea {
                         id: myMouseArea
                         anchors.fill:parent
+                        property var presed
                         onClicked: {
                             var json
                             partnerHeader.text = usersModel.get(index).login+" "+usersModel.get(index).famil;
@@ -513,7 +510,8 @@ Drawer {
                             }
                             drawer.close();
                         }
-                        drag.target: parent
+                        onPressAndHold: presed=true
+                        drag.target: presed?parent:undefined
                         drag.axis: {Drag.XAxis}
                         drag.minimumX: -width*0.40;
                         drag.maximumX: {
@@ -526,12 +524,13 @@ Drawer {
                         onExited: {
                             circleAnimation.stop();
                         }
-                        onEntered: {
+                        onPressed: {
                             coloresRect.x = mouseX;
                             coloresRect.y = mouseY;
                             circleAnimation.start()
                         }
                         onReleased: {
+                            presed = false
                             if (parent.x >= drag.maximumX) {
                                 if (usersModel.get(index).phone !== loader.tel) {
                                     drawer.close();
@@ -674,9 +673,10 @@ Drawer {
             }
             Row {
                 id: linesColumn
-                spacing: facade.toPx(6);
-                height: 0.3*parent.height
-                anchors.centerIn: parent;
+                x: facade.toPx(10);
+                spacing: {facade.toPx(6)}
+                height:0.25*parent.height
+                anchors.verticalCenter: parent.verticalCenter
                 Repeater {
                     model: 1
                     Rectangle {
@@ -704,7 +704,7 @@ Drawer {
             snapMode:ListView.SnapOneItem
             property bool isShowed: false
             height: {
-                var length = (parent.height - getProfHeight() - facade.toPx(540));
+                var length = parent.height-getProfHeight()-facade.toPx(540);
                 var count = Math.ceil(length / facade.toPx(80))
                 if (count >navigateDownModel.count)
                    count = navigateDownModel.count;
@@ -732,7 +732,7 @@ Drawer {
             delegate: Rectangle{
                 width: parent.width;
                 height: facade.toPx(80)
-                color: ListView.isCurrentItem==true?"lightgrey":loader.menu9Color
+                color: ListView.isCurrentItem? "lightgrey":loader.menu9Color
                 MouseArea {
                     id: menMouseArea
                     anchors.fill:parent
@@ -839,7 +839,7 @@ Drawer {
                     }
                     Connections {
                         target: loader
-                        onIsOnlineChanged: myswitcher.checked=loader.isOnline
+                        onIsOnlineChanged:myswitcher.checked=loader.isOnline
                     }
                     Switch {
                         id: myswitcher
@@ -856,31 +856,31 @@ Drawer {
                             color: parent.checked==true? loader.menu12Color: loader.menu13Color
 
                             Rectangle {
+                                color: "#76CCCCCC"
                                 x: parent.parent.checked? parent.width - width - (parent.height - height)/2: (parent.height - height)/2;
-                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.verticalCenter:parent.verticalCenter
                                 width: (myswitcher.height/2)
                                 height:(myswitcher.height/2)
-                                radius:width/2
-                                color: "#76CCCCCC"
+                                radius: {width/2;}
                             }
                             Rectangle {
-                                radius:width/2
                                 x: parent.parent.checked? parent.width - width - (parent.height - height)/2: (parent.height - height)/2;
                                 color: myswitcher.down? "#004A7F": (myswitcher.checked? "#4182EF":"#ECECEC")
-                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.verticalCenter:parent.verticalCenter
                                 width: myswitcher.height/2.3
                                 height:myswitcher.height/2.3
+                                radius: {width/2;}
                             }
                         }
                     }
                     Text {
                         text: index == 1? (myswitcher.checked == true? "В сети": qsTr("Невидимый")): target;
-                        width: {parent.width - icon.width - facade.toPx(40);}
-                        color: loader.menu11Color;
-                        elide: {(Text.ElideRight)}
-                        font.family: {(trebu4etMsNorm.name)}
-                        font.pixelSize: {(facade.doPx(20));}
+                        width:parent.width-icon.width-facade.toPx(40)
                         anchors.verticalCenter: parent.verticalCenter
+                        font.family:trebu4etMsNorm.name
+                        font.pixelSize: facade.doPx(20)
+                        color: loader.menu11Color
+                        elide: Text.ElideRight
                     }
                 }
             }

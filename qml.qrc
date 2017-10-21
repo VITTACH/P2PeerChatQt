@@ -66,5 +66,9 @@
         <file>P2PStyle/MenuvDrawei.qml</file>
         <file>P2PStyle/AvatarDialogs.qml</file>
         <file>P2PStyle/BusyCircle.qml</file>
+        <file>ui/buttons/feeds/img.png</file>
+        <file>ui/buttons/feeds/mus.png</file>
+        <file>ui/buttons/feeds/play.png</file>
+        <file>ui/buttons/feeds/vide.png</file>
     </qresource>
 </RCC>

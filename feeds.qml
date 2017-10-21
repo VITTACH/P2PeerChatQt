@@ -8,6 +8,7 @@ Rectangle {
     color: "#FFEDEDED";
     property bool find:true
 
+    property var nWidth;
     property int curInd: 0;
     property int oldContentY: 0
     property int newsCardHgt: 0
@@ -22,16 +23,16 @@ Rectangle {
             topMargin: facade.toPx(40)
         }
 
-        boundsBehavior: {Flickable.StopAtBounds}
         model : ListModel {
             id: feedsModel;
             ListElement {activiti: 0;}
             ListElement {activiti: 1;}
+            ListElement {activiti: 0;}
         }
 
         delegate: Column {
             anchors.horizontalCenter:parent.horizontalCenter
-            width: Math.min(0.9*parent.width, facade.toPx(900))
+            width: nWidth = Math.min(0.9*parent.width, facade.toPx(900))
             Component.onCompleted: {
                 getMePeers();
                 var rssNews = event_handler.loadValue("rss")
@@ -407,7 +408,7 @@ Rectangle {
 
             Rectangle {
                 id: rssRect;
-                visible: index
+                visible: index == 1
                 color: ("transparent")
                 width: {parent.width;}
                 height: if (visible) {3*facade.toPx(200)}
@@ -416,23 +417,21 @@ Rectangle {
                     samples:15
                     source: {rssView;}
                     color: "#50000000"
-                    anchors.fill: rssView
+                    anchors.fill: {rssView;}
                 }
                 ListView {
                     clip:true
                     id: rssView
-                    width: {parent.width}
-                    height: parent.height
-                    spacing: facade.toPx(20);
+                    width: parent.width;
+                    height:parent.height
+                    spacing: facade.toPx(20)
                     onContentYChanged: {
-                        if (contentY < -200){
-                            xmlmodel.reload()
-                        }
+                        if (contentY < -200) {xmlmodel.reload()}
                         curInd=Math.floor((contentY-1)/(newsCardHgt+spacing));
                         if (contentY > oldContentY && curInd>=0) {
                             rssmodel.get(curInd).enable = false;
                         } else if (curInd >= -1) {
-                            rssmodel.get(curInd + 1).enable = true
+                            rssmodel.get(curInd+1).enable = true
                         }
                         oldContentY=contentY
                     }
@@ -520,11 +519,11 @@ Rectangle {
                             visible:false
                             width: facade.toPx(160)
                             height:facade.toPx(160)
-                            x: (parent.height - height)/2;
+                            x: (parent.height - height)/2
                             anchors.verticalCenter:parent.verticalCenter
                             Image {
                                 source: {image.replace("https", "http")}
-                                anchors.centerIn: {parent}
+                                anchors.centerIn: parent;
                                 height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                                 width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                             }
@@ -546,7 +545,7 @@ Rectangle {
                             id: misk
                             smooth: true;
                             visible:false
-                            source: {"ui/mask/round.png";}
+                            source: {"ui/mask/round.png"}
                             sourceSize: {Qt.size(bag.width, bag.height)}
                         }
 
@@ -554,12 +553,12 @@ Rectangle {
                             anchors {
                                 left: bag.right
                                 right: parent.right
-                                leftMargin:facade.toPx(20)
+                                leftMargin: facade.toPx(20)
                                 verticalCenter: {parent.verticalCenter;}
                             }
                             Text {
                                 text: title
-                                elide: {Text.ElideRight}
+                                elide: {Text.ElideRight;}
                                 width: {parent.width - facade.toPx(30);}
                                 font.bold: true
                                 font.family:trebu4etMsNorm.name
@@ -583,39 +582,61 @@ Rectangle {
                     }
                 }
             }
+
+            ListView {
+                clip: true
+                visible: index == 2
+                spacing: facade.toPx(27);
+                width: parent.width
+                height: facade.toPx(200);
+                orientation:Qt.Horizontal
+                model:ListModel {
+                    ListElement {image: "mus.png"; text: "music"}
+                    ListElement {image: "img.png"; text: "image"}
+                    ListElement {image: "vide.png";text: "video"}
+                    ListElement {image: "play.png";text: "games"}
+                }
+                delegate: Image {
+                    width: facade.toPx(sourceSize.width / 3.5)
+                    height: facade.toPx(sourceSize.height/ 3.5)
+                    source: {"qrc:/ui/buttons/feeds/" + image;}
+                }
+            }
         }
     }
 
     Button {
-        text:qsTr("Наверх")
+        text: "Наверх"
         anchors {
             top: parent.top
             bottom: downRow.top;
             right: parent.right;
         }
-        visible: basView.contentY > 0;
         font {
             pixelSize: facade.doPx(20)
             family:trebu4etMsNorm.name
         }
-        onClicked: basView.positionViewAtBeginning()
+        visible: basView.contentY > 0 && (parent.width - nWidth) / 2 >= width;
         contentItem: Text {
+            elide: {(Text.ElideRight)}
             verticalAlignment: Text.AlignBottom
             horizontalAlignment: {Text.AlignHCenter}
+            width: parent.width;
             font: (parent.font);
             text: (parent.text);
         }
-        width: (parent.width - Math.min(0.9 * parent.width, facade.toPx(900)))/2-facade.toPx(10)
+        onClicked: basView.positionViewAtBeginning()
+        width: facade.toPx(250);
         background: Rectangle {
-            color: ("#BBFFFFFF")
-            anchors.fill: parent
+            color: ("#B0FFFFFF")
+            anchors.fill:parent;
         }
     }
 
     Rectangle {
         id: downRow
         width: parent.width
-        height: facade.toPx(100)
+        height: parent.height > parent.width? facade.toPx(100):facade.toPx(80)
         anchors.bottom: parent.bottom;
         Rectangle {
             height: 1
@@ -627,7 +648,7 @@ Rectangle {
             spacing: {facade.toPx(50)}
             anchors.centerIn: {parent}
             Repeater {
-                model: [qsTr("Реклама"), qsTr("Для бизнеса"), "Все о P2P", "Конфиденциальность"]
+                model: ["Реклама", "Для бизнеса", "Все о P2P", "Безопасность"]
                 Text {
                     text: {modelData;}
                     anchors.verticalCenter:parent.verticalCenter
