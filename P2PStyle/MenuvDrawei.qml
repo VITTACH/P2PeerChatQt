@@ -360,6 +360,7 @@ Drawer {
                 Text {
                     color: "#FFFFFF";
                     elide: Text.ElideRight
+                    font.bold: true
                     font.family: {trebu4etMsNorm.name}
                     font.pixelSize: {facade.doPx(28);}
                     text:loader.login+" "+loader.famil
@@ -367,7 +368,7 @@ Drawer {
                 }
                 Text {
                     id: scope1
-                    text: " ( "
+                    text: " [ "
                     color: "white"
                     font.family: {trebu4etMsNorm.name}
                     font.pixelSize: {facade.doPx(28);}
@@ -388,7 +389,7 @@ Drawer {
                 }
                 Text {
                     id: scope2
-                    text: " 0 )"
+                    text: " 0 ]"
                     color: "white"
                     font.family: {trebu4etMsNorm.name}
                     font.pixelSize: {facade.doPx(28);}
@@ -428,7 +429,7 @@ Drawer {
 
                 Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
-                    color: baseItem.ListView.isCurrentItem?loader.menu6Color:loader.menu6Color
+                    color: loader.isOnline? loader.menu5Color: loader.menu6Color
                     Image {
                         anchors.top: parent.top;
                         anchors.left: {parent.left}
@@ -445,7 +446,7 @@ Drawer {
                 Rectangle {
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
-                    color: baseItem.ListView.isCurrentItem?loader.menu5Color:loader.menu5Color
+                    color: loader.isOnline? loader.menu5Color: loader.menu6Color
                     Image {
                         anchors.top: parent.top;
                         anchors.right: parent.right
@@ -465,13 +466,13 @@ Drawer {
                     id: delegaRect
                     width: parent.width
                     height: parent.height
-                    color: baseItem.ListView.isCurrentItem? (loader.isOnline? loader.menu3Color: loader.menu4Color): ("white")
+                    color: (index == 0)? (loader.isOnline == true? loader.menu3Color: loader.menu4Color): ("#FFFFFF")
 
                     Rectangle {
                         width: 0
                         height: 0
                         id: coloresRect
-                        color:baseItem.ListView.isCurrentItem?(loader.isOnline?loader.menu8Color:"darkgray"):loader.menu9Color
+                        color: index == 0? (loader.isOnline? loader.menu4Color: loader.menu8Color): loader.menu9Color
 
                         transform: Translate {
                             x:-coloresRect.width /2
@@ -515,11 +516,11 @@ Drawer {
                         drag.axis: {Drag.XAxis}
                         drag.minimumX: -width*0.40;
                         drag.maximumX: {
-                            if (usersModel.count>=index+1) {
+                            if (usersModel.count> index+1) {
                                 if (usersModel.get(index).phone !== loader.tel) {
                                     -drag.minimumX;
                                 } else 0
-                            }
+                            } else 0
                         }
                         onExited: {
                             circleAnimation.stop();
@@ -625,7 +626,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(26)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex === index? "white": loader.menu10Color
+                            color:index==0?"white":loader.menu10Color
                         }
                         Text {
                             text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
@@ -633,7 +634,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(22)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex === index? "white": loader.menu11Color
+                            color:index==0?"white":loader.menu11Color
                         }
                         Text {
                             text: "Статус: offline с 13:45"
@@ -641,7 +642,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(16)
                             width:fo.width-facade.toPx(100)-bug.width
-                            color:listView.currentIndex === index? "white": loader.menu11Color
+                            color:index==0?"white":loader.menu11Color
                         }
                     }
                 }

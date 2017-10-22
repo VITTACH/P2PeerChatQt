@@ -59,12 +59,12 @@ Rectangle {
                 for (var i = 0; i < humanModel.count; i ++) {
                     var name = " " + humanModel.get(i).login + humanModel.get(i).famil
                     if (name.toLowerCase().search(param)>0) {
-                        humanModel.setProperty(i, "activity", 1)
-                        if (!succesFind)listView.currentIndex=i;
-                        succesFind = true
+                    humanModel.setProperty(i, "activity", 1);
+                    if (!succesFind) listView.currentIndex=i;
+                    succesFind = true
                     }
                     else {
-                        humanModel.setProperty(i, "activity", 0)
+                    humanModel.setProperty(i, "activity", 0);
                     }
                 }
                 if (succesFind == true)
@@ -247,18 +247,21 @@ Rectangle {
 
                             MouseArea {
                                 id: myMouseArea
-                                anchors.fill:{parent;}
-                                drag.target: {parent;}
-                                drag.axis: Drag.XAxis;
+                                property var presed
+                                anchors.fill: parent;
+                                onPressAndHold: presed=true
+                                drag.target: presed?parent:undefined
+                                drag.axis: Drag.XAxis
                                 drag.minimumX: -width*0.40;
                                 drag.maximumX: 0
                                 onExited: {(circleAnimation.stop())}
-                                onEntered: {
+                                onPressed: {
                                     coloresRect.x = mouseX;
                                     coloresRect.y = mouseY;
                                     circleAnimation.start()
                                 }
                                 onReleased: {
+                                    presed = false
                                     if (parent.x <= drag.minimumX) {
                                         if (event_handler.currentOSys() != 1){
                                             Qt.openUrlExternally("tel:"+phone)

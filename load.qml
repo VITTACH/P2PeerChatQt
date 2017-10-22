@@ -227,17 +227,17 @@ ApplicationWindow {
             var request = new XMLHttpRequest()
             request.open('POST',"http://www.hoppernet.hol.es")
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            request.send("name=" + loader.tel + "&friend=" +(frienList))
+            request.send("name=" + loader.tel + "&friend=" + loader.frienList)
         }
 
         // colors variables
         property string menu1Color: "#818181";
         property string menu2Color: "#FFC129";
-        property string menu3Color: "#6D6D6D";
-        property string menu4Color: "#999694";
-        property string menu5Color: "#42544D";
-        property string menu6Color: "#292C33";
-        property string menu8Color: "#5D5D5D";
+        property string menu3Color: "#898785";
+        property string menu4Color: "#777777";
+        property string menu5Color: "#C5C3C0";
+        property string menu6Color: "#A5A4A2";
+        property string menu8Color: "#666666";
         property string menu9Color: "#E5E5E5";
 
         property string menu10Color:"#333333";
