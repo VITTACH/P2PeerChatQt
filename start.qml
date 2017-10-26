@@ -42,8 +42,8 @@ Item {
         id: logo
         scale: 0.8
         opacity: 0
-        width: facade.toPx(sourceSize.width *1.3)
-        height:facade.toPx(sourceSize.height*1.3)
+        width: facade.toPx(sourceSize.width /1.3)
+        height:facade.toPx(sourceSize.height/1.3)
         source:"/ui/logos/logo.png"
         x: parent.width /2-width /2
         y: parent.height/2-height/2

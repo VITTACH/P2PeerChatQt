@@ -237,11 +237,11 @@ Rectangle {
                                 id: circleAnimation;
                                 properties:("width, height, radius")
                                 from: 0
-                                to: (delegaRect.width * 3)
+                                to: (delegaRect.width * 3);
 
                                 onStopped: {
                                     coloresRect.width = 0;
-                                    coloresRect.height= 0;
+                                    coloresRect.height = 0;
                                 }
                             }
 
@@ -281,11 +281,13 @@ Rectangle {
                                 target: windowsDialogs
                                 onChooseChanged: {
                                     var objct = JSON.parse((loader.frienList))
-                                    if (objct.indexOf(listView.friend) < 0 && windowsDialogs.choose ==false && listView.friend != null) {
-                                        objct.push((listView.friend));
+                                    if (windowsDialogs.choose ==false && listView.friend != null) {
+                                        if (objct == null) {
+                                            objct = []
+                                        }
+                                        var objs = objct.push(listView.friend)
                                         loader.frienList=JSON.stringify(objct)
-                                        console.log(loader.frienList);
-                                        loader.addFriends()
+                                        loader.addFriend(listView.friend)
                                     }
                                 }
                             }

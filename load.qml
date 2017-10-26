@@ -223,11 +223,11 @@ ApplicationWindow {
             loader.isLogin=true
         }
 
-        function addFriends() {
+        function addFriend(friend) {
             var request = new XMLHttpRequest()
             request.open('POST',"http://www.hoppernet.hol.es")
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            request.send("name=" + loader.tel + "&friend=" + loader.frienList)
+            request.send("name="+loader.tel+"&friend="+friend)
         }
 
         // colors variables

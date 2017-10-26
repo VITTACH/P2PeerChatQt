@@ -111,7 +111,7 @@ Drawer {
             if (request.readyState==XMLHttpRequest.DONE) {
                 if (request.status&&request.status==200) {
                     obj = JSON.parse(request.responseText)
-                    for (var i = 0; i < obj.length; i++) {
+                    for (var i = 0; obj !== null && i < obj.length; i++) {
                         index = findPeer(obj[i].name)
                         if (usersModel.count<1||index<0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
@@ -517,9 +517,7 @@ Drawer {
                         drag.minimumX: -width*0.40;
                         drag.maximumX: {
                             if (usersModel.count> index+1) {
-                                if (usersModel.get(index).phone !== loader.tel) {
-                                    -drag.minimumX;
-                                } else 0
+                                -drag.minimumX;
                             } else 0
                         }
                         onExited: {
