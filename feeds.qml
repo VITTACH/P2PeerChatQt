@@ -13,6 +13,10 @@ Rectangle {
     property int oldContentY: 0
     property int newsCardHgt: 0
 
+    Component.onCompleted: {
+        basicMenuDrawer.open();
+    }
+
     ListView {
         id: basView
         width: parent.width
@@ -37,8 +41,8 @@ Rectangle {
                 getMePeers();
                 var rssNews = event_handler.loadValue("rss")
                 if (rssNews != "") {
-                    var rssOld = JSON.parse(rssNews)
-                    for (var i = 0; i < rssOld.length;i++) {
+                    var rssOld = JSON.parse(rssNews);
+                    for (var i =0; i < rssOld.length; i++) {
                         rssmodel.append({title: rssOld[i].title, image: rssOld[i].image, pDate: rssOld[i].pDate, pDesc: rssOld[i].pDesc, link: rssOld[i].link, enable: true})
                     }
                 }
@@ -442,8 +446,9 @@ Rectangle {
                     }
                     Connections {
                         target: basView
+                        onFlickStarted: oldContentY = basView.contentY
                         onContentYChanged: {
-                            if (basView.contentY === 0) {
+                            if (basView.contentY == 0 && oldContentY < -300) {
                                 rssView.positionViewAtBeginning();
                                 for (var i = 0; i < rssmodel.count; i = i+1) {
                                     rssmodel.get(i).enable = true;
@@ -596,10 +601,10 @@ Rectangle {
                 height: facade.toPx(200);
                 orientation:Qt.Horizontal
                 model:ListModel {
-                    ListElement {image: "mus.png"; text: "music"}
-                    ListElement {image: "img.png"; text: "image"}
-                    ListElement {image: "vide.png";text: "video"}
-                    ListElement {image: "play.png";text: "games"}
+                    ListElement {image:"mus.png"; text:"music"}
+                    ListElement {image:"img.png"; text:"image"}
+                    ListElement {image:"vide.png";text:"video"}
+                    ListElement {image:"play.png";text:"games"}
                 }
                 delegate: Image {
                     width: facade.toPx(sourceSize.width / 3.5)
@@ -617,13 +622,11 @@ Rectangle {
             bottom: downRow.top;
             right: parent.right;
         }
-        font {
-            pixelSize: facade.doPx(20)
-            family:trebu4etMsNorm.name
-        }
+        font.pixelSize: facade.doPx(20)
+        font.family:trebu4etMsNorm.name
         visible: basView.contentY > 0 && (parent.width - nWidth) / 2 >= width;
         contentItem: Text {
-            elide: {(Text.ElideRight)}
+            elide:Text.ElideRight
             verticalAlignment: Text.AlignBottom
             horizontalAlignment: {Text.AlignHCenter}
             width: parent.width;
