@@ -16,7 +16,6 @@ Rectangle {
     Component.onCompleted: {
         basicMenuDrawer.open();
     }
-
     ListView {
         id: basView
         width: parent.width
@@ -446,7 +445,7 @@ Rectangle {
                     }
                     Connections {
                         target: basView
-                        onFlickStarted: oldContentY = basView.contentY
+                        onFlickStarted: oldContentY=basView.contentY
                         onContentYChanged: {
                             if (basView.contentY == 0 && oldContentY < -300) {
                                 rssView.positionViewAtBeginning();

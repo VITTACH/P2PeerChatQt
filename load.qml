@@ -175,6 +175,7 @@ ApplicationWindow {
                         }
                         switch(response){
                             case 1:
+                                basicMenuDrawer.open()
                                 loader.isOnline = !false;
                                 if (loader.source!="qrc:/profile.qml")
                                     goTo("qrc:/profile.qml");
@@ -198,7 +199,7 @@ ApplicationWindow {
                                 partnerHeader.page = 1;
                                 break;
                             case -1:
-                                windowsDialogs.show("Нет доступа к интернету", 0)
+                                windowsDialogs.show("Временно нет доступа к интернету", 0)
                                 break;
                         }
                     } else {
