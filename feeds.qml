@@ -13,9 +13,8 @@ Rectangle {
     property int oldContentY: 0
     property int newsCardHgt: 0
 
-    Component.onCompleted: {
-        basicMenuDrawer.open();
-    }
+    Component.onCompleted: basicMenuDrawer.open();
+
     ListView {
         id: basView
         width: parent.width
@@ -34,22 +33,12 @@ Rectangle {
         }
 
         delegate: Column {
-            anchors.horizontalCenter:parent.horizontalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
             width: nWidth = Math.min(0.9*parent.width, facade.toPx(900))
-            Component.onCompleted: {
-                getMePeers();
-                var rssNews = event_handler.loadValue("rss")
-                if (rssNews != "") {
-                    var rssOld = JSON.parse(rssNews);
-                    for (var i =0; i < rssOld.length; i++) {
-                        rssmodel.append({title: rssOld[i].title, image: rssOld[i].image, pDate: rssOld[i].pDate, pDesc: rssOld[i].pDesc, link: rssOld[i].link, enable: true})
-                    }
-                }
-            }
-
+            Component.onCompleted: if (index == 1) {restorePref.start()}
             function findPeer(phone) {
-                for (var i = 0; i < humanModel.count; i++) {
-                    if (humanModel.get(i).phone === phone) {
+                for (var i = 0; i < humanModel.count; i+=1) {
+                    if (humanModel.get(i).phone == (phone)) {
                         return i;
                     }
                 }
@@ -58,22 +47,22 @@ Rectangle {
 
             function filterList(param) {
                 getMePeers()
-                var succesFind = false
+                var succesFind = (false);
                 for (var i = 0; i < humanModel.count; i ++) {
                     var name = " " + humanModel.get(i).login + humanModel.get(i).famil
                     if (name.toLowerCase().search(param)>0) {
-                    humanModel.setProperty(i, "activity", 1);
-                    if (!succesFind) listView.currentIndex=i;
-                    succesFind = true
-                    }
-                    else {
-                    humanModel.setProperty(i, "activity", 0);
+                        humanModel.setProperty(i, ("activity"), 1)
+                        if (!succesFind) {listView.currentIndex=i}
+                        succesFind = true
+                    } else {
+                        humanModel.setProperty(i, ("activity"), 0)
                     }
                 }
-                if (succesFind == true)
+                if (succesFind == true) {
                     feedsModel.setProperty(0, "activiti", 1);
-                else
+                } else {
                     feedsModel.setProperty(0, "activiti", 0);
+                }
                 listView.positionViewAtBeginning()
             }
 
@@ -107,6 +96,46 @@ Rectangle {
                 }
                 request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                 request.send("READ=4")
+            }
+
+            Timer {
+                id: restorePref
+                interval: 2000;
+                onTriggered: restoreFromPref();
+            }
+
+            function restoreFromPref() {
+                if (xmlmodel.count > 0) {
+                    var RssCache = []
+                    for (var i = 0; i < xmlmodel.count; i++) {
+                        var obj = {enable: true,
+                                     link: xmlmodel.get(i).link,
+                                       title: xmlmodel.get(i).title,
+                                         image: xmlmodel.get(i).image,
+                                           pDate: xmlmodel.get(i).pDate,
+                                             pDesc: xmlmodel.get(i).pDesc}
+                        RssCache.push(obj)
+                        for (var j = 0; j < rssView.model.count; j++) {
+                            if (rssView.model.get(j).title == obj.title) {
+                                break;
+                            }
+                        }
+                        if(j == rssView.model.count){
+                            rssView.model.append(obj)
+                        }
+                    }
+                    event_handler.saveSet("rss", JSON.stringify(RssCache))
+                } else {
+                    var rssNews = event_handler.loadValue("rss");
+                    if (rssNews !== "") {
+                        var rssOld = JSON.parse(rssNews);
+                        for (var i = 0; i <rssOld.length; i+=1) {
+                            var myNews = {enable:true,link: rssOld[i].link, title:rssOld[i].title,
+                                image:rssOld[i].image,pDate:rssOld[i].pDate,pDesc:rssOld[i].pDesc}
+                            rssView.model.append(myNews);
+                        }
+                    }
+                }
             }
 
             Rectangle {
@@ -392,24 +421,7 @@ Rectangle {
                 namespaceDeclarations: "declare namespace media=\"http://search.yahoo.com/mrss/\";"
                 onStatusChanged: {
                     if ((status == XmlListModel.Ready) && (rssRect.visible)) {
-                        var RssCache = []
-                        for (var i = 0; i < xmlmodel.count; i++) {
-                            var obj = {link: xmlmodel.get(i).link,
-                                        title: xmlmodel.get(i).title,
-                                          image: xmlmodel.get(i).image,
-                                            pDate: xmlmodel.get(i).pDate,
-                                              pDesc: xmlmodel.get(i).pDesc}
-                            RssCache.push(obj)
-                            for (var j = 0; j < rssView.model.count; j++) {
-                                if (rssView.model.get(j).title == obj.title) {
-                                    break;
-                                }
-                            }
-                            if(j == rssView.model.count){
-                                rssView.model.append(obj)
-                            }
-                        }
-                        event_handler.saveSet("rss", JSON.stringify(RssCache))
+                       restorePref.start()
                     }
                 }
             }
@@ -445,12 +457,12 @@ Rectangle {
                     }
                     Connections {
                         target: basView
-                        onFlickStarted: oldContentY=basView.contentY
+                        onFlickStarted:oldContentY=basView.contentY
                         onContentYChanged: {
                             if (basView.contentY == 0 && oldContentY < -300) {
-                                rssView.positionViewAtBeginning();
+                                rssView.positionViewAtBeginning()
                                 for (var i = 0; i < rssmodel.count; i = i+1) {
-                                    rssmodel.get(i).enable = true;
+                                    rssmodel.get(i).enable = true
                                 }
                             }
                         }
