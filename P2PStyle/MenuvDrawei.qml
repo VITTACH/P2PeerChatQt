@@ -130,6 +130,8 @@ Drawer {
                             if (usersModel.get(index).image == "") {
                                 usersModel.setProperty(index, "image", "http://lorempixel.com/200/20" + i + "/sports")
                             }
+                            usersModel.setProperty(index,"famil",obj[i].famil)
+                            usersModel.setProperty(index,"login",obj[i].login)
                             usersModel.setProperty(index, "port", obj[i].port)
                             usersModel.setProperty(index, "ip", obj[i].ip)
                         }
@@ -412,15 +414,22 @@ Drawer {
                 right: parent.right
                 top: profile.bottom
                 bottom:listMenu.top
-                leftMargin:leftSlider.width
+                leftMargin: leftSlider.width
             }
             spacing: facade.toPx(8)
             boundsBehavior: {(Flickable.StopAtBounds)}
 
-            snapMode: {ListView.SnapToItem}
-            Component.onCompleted: usersModel.clear();
+            snapMode: {ListView.SnapToItem;}
+            Component.onCompleted:{
+                if (loader.chats.length<1) {
+                    var mchat = event_handler.loadValue("chats");
+                    if (mchat!= "")
+                        loader.chats=JSON.parse(mchat)
+                }
+                usersModel.clear();
+            }
 
-            model:ListModel{id: usersModel}
+            model:ListModel{id: usersModel;}
             delegate: Item {
                 id: baseItem
                 visible: activity
@@ -627,7 +636,13 @@ Drawer {
                             color:index==0?"white":loader.menu10Color
                         }
                         Text {
-                            text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
+                            text: {
+                                var i = 0;
+                                i=loader.chats[index].message.length;
+                                if (i > 0)loader.chats[index].message[i-1].flag? "Вам: ": "Вы: " + loader.chats[index].message[i-1].text
+                                if (i ==0)"Начните беседу";
+                            }
+//                          text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
                             elide: Text.ElideRight
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(22)

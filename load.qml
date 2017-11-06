@@ -67,6 +67,10 @@ ApplicationWindow {
 
         property real dpi: 0
 
+        // login by social
+        property string aToken
+        property string userId
+
         // some visible popup window
         property bool avatar: false;
         property bool dialog: false;
@@ -79,11 +83,8 @@ ApplicationWindow {
         property string famil;
         property string avatarPath: "qrc:/ui/profiles/default/Human.png";
 
-        // login by social
-        property string aToken
-        property string userId
-
-        property bool isLogin: false
+        property bool isNews:false
+        property bool isLogin:false
         property bool isOnline:false
 
         // history of chats

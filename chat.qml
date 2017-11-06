@@ -69,7 +69,8 @@ Rectangle {
         if ((screenTextFieldPost.text.length) >= 1) {
             buferText.text = screenTextFieldPost.text
             var time= new Date().toLocaleTimeString(Qt.locale(), Locale.LongFormat)
-            loader.chats[basicMenuDrawer.cindex].message.push({text: buferText.text,flag: flag,time: time})
+            var i = basicMenuDrawer.cindex
+            loader.chats[i].message.push({text:buferText.text,flag:flag,time:time})
             event_handler.saveSet("chats", JSON.stringify(loader.chats))
 
             appendMessage(buferText.text, flag, time)
@@ -107,7 +108,8 @@ Rectangle {
                 select.sort();
                 for(var i=0; i<select.length; i++) {
                     chatModel.remove(select[i] - i);
-                    loader.chats[basicMenuDrawer.cindex].message.splice(select[i] - i,1)
+                    var currentIndex = basicMenuDrawer.cindex;
+                    loader.chats[currentIndex].message.splice(select[i]-i,1)
                 }
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 for(var i=1; i<chatModel.count; i++)

@@ -100,13 +100,13 @@ Rectangle {
 
             Timer {
                 id: restorePref
-                interval: 2000;
-                onTriggered: restoreFromPref();
+                interval: 1000;
+                onTriggered: {restoreFromPref()}
             }
 
             function restoreFromPref() {
                 if (xmlmodel.count > 0) {
-                    var RssCache = []
+                    var RssCache = [];
                     for (var i = 0; i < xmlmodel.count; i++) {
                         var obj = {enable: true,
                                      link: xmlmodel.get(i).link,
@@ -411,7 +411,7 @@ Rectangle {
 
             XmlListModel {
                 id: xmlmodel
-                query: "/rss/channel/item"
+                query: {"/rss/channel/item"}
                 XmlRole {name: "link"; query : "link/string()";}
                 XmlRole {name: "title"; query: "title/string()";}
                 XmlRole {name: "pDate"; query: "pubDate/string()"}
@@ -421,7 +421,10 @@ Rectangle {
                 namespaceDeclarations: "declare namespace media=\"http://search.yahoo.com/mrss/\";"
                 onStatusChanged: {
                     if ((status == XmlListModel.Ready) && (rssRect.visible)) {
-                       restorePref.start()
+                        if (!loader.isNews) {
+                            restorePref.start();
+                            loader.isNews = true
+                        } else restoreFromPref()
                     }
                 }
             }
