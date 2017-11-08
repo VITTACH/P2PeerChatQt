@@ -10,7 +10,7 @@ ApplicationWindow {
     x: 0
     y: 0
     visible: true
-    title: "p2peer.io"
+    title: "PeerMe"
     property var tmpLogin
     property var tmpPhone
 
@@ -160,6 +160,7 @@ ApplicationWindow {
         function logon(phone, password) {
             var request = new XMLHttpRequest();var response;
             request.open('POST',"http://hoppernet.hol.es/default.php")
+            basicMenuDrawer.open()
             request.onreadystatechange = function() {
                 if (request.readyState == XMLHttpRequest.DONE) {
                     busyCircle.visible=false;
@@ -176,16 +177,15 @@ ApplicationWindow {
                         }
                         switch(response){
                             case 1:
-                                basicMenuDrawer.open()
                                 loader.isOnline = !false;
-                                if (loader.source!="qrc:/profile.qml")
-                                    goTo("qrc:/profile.qml");
+                                if (loader.source!="qrc:/profile.qml") goTo("profile.qml")
                                 event_handler.sendMsgs(phone)
                                 var u
                                 u = {tel:phone,pass:password,login:loader.login,family:loader.famil,image:loader.avatarPath}
                                 event_handler.saveSet("user", JSON.stringify(u));
                                 break;
                             case 0:
+                                basicMenuDrawer.close()
                                 windowsDialogs.show("Вы не зарегистрированы!", 0)
                                 if (loader.source != "qrc:/loginanDregister.qml") {loader.goTo("qrc:/loginanDregister.qml")}
                                 if (loader.aToken != ""){
@@ -200,6 +200,7 @@ ApplicationWindow {
                                 partnerHeader.page = 1;
                                 break;
                             case -1:
+                                basicMenuDrawer.close()
                                 windowsDialogs.show("Временно нет доступа к интернету", 0)
                                 break;
                         }
@@ -242,7 +243,7 @@ ApplicationWindow {
         property string menu8Color: "#666666";
         property string menu9Color: "#E5E5E5";
 
-        property string menu10Color:"#333333";
+        property string menu10Color:"#545454";
         property string menu11Color:"#606060";
         property string menu12Color:"#C5D9FB";
         property string menu13Color:"#B1B1B1";

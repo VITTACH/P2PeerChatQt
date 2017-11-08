@@ -578,6 +578,7 @@ Drawer {
                         }
                     }
 
+                    /*
                     DropShadow {
                         radius: 15
                         samples: 15
@@ -585,7 +586,6 @@ Drawer {
                         color:"#90000000"
                         anchors.fill:bug;
                     }
-                    /*
                     OpacityMask {
                         id: beg
                         source: bug
@@ -604,7 +604,6 @@ Drawer {
                         id: bug
                         clip: true
                         smooth: true
-                        visible: false
                         x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/facade.toPx(5);
                         width: facade.toPx(120)
                         height:facade.toPx(120)
@@ -626,12 +625,11 @@ Drawer {
                         }
                         anchors.verticalCenter: parent.verticalCenter
                         Text {
-                            lineHeight: (1.3)
                             elide: Text.ElideRight
                             text: (login + " " + famil)
                             font.bold: true
                             font.family:trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(26)
+                            font.pixelSize: facade.doPx(30)
                             width:fo.width-facade.toPx(100)-bug.width
                             color:index==0?"white":loader.menu10Color
                         }
@@ -639,21 +637,21 @@ Drawer {
                             text: {
                                 var i = 0;
                                 i=loader.chats[index].message.length;
-                                if (i > 0)loader.chats[index].message[i-1].flag? "Вам: ": "Вы: " + loader.chats[index].message[i-1].text
-                                if (i ==0)"Начните беседу";
+                                if (i> 0)loader.chats[index].message[i-1].flag? "Вам: ": "Вы: " + loader.chats[index].message[i-1].text;
+                                if (i==0)"Начните вашу новую беседу";
                             }
-//                          text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
+                            lineHeight: (1.2)
                             elide: Text.ElideRight
                             font.family:trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(22)
+                            font.pixelSize: facade.doPx(20)
                             width:fo.width-facade.toPx(100)-bug.width
                             color:index==0?"white":loader.menu11Color
                         }
                         Text {
-                            text: "Статус: offline с 13:45"
+                            text: phone.substring(0,1)+"("+phone.substring(1,4)+")"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
                             elide: Text.ElideRight
                             font.family:trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(16)
+                            font.pixelSize: facade.doPx(15)
                             width:fo.width-facade.toPx(100)-bug.width
                             color:index==0?"white":loader.menu11Color
                         }

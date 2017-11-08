@@ -39,11 +39,13 @@ Button {
     }
     Rectangle {
         id: dialogWindow;
-        radius: {facade.toPx(25);}
-        anchors.centerIn: {parent}
         color: "#f7f7f7";
         height: 2*width/3
+        radius: {facade.toPx(25);}
+        anchors.centerIn: {parent}
         width: Math.min(0.73 * parent.width, facade.toPx(666.6));
+
+        MouseArea {anchors.fill: parent}
 
         //Область для сообщения для диалогового;
         Rectangle {

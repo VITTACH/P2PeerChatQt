@@ -40,13 +40,14 @@ Button {
     }
     Rectangle {
         id: dialogWindow;
-        radius: {facade.toPx(25);}
-        anchors.centerIn: {parent}
         color: "#f7f7f7";
         height: 2*width/3
+        radius: {facade.toPx(25);}
+        anchors.centerIn: {parent}
         width: Math.min(0.73 * parent.width, facade.toPx(666.6));
 
-        //создаём горизонтальный разделитель у всего окна
+        MouseArea {anchors.fill: parent}
+
         Rectangle {
             id:dialogAndroidDividerHorizontal
             height: 1
@@ -57,6 +58,7 @@ Button {
                 bottom: dialogAndroidrow.top;
             }
         }
+        //создаём горизонтальный разделитель у всего окна
 
         //место отобажения сообщения для диалогового окна
         Rectangle {

@@ -25,11 +25,14 @@ Rectangle {
             topMargin: facade.toPx(40)
         }
 
-        model : ListModel {
-            id: feedsModel;
+        model: ListModel {
+            id: feedsModel
             ListElement {activiti: 0;}
             ListElement {activiti: 1;}
             ListElement {activiti: 0;}
+        }
+        boundsBehavior : {
+            (contentY <= 0) ? Flickable.StopAtBounds: Flickable.DragAndOvershootBounds
         }
 
         delegate: Column {
@@ -171,7 +174,7 @@ Rectangle {
                     }
                     Connections {
                         target: basicMenuDrawer
-                        onPositionChanged: if((basicMenuDrawer.position == 1) == true) {inerText.focus = (false)}
+                        onPositionChanged: if((basicMenuDrawer.position === 1) == true) inerText.focus=false
                     }
                     TextField {
                         id: inerText
@@ -272,7 +275,7 @@ Rectangle {
                                 to: (delegaRect.width * 3);
 
                                 onStopped: {
-                                    coloresRect.width = 0;
+                                    coloresRect.width  = 0;
                                     coloresRect.height = 0;
                                 }
                             }
@@ -314,9 +317,7 @@ Rectangle {
                                 onChooseChanged: {
                                     var objct = JSON.parse((loader.frienList))
                                     if (windowsDialogs.choose ==false && listView.friend != null) {
-                                        if (objct == null) {
-                                            objct = []
-                                        }
+                                        if (objct === null) {objct = [];}
                                         var objs = objct.push(listView.friend)
                                         loader.frienList=JSON.stringify(objct)
                                         loader.addFriend(listView.friend)
@@ -378,7 +379,7 @@ Rectangle {
                                     font.family:trebu4etMsNorm.name
                                     font.pixelSize: facade.doPx(24)
                                     font.bold: true
-                                    color: listView.currentIndex==index? "white":"#10387F"
+                                    color: listView.currentIndex == index? "#FFFFFFFF": "#FF10387F"
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                                 Text {
@@ -388,7 +389,7 @@ Rectangle {
                                     font.family:trebu4etMsNorm.name
                                     font.pixelSize: facade.doPx(18)
                                     width: delegaRect.width - bug.width - bug.x - fullName.implicitWidth - parent.spacing - 2 * facade.toPx(30);
-                                    color:listView.currentIndex ==index? "white": "gray"
+                                    color: listView.currentIndex == index? "#FFFFFFFF": "gray"
                                     anchors.verticalCenter: parent.verticalCenter
                                 }
                             }
@@ -448,27 +449,17 @@ Rectangle {
                     width: parent.width;
                     height:parent.height
                     spacing: facade.toPx(20)
+                    boundsBehavior: {
+                        (contentY <= 0) ? Flickable.StopAtBounds : Flickable.DragAndOvershootBounds
+                    }
                     onContentYChanged: {
-                        if (contentY < -200) {xmlmodel.reload()}
                         curInd=Math.floor((contentY-1)/(newsCardHgt+spacing));
-                        if (contentY > oldContentY && curInd>=0) {
+                        if (contentY>oldContentY && curInd>=0) {
                             rssmodel.get(curInd).enable = false;
                         } else if (curInd >= -1) {
                             rssmodel.get(curInd+1).enable = true
                         }
                         oldContentY=contentY
-                    }
-                    Connections {
-                        target: basView
-                        onFlickStarted:oldContentY=basView.contentY
-                        onContentYChanged: {
-                            if (basView.contentY == 0 && oldContentY < -300) {
-                                rssView.positionViewAtBeginning()
-                                for (var i = 0; i < rssmodel.count; i = i+1) {
-                                    rssmodel.get(i).enable = true
-                                }
-                            }
-                        }
                     }
                     model: ListModel {id: rssmodel}
                     snapMode: {ListView.SnapToItem}
@@ -610,10 +601,11 @@ Rectangle {
             ListView {
                 clip: true
                 visible: index == 2
-                spacing: facade.toPx(27);
+                spacing: {facade.toPx(27)}
                 width: parent.width
-                height: facade.toPx(200);
-                orientation:Qt.Horizontal
+                height: facade.toPx(200)
+                orientation: Qt.Horizontal
+                boundsBehavior: Flickable.StopAtBounds;
                 model:ListModel {
                     ListElement {image:"mus.png"; text:"music"}
                     ListElement {image:"img.png"; text:"image"}
@@ -621,9 +613,49 @@ Rectangle {
                     ListElement {image:"play.png";text:"games"}
                 }
                 delegate: Image {
+                    clip: true
                     width: facade.toPx(sourceSize.width / 3.5)
                     height: facade.toPx(sourceSize.height/ 3.5)
                     source: {"qrc:/ui/buttons/feeds/" + image;}
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onExited: {
+                            squareAnimation.stop();
+                        }
+                        onPressed: {
+                            colorSquare.x = mouseX;
+                            colorSquare.y = mouseY;
+                            squareAnimation.start()
+                        }
+                    }
+
+                    Rectangle {
+                        width: 0
+                        height: 0
+                        opacity: 0.37
+                        id: colorSquare
+                        color: loader.menu9Color
+
+                        transform: Translate {
+                            x:-colorSquare.width /2
+                            y:-colorSquare.height/2
+                        }
+                    }
+
+                    PropertyAnimation {
+                        duration: 1000
+                        target: colorSquare;
+                        id: squareAnimation;
+                        properties: {("width, height, radius")}
+                        from: 0
+                        to: (parent.width*3)
+
+                        onStopped: {
+                            colorSquare.width  = 0;
+                            colorSquare.height = 0;
+                        }
+                    }
                 }
             }
         }
