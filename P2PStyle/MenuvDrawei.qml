@@ -407,6 +407,7 @@ Drawer {
         ListView {
             clip:true
             id: listView;
+            spacing: 1
             property int memIndex:0
             anchors {
                 topMargin: -1
@@ -416,7 +417,6 @@ Drawer {
                 bottom:listMenu.top
                 leftMargin: leftSlider.width
             }
-            spacing: facade.toPx(8)
             boundsBehavior: {(Flickable.StopAtBounds)}
 
             snapMode: {ListView.SnapToItem;}
@@ -475,7 +475,11 @@ Drawer {
                     id: delegaRect
                     width: parent.width
                     height: parent.height
-                    color: (index == 0)? (loader.isOnline == true? loader.menu3Color: loader.menu4Color): ("#FFFFFF")
+                    color: {
+                        if (index == 0) {
+                            (loader.isOnline == true) ? loader.menu3Color : loader.menu4Color;
+                        } else loader.chats[index].message.length == 0? "#EDEDED" : "#FFFFFF";
+                    }
 
                     Rectangle {
                         width: 0
@@ -607,10 +611,13 @@ Drawer {
                         x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/facade.toPx(5);
                         width: facade.toPx(120)
                         height:facade.toPx(120)
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors {
+                            top: parent.top
+                            topMargin: facade.toPx(10);
+                        }
                         Image {
                             source: image
-                            anchors.centerIn: parent
+                            anchors.centerIn: {parent;}
                             height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                             width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                         }
@@ -623,11 +630,9 @@ Drawer {
                             left: (bug.right)
                             leftMargin: facade.toPx(40)
                         }
-                        anchors.verticalCenter: parent.verticalCenter
                         Text {
                             elide: Text.ElideRight
                             text: (login + " " + famil)
-                            font.bold: true
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(30)
                             width:fo.width-facade.toPx(100)-bug.width
@@ -640,18 +645,10 @@ Drawer {
                                 if (i> 0)loader.chats[index].message[i-1].flag? "Вам: ": "Вы: " + loader.chats[index].message[i-1].text;
                                 if (i==0)"Начните вашу новую беседу";
                             }
-                            lineHeight: (1.2)
-                            elide: Text.ElideRight
+                            wrapMode: Text.WordWrap
+                            maximumLineCount: 3
                             font.family:trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(20)
-                            width:fo.width-facade.toPx(100)-bug.width
-                            color:index==0?"white":loader.menu11Color
-                        }
-                        Text {
-                            text: phone.substring(0,1)+"("+phone.substring(1,4)+")"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
-                            elide: Text.ElideRight
-                            font.family:trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(15)
+                            font.pixelSize: facade.doPx(16)
                             width:fo.width-facade.toPx(100)-bug.width
                             color:index==0?"white":loader.menu11Color
                         }
@@ -716,8 +713,9 @@ Drawer {
             snapMode:ListView.SnapOneItem
             property bool isShowed: false
             height: {
-                var length = parent.height-getProfHeight()-facade.toPx(540);
-                var count = Math.ceil(length / facade.toPx(80))
+                var length=parent.height;
+                length -= (facade.toPx(540) + getProfHeight());
+                var count = Math.ceil(length /facade.toPx(80));
                 if (count >navigateDownModel.count)
                    count = navigateDownModel.count;
                 if (count < 1) count = 1;
@@ -744,7 +742,11 @@ Drawer {
             delegate: Rectangle{
                 width: parent.width;
                 height: facade.toPx(80)
-                color: ListView.isCurrentItem? "lightgrey":loader.menu9Color
+                color: if(ListView.isCurrentItem) {
+                           "lightgrey";
+                       } else {
+                           loader.menu9Color;
+                       }
                 MouseArea {
                     id: menMouseArea
                     anchors.fill:parent
@@ -841,6 +843,12 @@ Drawer {
                         fill: parent;
                         leftMargin:facade.toPx(20)
                     }
+                    Connections {
+                        target: loader
+                        onIsOnlineChanged: {
+                          myswitcher.checked=loader.isOnline
+                        }
+                    }
                     Image {
                         id: icon
                         visible: index >= 2
@@ -848,10 +856,6 @@ Drawer {
                         width: {facade.toPx(sourceSize.width * 1.5);}
                         height:{facade.toPx(sourceSize.height * 1.5)}
                         anchors.verticalCenter: parent.verticalCenter
-                    }
-                    Connections {
-                        target: loader
-                        onIsOnlineChanged:myswitcher.checked=loader.isOnline
                     }
                     Switch {
                         id: myswitcher
@@ -900,9 +904,9 @@ Drawer {
     }
     Settingdrawei {id:settingDrawer}
     Rectangle {
-        height:parent.height
-        color: loader.menu2Color
         anchors.left: {parent.right}
+        color: loader.menu2Color
+        height:parent.height
         width:4
     }
 }

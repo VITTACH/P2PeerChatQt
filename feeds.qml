@@ -215,8 +215,8 @@ Rectangle {
                 visible: index==0&&activiti
                 ListView {
                     id: listView
+                    spacing: 1
                     anchors.fill:parent
-                    spacing: parent.counter>1?facade.toPx(10):0
                     snapMode: {ListView.SnapToItem;}
                     boundsBehavior: {(Flickable.StopAtBounds);}
 
@@ -227,11 +227,11 @@ Rectangle {
                         id: baseItem
                         visible: activity
                         width: parent.width
-                        height: activity==1? facade.toPx(20)+Math.max(bug.height,fo.height):0
+                        height: activity == 1? facade.toPx(20) + Math.max(bug.height, fo.height): 0
 
                         Rectangle {
                             color: loader.menu5Color
-                            anchors.right: parent.right
+                            anchors.right: parent.right;
                             anchors.verticalCenter: parent.verticalCenter
                             Image {
                                 anchors.top: parent.top;
@@ -364,33 +364,39 @@ Rectangle {
                                 }
                             }
 
-                            Row {
+                            Item {
                                 id: fo
-                                spacing: facade.toPx(20)
                                 height: Math.max(fullName.implicitHeight, telPhone.implicitHeight);
+                                anchors.verticalCenter: parent.verticalCenter;
                                 anchors {
                                     left: bug.right
+                                    right: parent.right
                                     leftMargin: facade.toPx(30)
-                                    verticalCenter: {(parent.verticalCenter);}
                                 }
+
                                 Text {
                                     id: fullName
                                     text: (login + " " + famil)
                                     font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(24)
-                                    font.bold: true
-                                    color: listView.currentIndex == index? "#FFFFFFFF": "#FF10387F"
-                                    anchors.verticalCenter: parent.verticalCenter
+                                    font.pixelSize: facade.doPx(30)
+                                    color: listView.currentIndex== index? "#FFFFFFFF": "#FF000000";
+                                    anchors{
+                                        verticalCenter: parent.verticalCenter;
+                                    }
                                 }
                                 Text {
                                     id: telPhone
                                     elide: Text.ElideRight
-                                    text:phone.substring(0,1)+"("+phone.substring(1,4)+")-"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
+                                    text:phone.substring(0,1)+"("+phone.substring(1,4)+")"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port;
                                     font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(18)
-                                    width: delegaRect.width - bug.width - bug.x - fullName.implicitWidth - parent.spacing - 2 * facade.toPx(30);
-                                    color: listView.currentIndex == index? "#FFFFFFFF": "gray"
-                                    anchors.verticalCenter: parent.verticalCenter
+                                    font.pixelSize: facade.doPx(20)
+                                    width: delegaRect.width - bug.width - bug.x - fullName.implicitWidth - 3 * facade.toPx(30);
+                                    color: listView.currentIndex== index? "#FFFFFFFF": "#FF808080";
+                                    anchors{
+                                        right: parent.right
+                                        rightMargin:facade.toPx(30)
+                                        verticalCenter: parent.verticalCenter;
+                                    }
                                 }
                             }
                         }

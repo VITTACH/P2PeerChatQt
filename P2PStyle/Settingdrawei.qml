@@ -15,7 +15,7 @@ Drawer {
     Connections {
         target: drawed
         onPositionChanged: {
-            if (basicMenuDrawer.position <= 0.100) {
+            if(basicMenuDrawer.position<=0.1) {
                 position = 0
             }
         }
@@ -30,9 +30,15 @@ Drawer {
 
     Rectangle {
         width: parent.width;
-        y: {basicMenuDrawer.getProfHeight()}
-        height: parent.height - basicMenuDrawer.getProfHeight()
-        color: loader.sets1Color
+        y: basicMenuDrawer.getProfHeight()
+        height: {
+            parent.height-basicMenuDrawer.getProfHeight();
+        }
+        Background {
+            opacity: 0.6
+            Component.onCompleted: setColors([[40, 40, 40], [120, 120, 120]], 500)
+            anchors.fill: parent
+        }
 
         ListView {
             clip: true
