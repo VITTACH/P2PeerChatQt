@@ -55,14 +55,15 @@ Rectangle {
             }
         }
         select = [];
-        busyCircle.visible=true
+        busyCircle.visible = true
         chatModel.clear();
         var i = basicMenuDrawer.cindex;
+        if (i < loader.chats.length)
         for (j = 0; j<loader.chats[i].message.length; j++) {
             buferText.text = loader.chats[i].message[j].text
             appendMessage(loader.chats[i].message[j].text, (loader.chats[i].message[j].flag), loader.chats[i].message[j].time)
         }
-        busyCircle.visible=!busyCircle.visible;
+        busyCircle.visible=false;
     }
 
     function checkMessage(flag) {

@@ -7,7 +7,6 @@
         <file>chat.qml</file>
         <file>load.qml</file>
         <file>P2PStyle/Background.qml</file>
-        <file>start.qml</file>
         <file>login.qml</file>
         <file>ui/chat/leFtMessage.png</file>
         <file>ui/chat/rightMessag.png</file>
@@ -17,7 +16,6 @@
         <file>ui/bars/icons/configWhite.png</file>
         <file>ui/icons/passWIconWhite.png</file>
         <file>ui/icons/phoneIconWhite.png</file>
-        <file>ui/logos/logo.png</file>
         <file>P2PStyle/WindsDialogs.qml</file>
         <file>regin.qml</file>
         <file>ui/icons/personIconwhite.png</file>
@@ -56,7 +54,7 @@
         <file>ui/buttons/social/vk.png</file>
         <file>ibrowser.qml</file>
         <file>webview.qml</file>
-        <file>qrscan.qml</file>
+        <file>qrscaner.qml</file>
         <file>profile.qml</file>
         <file>ui/buttons/trashButton.png</file>
         <file>ui/buttons/dialerButton.png</file>
@@ -70,5 +68,6 @@
         <file>ui/buttons/feeds/mus.png</file>
         <file>ui/buttons/feeds/play.png</file>
         <file>ui/buttons/feeds/vide.png</file>
+        <file>ui/backind/back1.png</file>
     </qresource>
 </RCC>

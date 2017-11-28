@@ -23,7 +23,12 @@ Item {
         id: headerRect
         width: parent.width
         height: facade.toPx(140)
-        color: loader.head1Color
+        color: {
+            if (loader.source == "qrc:/loginanDregister.qml")
+                loader.head1Color
+            else
+                loader.head1Color
+        }
 
         Item {
             id: inerItem

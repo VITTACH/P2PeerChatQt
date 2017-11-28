@@ -21,9 +21,7 @@ Drawer {
         }
     }
 
-    closePolicy: {
-        (Popup.CloseOnPressOutside | Popup.CloseOnEscape);
-    }
+    closePolicy: Popup.CloseOnEscape;
 
     height:{(parent.height)}
     width: {Math.min(facade.toPx(520), 0.60*parent.width)}
@@ -34,11 +32,7 @@ Drawer {
         height: {
             parent.height-basicMenuDrawer.getProfHeight();
         }
-        Background {
-            opacity: 0.6
-            Component.onCompleted: setColors([[40, 40, 40], [120, 120, 120]], 500)
-            anchors.fill: parent
-        }
+        color: "#ACACAC"
 
         ListView {
             clip: true
@@ -63,74 +57,79 @@ Drawer {
                             y: -coloresRect.height/2;
                         }
                     }
-                Row {
-                    id: navigate
-                    anchors.fill:parent
-                    Image {
-                        id: icon
-                        source:index > 0 || element.ListView.isCurrentItem == true? image1: image2
-                        anchors.verticalCenter: parent.verticalCenter;
-                        width: ((facade.toPx(sourceSize.width *1.5)));
-                        height:((facade.toPx(sourceSize.height*1.5)));
-                    }
-                    Text {
-                        text: target;
-                        color:index>0||element.ListView.isCurrentItem? loader.menu11Color: "white"
-                        width: parent.width-icon.width-facade.toPx(40)
-                        anchors.verticalCenter: parent.verticalCenter;
-                        font.family: {trebu4etMsNorm.name}
-                        font.pixelSize: {facade.doPx(32);}
-                        elide: Text.ElideRight;
-                    }
-                    anchors.leftMargin: {facade.toPx(20);}
-                    spacing: {facade.toPx(25);}
-                }
-
-                MouseArea {
-                    anchors.fill:parent
-                    onExited: {
-                        circleAnimation.stop();
-                        listMenu.currentIndex= -1
-                    }
-                    onEntered: {
-                        listMenu.currentIndex = index
-                        coloresRect.x = mouseX;
-                        coloresRect.y = mouseY;
-                        circleAnimation.start()
+                    Row {
+                        id: navigate
+                        anchors.fill:parent
+                        Image {
+                            id: icon
+                            source:{
+                               if(index>0||element.ListView.isCurrentItem)
+                                    image1; else image2
+                            }
+                            anchors.verticalCenter: parent.verticalCenter;
+                            width: ((facade.toPx(sourceSize.width *1.5)));
+                            height:((facade.toPx(sourceSize.height*1.5)));
+                        }
+                        Text {
+                            text: target;
+                            color:{
+                               if(index>0||element.ListView.isCurrentItem)
+                                    loader.menu11Color; else "#FFFFFFFF"
+                            }
+                            width: parent.width-icon.width-facade.toPx(40)
+                            anchors.verticalCenter: parent.verticalCenter;
+                            font.family: {trebu4etMsNorm.name}
+                            font.pixelSize: {facade.doPx(32);}
+                            elide: Text.ElideRight;
+                        }
+                        anchors.leftMargin: {facade.toPx(20);}
+                        spacing: {facade.toPx(25);}
                     }
 
-                    onClicked: {
-                        circleAnimation.stop();
-                        switch(index) {
-                        case 4:
-                            settingDrawer.close()
-                            break
+                    MouseArea {
+                        anchors.fill:parent
+                        onExited: {
+                            circleAnimation.stop();
+                            listMenu.currentIndex= -1
+                        }
+                        onEntered: {
+                            listMenu.currentIndex = index
+                            coloresRect.x = mouseX;
+                            coloresRect.y = mouseY;
+                            circleAnimation.start()
+                        }
+
+                        onClicked: {
+                            circleAnimation.stop();
+                            switch(index) {
+                            case 5:
+                                settingDrawer.close()
+                                break
+                            }
                         }
                     }
-                }
 
-                PropertyAnimation {
-                    duration: 500
-                    target: coloresRect;
-                    id: circleAnimation;
-                    properties: "width,height,radius"
-                    from: 0
-                    to: body.width*3
+                    PropertyAnimation {
+                        duration: 500
+                        target: coloresRect;
+                        id: circleAnimation;
+                        properties: "width,height,radius"
+                        from: 0
+                        to: body.width*3
 
-                    onStopped: {
-                    coloresRect.width =0
-                    coloresRect.height=0
+                        onStopped: {
+                        coloresRect.width =0
+                        coloresRect.height=0
+                        }
                     }
-                }
 
-                color: element.ListView.isCurrentItem && !circleAnimation.running? loader.sets2Color: (index == 0? (loader.isOnline? loader.head1Color: loader.menu4Color): "#EEEDEEF0")
-
-                Rectangle {
-                    visible: index!=1 && index!=4
-                    anchors.top: navigate.bottom;
-                    width: parent.width
-                    color: "#6198D9"
-                    height: 1
+                    color: {
+                        if (element.ListView.isCurrentItem&&!circleAnimation.running)
+                            loader.sets2Color
+                        else
+                            if (index === 0)
+                                (loader.isOnline?loader.head1Color:loader.menu4Color)
+                        else "#EEEDEEF0"
                     }
                 }
             }
@@ -153,12 +152,17 @@ Drawer {
                 ListElement {
                     image1:"../ui/icons/myalgortBlue.png";
                     image2:"../ui/icons/myalgortLigh.png";
-                    target:qsTr("Безопасность")
+                    target: qsTr("Безопасность")
+                }
+                ListElement {
+                    image1: "../ui/icons/myalgortBlue.png"
+                    image2: "../ui/icons/myalgortLigh.png"
+                    target: qsTr("Настройки")
                 }
                 ListElement {
                     image1: "../ui/icons/manswerBlue.png";
                     image2: "../ui/icons/manswerLigh.png";
-                    target:qsTr("Помощь")
+                    target: qsTr("Помощь")
                 }
                 ListElement {
                     image1: "qrc:/ui/icons/goBackBlue.png"

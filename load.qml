@@ -250,7 +250,6 @@ ApplicationWindow {
         property string menu14Color:"#51587F";
 
         property string head1Color: "#777777";
-        property string head2Color: "#4F81B6";
 
         property string sets1Color: "#727273";
         property string sets2Color: "#D8D8D8";
@@ -264,15 +263,14 @@ ApplicationWindow {
         var usa
         usa = event_handler.loadValue("user");
         if (usa != "") {
-            var objct = JSON.parse(usa);
-            loader.avatarPath = (objct.image);
-            loader.famil = objct.family;
-            loader.login = objct.login
-            loader.logon(objct.tel,objct.pass)
-            loader.tel = objct.tel
+           var objct = JSON.parse(usa);
+           loader.avatarPath = objct.image
+           loader.famil = objct.family;
+           loader.login = objct.login
+           loader.logon(objct.tel, objct.pass)
+           loader.tel = objct.tel
         } else {
-            loader.source = ("qrc:/start.qml")
-            loader.goTo(loader.source)
+           loader.goTo("loginanDregister.qml")
         }
     }
 
@@ -293,7 +291,7 @@ ApplicationWindow {
     }
 
     P2PStyle.HeaderSplash {
-        visible: (loader.source != "qrc:/start.qml" && loader.source != "qrc:/qrscan.qml")
+        visible: loader.source != "qrscan.qml"
         id: partnerHeader;
     }
 

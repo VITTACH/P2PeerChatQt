@@ -4,63 +4,57 @@ import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
 
 Item {
-    P2PStyle.Background {
-    Component.onCompleted: setColors([[40, 40, 40],[120, 120, 120],[0, 74, 127]],500)
-    anchors.fill: parent;
-    }
-
     function registration(login, family, password, phone, email) {
         var request=new XMLHttpRequest()
         request.open('POST',"http://hoppernet.hol.es/default.php")
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
         request.onreadystatechange = function() {
-            if(request.readyState == XMLHttpRequest.DONE) {
-                if(request.status && request.status==200) {
+            if (request.readyState === XMLHttpRequest.DONE) {
+                if (request.status && request.status == 200) {
                     if (request.responseText == "yes") {
                         loader.tel = phone;
                         loader.famil = family
                         loader.login = login;
                         windowsDialogs.show("Вы зарегистрированы",0)
-                        event_handler.saveSet("passw", password)
                         event_handler.saveSet("phone", (loader.tel))
-                        var object= JSON.parse(loader.frienList)
-                        object.push(phone);
-                        loader.frienList= JSON.stringify(object)
+                        event_handler.saveSet("passw", password)
+                        var objectFrnd= JSON.parse(loader.frienList)
+                        objectFrnd.push(phone)
+                        loader.frienList= JSON.stringify(objectFrnd)
                         loader.addFriends()
-                        loader.isLogin = true
+                        loader.isLogin = true;
                         goTo("profile.qml")
-                    }
-                    else if(request.responseText == "no") {
+                    } else if (request.responseText == "no") {
                         windowsDialogs.show("Что-то пошло не так",0)
                     }
                     busyCircle.visible = false
                 }
             }
         }
-        request.send("name=" + phone + "&family=" + family + "&pass=" + password + "&login=" + login + "&mail=" + email)
+        request.send("name=" + phone + "&family=" + family + "&pass=" + password + "&login= " +
+                     login + "&mail=" + email);
     }
 
     ListView {
         width: parent.width
         spacing: facade.toPx(50)
+        displayMarginBeginning:facade.toPx(100)
         model:ListModel {
             ListElement {image:"ui/icons/personIconwhite.png"; plaseholder: "Логин";}
             ListElement {image:"ui/icons/personIconwhite.png"; plaseholder:"Фамилия"}
-            ListElement {image:"ui/icons/passWIconWhite.png"; plaseholder: "Пароль";}
-            ListElement {image:"ui/icons/phoneIconWhite.png"; plaseholder: "э-почта"}
+            ListElement {image:"ui/icons/passWIconWhite.png"; plaseholder: "Ваш личный пароль"}
+            ListElement {image:"ui/icons/phoneIconWhite.png"; plaseholder: "Электронная почта"}
             ListElement {image:"ui/icons/phoneIconWhite.png"; plaseholder: "Телефон"}
             ListElement {image: "-"; plaseholder: ""}
             ListElement {image: "_"; plaseholder: "Присоединиться"}
-            ListElement {image: "_"; plaseholder: "Правила"}
+            ListElement {image: "_"; plaseholder: "Демо вход"}
         }
 
         anchors {
             top: parent.top
             bottom: parent.bottom
-            topMargin: partnerHeader.height+facade.toPx(90);
+            topMargin: partnerHeader.height + facade.toPx(150)
         }
-
-        displayMarginBeginning: facade.toPx(100);
 
         delegate: Column {
             width: parent.width
@@ -69,15 +63,13 @@ Item {
             Item {
                 visible: image=="_"
                 height: facade.toPx(100)
-                width: Math.min(0.76*parent.width,facade.toPx(800))
-                anchors.horizontalCenter: {parent.horizontalCenter}
 
                 DropShadow {
                     radius: 12
                     samples: 20
-                    anchors.fill: reginButon
                     color: "#80000000";
                     source: reginButon;
+                    anchors.fill: reginButon
                 }
                 Button {
                     id: reginButon
@@ -92,19 +84,19 @@ Item {
                     onClicked: {
                         if (index == 6) {
                             if (loader.fields[0].length < 2) {
-                                windowsDialogs.show("Имя короче чем 2 символа",0)
+                                windowsDialogs.show("Ваше имя менее чем 2 символа",0)
                             }
                             else
                             if (loader.fields[1].length < 2) {
-                                windowsDialogs.show("Фамилия менее 2 символов",0)
+                                windowsDialogs.show("Фамилия короче двух символов",0)
                             }
                             else
                             if (loader.fields[2].length < 5) {
-                                windowsDialogs.show("Пароль < 5 - ти символов",0)
+                                windowsDialogs.show("Ваш пароль < 5 - ти символов",0)
                             }
                             else
                             if (loader.fields[4].length <11) {
-                                windowsDialogs.show("Укажите корректный номер",0)
+                                windowsDialogs.show("Ваш номер короче 11 символов",0)
                             }
                             else {
                                 busyCircle.visible = true
@@ -119,27 +111,26 @@ Item {
                     }
 
                     contentItem: Text {
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: {Text.AlignHCenter;}
+                        verticalAlignment: Text.AlignVCenter;
+                        horizontalAlignment: {(Text.AlignHCenter)}
                         color: ("#FFFFFF");
                         text: (parent.text)
                         font: (parent.font)
                     }
                 }
+                width:Math.min(0.76*parent.width,facade.toPx(800))
+                anchors.horizontalCenter: parent.horizontalCenter;
             }
 
             Item {
                 visible:index < 5? 1:0;
                 height: {parent.height}
-
+                width:Math.min(0.82*parent.width,facade.toPx(900))
                 anchors {
-                    left: {parent.left}
-                    right:parent.right;
-                    leftMargin: 0.09*parent.width
-                    rightMargin:0.09*parent.width
+                    horizontalCenter: parent.horizontalCenter
                 }
-
                 Image {
+                    id: icon
                     width: facade.toPx(sourceSize.width *1.5)
                     height:facade.toPx(sourceSize.height*1.5)
                     source: index < 5? image: "";
@@ -151,11 +142,10 @@ Item {
                     height: parent.height
                     placeholderText: plaseholder;
 
-                    anchors.left: parent.left
-                    anchors.right: {parent.right}
-                    anchors.leftMargin: facade.toPx(80)
-                    anchors.rightMargin: 0.09 * parent.width;
-
+                    anchors {
+                        left: icon.right
+                        leftMargin: (facade.toPx(20));
+                    }
                     Connections {
                         target: partnerHeader
                         onPageChanged: {
@@ -184,12 +174,10 @@ Item {
             }
 
             Rectangle {
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                }
-                width: {0.82 * parent.width;}
+                anchors.horizontalCenter: parent.horizontalCenter;
+                width:Math.min(0.82*parent.width,facade.toPx(900))
                 visible:{index<5?true:false;}
-                height: 2
+                height: 3
             }
         }
     }

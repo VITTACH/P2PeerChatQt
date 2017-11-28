@@ -5,16 +5,28 @@ import "P2PStyle" as P2PStyle
 import "js/URLQuery.js" as URLQuery
 
 Item {
-    property real oldsWidth
-    property real pageWidth
+    property real oldsWidth;
+    property real pageWidth;
     property real limsWidth: facade.toPx(1080)
 
-    Component.onCompleted: {partnerHeader.text = "Вход"}
+    Component.onCompleted: partnerHeader.text="Вход"
 
-    P2PStyle.Background {
-        anchors.fill: {parent}
-        Component.onCompleted: {
-            setColors([[40, 40, 40], [120, 120, 120], [0, 74, 127]], 500)
+    Item {
+        height: parent.height
+        width: 2 * parent.width
+        P2PStyle.Background {
+            anchors.fill: {parent}
+            Component.onCompleted: setColors([[180, 180, 180], [107,107,107]], 500)
+        }
+        Image {
+            y: parent.height - height
+            x: (parent.width - width)/2
+            source:"qrc:/ui/backind/back1.png"
+            height: {facade.doPx(sourceSize.height)}
+            width: {
+                if (parent.width > facade.toPx(sourceSize.width)) {(parent.width);}
+                else {facade.toPx(sourceSize.width)}
+            }
         }
     }
 
@@ -30,24 +42,16 @@ Item {
 
         model:ListModel {
             id: listModel
+            ListElement {image: ""; placeholder: ""}
             ListElement {
-                image: ""; placeholder: ""
-            }
-            ListElement {
-                image: "ui/icons/phoneIconWhite.png"; plaseHolder: "Номер телефон";
+                image: "ui/icons/phoneIconWhite.png"; plaseHolder: "Номер телефона"
             }
             ListElement {
                 image: "ui/icons/passWIconWhite.png"; plaseHolder: "Введите пароль"
             }
-            ListElement {
-                image: ""; plaseHolder: "Начать Общение"
-            }
-            ListElement {
-                image: ""; plaseHolder:"Вход по QR-коду"
-            }
-            ListElement {
-                image: ""; plaseHolder: "Нету аккаунта?"
-            }
+            ListElement {image: ""; plaseHolder: "Начать Общение"}
+            ListElement {image: ""; plaseHolder:"Вход по QR-коду"}
+            ListElement {image: ""; plaseHolder: "Нету аккаунта?"}
         }
 
         displayMarginBeginning: {
@@ -61,30 +65,23 @@ Item {
             height: index==3? facade.toPx(110): (index<1?pageWidth:facade.toPx(89))
 
             ListView {
+                visible:index<1
                 height: pageWidth
-                visible: index==0
                 width: links.count*(pageWidth + spacing);
                 spacing: facade.toPx(10);
                 orientation:Qt.Horizontal
-                anchors.horizontalCenter:
-                {parent.horizontalCenter}
+                anchors.horizontalCenter: {parent.horizontalCenter}
 
                 model:ListModel {
                     id: links
-                    ListElement {
-                        image: "ui/buttons/social/fb.png"
-                    }
-                    ListElement {
-                        image: "ui/buttons/social/tw.png"
-                    }
-                    ListElement {
-                        image: "ui/buttons/social/vk.png"
-                    }
+                    ListElement {image: "ui/buttons/social/fb.png"}
+                    ListElement {image: "ui/buttons/social/tw.png"}
+                    ListElement {image: "ui/buttons/social/vk.png"}
                 }
                 delegate: Image {
                     source: image
                     width: pageWidth = (facade.toPx(sourceSize.width*1.5*(listView.width>limsWidth? 1: listView.width/limsWidth))>0?
-                              oldsWidth=facade.toPx(sourceSize.width*1.5*(listView.width>limsWidth? 1: listView.width/limsWidth)): oldWidth)
+                            oldsWidth = facade.toPx(sourceSize.width*1.5*(listView.width>limsWidth? 1: listView.width/limsWidth)):oldsWidth)
                     height:pageWidth
                     MouseArea {
                         anchors.fill: parent
@@ -156,7 +153,7 @@ Item {
                             }
                             break;
                         case 4:
-                            loader.goTo("qrc:/qrscan.qml")
+                            loader.goTo("qrc:/qrscaner.qml");
                             break;
                         }
                     }
@@ -179,39 +176,42 @@ Item {
             Item {
                 height: facade.toPx(88)
                 visible:index == 1 || index == 2;
-                anchors {
-                    left: {parent.left}
-                    right: parent.right
-                    leftMargin: 0.09*parent.width
-                    rightMargin:0.09*parent.width
-                }
                 Image {
                     id: icon;
                     source: image
                     width: facade.toPx(sourceSize.width * 1.5);
                     height:facade.toPx(sourceSize.height* 1.5);
                 }
+                width: {
+                   Math.min(0.82*parent.width,facade.toPx(900))
+                }
+                anchors {
+                    horizontalCenter: (parent.horizontalCenter)
+                }
                 TextField {
                     color:"white"
                     height: facade.toPx(88)
                     placeholderText: plaseHolder;
-
                     onTextChanged: loader.fields[index-1]=text;
 
-                    inputMethodHints: index == 1? Qt.ImhFormattedNumbersOnly: Qt.ImhNone
-
-                    onFocusChanged: if (text.length==0 && index==1) text="8";
-
-                    echoMode: index==2? TextInput.Password: TextInput.Normal;
-
-                    anchors {
-                        left: parent.left;
-                        right:parent.right
-                        rightMargin:0.09*parent.width
-                        leftMargin: (facade.toPx(80))
+                    onFocusChanged: {
+                        if (text.length==0 && index==1)text="8"
+                    }
+                    echoMode: {
+                        if (index == 2)
+                            TextInput.Password
+                        else TextInput.Normal;
+                    }
+                    inputMethodHints: {
+                        if (index == 1)
+                           Qt.ImhFormattedNumbersOnly
+                        else Qt.ImhNone
                     }
                     background:Rectangle {opacity: 0}
-
+                    anchors {
+                        left: icon.right
+                        leftMargin: (facade.toPx(20))
+                    }
                     font {
                         family: (trebu4etMsNorm.name)
                         pixelSize:facade.doPx(38)
@@ -221,16 +221,12 @@ Item {
 
             Button {
                 anchors {
-                    leftMargin: 0.09*parent.width
-                    rightMargin:0.09*parent.width
                     left: parent.left;
+                    leftMargin: 0.09*parent.width
                     right:parent.right
+                    rightMargin:0.09*parent.width
                 }
-                background: Rectangle {opacity:0}
-                font.pixelSize: {facade.doPx(26)}
-                font.family: trebu4etMsNorm.name;
 
-                onClicked: partnerHeader.page = 1
                 contentItem: Text {
                     color:parent.down? "lightgray": "white";
                     horizontalAlignment: Text.AlignHCenter
@@ -239,16 +235,20 @@ Item {
                     font: parent.font;
                     padding: - 8;
                 }
+
+                background: Rectangle {opacity:0}
+                font.pixelSize: {facade.doPx(26)}
+                font.family: trebu4etMsNorm.name;
+                onClicked: partnerHeader.page=1
+
                 visible: index == 5
                 text: plaseHolder
             }
 
             Rectangle {
-                anchors {
-                    horizontalCenter:parent.horizontalCenter
-                }
+                anchors.horizontalCenter: {parent.horizontalCenter;}
+                width: Math.min(0.82*parent.width,facade.toPx(900));
                 visible: index == 1 || index == 2
-                width:0.82*parent.width
                 height: 4
             }
         }
