@@ -234,12 +234,14 @@ ApplicationWindow {
         }
 
         // colors variables
-        property string menu1Color: "#818181";
+        property string menu0Color: "#939393";
+        property string menu1Color: "#CEBC94";
         property string menu2Color: "#FFC129";
-        property string menu3Color: "#898785";
-        property string menu4Color: "#777777";
+        property string menu3Color: "#AA9D8C";
+        property string menu4Color: "#B2A492";
         property string menu5Color: "#C5C3C0";
         property string menu6Color: "#A5A4A2";
+        property string menu7Color: "#969696";
         property string menu8Color: "#666666";
         property string menu9Color: "#E5E5E5";
 

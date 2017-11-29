@@ -53,8 +53,8 @@ Drawer {
                         color: loader.sets2Color
 
                         transform: Translate {
-                            x: -coloresRect.width /2;
-                            y: -coloresRect.height/2;
+                            x:-coloresRect.width /2
+                            y:-coloresRect.height/2
                         }
                     }
                     Row {
@@ -64,7 +64,8 @@ Drawer {
                             id: icon
                             source:{
                                if(index>0||element.ListView.isCurrentItem)
-                                    image1; else image2
+                                    image1;
+                               else image2;
                             }
                             anchors.verticalCenter: parent.verticalCenter;
                             width: ((facade.toPx(sourceSize.width *1.5)));
@@ -72,7 +73,7 @@ Drawer {
                         }
                         Text {
                             text: target;
-                            color:{
+                            color: {
                                if(index>0||element.ListView.isCurrentItem)
                                     loader.menu11Color; else "#FFFFFFFF"
                             }
@@ -127,8 +128,9 @@ Drawer {
                         if (element.ListView.isCurrentItem&&!circleAnimation.running)
                             loader.sets2Color
                         else
-                            if (index === 0)
-                                (loader.isOnline?loader.head1Color:loader.menu4Color)
+                            if (index == 0) {
+                                (loader.isOnline?loader.menu3Color:loader.menu4Color)
+                            }
                         else "#EEEDEEF0"
                     }
                 }

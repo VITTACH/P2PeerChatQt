@@ -299,7 +299,7 @@ Drawer {
                         height: {parent.height - facade.toPx(45)}
                         anchors {
                             verticalCenter: parent.verticalCenter
-                            horizontalCenter: (parent.horizontalCenter);
+                            horizontalCenter: parent.horizontalCenter;
                         }
                         Image {
                             source:loader.avatarPath
@@ -485,7 +485,9 @@ Drawer {
                         width: 0
                         height: 0
                         id: coloresRect
-                        color: index == 0? (loader.isOnline? loader.menu4Color: loader.menu8Color): loader.menu9Color
+                        color: {
+                            index==0?(loader.isOnline?loader.menu4Color:loader.menu0Color):loader.menu9Color
+                        }
 
                         transform: Translate {
                             x:-coloresRect.width /2
@@ -513,7 +515,7 @@ Drawer {
                         property var presed
                         onClicked: {
                             var json
-                            partnerHeader.text = usersModel.get(index).login+" "+usersModel.get(index).famil;
+                            partnerHeader.text = usersModel.get(index).login+" "+usersModel.get(index).famil
                             json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
                             partnerHeader.stat = (json.port == 0) == true? "Offline": "Online"
                             partnerHeader.phot = usersModel.get(index).image
@@ -780,7 +782,7 @@ Drawer {
 
                 Rectangle {
                     visible: index==0;
-                    color: "#FFA0A0A0"
+                    color: loader.menu7Color
                     width: firstRow.width
                     height: facade.toPx(50)
                     radius: facade.toPx(25)
