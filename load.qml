@@ -30,7 +30,7 @@ ApplicationWindow {
         }
     }
 
-    width: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 500: facade.toPx(1200)
+    width: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 500: facade.toPx(1000)
     height:event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 900: Screen.height - facade.toPx(100)
 
     QtObject {
@@ -226,22 +226,23 @@ ApplicationWindow {
             loader.isLogin=true
         }
 
-        function addFriend(friend) {
+        function addFriend(friend, flag) {
+            flag = typeof flag !== 'undefined' ? flag : false;
             var request = new XMLHttpRequest()
             request.open('POST',"http://www.hoppernet.hol.es")
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            request.send("name="+loader.tel+"&friend="+friend)
+            console.log("name=" + loader.tel + "&friend=" + friend + "&remove=" + flag)
+            request.send("name=" + loader.tel + "&friend=" + friend + "&remove=" + flag)
         }
 
         // colors variables
-        property string menu0Color: "#939393";
-        property string menu1Color: "#CEBC94";
+        property string menu1Color: "#939393";
         property string menu2Color: "#FFC129";
-        property string menu3Color: "#AA9D8C";
-        property string menu4Color: "#B2A492";
+        property string menu3Color: "#767677";
+        property string menu4Color: "#B5B4B3";
         property string menu5Color: "#C5C3C0";
         property string menu6Color: "#A5A4A2";
-        property string menu7Color: "#969696";
+        property string menu7Color: "#F1F1F1";
         property string menu8Color: "#666666";
         property string menu9Color: "#E5E5E5";
 

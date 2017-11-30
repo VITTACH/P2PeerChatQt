@@ -45,7 +45,7 @@ Item {
                 Item {
                     width: bug.width
                     height:parent.height
-                    visible: loader.isLogin && rootItem.phot !=""
+                    visible: loader.source == "qrc:/chat.qml" && rootItem.phot != ""
 
                     DropShadow {
                         radius: 15
@@ -90,6 +90,7 @@ Item {
                 }
 
                 Column {
+                    visible: loader.source != "qrc:/profile.qml";
                     Text {
                         color:"#FFFFFF"
                         styleColor: "black"

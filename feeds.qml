@@ -315,12 +315,15 @@ Rectangle {
                             Connections {
                                 target: windowsDialogs
                                 onChooseChanged: {
-                                    var objct = JSON.parse((loader.frienList))
-                                    if (windowsDialogs.choose ==false && listView.friend != null) {
-                                        if (objct === null) {objct = [];}
-                                        var objs = objct.push(listView.friend)
-                                        loader.frienList=JSON.stringify(objct)
-                                        loader.addFriend(listView.friend)
+                                    if (listView.memIndex != index) {
+                                        var objct = JSON.parse((loader.frienList))
+                                        if (windowsDialogs.choose==false && listView.friend!=null){
+                                            if (objct === null) {objct = [];}
+                                            var objs = objct.push(listView.friend)
+                                            loader.frienList=JSON.stringify(objct)
+                                            loader.addFriend(listView.friend)
+                                            windowsDialogs.choose = true
+                                        }
                                     }
                                 }
                             }
