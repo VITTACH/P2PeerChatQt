@@ -315,14 +315,15 @@ Rectangle {
                             Connections {
                                 target: windowsDialogs
                                 onChooseChanged: {
-                                    if (listView.memIndex != index) {
+                                    if (listView.memIndex !== index) {
                                         var objct = JSON.parse((loader.frienList))
-                                        if (windowsDialogs.choose==false && listView.friend!=null){
+                                        if (windowsDialogs.choose == false
+                                                && listView.friend != null) {
                                             if (objct === null) {objct = [];}
                                             var objs = objct.push(listView.friend)
                                             loader.frienList=JSON.stringify(objct)
                                             loader.addFriend(listView.friend)
-                                            windowsDialogs.choose = true
+                                            windowsDialogs.choose=true
                                         }
                                     }
                                 }
@@ -407,14 +408,14 @@ Rectangle {
                 }
                 LinearGradient {
                     width: parent.width
-                    height: facade.toPx(30)
+                    height: facade.toPx(20)
                     end:  Qt.point(0, height)
                     visible: parent.counter > 2
                     anchors.bottom: parent.bottom
                     start:Qt.point(0, 0)
                     gradient: Gradient {
                         GradientStop {position: (0.40); color: ("#00000000");}
-                        GradientStop {position: (1.00); color: ("#50000000");}
+                        GradientStop {position: (1.00); color: ("#40000000");}
                     }
                 }
             }
@@ -447,7 +448,7 @@ Rectangle {
                 height: if (visible) {3*facade.toPx(200)}
                 DropShadow {
                     radius: 12
-                    samples:15
+                    samples:18
                     source: {rssView;}
                     color: "#50000000"
                     anchors.fill: {rssView;}

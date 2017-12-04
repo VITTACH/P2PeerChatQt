@@ -75,7 +75,7 @@ Drawer {
                             text: target;
                             color: {
                                if(index>0||element.ListView.isCurrentItem)
-                                    loader.menu11Color; else "#FFFFFFFF"
+                                    loader.menu15Color; else "#FFFFFFFF"
                             }
                             width: parent.width-icon.width-facade.toPx(40)
                             anchors.verticalCenter: parent.verticalCenter;

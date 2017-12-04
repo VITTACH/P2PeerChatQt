@@ -150,20 +150,21 @@ Drawer {
 
     Rectangle {
         anchors {
-            fill: parent;
-            topMargin: profile.height
+            fill: parent
+            topMargin:profile.height
         }
-        color:"#FEE5E5E5"
+        color: "#E5E5E5"
     }
 
     Rectangle {
         id: rightRect
         Rectangle {
-            height: 3
+            height: 6
             width: (parent.width)
+            color: loader.head1Color
         }
-        color: (loader.isOnline?loader.menu3Color:loader.menu4Color)
-        width: (drawer.width-avatarButton.width)/2 + facade.toPx(13)
+        color: (loader.isOnline? loader.menu3Color: loader.menu4Color)
+        width: (drawer.width - avatarButton.width)/2 + facade.toPx(13)
         anchors {
             top: profile.top
             right: parent.right
@@ -174,11 +175,12 @@ Drawer {
     Rectangle {
         id: leftRect;
         Rectangle {
-            height: 3
+            height: 6
             width: (parent.width)
+            color: loader.head1Color
         }
-        color: (loader.isOnline?loader.menu3Color:loader.menu4Color)
-        width: (drawer.width-avatarButton.width)/2 + facade.toPx(14)
+        color: (loader.isOnline? loader.menu3Color: loader.menu4Color)
+        width: (drawer.width - avatarButton.width)/2 + facade.toPx(14)
         anchors {
             top: profile.top
             bottom:profile.bottom
@@ -205,7 +207,16 @@ Drawer {
             context.moveTo(0,height - leftRect.height)
             context.lineTo(0,height)
             context.lineTo(width, height);
-            context.lineTo(width,0)
+            context.lineTo(width, 0)
+            context.closePath()
+            context.fill();
+
+            context.fillStyle = loader.head1Color
+            context.beginPath()
+            context.moveTo(0,height-leftRect.height+6)
+            context.lineTo(0,height - leftRect.height)
+            context.lineTo(width, 0)
+            context.lineTo(width, 6)
             context.closePath()
             context.fill();
         }
@@ -257,7 +268,7 @@ Drawer {
                     color:"transparent"
                     border {
                       width: 1.4
-                      color: "#FFFFFF";
+                      color:"#50FFFFFF"
                     }
                 }
 
@@ -336,9 +347,9 @@ Drawer {
             id: myRow
             width: firstRow.width
             Text {
-                color: "#FFFFFF";
+                color: "white"
                 elide: Text.ElideRight
-                font.bold: true
+                font.bold: {true}
                 font.family: {trebu4etMsNorm.name}
                 font.pixelSize: {facade.doPx(28);}
                 text:loader.login+" "+loader.famil
@@ -572,14 +583,14 @@ Drawer {
                     }
                 }
 
-                /*
                 DropShadow {
-                    radius: 15
-                    samples: 15
+                    radius: 10
+                    samples: 10
                     source: bug
                     color:"#90000000"
                     anchors.fill:bug;
                 }
+                /*
                 OpacityMask {
                     id: beg
                     source: bug
@@ -641,7 +652,7 @@ Drawer {
                         font.family:trebu4etMsNorm.name
                         font.pixelSize: facade.doPx(16)
                         width:fo.width-facade.toPx(100)-bug.width
-                        color:index==0?"white":loader.menu11Color
+                        color:index==0?"white":loader.menu15Color
                     }
                 }
             }
@@ -684,6 +695,18 @@ Drawer {
                     height: linesColumn.height;
                 }
             }
+        }
+    }
+
+
+    Settingdrawei {id: settingDrawer}
+    Rectangle {
+        width: 6;
+        color: {(loader.menu2Color);}
+        anchors.left: (parent.right);
+        anchors {
+            bottom: {(parent.bottom)}
+            top: rightRect.top
         }
     }
 
@@ -853,14 +876,12 @@ Drawer {
                     visible: index == 1
                     width: facade.toPx(64)
                     height:facade.toPx(80)
-                    anchors.verticalCenter: parent.verticalCenter
-                    onCheckedChanged: {loader.isOnline = checked}
                     indicator: Rectangle {
                         radius:facade.toPx(25)
+                        color: {parent.checked  === true ? (loader.menu12Color) : (loader.menu13Color);}
                         y: (parent.height/2 - height/2);
                         implicitWidth: (facade.toPx(60))
                         implicitHeight:(facade.toPx(30))
-                        color: parent.checked==true? loader.menu12Color: loader.menu13Color
 
                         Rectangle {
                             color: "#76CCCCCC"
@@ -871,14 +892,16 @@ Drawer {
                             radius: {width/2;}
                         }
                         Rectangle {
+                            radius: {width/2;}
+                            width: myswitcher.height/2.3
+                            height:myswitcher.height/2.3
                             x: parent.parent.checked? parent.width - width - (parent.height - height)/2: (parent.height - height)/2;
                             color: myswitcher.down? "#004A7F": (myswitcher.checked? "#4182EF":"#ECECEC")
                             anchors.verticalCenter:parent.verticalCenter
-                            width: myswitcher.height/2.3
-                            height:myswitcher.height/2.3
-                            radius: {width/2;}
                         }
                     }
+                    anchors.verticalCenter: parent.verticalCenter
+                    onCheckedChanged: {loader.isOnline = checked}
                 }
                 Text {
                     text: index == 1? (myswitcher.checked == true? "В сети": qsTr("Невидимый")): target;
@@ -891,17 +914,5 @@ Drawer {
                 }
             }
         }
-    }
-    Settingdrawei {
-        id:settingDrawer
-    }
-    Rectangle {
-        anchors.left:parent.right
-        color: loader.menu2Color;
-        anchors {
-            bottom: parent.bottom
-            top: rightRect.top
-        }
-        width:4
     }
 }

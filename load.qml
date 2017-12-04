@@ -16,6 +16,12 @@ ApplicationWindow {
 
     StatusBar {color: ("#5D5A58")}
 
+    onClosing: {
+        if(event_handler.currentOSys()>0) {
+            close.accepted = false
+        } else close.accepted=true
+    }
+
     Timer {
         id: backTimer
         interval: 100
@@ -30,8 +36,10 @@ ApplicationWindow {
         }
     }
 
-    width: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 500: facade.toPx(1000)
-    height:event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2? 900: Screen.height - facade.toPx(100)
+    width: {event_handler.currentOSys() > 0? (500): (facade.toPx(1000))}
+    height: {
+        event_handler.currentOSys()>0?900:Screen.height-facade.toPx(100)
+    }
 
     QtObject {
         id: facade
@@ -238,8 +246,8 @@ ApplicationWindow {
         // colors variables
         property string menu1Color: "#939393";
         property string menu2Color: "#FFC129";
-        property string menu3Color: "#767677";
-        property string menu4Color: "#B5B4B3";
+        property string menu3Color: "#B5B4B3";
+        property string menu4Color: "#A3A3A3";
         property string menu5Color: "#C5C3C0";
         property string menu6Color: "#A5A4A2";
         property string menu7Color: "#F1F1F1";
@@ -251,6 +259,7 @@ ApplicationWindow {
         property string menu12Color:"#C5D9FB";
         property string menu13Color:"#B1B1B1";
         property string menu14Color:"#51587F";
+        property string menu15Color:"#4879D8";
 
         property string head1Color: "#777777";
 
