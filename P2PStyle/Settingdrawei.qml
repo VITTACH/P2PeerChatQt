@@ -32,12 +32,13 @@ Drawer {
         height: {
             parent.height-basicMenuDrawer.getProfHeight();
         }
-        color: "#ACACAC"
+        color: "#DEDEE0"
 
         ListView {
             clip: true
             id: listMenu
             anchors.fill: parent
+            spacing: facade.toPx(10)
             delegate: Item {
                 id: element;
                 width: parent.width;
@@ -75,7 +76,7 @@ Drawer {
                             text: target;
                             color: {
                                if(index>0||element.ListView.isCurrentItem)
-                                    loader.menu15Color; else "#FFFFFFFF"
+                                    loader.menu16Color; else "#FFFFFFFF"
                             }
                             width: parent.width-icon.width-facade.toPx(40)
                             anchors.verticalCenter: parent.verticalCenter;

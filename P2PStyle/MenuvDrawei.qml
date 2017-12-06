@@ -161,9 +161,9 @@ Drawer {
         Rectangle {
             height: 6
             width: (parent.width)
-            color: loader.head1Color
+            color: loader.isOnline?loader.menu2Color:loader.head1Color
         }
-        color: (loader.isOnline? loader.menu3Color: loader.menu4Color)
+        color: (loader.isOnline? loader.menu3Color: loader.menu3Color)
         width: (drawer.width - avatarButton.width)/2 + facade.toPx(13)
         anchors {
             top: profile.top
@@ -177,9 +177,9 @@ Drawer {
         Rectangle {
             height: 6
             width: (parent.width)
-            color: loader.head1Color
+            color: loader.isOnline?loader.menu2Color:loader.head1Color
         }
-        color: (loader.isOnline? loader.menu3Color: loader.menu4Color)
+        color: (loader.isOnline? loader.menu3Color: loader.menu3Color)
         width: (drawer.width - avatarButton.width)/2 + facade.toPx(14)
         anchors {
             top: profile.top
@@ -203,7 +203,7 @@ Drawer {
         onPaint: {
             var context =getContext("2d");
             context.reset()
-            context.fillStyle=loader.isOnline == true? loader.menu3Color:loader.menu4Color
+            context.fillStyle=loader.isOnline == true? loader.menu3Color:loader.menu3Color
             context.moveTo(0,height - leftRect.height)
             context.lineTo(0,height)
             context.lineTo(width, height);
@@ -211,7 +211,7 @@ Drawer {
             context.closePath()
             context.fill();
 
-            context.fillStyle = loader.head1Color
+            context.fillStyle = loader.isOnline==true? loader.menu2Color:loader.head1Color
             context.beginPath()
             context.moveTo(0,height-leftRect.height+6)
             context.lineTo(0,height - leftRect.height)
@@ -436,12 +436,14 @@ Drawer {
                     height: {facade.toPx(sourceSize.height);}
                     source: "qrc:/ui/buttons/trashButton.png"
                 }
-                width: 0.5*parent.width
-                height: parent.height-4
+                width: {0.5*parent.width}
+                height: {parent.height-4}
             }
             Rectangle {
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
+                anchors {
+                    right: (parent.right)
+                    verticalCenter:parent.verticalCenter
+                }
                 color: loader.isOnline? loader.menu5Color: loader.menu6Color
                 Image {
                     anchors.top: parent.top;
@@ -453,8 +455,8 @@ Drawer {
                     height: {facade.toPx(sourceSize.height);}
                     source:"qrc:/ui/buttons/dialerButton.png"
                 }
-                width: 0.5*parent.width
-                height: parent.height-4
+                width: {0.5*parent.width}
+                height: {parent.height-4}
             }
 
             Rectangle {
@@ -464,7 +466,7 @@ Drawer {
                 height: parent.height
                 color: {
                     if (index == 0) {
-                        (loader.isOnline == true) ? loader.menu3Color : loader.menu4Color;
+                        loader.menu3Color;
                     } else if (typeof loader.chats[index] !== 'undefined') {
                         loader.chats[index].message.length == 0? "#FFEDEDED" : "#FFFFFFFF"
                     } else "#FFEDEDED"
@@ -476,8 +478,7 @@ Drawer {
                     id: coloresRect
                     color: {
                         if (index === 0) {
-                            if (loader.isOnline)
-                               loader.menu4Color
+                            if (loader.isOnline) loader.menu4Color
                             else
                                loader.menu1Color
                         } else loader.menu9Color
@@ -634,8 +635,8 @@ Drawer {
                     Text {
                         elide: Text.ElideRight
                         text: (login + " " + famil)
-                        font.family:trebu4etMsNorm.name
-                        font.pixelSize: facade.doPx(30)
+                        font.family:trebu4etMsNorm.name;
+                        font.pixelSize: facade.doPx(30);
                         width:fo.width-facade.toPx(100)-bug.width
                         color:index==0?"white":loader.menu10Color
                     }
@@ -649,8 +650,8 @@ Drawer {
                         }
                         wrapMode: Text.WordWrap
                         maximumLineCount: 3
-                        font.family:trebu4etMsNorm.name
-                        font.pixelSize: facade.doPx(16)
+                        font.family:trebu4etMsNorm.name;
+                        font.pixelSize: facade.doPx(16);
                         width:fo.width-facade.toPx(100)-bug.width
                         color:index==0?"white":loader.menu15Color
                     }
@@ -661,15 +662,15 @@ Drawer {
 
     Rectangle {
         id: leftSlider
-        width: facade.toPx(40)
-        anchors.topMargin: -1;
+        width: {facade.toPx(40)}
+        anchors.topMargin: (-1);
+        color: loader.menu4Color
         anchors.top: {profile.bottom}
         anchors.bottom: listMenu.top;
-        color: loader.isOnline === true? loader.menu3Color: loader.menu4Color;
         x: settingDrawer.position==0?0: settingDrawer.x+settingDrawer.width-1;
         MouseArea {
             property int p
-            anchors.fill: parent
+            anchors.fill:parent;
             onPressed: p=mouse.x
             onPositionChanged: {
                 if (mouse.x>p&&settingDrawer.position==0) settingDrawer.open()
@@ -687,7 +688,7 @@ Drawer {
             x: facade.toPx(10);
             spacing: {facade.toPx(6)}
             height:0.25*parent.height
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenter: parent.verticalCenter;
             Repeater {
                 model: 1
                 Rectangle {
@@ -702,8 +703,8 @@ Drawer {
     Settingdrawei {id: settingDrawer}
     Rectangle {
         width: 6;
-        color: {(loader.menu2Color);}
-        anchors.left: (parent.right);
+        color:loader.isOnline?loader.menu2Color:loader.head1Color
+        anchors.left: {parent.right;}
         anchors {
             bottom: {(parent.bottom)}
             top: rightRect.top
@@ -728,8 +729,8 @@ Drawer {
         property bool isShowed: false
         height: {
             var length=parent.height;
-            length -= (facade.toPx(540) + getProfHeight());
-            var count = Math.ceil(length /facade.toPx(80));
+            length -= (facade.toPx(540) + getProfHeight())
+            var count = Math.ceil(length /facade.toPx(80))
             if (count >navigateDownModel.count)
                count = navigateDownModel.count;
             if (count < 1) count = 1;
@@ -745,11 +746,11 @@ Drawer {
                 ListElement{image:"";target:""}
                 ListElement{image:"";target:""}
                 ListElement{
-                    image: "qrc:/ui/icons/DevsIconBlue.png"
+                    image:"qrc:/ui/icons/DevsIconBlue.png"
                     target: "Настройки"
                 }
                 ListElement{
-                    image: "qrc:/ui/icons/doorIconBlue.png"
+                    image:"qrc:/ui/icons/doorIconBlue.png"
                     target: "Выйти"
                 }
             }
