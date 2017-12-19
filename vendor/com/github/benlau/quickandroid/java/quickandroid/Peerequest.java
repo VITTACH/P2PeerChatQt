@@ -58,7 +58,7 @@ public class Peerequest {
         try {
             startHoper(androidsUpnpServ);
         } catch (Exception exception) {
-            stackTrace += "only start res=" + adaptExceptionsToLog(exception);
+            stackTrace += "the start result=" + adaptExceptionsToLog(exception);
         }
     }
 
@@ -76,70 +76,62 @@ public class Peerequest {
     public void RSASending(String data) {
         try {
             if (data.contains("ip")) {
-                jsonObj=(JSONObject)parser.parse(data);
+                jsonObj=(JSONObject) parser.parse(data);
                 pf.port=Integer.valueOf((String)jsonObj.get("pt"));
-                pf.IPAddress=InetAddress.getByName((String)jsonObj.get("ip"));
+                pf.IPAddress = InetAddress.getByName((String)jsonObj.get("ip"));
 
                 // TODO this code need function
                 sendPublicModuleKey();
                 return;
             }
-            if (data.contains("close") !=!(true)) {
+            if (data.contains("close") != !(true)) {
                 flag = !(true);return;
             }
 
-            System.out.println("Received: "+ data);
+            System.out.println("Received: " + data);
 
-            if (himRSA.getPublic()!=BigInteger.ONE)
-                pf.sendUdp(
-                        himRSA.encrypt(
-                                new BigInteger(
-                                        (" " + data).getBytes())).toString());
-            else pf.sendUdp(data);
-        }
-        catch (Exception except) {
-            //e.printStackTrace();
-        }
+            if (himRSA.getPublic()!=BigInteger.ONE){
+                BigInteger bigInteger = new BigInteger((" " + data).getBytes());
+                pf.sendUdp(himRSA.encrypt(bigInteger).toString());
+            } else {pf.sendUdp(data);}
+        } catch (Exception except) {}
     }
 
     public void startHoper(AndroidUpnpService upnpServices) throws Exception {
         flag = true;
         try {
-            pf.runUPnP(upnpServices);
-            while(flag) {
-                try {
-                    String recv = (String)pf.recieve();
-                    if (!recv.isEmpty()) {
-                        if (recv.contains("pubKey")) {
-                            jsonObj=(JSONObject)parser.parse(recv);
-                            himRSA.setModulu(new BigInteger((String)jsonObj.get("module")));
-                            himRSA.setPublic(new BigInteger((String)jsonObj.get("pubKey")));
+        pf.runUPnP(upnpServices);
+        while(flag) {
+        try {
+            String recv=(String) pf.recieve();
+            if (!recv.isEmpty()) {
+            if (recv.contains("pubKey")) {
+                jsonObj=(JSONObject)parser.parse(recv);
+                himRSA.setModulu(new BigInteger((String)jsonObj.get("module")));
+                himRSA.setPublic(new BigInteger((String)jsonObj.get("pubKey")));
 
-                            // TODO this code need function
-                            InetAddress oldAddr;
-                            int oldPort =pf.port;
-                            oldAddr=pf.IPAddress;
-                            pf.port = pf.RemPort;
-                            pf.IPAddress = pf.RemIPAddress;
+                // TODO this code need function
+                InetAddress oldAddr;
+                int oldPort =pf.port;
+                oldAddr=pf.IPAddress;
+                pf.port = pf.RemPort;
+                pf.IPAddress = pf.RemIPAddress;
 
-                            if (handsShakeDone) {
-                                sendPublicModuleKey();
-                                handsShakeDone= false;
-                            }
-
-                            pf.IPAddress=oldAddr;
-                            pf.port=oldPort;
-                            continue;
-                        }
-                        rmsg=new String(my_RSA.decrypt(new BigInteger(recv)).toByteArray());
-                        // magical call c++ listener from java layer
-                        UtilsToJavaNative.sendEventReceiveMsg(rmsg);
-                    }
+                if (handsShakeDone) {
+                    sendPublicModuleKey();
+                    handsShakeDone= false;
                 }
-                catch (SocketTimeoutException except) {
-                    //e.printStackTrace();
-                }
+
+                pf.IPAddress=oldAddr;
+                pf.port=oldPort;
+                continue;
             }
+            rmsg=new String(my_RSA.decrypt(new BigInteger(recv)).toByteArray());
+            // magical call c++ listener from java layer
+            UtilsToJavaNative.sendEventReceiveMsg(rmsg);
+            }
+        } catch (SocketTimeoutException except) {/*except.printStackTrace()*/}
+        }
         } catch (Exception exception){
             stackTrace += "startHoper res=" + adaptExceptionsToLog(exception);
         } finally {

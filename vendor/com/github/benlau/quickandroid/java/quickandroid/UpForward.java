@@ -18,11 +18,11 @@ public class UpForward {
     public int RemPort = 4445;
     public InetAddress IPAddress;
     public InetAddress RemIPAddress;
-    public DatagramSocket clientSoket;
-    public DatagramPacket receivePacket;
-    public byte[] sendData = new byte[1024];
-    public byte[] receiveDat = new byte[1024];
-    public AndroidUpnpService upnpService= null;
+    private DatagramSocket clientSocket;
+    protected DatagramPacket receivePacket;
+    protected byte[] sendData = new byte[1024];
+    protected byte[] receiveDat= new byte[1024];
+    private AndroidUpnpService uPNPService=null;
 
     public String getLocalHostlIp() throws IOException {
         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -54,7 +54,7 @@ public class UpForward {
     }
 
     public String recieve() throws IOException {
-        clientSoket.receive(receivePacket);
+        clientSocket.receive(receivePacket);
         this.RemPort = receivePacket.getPort();
         this.RemIPAddress= receivePacket.getAddress();
 
@@ -65,40 +65,39 @@ public class UpForward {
     }
 
     public void sendUdp(String message) throws IOException {
-        sendData= message.getBytes();
+        sendData = message.getBytes();
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
-        clientSoket.send(sendPacket);
+        clientSocket.send(sendPacket);
     }
 
     public void runUPnP(AndroidUpnpService pnpServ) throws IOException {
-        Random r= new Random();
-        int upnp= r.nextInt(49151-25087)+25087;
+        Random rnd=new Random();
+        int uPNP = rnd.nextInt(49151 - 25087) + 25087;
         PortMapping[] arr = new PortMapping[1];
         receivePacket=new DatagramPacket(receiveDat, receiveDat.length);
 
         Peerequest.stackTrace += "local-ip: " + getLocalHostlIp()+ "\n";
-        arr[0] = new PortMapping(upnp, getLocalHostlIp(), PortMapping.Protocol.UDP, "HopperNet10");
+        arr[0] = new PortMapping(uPNP, getLocalHostlIp(), PortMapping.Protocol.UDP, "HopperNet10");
 
         PortMappingListener portMaplistn = new PortMappingListener(arr);
         /*
         WifiManager wifiCon = (WifiManager) getSystemService(MainActivity.WIFI_SERVICE);
         PortMapping desiredMapping = new PortMapping(upnp, Formatter.formatIpAddress(wifiCon.getConnectionInfo().getIpAddress()), PortMapping.Protocol.UDP, "HopperNet10");
-        UpnpService upnpService =new UpnpServiceImpl(new AndroidUpnpServiceConfiguration(wifiCon));
+        UpnpService uPNPService =new UpnpServiceImpl(new AndroidUpnpServiceConfiguration(wifiCon));
         */
-        upnpService = pnpServ;
-        upnpService.getRegistry().addListener(portMaplistn);
+        uPNPService=pnpServ;
+        uPNPService.getRegistry().addListener(portMaplistn);
 
-        upnpService.getControlPoint().search();
-        clientSoket = new DatagramSocket(upnp);
-        clientSoket.setSoTimeout(1000);
+        uPNPService.getControlPoint().search();
+        clientSocket= new DatagramSocket(uPNP);
+        clientSocket.setSoTimeout(1000);
 
         IPAddress = InetAddress.getByName ("91.122.37.152");
-
     }
 
     public void closeAllUpnp() throws InterruptedException {
-        if (clientSoket != null) {
-            clientSoket.close();
+        if (clientSocket != null) {
+            clientSocket.close();
         }
     }
 }

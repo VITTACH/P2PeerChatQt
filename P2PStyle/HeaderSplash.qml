@@ -14,7 +14,7 @@ Item {
     DropShadow {
         radius: 15
         samples: 16
-        anchors.fill: headerRect
+        anchors.fill: headerRect;
         verticalOffset: 10;
         color: "#60000000";
         source: headerRect;
@@ -22,12 +22,13 @@ Item {
     Rectangle {
         id: headerRect
         width: parent.width
-        height: facade.toPx(140)
+        height: facade.toPx(140);
         color: {
-            if (loader.source == "qrc:/loginanDregister.qml")
+            if (loader.source == ("qrc:/loginanDregister.qml")) {
                 loader.head1Color
-            else
+            } else {
                 loader.head1Color
+            }
         }
 
         Item {
@@ -36,16 +37,16 @@ Item {
                 spacing: facade.toPx(30)
                 anchors {
                     left: (loader.isLogin)? parent.left:undefined
-                    leftMargin: loader.isLogin? facade.toPx(50):0
+                    leftMargin: loader.isLogin? facade.toPx(30):0
                     centerIn: (loader.isLogin)? undefined: parent
-                    verticalCenter: parent.verticalCenter
                     horizontalCenter: loader.isLogin? undefined: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
                 }
 
                 Item {
                     width: bug.width
                     height:parent.height
-                    visible: loader.source == "qrc:/chat.qml" && rootItem.phot != ""
+                    visible: (loader.source == "qrc:/chat.qml") && (rootItem.phot != "")
 
                     DropShadow {
                         radius: 15
@@ -61,7 +62,6 @@ Item {
                         maskSource: mask
                         anchors.fill:bug
                     }
-
                     Rectangle {
                         id: bug
                         clip: true
@@ -92,12 +92,12 @@ Item {
                 Column {
                     visible: loader.source != "qrc:/profile.qml";
                     Text {
-                        color:"#FFFFFF"
-                        styleColor: "black"
-                        style: Text.Raised;
-                        elide: Text.ElideLeft
-                        width: Math.min((inerItem.width - bug.width - facade.toPx(90)), (this.implicitWidth))
-                        text: {rootItem.text.replace("\n" , "");}
+                        color: "white"
+                        elide: {Text.ElideLeft}
+                        width: {
+                        Math.min(inerItem.width-bug.width-facade.toPx(90),implicitWidth)
+                        }
+                        text:  {rootItem.text.replace("\n" , "")}
 
                         font.pixelSize: loader.isLogin? facade.doPx(28): facade.doPx(34)
                         font.family:trebu4etMsNorm.name
@@ -122,16 +122,16 @@ Item {
         DropShadow {
             radius: 10
             samples: 20
-            color: ("#CC000000")
-            source:hambrgrButton
+            color: ("#CC000000");
+            source: hambrgrButton
             anchors.fill: hambrgrButton
             visible: page==1?true:false
         }
         Button {
             id: hambrgrButton;
-            visible: page!=0||loader.isLogin? true: false
             width: facade.toPx(150)
             height: {parent.height}
+            visible: page!=0 || loader.isLogin?true:false
             anchors.verticalCenter: parent.verticalCenter
             background:Image {
                 id: hambrgrButtonImage;
@@ -156,7 +156,7 @@ Item {
 
         Button {
             id: hamMoreButton;
-            visible: (loader.source == "qrc:/chat.qml");
+            visible: {(loader.source == "qrc:/chat.qml")}
             width: facade.toPx(90);
             height: {parent.height}
             x: parent.width-facade.toPx(20)-width;
@@ -164,16 +164,16 @@ Item {
             background: Image{
                 id: hamMoreButtonImage;
                 fillMode: Image.PreserveAspectFit;
-                source: "qrc:/ui/buttons/moreButton.png";
                 anchors.centerIn:parent
+                source: "qrc:/ui/buttons/moreButton.png";
                 height:facade.toPx(sourceSize.height*1.2)
                 width: facade.toPx(sourceSize.width *1.2)
             }
             onClicked: {
+                loader.focus = true
                 contextDialog.xPosition = rootItem.width-contextDialog.w-facade.toPx(20)
                 contextDialog.yPosition = facade.toPx(20)
-                loader.context = true;
-                loader.focus = true
+                loader.context=true
             }
         }
     }

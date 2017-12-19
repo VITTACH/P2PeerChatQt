@@ -645,7 +645,7 @@ Drawer {
                             var i = 0;
                             if (typeof loader.chats[index] !== 'undefined')
                             i=loader.chats[index].message.length;
-                            if (i> 0)loader.chats[index].message[i-1].flag? "Вам: ": "Вы: " + loader.chats[index].message[i-1].text;
+                            if (i>=1)loader.chats[index].message[i-1].flag==1? "Вам: ":"Вы: "+loader.chats[index].message[i-1].text;
                             if (i==0)"Начните вашу новую беседу";
                         }
                         wrapMode: Text.WordWrap
@@ -664,7 +664,7 @@ Drawer {
         id: leftSlider
         width: {facade.toPx(40)}
         anchors.topMargin: (-1);
-        color: loader.menu4Color
+        color: settingDrawer.position == 0 ? loader.menu4Color : "#6F6E6F"
         anchors.top: {profile.bottom}
         anchors.bottom: listMenu.top;
         x: settingDrawer.position==0?0: settingDrawer.x+settingDrawer.width-1;
@@ -835,7 +835,7 @@ Drawer {
                     }
                     TextField {
                         id: inerText
-                        color: "#90FFFFFF"
+                        color:"#BDBEBF"
                         height:parent.parent.height
                         width: parent.parent.width - inerImage.width - parent.spacing - facade.toPx(20);
 

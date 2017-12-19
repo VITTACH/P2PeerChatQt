@@ -47,7 +47,6 @@ Rectangle {
                 break;
             }
         }
-
         if (firstLaunch) {
             var historics = event_handler.loadValue("chats")
             if (historics != "") {
@@ -61,7 +60,7 @@ Rectangle {
         if (i < loader.chats.length)
         for (j = 0; j<loader.chats[i].message.length; j++) {
             buferText.text = loader.chats[i].message[j].text
-            appendMessage(loader.chats[i].message[j].text, (loader.chats[i].message[j].flag), loader.chats[i].message[j].time)
+            appendMessage(loader.chats[i].message[j].text, -loader.chats[i].message[j].flag, loader.chats[i].message[j].time);
         }
         busyCircle.visible=false;
     }
@@ -104,8 +103,16 @@ Rectangle {
     Connections {
         target: contextDialog;
         onActionChanged: {
-            if(contextDialog.action==1)
-            {
+            if(contextDialog.action==8) {
+                loader.chats[basicMenuDrawer.cindex].message=[]
+                event_handler.saveSet("chats", JSON.stringify(loader.chats))
+                chatModel.clear()
+                select=[];
+            }
+            if(contextDialog.action==3) {
+            event_handler.copyText(chatModel.get(select[select.length-1]).someText)
+            }
+            if(contextDialog.action==1) {
                 select.sort();
                 for(var i=0; i<select.length; i++) {
                     chatModel.remove(select[i] - i);
@@ -119,14 +126,6 @@ Rectangle {
                 contextDialog.action=0;
                 select=[];
             }
-            if(contextDialog.action==3)
-            event_handler.copyText(chatModel.get(select[select.length-1]).someText)
-            if(contextDialog.action==8) {
-                loader.chats[basicMenuDrawer.cindex].message=[]
-                event_handler.saveSet("chats", JSON.stringify(loader.chats))
-                chatModel.clear()
-                select=[];
-            }
         }
     }
 
@@ -136,17 +135,18 @@ Rectangle {
     }
 
     function appendMessage(newmessage, flag , timestamp) {
-        var sp;
+        var sp,cflag =flag;
+        flag=Math.abs(flag)
         chatModel.append({
             falg: flag,
-            mySpacing:sp = (chatModel.count>0 ? ((chatModel.get(chatModel.count - 1).textColor == "#000000" && flag == 0) || (chatModel.get(chatModel.count - 1).textColor == "#960f133d" && flag == 1)? facade.toPx(60): facade.toPx(30)): facade.toPx(20)),
+            mySpacing:sp = (chatModel.count>0 ? ((chatModel.get(chatModel.count - 1).textColor == "#000000" && flag == 2) || (chatModel.get(chatModel.count - 1).textColor == "#960f133d" && flag == 1)? facade.toPx(60): facade.toPx(30)): facade.toPx(20)),
             someText: newmessage,
             timeStamp: timestamp,
-            textColor: (flag == 0)? "#960f133d":"#000000",
-            backgroundColor:flag == 0?"#ECECEC":"#DBEEFC",
-            image: flag == 0? (sp == facade.toPx(30)?"":"ui/chat/leFtMessage.png"): (sp == facade.toPx(30)? "": "ui/chat/rightMessag.png")
+            textColor: (flag == 2)? "#960f133d":"#000000",
+            backgroundColor:flag == 2?"#ECECEC":"#DBEEFC",
+            image: flag == 2? (sp == facade.toPx(30)?"":"ui/chat/leFtMessage.png"): (sp == facade.toPx(30)? "": "ui/chat/rightMessag.png")
         });
-        if(flag == 0) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0));
+        if(cflag == 2) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0))
     }
 
     Component.onCompleted: loadChatsHistory();
@@ -202,7 +202,7 @@ Rectangle {
                 Row {
                     id: parentText;
                     spacing: facade.toPx(20)
-                    x:falg*(parent.parent.width/4-facade.toPx(60))
+                    x: Math.abs(falg-2) * (parent.parent.width/4-facade.toPx(60))
                     TextArea {
                         text: someText;
                         readOnly: true;
@@ -362,7 +362,7 @@ Rectangle {
             }
             Button {
                 onClicked: {
-                    checkMessage(0)
+                    checkMessage(2)
                     if (event_handler.currentOSys() >= 1) {(hideKeyboard(0))}
                 }
                 background: Image {

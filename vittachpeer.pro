@@ -62,9 +62,12 @@ DISTFILES += \
     android-sources/androidManifest.xml \
     android-sources/res/values/libs.xml \
     android-sources/google-services.json \
-    android-sources/res/drawable/icon.png\
     android-sources/libs/jsons-1.1.1.jar \
+    android-sources/libs/stuns-0.7.3.jar \
+    android-sources/res/drawable/icon.png \
+    android-sources/libs/slf4j-api.16.jar \
     android-sources/libs/cling-core-2.1.1.jar \
+    android-sources/libs/slf4j-jdk14-1.5.6.jar \
     android-sources/libs/Seamless-Xml-1.1.1.jar \
     android-sources/libs/cling-support-2.1.1.jar\
     android-sources/libs/seamless-http-1.1.1.jar\

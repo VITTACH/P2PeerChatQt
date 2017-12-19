@@ -15,17 +15,12 @@ public class QuickAndroidActivity
     private static Context myContext;
     static Peerequest androidUpnpInstance;
 
-    public static String getStacTrace() {
-        return Peerequest.stackTrace;
-    }
-
     public static void startUpNpForwards() {
         new AsynchronedRequest().execute();
     }
 
     @Override
     protected void onResume() {
-        super.onResume();
         SystemDispatcher.onActivityResume();
     }
 
@@ -69,7 +64,6 @@ public class QuickAndroidActivity
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         //This will stop the UPnP service if nobody else is bound to it
         myContext.unbindService(androidServiceConnect);
     }
@@ -91,5 +85,9 @@ public class QuickAndroidActivity
         QtNative.activity().startActivity(
             Intent.createChooser(intent,"Choose app to share")
         );
+    }
+
+    public static String getStacTrace() {
+        return (String)Peerequest.stackTrace;
     }
 }
