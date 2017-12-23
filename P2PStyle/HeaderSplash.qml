@@ -37,7 +37,7 @@ Item {
                 spacing: facade.toPx(30)
                 anchors {
                     left: (loader.isLogin)? parent.left:undefined
-                    leftMargin: loader.isLogin? facade.toPx(30):0
+                    leftMargin: loader.isLogin? facade.toPx(40):0
                     centerIn: (loader.isLogin)? undefined: parent
                     horizontalCenter: loader.isLogin? undefined: parent.horizontalCenter
                     verticalCenter: parent.verticalCenter

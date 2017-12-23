@@ -5,7 +5,7 @@ import QtQuick.XmlListModel 2.0
 
 Rectangle {
     id: rootPage;
-    color: "#FFEDEDED";
+    color: loader.feedColor
     property bool find:true
 
     property var nWidth;

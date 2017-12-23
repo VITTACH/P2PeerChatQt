@@ -19,14 +19,16 @@ import java.nio.channels.ServerSocketChannel;
 import org.fourthline.cling.android.AndroidUpnpService;
 
 
-class UtilsToJavaNative {
+class UtilsForJavaNative {
     public static native void sendEventReceiveMsg(String m);
+    public static native void sendEventSTUNjarMsg(String m);
 }
 
 /**
  *Created by VITTACH on 11.04.2017
  */
-public class Peerequest {
+public class PesrRequest {
+    private String[] addr;
     static String stackTrace = "";
     Integer port;
     boolean flag;
@@ -56,9 +58,10 @@ public class Peerequest {
         himRSA.setPublic(BigInteger.ONE);
 
         try {
+            addr=GetstUnPort.startSTUN();
             startHoper(androidsUpnpServ);
         } catch (Exception exception) {
-            stackTrace += "the start result=" + adaptExceptionsToLog(exception);
+            stackTrace += "A start result = " + adaptExceptionsToLog(exception);
         }
     }
 
@@ -75,12 +78,11 @@ public class Peerequest {
 
     public void RSASending(String data) {
         try {
-            if (data.contains("ip")) {
+            if (data.contains("ip") == true) {
                 jsonObj=(JSONObject) parser.parse(data);
                 pf.port=Integer.valueOf((String)jsonObj.get("pt"));
                 pf.IPAddress = InetAddress.getByName((String)jsonObj.get("ip"));
 
-                // TODO this code need function
                 sendPublicModuleKey();
                 return;
             }
@@ -88,25 +90,26 @@ public class Peerequest {
                 flag = !(true);return;
             }
 
-            System.out.println("Received: " + data);
-
             if (himRSA.getPublic()!=BigInteger.ONE){
                 BigInteger bigInteger = new BigInteger((" " + data).getBytes());
                 pf.sendUdp(himRSA.encrypt(bigInteger).toString());
-            } else {pf.sendUdp(data);}
-        } catch (Exception except) {}
+            } else {
+                String myMessage = "name="+data+"&port="+addr[1]+"&ip="+addr[0];
+                UtilsForJavaNative.sendEventSTUNjarMsg(myMessage);
+            }
+        } catch (Exception e) {}
     }
 
     public void startHoper(AndroidUpnpService upnpServices) throws Exception {
         flag = true;
         try {
-        pf.runUPnP(upnpServices);
-        while(flag) {
-        try {
+            pf.runUPnP(upnpServices);
+            while(flag) {
+            try {
             String recv=(String) pf.recieve();
             if (!recv.isEmpty()) {
             if (recv.contains("pubKey")) {
-                jsonObj=(JSONObject)parser.parse(recv);
+                jsonObj=(JSONObject) parser.parse(recv);
                 himRSA.setModulu(new BigInteger((String)jsonObj.get("module")));
                 himRSA.setPublic(new BigInteger((String)jsonObj.get("pubKey")));
 
@@ -127,13 +130,13 @@ public class Peerequest {
                 continue;
             }
             rmsg=new String(my_RSA.decrypt(new BigInteger(recv)).toByteArray());
-            // magical call c++ listener from java layer
-            UtilsToJavaNative.sendEventReceiveMsg(rmsg);
+            // magical call c++ listener from java layer!
+            UtilsForJavaNative.sendEventReceiveMsg(rmsg);
             }
-        } catch (SocketTimeoutException except) {/*except.printStackTrace()*/}
-        }
+            } catch (SocketTimeoutException exception) {}
+            }
         } catch (Exception exception){
-            stackTrace += "startHoper res=" + adaptExceptionsToLog(exception);
+            stackTrace += "startHoper res = " + adaptExceptionsToLog(exception);
         } finally {
             pf.closeAllUpnp();
         }

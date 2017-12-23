@@ -70,7 +70,7 @@ int main(int argc,char **argv)
     QByteArray biteUtf = buf.toUtf8();
     QString res= httpBase.sendPost(&biteUtf);
     int cp = res.indexOf('|');
-    QString ip = res.right(res.length() - 1 - cp);
+    QString ip = res.right(res.length() - 1-cp);
     QString pt = res.left(cp);
 
     client.connectedToIp(ip, pt);

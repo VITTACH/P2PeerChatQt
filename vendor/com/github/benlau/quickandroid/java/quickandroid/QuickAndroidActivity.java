@@ -13,7 +13,7 @@ import org.fourthline.cling.android.AndroidUpnpServiceImpl;
 public class QuickAndroidActivity
     extends org.qtproject.qt5.android.bindings.QtActivity {
     private static Context myContext;
-    static Peerequest androidUpnpInstance;
+    static PesrRequest androidUpnpInstance;
 
     public static void startUpNpForwards() {
         new AsynchronedRequest().execute();
@@ -26,6 +26,10 @@ public class QuickAndroidActivity
 
     public static void sendMsg(String msg) {
         androidUpnpInstance.RSASending(msg);
+    }
+
+    public static String getStacTrace() {
+        return PesrRequest.stackTrace;
     }
 
     public static void openingMap(String lat, String lon) {
@@ -57,7 +61,7 @@ public class QuickAndroidActivity
 
     static class AsynchronedRequest extends AsyncTask<Void,Void,Void> {
         protected Void doInBackground(Void... params) {
-            (androidUpnpInstance=new Peerequest()).start(upnpServices);
+            (androidUpnpInstance=new PesrRequest()).start(upnpServices);
             return null;
         }
     }
@@ -85,9 +89,5 @@ public class QuickAndroidActivity
         QtNative.activity().startActivity(
             Intent.createChooser(intent,"Choose app to share")
         );
-    }
-
-    public static String getStacTrace() {
-        return (String)Peerequest.stackTrace;
     }
 }

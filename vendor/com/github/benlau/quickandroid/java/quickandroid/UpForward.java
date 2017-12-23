@@ -76,7 +76,7 @@ public class UpForward {
         PortMapping[] arr = new PortMapping[1];
         receivePacket=new DatagramPacket(receiveDat, receiveDat.length);
 
-        Peerequest.stackTrace += "local-ip: " + getLocalHostlIp()+ "\n";
+        PesrRequest.stackTrace += "local-ip: " + getLocalHostlIp()+"\n";
         arr[0] = new PortMapping(uPNP, getLocalHostlIp(), PortMapping.Protocol.UDP, "HopperNet10");
 
         PortMappingListener portMaplistn = new PortMappingListener(arr);

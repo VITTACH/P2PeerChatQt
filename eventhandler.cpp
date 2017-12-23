@@ -14,26 +14,23 @@
   extern "C" {
   #endif
 
-  JNIEXPORT void JNICALL
-  Java_quickandroid_UtilsToJavaNative_sendEventReceiveMsg(JNIEnv *env, jobject obj, jstring msg)
-  {
+  JNIEXPORT
+
+  void JNICALL Java_quickandroid_UtilsForJavaNative_sendEventReceiveMsg(JNIEnv *env, jobject obj, jstring msg) {
       QString messages(env->GetStringUTFChars(msg, 0));
       EventHandler *instance =EventHandler::Instance();
       emit instance->reciving(messages);
+  }
+
+  void JNICALL Java_quickandroid_UtilsForJavaNative_sendEventSTUNjarMsg(JNIEnv *env, jobject obj, jstring msg) {
+      QString messages(env->GetStringUTFChars(msg, 0));
+      // надо теперь послать этот messages на hoppernet
   }
 
   #ifdef __cplusplus
   }
   #endif
 #endif
-
-EventHandler* EventHandler::__instance = NULL;
-EventHandler* EventHandler::Instance() {
-  if(__instance==0){
-     __instance=new EventHandler;
-  }
-  return __instance;
-}
 
 QString EventHandler::myError() {
 #ifdef Q_OS_ANDROID
@@ -43,6 +40,14 @@ QString EventHandler::myError() {
 
 int EventHandler::currentOSys() {
     return currentSys;
+}
+
+EventHandler* EventHandler::__instance = NULL;
+EventHandler* EventHandler::Instance() {
+  if(__instance==0){
+     __instance=new EventHandler;
+  }
+  return __instance;
 }
 
 void EventHandler::sendMsgs(QString msgtext) {
@@ -74,18 +79,19 @@ void EventHandler::copyText(QString msgtext) {
 
 void EventHandler::display(QString message, QString sender) {
     emit reciving(message);
-    qDebug() << "Incoming message= " << message;
+    qDebug() << "Incoming text = " << message;
 }
 
 EventHandler::EventHandler(QObject*parent): QObject(parent) {
     setting = new QSettings("p2peerio",QSettings::IniFormat);
-    if (currentSys == 0) {
-        QString path = QStandardPaths::standardLocations(QStandardPaths::DataLocation).value(0);
-        QDir dir(path);
-        if(!dir.exists())
-            dir.mkpath(path);
-        if(!path.isEmpty()&&!path.endsWith("/"))
-            path += "/" + PathFile;
-            PathFile = path;
+    if (currentSys == !1) {
+        QString fullPath = QStandardPaths::standardLocations(QStandardPaths::DataLocation).value(0);
+        QDir dir(fullPath);
+        if (!dir.exists())
+            dir.mkpath(fullPath);
+        if (!fullPath.isEmpty() && !fullPath.endsWith("/")) {
+            fullPath += "/" + PathFile;
+        }
+        PathFile =fullPath;
     }
 }

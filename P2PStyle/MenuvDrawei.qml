@@ -516,8 +516,10 @@ Drawer {
                         json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
                         partnerHeader.stat = (json.port == 0) == true? "Offline": "Online"
                         partnerHeader.phot = usersModel.get(index).image
-                        if (index!=-1) listView.currentIndex = index
-                        event_handler.sendMsgs(JSON.stringify(json))
+                        if (index != -1) {listView.currentIndex = index}
+                        var jstring=JSON.stringify(json)
+                        console.log(jstring)
+                        event_handler.sendMsgs(jstring);
                         if (loader.source!="qrc:/chat.qml") {
                             loader.goTo("qrc:/chat.qml")
                         }
