@@ -34,13 +34,15 @@ Rectangle {
     }
 
     function hideKeyboard(event) {
+        pressedArea.visible= true;
         if (event !== 0) {
             event.accepted = true;
         }
-        input=!(loader.focus=true)
-        screenTextFieldPost.focus = true
-        pressedArea.visible= true;
+        screenTextFieldPost.focus = false;
         Qt.inputMethod.hide()
+        loader.focus= true
+        input=false;
+
     }
 
     function loadChatsHistory() {
@@ -236,7 +238,7 @@ Rectangle {
                     color: Qt.hsva(lineColor, 0.37,0.84)
                     x: staMessage.x - width/2 + staMessage.width/2
                     visible: index<chatModel.count-1&&chatModel.get(index+1).mySpacing==0;
-                    width: {facade.toPx(8);}
+                    width: {facade.toPx(4);}
                     height: {parent.height;}
                 }
                 x: facade.toPx(40);
@@ -331,8 +333,8 @@ Rectangle {
 
                     Item {
                         id: staMessage
-                        width: facade.toPx(50)
-                        height:facade.toPx(50)
+                        width: facade.toPx(36)
+                        height:facade.toPx(36)
                         x:Math.abs(falg-2)==0? textarea.width + parent.spacing: -parent.x;
                         Rectangle {
                             anchors.horizontalCenter: {
@@ -340,23 +342,23 @@ Rectangle {
                             }
                             smooth: true
                             width: {
-                                if (index < chatModel.count - 1)
-                                    parent.width-facade.toPx(18)
-                                else {parent.width}
+                                if (index < chatModel.count-1) {
+                                    parent.width-facade.toPx(6);
+                                } else {(parent.width)}
                             }
                             height: width*1
                             color: Qt.hsva(lineColor,0.41,0.84);
                             border.color: loader.chat2Color
-                            border.width: 8
+                            border.width: 4
                             radius: width/2
 
                             Rectangle {
                                 height: width
                                 radius: width/2
-                                width: parent.width/2.5
+                                width: parent.width/2.2
                                 anchors.centerIn: {parent;}
                                 border.color: loader.chat2Color;
-                                border.width: 4
+                                border.width: 3
                                 visible:index==chatModel.count-1
                             }
                         }
@@ -410,11 +412,12 @@ Rectangle {
                     }
                     MouseArea {
                         id: pressedArea
-                        anchors.fill: parent
-                        anchors.rightMargin: parent.rightPadding
+                        width: parent.width - parent.rightPadding
+                        height: parent.height
                         visible:event_handler.currentOSys()>0
                         onClicked: {
-                            input = !(visible =!true)
+                            input = !(false);
+                            visible = (false)
                             chatScrenList.positionViewAtEnd()
                             screenTextFieldPost.focus = true;
                         }
@@ -443,9 +446,9 @@ Rectangle {
                     }
                 }
                 onClicked: {
-                    checkMessage(2)
                     if (event_handler.currentOSys() >= 1)
                         hideKeyboard(0)
+                    checkMessage(2)
                 }
                 background: Image {
                     source:"ui/buttons/sendButton.png"
