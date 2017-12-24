@@ -391,14 +391,14 @@ Rectangle {
                         if (event_handler.currentOSys() <= 0) "Ctrl+Enter ДЛЯ ОТПРАВКИ..."
                         else "СООБЩЕНИЕ...";
                     }
-                    background: Rectangle {color:"#EFFAFAFA"}
+                    background: Rectangle {color:"#CFF8F8F8"}
                     Keys.onReturnPressed: {pressCtrl = !(false); event.accepted = (false)}
                     Keys.onPressed: if (event.key === Qt.Key_Control) {pressEntr = !false}
                     font {
-                        pixelSize: facade.doPx(18);
+                        pixelSize: facade.doPx(24);
                         family:trebu4etMsNorm.name;
                     }
-                    padding: facade.toPx(25)
+                    leftPadding: facade.toPx(25)
                     rightPadding: messageButton.width + facade.toPx(20)
                     wrapMode: TextEdit.Wrap;
                     Keys.onReleased: {
@@ -451,7 +451,7 @@ Rectangle {
                     checkMessage(2)
                 }
                 background: Image {
-                    source:"ui/buttons/sendButton.png"
+                    source: ("ui/buttons/sendButton.png")
                     height:facade.toPx(sourceSize.height)
                     width: facade.toPx(sourceSize.width);
                 }
