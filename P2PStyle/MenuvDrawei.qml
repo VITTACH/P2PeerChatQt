@@ -662,7 +662,7 @@ Drawer {
         id: leftSlider
         width: {facade.toPx(40)}
         anchors.topMargin: (-1);
-        color: loader.menu4Color
+        color: loader.menu0Color
         anchors.top: {profile.bottom}
         anchors.bottom: listMenu.top;
         x: settingDrawer.position==0?0: settingDrawer.x+settingDrawer.width-1;

@@ -42,9 +42,7 @@ android {
     QA_JAVASRC.files += \
     $$PWD/java/quickandroid/QuickAndroidActivity.java \
     $$PWD/java/quickandroid/UpForward.java \
-    $$PWD/java/quickandroid/TRUNsearch.java \
     $$PWD/java/quickandroid/RsaEncrypt.java \
-    $$PWD/java/quickandroid/GetstUnPort.java \
     $$PWD/java/quickandroid/PesrRequest.java \
     $$PWD/java/quickandroid/ImagePicker.java \
     $$PWD/java/quickandroid/SystemDispatcher.java
@@ -56,11 +54,9 @@ DISTFILES += \
     $$PWD/java/quickandroid/QuickAndroidActivity.java \
     $$PWD/java/quickandroid/UpForward.java \
     $$PWD/java/quickandroid/RsaEncrypt.java \
-    $$PWD/java/quickandroid/TRUNsearch.java \
     $$PWD/java/quickandroid/PesrRequest.java \
     $$PWD/java/com/lasconic/QShareUtils.java \
     $$PWD/java/quickandroid/ImagePicker.java \
-    $$PWD/java/quickandroid/GetstUnPort.java \
     $$PWD/java/quickandroid/SystemDispatcher.java \
     $$PWD/gradle.properties.in
 

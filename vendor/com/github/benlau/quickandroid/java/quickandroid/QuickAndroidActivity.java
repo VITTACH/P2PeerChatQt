@@ -21,6 +21,7 @@ public class QuickAndroidActivity
 
     @Override
     protected void onResume() {
+        super.onResume();
         SystemDispatcher.onActivityResume();
     }
 

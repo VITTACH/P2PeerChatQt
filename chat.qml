@@ -11,13 +11,6 @@ Rectangle {
 
     anchors.fill: (parent)
 
-    function hideKeyboard(event) {
-        pressedArea.visible= true;
-        if (event !== 0) event.accepted = true
-        input=!(screenTextFieldPost.focus=loader.focus=true)
-        Qt.inputMethod.hide()
-    }
-
     function relative(str) {
     var s = (+new Date()-Date.parse(str))/1e3,
         m = s / 60,
@@ -38,6 +31,16 @@ Rectangle {
            : w <= 1? 'last week' : M < 1? approx(w)+' w ago'
            : M <= 1? 'last month': y < 1? approx(M)+' m ago'
            : y <= 1? 'a year ago': approx(y) + ' years ago'
+    }
+
+    function hideKeyboard(event) {
+        if (event !== 0) {
+            event.accepted = true;
+        }
+        input=!(loader.focus=true)
+        screenTextFieldPost.focus = true
+        pressedArea.visible= true;
+        Qt.inputMethod.hide()
     }
 
     function loadChatsHistory() {
@@ -233,7 +236,7 @@ Rectangle {
                     color: Qt.hsva(lineColor, 0.37,0.84)
                     x: staMessage.x - width/2 + staMessage.width/2
                     visible: index<chatModel.count-1&&chatModel.get(index+1).mySpacing==0;
-                    width: {facade.toPx(4);}
+                    width: {facade.toPx(8);}
                     height: {parent.height;}
                 }
                 x: facade.toPx(40);
@@ -328,8 +331,8 @@ Rectangle {
 
                     Item {
                         id: staMessage
-                        width: facade.toPx(28)
-                        height:facade.toPx(28)
+                        width: facade.toPx(50)
+                        height:facade.toPx(50)
                         x:Math.abs(falg-2)==0? textarea.width + parent.spacing: -parent.x;
                         Rectangle {
                             anchors.horizontalCenter: {
@@ -338,13 +341,13 @@ Rectangle {
                             smooth: true
                             width: {
                                 if (index < chatModel.count - 1)
-                                    parent.width-facade.toPx(10)
+                                    parent.width-facade.toPx(18)
                                 else {parent.width}
                             }
                             height: width*1
                             color: Qt.hsva(lineColor,0.41,0.84);
                             border.color: loader.chat2Color
-                            border.width: 4
+                            border.width: 8
                             radius: width/2
 
                             Rectangle {
@@ -353,7 +356,7 @@ Rectangle {
                                 width: parent.width/2.5
                                 anchors.centerIn: {parent;}
                                 border.color: loader.chat2Color;
-                                border.width: 2
+                                border.width: 4
                                 visible:index==chatModel.count-1
                             }
                         }
@@ -408,6 +411,7 @@ Rectangle {
                     MouseArea {
                         id: pressedArea
                         anchors.fill: parent
+                        anchors.rightMargin: parent.rightPadding
                         visible:event_handler.currentOSys()>0
                         onClicked: {
                             input = !(visible =!true)

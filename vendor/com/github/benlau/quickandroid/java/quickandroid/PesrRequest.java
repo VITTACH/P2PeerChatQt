@@ -58,7 +58,6 @@ public class PesrRequest {
         himRSA.setPublic(BigInteger.ONE);
 
         try {
-            addr=GetstUnPort.startSTUN();
             startHoper(androidsUpnpServ);
         } catch (Exception exception) {
             stackTrace += "A start result = " + adaptExceptionsToLog(exception);
@@ -94,8 +93,7 @@ public class PesrRequest {
                 BigInteger bigInteger = new BigInteger((" " + data).getBytes());
                 pf.sendUdp(himRSA.encrypt(bigInteger).toString());
             } else {
-                String myMessage = "name="+data+"&port="+addr[1]+"&ip="+addr[0];
-                UtilsForJavaNative.sendEventSTUNjarMsg(myMessage);
+                pf.sendUdp(data);
             }
         } catch (Exception e) {}
     }
