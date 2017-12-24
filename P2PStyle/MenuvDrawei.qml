@@ -149,20 +149,18 @@ Drawer {
     }
 
     Rectangle {
-        anchors {
-            fill: parent
-            topMargin:profile.height
-        }
-        color: "#E5E5E5"
+        anchors.fill: parent
+        color: loader.menu17Color
+        anchors.topMargin:profile.height
     }
 
     Rectangle {
-        id: rightRect
         Rectangle {
-            height: 6
             width: (parent.width)
             color: loader.isOnline?loader.menu2Color:loader.head1Color
+            height: 6
         }
+        id: rightRect
         color: (loader.isOnline? loader.menu3Color: loader.menu3Color)
         width: (drawer.width - avatarButton.width)/2 + facade.toPx(13)
         anchors {
@@ -394,7 +392,6 @@ Drawer {
     ListView {
         clip:true
         id: listView;
-        spacing: 1
         property int memIndex:0
         anchors {
             topMargin: -1
@@ -437,7 +434,7 @@ Drawer {
                     source: "qrc:/ui/buttons/trashButton.png"
                     width:facade.toPx(sourceSize.width)
                 }
-                height: {parent.height-4}
+                height: {parent.height-facade.toPx(20)}
             }
             Rectangle {
                 anchors.right: parent.right;
@@ -448,13 +445,13 @@ Drawer {
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
                     height: {facade.toPx(sourceSize.height);}
-                    anchors.rightMargin: facade.toPx(30)
-                    fillMode: {Image.PreserveAspectFit;}
+                    anchors.rightMargin:facade.toPx(30)
+                    fillMode: {Image.PreserveAspectFit}
                     source:"qrc:/ui/buttons/dialerButton.png"
-                    width: facade.toPx(sourceSize.width)
+                    width:facade.toPx(sourceSize.width)
                 }
                 width: {0.5*parent.width}
-                height: {parent.height-4}
+                height: {parent.height-facade.toPx(20)}
             }
 
             Rectangle {
