@@ -245,7 +245,7 @@ Rectangle {
                         id:textarea
                         padding: baseRect.radius
                         wrapMode: TextEdit.Wrap;
-                        width:baseRect.width-2*baseRect.x-staMessage.width-parent.spacing
+                        width: baseRect.width-2*baseRect.x-staMessage.width-parent.spacing
                         font.family: trebu4etMsNorm.name
                         font.pixelSize: facade.doPx(23);
                         text: someText;
@@ -330,7 +330,7 @@ Rectangle {
                         id: staMessage
                         width: facade.toPx(28)
                         height:facade.toPx(28)
-                        x: Math.abs(falg - 2) == 0 ? textarea.width + parent.spacing: -parent.x
+                        x:Math.abs(falg-2)==0? textarea.width + parent.spacing: -parent.x;
                         Rectangle {
                             anchors.horizontalCenter: {
                                 parent.horizontalCenter
@@ -383,12 +383,12 @@ Rectangle {
                     property bool pressCtrl: false;
                     property bool pressEntr: false;
                     placeholderText: {
-                        if (event_handler.currentOSys() < 1) "Ctrl+Enter для отправки..."
+                        if (event_handler.currentOSys() <= 0) "Ctrl+Enter ДЛЯ ОТПРАВКИ..."
                         else "СООБЩЕНИЕ...";
                     }
                     background: Rectangle {color:"#EFFAFAFA"}
-                    Keys.onReturnPressed: {pressCtrl = !false; event.accepted = (false);}
-                    Keys.onPressed: if (event.key === Qt.Key_Control) pressEntr = !false;
+                    Keys.onReturnPressed: {pressCtrl = !(false); event.accepted = (false)}
+                    Keys.onPressed: if (event.key === Qt.Key_Control) {pressEntr = !false}
                     font {
                         pixelSize: facade.doPx(18);
                         family:trebu4etMsNorm.name;
@@ -397,8 +397,8 @@ Rectangle {
                     rightPadding: messageButton.width + facade.toPx(20)
                     wrapMode: TextEdit.Wrap;
                     Keys.onReleased: {
-                        if (event.key == Qt.Key_Control || event.key === Qt.Key_Return) {
-                            if (pressCtrl == true && pressEntr == true) {checkMessage(0)}
+                        if (event.key === Qt.Key_Control || event.key === Qt.Key_Return) {
+                            if (pressCtrl == true && pressEntr == true) {checkMessage(0);}
                         } else if (event.key ==Qt.Key_Back) {
                             hideKeyboard(event)
                         }
@@ -423,7 +423,7 @@ Rectangle {
                         screenTextFieldPost.memHeight =facade.toPx(81)
                     }
                     else if (screenTextFieldPost.lineCount<6)
-                        screenTextFieldPost.memHeight =screenTextFieldPost.implicitHeight
+                        screenTextFieldPost.memHeight = screenTextFieldPost.implicitHeight
                     else {
                         screenTextFieldPost.memHeight
                     }
@@ -435,7 +435,7 @@ Rectangle {
                     right: parent.right
                     rightMargin: facade.toPx(20)
                     verticalCenter: {
-                        screenTextFieldPost.lineCount==1?parent.verticalCenter: undefined
+                        screenTextFieldPost.lineCount==1? parent.verticalCenter: undefined
                     }
                 }
                 onClicked: {
