@@ -489,9 +489,6 @@ Rectangle {
                     ListElement {
                         image: "http://lorempixel.com/60/64";
                     }
-                    ListElement {
-                        image: "http://lorempixel.com/61/64";
-                    }
                 }
                 width: parent.width - x
                 height: parent.height - spacing

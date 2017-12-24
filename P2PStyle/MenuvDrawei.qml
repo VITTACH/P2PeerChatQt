@@ -391,7 +391,7 @@ Drawer {
 
     ListView {
         clip:true
-        id: listView;
+        id: listView
         property int memIndex:0
         anchors {
             topMargin: -1
@@ -403,6 +403,7 @@ Drawer {
         }
         boundsBehavior: {(Flickable.StopAtBounds)}
 
+        model:ListModel{id: usersModel;}
         snapMode: {ListView.SnapToItem;}
         Component.onCompleted:{
             if (loader.chats.length<1) {
@@ -413,7 +414,6 @@ Drawer {
             usersModel.clear();
         }
 
-        model:ListModel{id: usersModel;}
         delegate: Item {
             id: baseItem
             visible: activity
@@ -421,9 +421,9 @@ Drawer {
             height: (activity === 1)? facade.toPx(20) + Math.max(bug.height, fo.height): 0
 
             Rectangle {
-                width: {0.5 * parent.width;}
+                opacity: 0.8
                 anchors.verticalCenter: parent.verticalCenter
-                color: loader.isOnline? loader.menu5Color: loader.menu6Color
+                color: (loader.isOnline === true) ? loader.menu5Color : loader.menu6Color;
                 Image {
                     anchors.top: parent.top;
                     anchors.left: {parent.left}
@@ -434,12 +434,15 @@ Drawer {
                     source: "qrc:/ui/buttons/trashButton.png"
                     width:facade.toPx(sourceSize.width)
                 }
-                height: {parent.height-facade.toPx(20)}
+                width: parent.width/2
+                height: parent.height
             }
+
             Rectangle {
+                opacity: 0.8
                 anchors.right: parent.right;
                 anchors.verticalCenter: parent.verticalCenter
-                color: loader.isOnline? loader.menu5Color: loader.menu6Color
+                color: (loader.isOnline === true) ? loader.menu5Color : loader.menu6Color;
                 Image {
                     anchors.top: parent.top;
                     anchors.right: parent.right
@@ -450,8 +453,8 @@ Drawer {
                     source:"qrc:/ui/buttons/dialerButton.png"
                     width:facade.toPx(sourceSize.width)
                 }
-                width: {0.5*parent.width}
-                height: {parent.height-facade.toPx(20)}
+                width: parent.width/2
+                height: parent.height
             }
 
             Rectangle {
