@@ -328,8 +328,8 @@ Rectangle {
 
                     Item {
                         id: staMessage
-                        width: facade.toPx(30)
-                        height:facade.toPx(30)
+                        width: facade.toPx(28)
+                        height:facade.toPx(28)
                         x: Math.abs(falg - 2) == 0 ? textarea.width + parent.spacing: -parent.x
                         Rectangle {
                             anchors.horizontalCenter: {
