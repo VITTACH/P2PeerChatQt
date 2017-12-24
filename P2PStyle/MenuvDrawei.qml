@@ -464,7 +464,7 @@ Drawer {
                 height: parent.height
                 color: {
                     if (index == 0) {
-                        loader.menu4Color;
+                        loader.menu3Color;
                     } else if (typeof loader.chats[index] !== 'undefined') {
                         loader.chats[index].message.length == 0? "#FFEDEDED" : "#FFFFFFFF"
                     } else "#FFEDEDED"
@@ -476,7 +476,7 @@ Drawer {
                     id: coloresRect
                     color: {
                         if (index === 0) {
-                            if (loader.isOnline) loader.menu3Color
+                            if (loader.isOnline) loader.menu4Color
                             else
                                loader.menu1Color
                         } else loader.menu9Color
@@ -639,7 +639,7 @@ Drawer {
                         elide: Text.ElideRight
                     }
                     Text {
-                        color: (index == 0)? "#FFE97F" : loader.menu15Color
+                        color: (index == 0)? "#808080" : loader.menu15Color
                         text: {
                             var i = 0;
                             if (typeof loader.chats[index] !== 'undefined')
@@ -662,7 +662,7 @@ Drawer {
         id: leftSlider
         width: {facade.toPx(40)}
         anchors.topMargin: (-1);
-        color: loader.menu0Color
+        color: loader.menu4Color
         anchors.top: {profile.bottom}
         anchors.bottom: listMenu.top;
         x: settingDrawer.position==0?0: settingDrawer.x+settingDrawer.width-1;

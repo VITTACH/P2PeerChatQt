@@ -388,7 +388,7 @@ Rectangle {
                     property bool pressCtrl: false;
                     property bool pressEntr: false;
                     placeholderText: {
-                        if (event_handler.currentOSys() <= 0) "Ctrl+Enter ДЛЯ ОТПРАВКИ..."
+                        if (event_handler.currentOSys() <= 0) "CTRL+ENTER ДЛЯ ОТПРАВКИ..."
                         else "СООБЩЕНИЕ...";
                     }
                     background: Rectangle {color:"#CFF8F8F8"}
