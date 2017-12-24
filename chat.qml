@@ -152,15 +152,16 @@ Rectangle {
     }
 
     function appendMessage(newmessage, flag , timestamp) {
-        var sp,cflag =flag;
-        flag=Math.abs(flag)
+        var sp, cflag;
+        flag = Math.abs(cflag = flag)
         chatModel.append({
-            falg: flag,
-            mySpacing: sp = (chatModel.count > 0 ? ((chatModel.get(chatModel.count - 1).textColor == "white" && flag == 2) || (chatModel.get(chatModel.count - 1).textColor == "#960f133d" && flag == 1)? facade.toPx(30): facade.toPx(0)): facade.toPx(20)),
+            falg:flag,
+            lineColor: Math.random(),
+            mySpacing: sp = (chatModel.count > 0 ? ((chatModel.get(chatModel.count - 1).textColor == "#FFFFFF" && flag == 2) || (chatModel.get(chatModel.count - 1).textColor == "#656F92" && flag == 1)? facade.toPx(30): facade.toPx(0)): facade.toPx(20)),
             someText: newmessage,
             timeStamp: String(timestamp),
-            textColor: flag === (2)? "#960f133d": "white",
-            backgroundColor: flag === 2? loader.feedColor: loader.chat1Color,
+            textColor: (flag === 2)? "#656F92": "#FFFFFF",
+            backgroundColor: flag === 2? loader.feedColor: "#8BDDA3",
             image: sp == facade.toPx(0)? "": (flag == 2? "ui/chat/leFtMessage.png": "ui/chat/rightMessag.png")
         });
         if (cflag ==2) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0))
@@ -184,7 +185,7 @@ Rectangle {
             onClicked: {
                 hideKeyboard(mouse); mouse.accepted=false;
             }
-            visible: event_handler.currentOSys()==1||event_handler.currentOSys()==2
+            visible: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2;
         }
         delegate: Column {
             width: parent.width
@@ -192,20 +193,19 @@ Rectangle {
                 width: parent.width;
                 height: timeText.implicitHeight+mySpacing;
                 Rectangle {
-                    visible: (chatModel.get(index).mySpacing==facade.toPx(0))==true
-                    width: facade.toPx(4)
-                    height: (parent.height)
+                    height:parent.height
+                    width: routeLine.width
+                    visible: {chatModel.get(index).mySpacing == 0}
+                    color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.37,0.84)
                     x: routeLine.x+baseRect.x;
-                    color: {loader.chat1Color}
                 }
                 Text {
                     id: timeText
-                    color: textColor
                     text: relative(timeStamp);
-                    anchors.bottom: parent.bottom
+                    x: ((textarea.width) + (parentText.x - width))
+                    anchors.verticalCenter: parent.verticalCenter;
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(16);
-                    x: textarea.width + parentText.x-implicitWidth
                 }
             }
 
@@ -230,25 +230,25 @@ Rectangle {
 
                 Rectangle {
                     id: routeLine
-                    width: facade.toPx(4)
-                    height: {parent.height;}
-                    color: loader.chat1Color
-                    visible: index<chatModel.count-1&&chatModel.get(index+1).mySpacing==0;
+                    color: Qt.hsva(lineColor, 0.37,0.84)
                     x: staMessage.x - width/2 + staMessage.width/2
+                    visible: index<chatModel.count-1&&chatModel.get(index+1).mySpacing==0;
+                    width: {facade.toPx(4);}
+                    height: {parent.height;}
                 }
-                x: facade.toPx(20);
+                x: facade.toPx(40);
                 Item {
                     id: parentText;
-                    property var spacing: facade.toPx(20);
                     height: textarea.height;
+                    property var spacing:facade.toPx(40)
                     TextArea {
                         id:textarea
-                        text: someText;
                         padding: baseRect.radius
                         wrapMode: TextEdit.Wrap;
                         width:baseRect.width-2*baseRect.x-staMessage.width-parent.spacing
-                        font.family: {trebu4etMsNorm.name;}
-                        font.pixelSize: {facade.doPx((23))}
+                        font.family: trebu4etMsNorm.name
+                        font.pixelSize: facade.doPx(23);
+                        text: someText;
 
                         color:textColor
                         readOnly: true;
@@ -270,8 +270,8 @@ Rectangle {
                                     color: "#FFF3E0"
 
                                     transform: Translate {
-                                        x: -coloresRect.width / 2;
-                                        y: -coloresRect.height/ 2;
+                                        x: -coloresRect.width /(2)
+                                        y: -coloresRect.height/(2)
                                     }
                                 }
                             }
@@ -325,18 +325,44 @@ Rectangle {
                         }
                     }
                     x: Math.abs(falg - 2) * 2 * baseRect.x;
-                    Image {
+
+                    Item {
                         id: staMessage
+                        width: facade.toPx(30)
+                        height:facade.toPx(30)
                         x: Math.abs(falg - 2) == 0 ? textarea.width + parent.spacing: -parent.x
-                        source: index <chatModel.count - 1?"/ui/chat/unreadMsgs.png":"/ui/chat/readedMsgs.png"
-                        height: facade.toPx(sourceSize.height)
-                        width:facade.toPx(sourceSize.width)
+                        Rectangle {
+                            anchors.horizontalCenter: {
+                                parent.horizontalCenter
+                            }
+                            smooth: true
+                            width: {
+                                if (index < chatModel.count - 1)
+                                    parent.width-facade.toPx(10)
+                                else {parent.width}
+                            }
+                            height: width*1
+                            color: Qt.hsva(lineColor,0.41,0.84);
+                            border.color: loader.chat2Color
+                            border.width: 4
+                            radius: width/2
+
+                            Rectangle {
+                                height: width
+                                radius: width/2
+                                width: parent.width/2.5
+                                anchors.centerIn: {parent;}
+                                border.color: loader.chat2Color;
+                                border.width: 2
+                                visible:index==chatModel.count-1
+                            }
+                        }
                     }
                 }
             }
         }
-        boundsBehavior: {(Flickable.StopAtBounds)}
-        displayMarginBeginning: rootChat.height/2;
+        boundsBehavior: {(Flickable.StopAtBounds);}
+        displayMarginBeginning: (rootChat.height/2)
     }
 
     Column {
@@ -344,12 +370,12 @@ Rectangle {
         id: flickTextArea
         width: parent.width
         anchors {
-            bottom: {parent.bottom;}
-            bottomMargin: input==true? parent.height*0.43: 0;
+            bottom: {parent.bottom}
+            bottomMargin:input?parent.height*0.43:0
         }
         Item {
             width: parent.width
-            height: screenTextFieldPost.memHeight
+            height: {screenTextFieldPost.memHeight}
             Flickable {
                 TextArea.flickable: TextArea {
                     property var memHeight
@@ -394,7 +420,7 @@ Rectangle {
                 width: parent.width
                 height: {
                     if (screenTextFieldPost.lineCount == 1) {
-                        screenTextFieldPost.memHeight =facade.toPx(80)
+                        screenTextFieldPost.memHeight =facade.toPx(81)
                     }
                     else if (screenTextFieldPost.lineCount<6)
                         screenTextFieldPost.memHeight =screenTextFieldPost.implicitHeight
@@ -458,9 +484,6 @@ Rectangle {
                     }
                     ListElement {
                         image: "http://lorempixel.com/61/64";
-                    }
-                    ListElement {
-                        image: "http://lorempixel.com/62/64";
                     }
                 }
                 width: parent.width - x

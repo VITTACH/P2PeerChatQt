@@ -424,36 +424,34 @@ Drawer {
             height: (activity === 1)? facade.toPx(20) + Math.max(bug.height, fo.height): 0
 
             Rectangle {
+                width: {0.5 * parent.width;}
                 anchors.verticalCenter: parent.verticalCenter
                 color: loader.isOnline? loader.menu5Color: loader.menu6Color
                 Image {
                     anchors.top: parent.top;
                     anchors.left: {parent.left}
                     anchors.bottom: parent.bottom
+                    height: {facade.toPx(sourceSize.height);}
                     anchors.leftMargin: facade.toPx(30)
                     fillMode: {Image.PreserveAspectFit}
-                    width:facade.toPx(sourceSize.width)
-                    height: {facade.toPx(sourceSize.height);}
                     source: "qrc:/ui/buttons/trashButton.png"
+                    width:facade.toPx(sourceSize.width)
                 }
-                width: {0.5*parent.width}
                 height: {parent.height-4}
             }
             Rectangle {
-                anchors {
-                    right: (parent.right)
-                    verticalCenter:parent.verticalCenter
-                }
+                anchors.right: parent.right;
+                anchors.verticalCenter: parent.verticalCenter
                 color: loader.isOnline? loader.menu5Color: loader.menu6Color
                 Image {
                     anchors.top: parent.top;
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
+                    height: {facade.toPx(sourceSize.height);}
                     anchors.rightMargin: facade.toPx(30)
                     fillMode: {Image.PreserveAspectFit;}
-                    width: facade.toPx(sourceSize.width)
-                    height: {facade.toPx(sourceSize.height);}
                     source:"qrc:/ui/buttons/dialerButton.png"
+                    width: facade.toPx(sourceSize.width)
                 }
                 width: {0.5*parent.width}
                 height: {parent.height-4}
@@ -466,7 +464,7 @@ Drawer {
                 height: parent.height
                 color: {
                     if (index == 0) {
-                        loader.menu3Color;
+                        loader.menu4Color;
                     } else if (typeof loader.chats[index] !== 'undefined') {
                         loader.chats[index].message.length == 0? "#FFEDEDED" : "#FFFFFFFF"
                     } else "#FFEDEDED"
@@ -478,7 +476,7 @@ Drawer {
                     id: coloresRect
                     color: {
                         if (index === 0) {
-                            if (loader.isOnline) loader.menu4Color
+                            if (loader.isOnline) loader.menu3Color
                             else
                                loader.menu1Color
                         } else loader.menu9Color
@@ -630,19 +628,18 @@ Drawer {
                 Column {
                     id: fo
                     width: parent.width
-                    anchors {
-                        left: (bug.right)
-                        leftMargin: facade.toPx(40)
-                    }
+                    anchors.left: (bug.right);
+                    anchors.leftMargin: facade.toPx(40);
                     Text {
-                        elide: Text.ElideRight
-                        text: (login + " " + famil)
                         font.family:trebu4etMsNorm.name;
                         font.pixelSize: facade.doPx(30);
                         width:fo.width-facade.toPx(100)-bug.width
                         color:index==0?"white":loader.menu10Color
+                        text: (login + " " + famil)
+                        elide: Text.ElideRight
                     }
                     Text {
+                        color: (index == 0)? "#FFE97F" : loader.menu15Color
                         text: {
                             var i = 0;
                             if (typeof loader.chats[index] !== 'undefined')
@@ -650,12 +647,11 @@ Drawer {
                             if (i>=1)loader.chats[index].message[i-1].flag==1? "Вам: ":"Вы: "+loader.chats[index].message[i-1].text;
                             if (i==0)"Начните вашу новую беседу";
                         }
+                        width:fo.width-facade.toPx(100)-bug.width
+                        font.family:trebu4etMsNorm.name;
+                        font.pixelSize: facade.doPx(18);
                         wrapMode: Text.WordWrap
                         maximumLineCount: 3
-                        font.family:trebu4etMsNorm.name;
-                        font.pixelSize: facade.doPx(16);
-                        width:fo.width-facade.toPx(100)-bug.width
-                        color:index==0?"white":loader.menu15Color
                     }
                 }
             }
@@ -666,7 +662,7 @@ Drawer {
         id: leftSlider
         width: {facade.toPx(40)}
         anchors.topMargin: (-1);
-        color: settingDrawer.position == 0 ? loader.menu4Color : "#6F6E6F"
+        color: loader.menu4Color
         anchors.top: {profile.bottom}
         anchors.bottom: listMenu.top;
         x: settingDrawer.position==0?0: settingDrawer.x+settingDrawer.width-1;

@@ -59,8 +59,6 @@
         <file>ui/buttons/trashButton.png</file>
         <file>ui/buttons/dialerButton.png</file>
         <file>feeds.qml</file>
-        <file>ui/chat/readedMsgs.png</file>
-        <file>ui/chat/unreadMsgs.png</file>
         <file>P2PStyle/MenuvDrawei.qml</file>
         <file>P2PStyle/AvatarDialogs.qml</file>
         <file>P2PStyle/BusyCircle.qml</file>
