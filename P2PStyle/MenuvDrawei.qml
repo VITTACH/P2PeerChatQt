@@ -476,7 +476,7 @@ Drawer {
                     id: coloresRect
                     color: {
                         if (index === 0) {
-                            if (loader.isOnline) loader.menu4Color
+                            if (loader.isOnline) loader.menu0Color
                             else
                                loader.menu1Color
                         } else loader.menu9Color
@@ -639,7 +639,7 @@ Drawer {
                         elide: Text.ElideRight
                     }
                     Text {
-                        color: (index == 0)? "#808080" : loader.menu15Color
+                        color: (index == 0)? "#FFFFFF" : loader.menu15Color
                         text: {
                             var i = 0;
                             if (typeof loader.chats[index] !== 'undefined')
