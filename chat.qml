@@ -1,16 +1,14 @@
+import QtQml 2.0
+import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
-import QtQml 2.0
-import QtQuick 2.7
 
 Rectangle {
-    id: rootChat
-    property var input;
+    property var input: false
     property var select:[]
 
     anchors.fill: (parent)
-
     function relative(str) {
     var s = (+new Date()-Date.parse(str))/1e3,
         m = s / 60,
@@ -31,18 +29,6 @@ Rectangle {
            : w <= 1? 'last week' : M < 1? approx(w)+' w ago'
            : M <= 1? 'last month': y < 1? approx(M)+' m ago'
            : y <= 1? 'a year ago': approx(y) + ' years ago'
-    }
-
-    function hideKeyboard(event) {
-        pressedArea.visible= true;
-        if (event !== 0) {
-            event.accepted = true;
-        }
-        screenTextFieldPost.focus = false;
-        Qt.inputMethod.hide()
-        loader.focus= true
-        input=false;
-
     }
 
     function loadChatsHistory() {
@@ -71,17 +57,6 @@ Rectangle {
         }
         chatScrenList.positionViewAtEnd();
         busyCircle.visible = false
-    }
-
-    TextArea {
-        id: buferText;
-        wrapMode: {TextEdit.Wrap;}
-        width: 3*rootChat.width/4;
-        visible: false
-        font {
-            pixelSize: {facade.doPx((23))}
-            family: {trebu4etMsNorm.name;}
-        }
     }
 
     Connections {
@@ -120,6 +95,29 @@ Rectangle {
                     chatScrenList.positionViewAtEnd();
                 }
             }
+        }
+    }
+
+    function hideKeyboard(event) {
+        pressedArea.visible= true;
+        if (event !== 0) {
+            event.accepted = true;
+        }
+        screenTextFieldPost.focus = false;
+        Qt.inputMethod.hide()
+        loader.focus= true
+        input=false;
+
+    }
+
+    TextArea {
+        id: buferText;
+        wrapMode: {TextEdit.Wrap;}
+        width: {0.75*parent.width}
+        visible: false
+        font {
+            pixelSize: {facade.doPx((23))}
+            family: {trebu4etMsNorm.name;}
         }
     }
 
@@ -183,6 +181,8 @@ Rectangle {
             bottomMargin: facade.toPx(40)
             topMargin:partnerHeader.height+facade.toPx(10)
         }
+        displayMarginEnd: (height/2)
+        displayMarginBeginning: height/2;
         model: ListModel {id: chatModel;}
         MouseArea {
             anchors.fill: {(parent)}
@@ -367,7 +367,6 @@ Rectangle {
             }
         }
         boundsBehavior: {(Flickable.StopAtBounds);}
-        displayMarginBeginning: (rootChat.height/2)
     }
 
     Column {
@@ -427,7 +426,7 @@ Rectangle {
                 width: parent.width
                 height: {
                     if (screenTextFieldPost.lineCount == 1) {
-                        screenTextFieldPost.memHeight =facade.toPx(81)
+                        screenTextFieldPost.memHeight =facade.toPx(85)
                     }
                     else if (screenTextFieldPost.lineCount<6)
                         screenTextFieldPost.memHeight = screenTextFieldPost.implicitHeight
@@ -479,15 +478,6 @@ Rectangle {
                     }
                     ListElement {
                         image: "http://lorempixel.com/65/64";
-                    }
-                    ListElement {
-                        image: "http://lorempixel.com/66/64";
-                    }
-                    ListElement {
-                        image: "http://lorempixel.com/67/64";
-                    }
-                    ListElement {
-                        image: "http://lorempixel.com/60/64";
                     }
                 }
                 width: parent.width - x

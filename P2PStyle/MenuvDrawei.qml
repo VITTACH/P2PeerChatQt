@@ -283,8 +283,8 @@ Drawer {
                     width: {parent.width - facade.toPx(45.0)}
                     height: {parent.height - facade.toPx(45)}
                     anchors {
-                        verticalCenter: parent.verticalCenter
                         horizontalCenter: parent.horizontalCenter;
+                        verticalCenter: parent.verticalCenter
                     }
                     Image {
                         source:loader.avatarPath
@@ -392,6 +392,7 @@ Drawer {
     ListView {
         clip:true
         id: listView
+        spacing:-1
         property int memIndex:0
         anchors {
             topMargin: -1
@@ -420,41 +421,25 @@ Drawer {
             width: parent.width
             height: (activity === 1)? facade.toPx(20) + Math.max(bug.height, fo.height): 0
 
-            Rectangle {
-                opacity: 0.8
-                anchors.verticalCenter: parent.verticalCenter
-                color: (loader.isOnline === true) ? loader.menu5Color : loader.menu6Color;
-                Image {
-                    anchors.top: parent.top;
-                    anchors.left: {parent.left}
-                    anchors.bottom: parent.bottom
-                    height: {facade.toPx(sourceSize.height);}
-                    anchors.leftMargin: facade.toPx(30)
-                    fillMode: {Image.PreserveAspectFit}
-                    source: "qrc:/ui/buttons/trashButton.png"
-                    width:facade.toPx(sourceSize.width)
+            Row {
+                Repeater {
+                    Rectangle {
+                        Image {
+                            anchors.top: parent.top;
+                            anchors.bottom: parent.bottom
+                            height:facade.toPx(sourceSize.height)
+                            source:"qrc:/ui/buttons/" + modelData
+                            x: index==0?facade.toPx(30):parent.width-facade.toPx(30)-width
+                            width: facade.toPx(sourceSize.width);
+                            fillMode: Image.PreserveAspectFit
+                        }
+                        width: baseItem.width/2
+                        height: baseItem.height
+                        color: index==0? loader.menu5Color:loader.menu6Color
+                        anchors.verticalCenter: {(baseItem.verticalCenter);}
+                    }
+                    model: ["trashButton.png","dialerButton.png"]
                 }
-                width: parent.width/2
-                height: parent.height
-            }
-
-            Rectangle {
-                opacity: 0.8
-                anchors.right: parent.right;
-                anchors.verticalCenter: parent.verticalCenter
-                color: (loader.isOnline === true) ? loader.menu5Color : loader.menu6Color;
-                Image {
-                    anchors.top: parent.top;
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    height: {facade.toPx(sourceSize.height);}
-                    anchors.rightMargin:facade.toPx(30)
-                    fillMode: {Image.PreserveAspectFit}
-                    source:"qrc:/ui/buttons/dialerButton.png"
-                    width:facade.toPx(sourceSize.width)
-                }
-                width: parent.width/2
-                height: parent.height
             }
 
             Rectangle {
