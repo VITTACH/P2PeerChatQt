@@ -13,7 +13,7 @@ import org.fourthline.cling.support.igd.PortMappingListener;
 /**
  * Created by VITTACH on 09.02.2017.
  */
-public class UpForward {
+public class UPForward {
     public int port = 4445;
     public int RemPort = 4445;
     public InetAddress IPAddress;

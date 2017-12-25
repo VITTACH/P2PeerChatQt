@@ -35,7 +35,7 @@ public class PesrRequest {
     boolean handsShakeDone = true;
     Activity activ =QtNative.activity();
     String rmsg = new String ("");
-    UpForward pf= new UpForward();
+    UPForward pf= new UPForward();
     BigInteger pbk =new BigInteger("1");
     BigInteger mod =new BigInteger("1");
     RsaEncrypt my_RSA =new RsaEncrypt();

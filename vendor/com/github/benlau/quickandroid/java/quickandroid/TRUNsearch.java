@@ -1,21 +1,10 @@
 package quickandroid;
 
-import de.javawi.jstun.util.UtilityException;
-import java.net.InetAddress;
-import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
-import java.net.DatagramPacket;
-import java.net.SocketTimeoutException;
-
-import de.javawi.jstun.attribute.ChangeRequest;
-import de.javawi.jstun.attribute.MessageAttributeException;
+import java.net.*;
 import de.javawi.jstun.header.MessageHeader;
-import de.javawi.jstun.header.MessageHeaderParsingException;
-import de.javawi.jstun.attribute.MessageAttributeParsingException;
+import de.javawi.jstun.attribute.ChangeRequest;
 
-import java.io.IOException;
-
-public class TRUNsearch {
+public class TrunSearch {
     private int sourcePort;
     private String stunServer;
     private int stunServerPort;
@@ -23,76 +12,68 @@ public class TRUNsearch {
     private DatagramSocket socketTest1;
     private InetAddress sourceIaddress;
 
-    TRUNsearch(InetAddress sourcesIAddress, int sourcePort, String stunServer, int stunsServerPort) {
-            this.sourcePort = sourcePort;
-            this.stunServer = stunServer;
-            this.stunServerPort = stunsServerPort;
-            this.sourceIaddress = sourcesIAddress;
+    TrunSearch(InetAddress sourceIAddress,int sourcePort,String stunServer,int stunServerPort) {
+        this.sourcePort = sourcePort;
+        this.stunServer = stunServer;
+        this.stunServerPort = stunServerPort;
+        this.sourceIaddress = sourceIAddress;
     }
 
-    void test() throws UtilityException, IOException, MessageAttributeException, MessageHeaderParsingException {
+    void test() throws InterruptedException {
         socketTest1 = null;
 
-        Test1Thread t1thr = new Test1Thread(this);
-        t1thr.start();
+        Test1Thread thr=new Test1Thread((this));
+        thr.start();
 
-        while (t1thr.isAlive()) {
-            try {
-                Thread.currentThread().sleep(100);
-            } catch (InterruptedException excep) {
-                excep.printStackTrace();
-            }
+        while (thr.isAlive()) {
+            Thread.currentThread().sleep((100));
         }
 
         socketTest1.close();
     }
 
-    private boolean test1() throws UtilityException, IOException, MessageAttributeParsingException, MessageHeaderParsingException {
+    private boolean test1() throws Exception {
         int timeout = timeoutInitValue;
         while (true) {
-            try {
-                socketTest1 = new DatagramSocket(new InetSocketAddress(sourceIaddress, sourcePort));
-                socketTest1.setReuseAddress(true);
-                socketTest1.connect(InetAddress.getByName(stunServer),stunServerPort);
-                socketTest1.setSoTimeout(timeout);
+            socketTest1 = new DatagramSocket(new InetSocketAddress(sourceIaddress, sourcePort));
+            socketTest1.setReuseAddress(true);
+            socketTest1.connect(InetAddress.getByName(stunServer),stunServerPort);
+            socketTest1.setSoTimeout(timeout);
 
-                MessageHeader sendMH = new MessageHeader(MessageHeader.MessageHeaderType.BindingRequest);
-                sendMH.generateTransactionID();
+            MessageHeader MH= new MessageHeader(MessageHeader.MessageHeaderType.BindingRequest);
+            MH.generateTransactionID();
 
-                ChangeRequest changeRequest = new ChangeRequest();
-                sendMH.addMessageAttribute(changeRequest);
+            ChangeRequest changeRequest = new ChangeRequest();
+            MH.addMessageAttribute(changeRequest);
 
-                byte[] data = sendMH.getBytes();
-                DatagramPacket send = new DatagramPacket(data,data.length);
-                socketTest1.send(send);
+            byte[] data= MH.getBytes();
+            DatagramPacket send = new DatagramPacket(data,data.length);
+            socketTest1.send(send);
 
-                MessageHeader receiveMH  = new MessageHeader();
-                while (!(receiveMH.equalTransactionID(sendMH))) {
-                    DatagramPacket receive = new DatagramPacket(new byte[200], (200));
-                    socketTest1.receive(receive);
-                    receiveMH=MessageHeader.parseHeader(receive.getData());
-                    receiveMH.parseAttributes(receive.getData());
-                }
-
-                return true;
+            MessageHeader receiveMH  = new MessageHeader();
+            while (receiveMH.equalTransactionID(MH)==false) {
+                DatagramPacket receive = new DatagramPacket(new byte[200], (200));
+                socketTest1.receive(receive);
+                receiveMH=MessageHeader.parseHeader(receive.getData());
+                receiveMH.parseAttributes(receive.getData());
             }
-            catch(SocketTimeoutException e) {
-            }
+
+            return true;
         }
     }
 
     public class Test1Thread extends Thread {
-        TRUNsearch fd;
+        TrunSearch fd;
 
-        public Test1Thread(TRUNsearch disc) {
+        public Test1Thread(TrunSearch disc) {
             this.fd = disc;
         }
 
         @Override
         public void run() {
             try {
-              fd.test1();
-            } catch (Exception e) {}
+                fd.test1();
+            } catch (Exception exceptioner){}
         }
     }
 }

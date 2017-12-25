@@ -129,9 +129,7 @@ Drawer {
                         if (element.ListView.isCurrentItem&&!circleAnimation.running)
                             loader.sets2Color
                         else
-                            if (index == 0) {
-                                (loader.isOnline?loader.menu3Color:loader.menu4Color)
-                            }
+                            if (index==0)loader.menu3Color
                         else "#EEEDEEF0"
                     }
                 }

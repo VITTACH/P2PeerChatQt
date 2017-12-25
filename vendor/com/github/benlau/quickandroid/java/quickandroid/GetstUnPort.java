@@ -1,59 +1,22 @@
 package quickandroid;
 
-import java.net.NetworkInterface;
 import java.util.logging.*;
 import java.net.InetAddress;
 import java.util.Enumeration;
+import java.net.NetworkInterface;
 
 public class GetstUnPort implements Runnable {
-    private int port;
+    private int port = 0;
+    static Handler handlers;
     private InetAddress iAddress;
+    static String [] addrPort = new String[2];
+    protected static int line =0;
 
-    public GetstUnPort(InetAddress iAddress) {
-        this.iAddress = iAddress;
-        this.port =0;
-    }
-
-    public void run() {
+    static void start() {
         try {
-            new TRUNsearch(iAddress, port, "jstun.javawi.de", 3478).test();
-        } catch (Exception exp) {
-        }
-    }
-
-    static String[] startSTUN() {
-        final String[] addressPort=new String[2];
-        try {
-            final int[] line={0};
-            Handler h = new Handler() {
-                @Override
-                public void publish(LogRecord loggerRecords) {
-                    if (line[0] == 1) {
-                        String ADR= ": Address ";
-                        String message = loggerRecords.getMessage();
-                        String address = message.substring(message.indexOf(ADR)+ ADR.length(), message.indexOf(","));
-                        addressPort[0] = address;
-
-                        String PORT = "Port ";
-                        String port = message.substring(message.indexOf(PORT) + PORT.length(), message.length() - 1);
-                        addressPort[1] = port;
-                    }
-                    line[0]++;
-                }
-
-                @Override
-                public void flush() {
-                }
-
-                @Override
-                public void close() throws SecurityException {
-                }
-            };
-
-            h.setFormatter(new SimpleFormatter());
-            Logger.getLogger("de.javawi.jstun").addHandler(h);
+            handlers.setFormatter(new SimpleFormatter());
+            Logger.getLogger("de.javawi.jstun").addHandler(handlers);
             Logger.getLogger("de.javawi.jstun").setLevel(Level.FINE);
-
             Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
             while (ifaces.hasMoreElements()) {
                 NetworkInterface iface = ifaces.nextElement();
@@ -70,6 +33,43 @@ public class GetstUnPort implements Runnable {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return addressPort;
+    }
+
+    static String[] startSTUN() {
+        handlers = new Handler() {
+            @Override
+            public void close() throws SecurityException {
+            }
+            @Override
+            public void flush() { }
+            @Override
+            public void publish(LogRecord loggerRecords) {
+                if (line == 1) {
+                    String ADR= ": Address ";
+                    String m = loggerRecords.getMessage();
+                    String address=m.substring(m.indexOf(ADR)+ADR.length(),m.indexOf(","));
+                    addrPort[0] = address;
+                    String PORT = "Port ";
+                    String port = m.substring(m.indexOf(PORT)+PORT.length(), m.length()-1);
+                    addrPort[1] = port;
+                }
+                line++;
+            }
+        };
+        start();
+
+        return addrPort;
+    }
+
+    public GetstUnPort(InetAddress iAddress) {
+        this.iAddress = iAddress;
+    }
+
+    public void run() {
+        try {
+            new TrunSearch(iAddress, port, "jstun.javawi.de", (3478)).test();
+        } catch (InterruptedException fatal) {
+            fatal.printStackTrace();
+        }
     }
 }
