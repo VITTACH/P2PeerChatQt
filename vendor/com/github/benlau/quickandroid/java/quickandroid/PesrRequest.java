@@ -18,6 +18,10 @@ import java.nio.channels.ServerSocketChannel;
 
 import org.fourthline.cling.android.AndroidUpnpService;
 
+import de.javawi.jstun.header.MessageHeader;
+import de.javawi.jstun.attribute.ChangeRequest;
+import de.javawi.jstun.attribute.MappedAddress;
+import de.javawi.jstun.attribute.MessageAttribute;
 
 class UtilsForJavaNative {
     public static native void sendEventReceiveMsg(String m);
@@ -58,9 +62,10 @@ public class PesrRequest {
         himRSA.setPublic(BigInteger.ONE);
 
         try {
+            addr = getStun();
             startHoper(androidsUpnpServ);
-        } catch (Exception exception) {
-            stackTrace += "A start result = " + adaptExceptionsToLog(exception);
+        } catch (Exception exceptioned) {
+            stackTrace += adaptExceptionsToLog(exceptioned);
         }
     }
 
@@ -73,6 +78,28 @@ public class PesrRequest {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    public String[]getStun() throws Exception {
+        MessageHeader sendMsHeader =new MessageHeader(MessageHeader.MessageHeaderType.BindingRequest);
+        ChangeRequest changeRequest=new ChangeRequest();
+        sendMsHeader.addMessageAttribute(changeRequest);
+
+        byte[] recData=sendMsHeader.getBytes();
+        DatagramSocket s =new DatagramSocket();
+        s.setReuseAddress(true);
+
+        DatagramPacket p = new DatagramPacket((recData), recData.length, InetAddress.getByName("stun.l.google.com"), (19302));
+        s.send(p);
+
+        DatagramPacket r = new DatagramPacket(new byte[32],(32));
+        s.receive(r);
+        MessageHeader receiveMH = new MessageHeader(MessageHeader.MessageHeaderType.BindingResponse);
+        receiveMH.parseAttributes(r.getData());
+        MappedAddress ma = (MappedAddress) receiveMH.getMessageAttribute(MessageAttribute.MessageAttributeType.MappedAddress);
+        System.out.println(ma.getAddress() + " " + ma.getPort());
+
+        return new String[]{ma.getAddress().toString(), String.valueOf(ma.getPort())};
     }
 
     public void RSASending(String data) {
@@ -93,7 +120,9 @@ public class PesrRequest {
                 BigInteger bigInteger = new BigInteger((" " + data).getBytes());
                 pf.sendUdp(himRSA.encrypt(bigInteger).toString());
             } else {
-                pf.sendUdp(data);
+                String myMessage = "name="+data+"&port="+addr[1]+"&ip="+addr[0];
+                UtilsForJavaNative.sendEventSTUNjarMsg(myMessage);
+                // pf.sendUdp(data);//
             }
         } catch (Exception e) {}
     }
