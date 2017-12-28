@@ -812,9 +812,13 @@ Drawer {
                         height: {(parent.parent.height)}
                         width: parent.parent.width - inerImage.width - parent.spacing - facade.toPx(20);
 
-                        rightPadding: {parent.parent.radius;}
-                        onAccepted:filterList(text.toLowerCase())
-                        onTextChanged:if(event_handler.currentOSys()!=1&&event_handler.currentOSys()!=2) filterList(text.toLowerCase())
+                        rightPadding: parent.parent.radius;
+                        onAccepted: filterList(text.toLowerCase())
+                        onTextChanged: {
+                            if (event_handler.currentOSys() !== 1 && event_handler.currentOSys() !== 2){
+                                filterList(text.toLowerCase())
+                            }
+                        }
                         placeholderText: "Найти друзей";
                         font.bold: true
                         font.pixelSize: facade.doPx(20);
@@ -861,22 +865,48 @@ Drawer {
                         implicitHeight:(facade.toPx(30))
                         color: {
                             if (parent.checked  == true)
-                                loader.menu3Color
+                                "red"
                             else loader.menu13Color
                         }
                         Rectangle {
                             color:"#76CCCCCC"
-                            x: parent.parent.checked? parent.width - width - (parent.height - height)/2: (parent.height - height)/2;
-                            anchors.verticalCenter: {parent.verticalCenter}
+                            x: {
+                                if(myswitcher.checked) {
+                                    parent.width - width - (parent.height - height)/2
+                                } else (parent.height - height)/2
+                            }
+                            anchors {
+                                verticalCenter: {
+                                   parent.verticalCenter
+                                }
+                            }
                             width: (myswitcher.height/2)
                             height:(myswitcher.height/2)
                             radius: {width/2}
                         }
                         Rectangle {
                             radius: {width/2}
-                            x: parent.parent.checked? parent.width - width - (parent.height - height)/2: (parent.height - height)/2;
-                            color: myswitcher.down? loader.menu8Color : (myswitcher.checked ? loader.menu12Color: loader.feedColor);
-                            anchors.verticalCenter: {parent.verticalCenter}
+                            x: {
+                                if(myswitcher.checked) {
+                                    parent.width - width - (parent.height - height)/2
+                                } else (parent.height - height)/2
+                            }
+                            color: {
+                                if (myswitcher.down) {
+                                    loader.menu8Color
+                                }
+                                else {
+                                    if (myswitcher.checked)
+                                        loader.menu12Color;
+                                    else
+                                        loader.feedColor
+                                }
+                            }
+                            anchors {
+                                verticalCenter: {
+                                   parent.verticalCenter
+                                }
+                            }
                             width: myswitcher.height/2.3
                             height:myswitcher.height/2.3
                         }
