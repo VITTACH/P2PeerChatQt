@@ -15,7 +15,7 @@ Drawer {
     Connections {
         target: drawed
         onPositionChanged: {
-            if(basicMenuDrawer.position<=0.1) {
+            if (blankeDrawer.position <= 0.01) {
                 position = 0
             }
         }
@@ -28,10 +28,8 @@ Drawer {
 
     Rectangle {
         width: parent.width;
-        y: basicMenuDrawer.getProfHeight()
-        height: {
-            parent.height-basicMenuDrawer.getProfHeight();
-        }
+        y:blankeDrawer.getProfHeight()
+        height: parent.height-blankeDrawer.getProfHeight();
         color: "#DEDEE0"
 
         ListView {
@@ -105,7 +103,7 @@ Drawer {
                             circleAnimation.stop();
                             switch(index) {
                             case 5:
-                                settingDrawer.close()
+                                helperDrawer.close()
                                 break
                             }
                         }

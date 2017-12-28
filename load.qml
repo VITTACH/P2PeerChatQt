@@ -1,26 +1,20 @@
 import QtQuick 2.7
 import StatusBar 0.1
 import QtQuick.Window 2.0
-import QtQuick.Controls 2.0
-import"P2PStyle"as P2PStyle
-import"js/xHRQuery.js" as XHRQuery
-import"js/URLQuery.js" as URLQuery
+import QtQuick.Controls 2.0;
+import "P2PStyle"as P2PStyle
+import "js/xHRQuery.js" as XHRQuery;
+import "js/URLQuery.js" as URLQuery;
+import QtQuick.Controls.Material 2.0
 
 ApplicationWindow {
     x: 0
     y: 0
-    visible: true
+    visible: {true}
     title: "PeerMe"
-    property var tmpLogin
-    property var tmpPhone
+    Material.theme: Material.Light
 
     StatusBar {color: ("#5D5A58")}
-
-    onClosing: {
-        if(event_handler.currentOSys()>0) {
-            close.accepted = false
-        } else close.accepted=true
-    }
 
     Timer {
         id: backTimer
@@ -31,23 +25,25 @@ ApplicationWindow {
     Timer {
         id: connect
         interval: 4000
-        onTriggered: {
-            loader.logon(tmpPhone,tmpLogin)
-        }
+        onTriggered: {loader.logon(loader.tmpPhone, (loader.tmpLogin));}
     }
 
-    width: {event_handler.currentOSys() > 0? (500): (facade.toPx(1000))}
-    height: {
-        event_handler.currentOSys()>0?900:Screen.height-facade.toPx(100)
+    onClosing: {
+        if (event_handler.currentOSys() > 0) {
+            close.accepted = false
+        } else close.accepted=true
     }
+
+    width: {event_handler.currentOSys() > 0? facade.toPx(500): facade.toPx(1000)}
+    height:{event_handler.currentOSys() > 0? 900:Screen.height-facade.toPx(100);}
 
     QtObject {
         id: facade
         function toPx(dp) {
-            return dp*(loader.dpi/160)
+            return dp*(loader.dpi / 160)
         }
         function doPx(dp) {
-            return dp*(loader.dpi/160)*1.5;
+            return dp*(loader.dpi / 160) * 1.5
         }
     }
 
@@ -61,7 +57,7 @@ ApplicationWindow {
         }
         onLoaded: {
             item.onChange=function(urlimage) {
-                loader.avatarPath = urlimage
+                loader.avatarPath = (urlimage)
                 event_handler.sendAvatar(decodeURIComponent((urlimage)))
             }
         }
@@ -76,14 +72,15 @@ ApplicationWindow {
         property real dpi: 0
 
         // login by social
+        property var urlLink
         property string aToken
         property string userId
 
         // some visible popup window
-        property bool avatar: false;
-        property bool dialog: false;
-        property bool webview:false;
-        property bool context:false;
+        property bool avatar;
+        property bool dialog;
+        property bool webview;
+        property bool context;
 
         // info about user
         property string tel
@@ -91,16 +88,16 @@ ApplicationWindow {
         property string famil;
         property string avatarPath: "qrc:/ui/profiles/default/Human.png";
 
-        property bool isNews:false
-        property bool isLogin:false
-        property bool isOnline:false
+        property bool isNews
+        property bool isLogin
+        property bool isOnline
 
         // history of chats
-        property variant chats:[];
-        property string frienList:""
+        property var chats:[];
+        property var frienList
 
-        // loading web page
-        property string urlLink: "";
+        property var tmpLogin;
+        property var tmpPhone;
 
         Keys.onReleased: {listenBack(event)}
 
@@ -168,10 +165,10 @@ ApplicationWindow {
         function logon(phone, password) {
             var request = new XMLHttpRequest();var response;
             request.open('POST',"http://hoppernet.hol.es/default.php")
-            basicMenuDrawer.open()
+            blankeDrawer.open()
             request.onreadystatechange = function() {
                 if (request.readyState == XMLHttpRequest.DONE) {
-                    busyCircle.visible=false;
+                    loadnrsMenu.visible = false;
                     if (request.status && request.status==200) {
                         if (request.responseText == "") response = -1;
                         else if (request.responseText != "no") {
@@ -193,8 +190,8 @@ ApplicationWindow {
                                 event_handler.saveSet("user", JSON.stringify(u));
                                 break;
                             case 0:
-                                basicMenuDrawer.close()
-                                windowsDialogs.show("Вы не зарегистрированы!", 0)
+                                blankeDrawer.close()
+                                informDialog.show("Вы не зарегистрированы!", 0)
                                 if (loader.source != "qrc:/loginanDregister.qml") {loader.goTo("qrc:/loginanDregister.qml")}
                                 if (loader.aToken != ""){
                                     loader.fields[0] = (loader.login);
@@ -208,8 +205,8 @@ ApplicationWindow {
                                 partnerHeader.page = 1;
                                 break;
                             case -1:
-                                basicMenuDrawer.close()
-                                windowsDialogs.show("Временно нет доступа к интернету", 0)
+                                blankeDrawer.close()
+                                informDialog.show("Временно нет доступа к интернету", 0)
                                 break;
                         }
                     } else {
@@ -318,13 +315,13 @@ ApplicationWindow {
         id: trebu4etMsNorm
     }
 
-    P2PStyle.MenuvDrawei {id: basicMenuDrawer}
+    P2PStyle.AvatarDialog {id: avatarDialog}
 
-    P2PStyle.BusyCircle {id: busyCircle}
+    P2PStyle.InformDialog {id: informDialog}
 
-    P2PStyle.AvatarDialogs {id: avatardialogs}
+    P2PStyle.ChatPopupLis {id: chatPopupLis}
 
-    P2PStyle.WindsDialogs {id: windowsDialogs}
+    P2PStyle.BlankeDrawer {id: blankeDrawer}
 
-    P2PStyle.ContextMenu {id: contextDialog}
+    P2PStyle.LoadnrsMenu {id: loadnrsMenu}
 }

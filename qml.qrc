@@ -6,7 +6,6 @@
         <file>ui/buttons/sendButton.png</file>
         <file>chat.qml</file>
         <file>load.qml</file>
-        <file>P2PStyle/Background.qml</file>
         <file>login.qml</file>
         <file>ui/chat/leFtMessage.png</file>
         <file>ui/chat/rightMessag.png</file>
@@ -16,7 +15,6 @@
         <file>ui/bars/icons/configWhite.png</file>
         <file>ui/icons/passWIconWhite.png</file>
         <file>ui/icons/phoneIconWhite.png</file>
-        <file>P2PStyle/WindsDialogs.qml</file>
         <file>regin.qml</file>
         <file>ui/icons/personIconwhite.png</file>
         <file>ui/mask/round.png</file>
@@ -35,8 +33,6 @@
         <file>ui/icons/doorIconBlue.png</file>
         <file>ui/icons/HelpIconBlue.png</file>
         <file>ui/buttons/moreButton.png</file>
-        <file>P2PStyle/ContextMenu.qml</file>
-        <file>P2PStyle/Settingdrawei.qml</file>
         <file>loginanDregister.qml</file>
         <file>ui/icons/imProfileBlue.png</file>
         <file>ui/icons/imProfileLigh.png</file>
@@ -59,13 +55,17 @@
         <file>ui/buttons/trashButton.png</file>
         <file>ui/buttons/dialerButton.png</file>
         <file>feeds.qml</file>
-        <file>P2PStyle/MenuvDrawei.qml</file>
-        <file>P2PStyle/AvatarDialogs.qml</file>
-        <file>P2PStyle/BusyCircle.qml</file>
         <file>ui/buttons/feeds/img.png</file>
         <file>ui/buttons/feeds/mus.png</file>
         <file>ui/buttons/feeds/play.png</file>
         <file>ui/buttons/feeds/vide.png</file>
         <file>ui/backind/back1.png</file>
+        <file>P2PStyle/HelperDrawer.qml</file>
+        <file>P2PStyle/InformDialog.qml</file>
+        <file>P2PStyle/AvatarDialog.qml</file>
+        <file>P2PStyle/LoadnrsMenu.qml</file>
+        <file>P2PStyle/ColorAnimate.qml</file>
+        <file>P2PStyle/ChatPopupLis.qml</file>
+        <file>P2PStyle/BlankeDrawer.qml</file>
     </qresource>
 </RCC>

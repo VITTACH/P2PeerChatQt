@@ -14,7 +14,7 @@ Item {
     Item {
         height: parent.height
         width: 2 * parent.width
-        P2PStyle.Background {
+        P2PStyle.ColorAnimate {
             anchors.fill: {parent}
             Component.onCompleted: setColors([[180, 180, 180], [107,107,107]], 500)
         }
@@ -140,15 +140,15 @@ Item {
                         switch(index) {
                         case 3:
                             if (loader.fields[0].length <= 10) {
-                                windowsDialogs.show("Телефон не правильный",0)
+                                informDialog.show("Телефон не правильный",0)
                             }
                             else if(loader.fields[1].length<5) {
-                                windowsDialogs.show("Пароль < 5ти символов",0)
+                                informDialog.show("Пароль < 5ти символов",0)
                             }
                             else {
                             var telephone = loader.fields[0];
                             var passwords = loader.fields[1];
-                            busyCircle.visible = true;
+                            loadnrsMenu.visible = true;
                             loader.logon(telephone,passwords)
                             }
                             break;

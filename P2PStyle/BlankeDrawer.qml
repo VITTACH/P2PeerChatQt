@@ -12,7 +12,7 @@ Drawer {
                 close()
                 position = 0
             } else if (position == 1) {
-                settingDrawer.visible(true)
+                helperDrawer.visible(true)
                 if (loader.frienList == "") {
                     var friend
                     friend = event_handler.loadValue("frd")
@@ -28,7 +28,7 @@ Drawer {
                 }
                 getMePeers(loader.frienList);
             } else if (position == 0) {
-                settingDrawer.visible(false);
+                helperDrawer.visible(false);
                 loader.focus = !false
                 find = true;
             }
@@ -110,8 +110,10 @@ Drawer {
         request.onreadystatechange =function() {
             if (request.readyState==XMLHttpRequest.DONE) {
                 if (request.status&&request.status==200) {
+                    try {
                     obj = JSON.parse(request.responseText)
-                    for (var i = 0; obj !== null && i < obj.length; i++) {
+                    } catch(e) {}
+                    for (var i = 0; obj != null && i < obj.length; i+=1) {
                         index = findPeer(obj[i].name)
                         if (usersModel.count<1||index<0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
@@ -540,7 +542,7 @@ Drawer {
                             if (usersModel.get(index).phone !== loader.tel) {
                                 drawer.close();
                                 listView.memIndex=index;
-                                windowsDialogs.show("Хотите удалить <strong>" + login + " " + famil + "</strong> из друзей?", 2)
+                                informDialog.show("Хотите удалить <strong>" + login + " " + famil + "</strong> из друзей?", 2)
                             }
                         }
                         if (parent.x <= drag.minimumX) {
@@ -554,10 +556,10 @@ Drawer {
                 }
 
                 Connections {
-                    target: windowsDialogs
+                    target: informDialog
                     onChooseChanged: {
                         if (listView.memIndex== index) {
-                            if (windowsDialogs.choose == false) {
+                            if (informDialog.choose == false) {
                                 var phn=0;
                                 if (typeof usersModel.get(index) !== 'undefined')
                                 phn = usersModel.get(index).phone
@@ -646,13 +648,13 @@ Drawer {
         color: loader.menu4Color
         anchors.top: {profile.bottom}
         anchors.bottom: listMenu.top;
-        x: settingDrawer.position==0?0: settingDrawer.x+settingDrawer.width-1;
+        x:helperDrawer.position==0?0: helperDrawer.x + helperDrawer.width-1;
         MouseArea {
             property int p
             anchors.fill:parent;
             onPressed: p=mouse.x
             onPositionChanged: {
-                if (mouse.x>p&&settingDrawer.position==0) settingDrawer.open()
+                if (mouse.x>p&&helperDrawer.position==0) helperDrawer.open()
             }
         }
         DropShadow {
@@ -679,13 +681,13 @@ Drawer {
     }
 
 
-    Settingdrawei {id: settingDrawer}
+    HelperDrawer {id: helperDrawer}
     Rectangle {
         width: 6;
         color:loader.isOnline?loader.menu2Color:loader.head1Color
-        anchors.left: {parent.right;}
+        anchors.left: parent.right;
         anchors {
-            bottom: {(parent.bottom)}
+            bottom: {parent.bottom}
             top: rightRect.top
         }
     }
@@ -744,15 +746,15 @@ Drawer {
                 onClicked: {
                     switch(index) {
                     case 2:
-                        if (settingDrawer.position < 1) {
-                            settingDrawer.open()
+                        if (helperDrawer.position <= 1) {
+                            helperDrawer.open()
                         }
                         break;
                     case 3:
                         drawer.close()
                         event_handler.saveSet("user", "")
                         loader.goTo("qrc:/loginanDregister.qml");
-                        settingDrawer.visible(false);
+                        helperDrawer.visible((false))
                         loader.restores()
                     }
                     if (index == 1) {

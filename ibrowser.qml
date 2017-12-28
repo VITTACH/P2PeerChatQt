@@ -16,7 +16,7 @@ WebView {
 
     function successAuth(site) {
         loader.urlLink = "about:blank"
-        busyCircle.visible =true
+        loadnrsMenu.visible=true
         loader.loginByVk()
     }
 

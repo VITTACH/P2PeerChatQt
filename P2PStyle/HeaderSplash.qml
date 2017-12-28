@@ -114,16 +114,16 @@ Item {
                     }
                 }
             }
-            height: parent.height
+            height: {parent.height}
             anchors.left: page != 0 || loader.isLogin? hambrgrButton.right: parent.left;
             anchors.right:page != 0 || loader.isLogin? hamMoreButton.left: parent.right;
         }
 
         DropShadow {
             radius: 10
-            samples: 20
-            color: ("#CC000000");
-            source: hambrgrButton
+            samples:20
+            color: "#CC000000"
+            source: {hambrgrButton}
             anchors.fill: hambrgrButton
             visible: page==1?true:false
         }
@@ -148,7 +148,7 @@ Item {
                 else if (loader.webview) {
                     loader.webview = false
                 } else {
-                    basicMenuDrawer.open()
+                    blankeDrawer.open()
                 }
                 loader.focus = true
             }
@@ -171,8 +171,8 @@ Item {
             }
             onClicked: {
                 loader.focus = true
-                contextDialog.xPosition = rootItem.width-contextDialog.w-facade.toPx(20)
-                contextDialog.yPosition = facade.toPx(20)
+                chatPopupLis.xPosition = rootItem.width-chatPopupLis.w-facade.toPx(20)
+                chatPopupLis.yPosition = facade.toPx(20)
                 loader.context=true
             }
         }

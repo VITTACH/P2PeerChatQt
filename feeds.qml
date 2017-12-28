@@ -13,8 +13,7 @@ Rectangle {
     property int oldContentY: 0
     property int newsCardHgt: 0
 
-    Component.onCompleted: basicMenuDrawer.open();
-
+    Component.onCompleted: blankeDrawer.open()
     ListView {
         id: basView
         width: parent.width
@@ -111,12 +110,7 @@ Rectangle {
                 if (xmlmodel.count > 0) {
                     var RssCache = [];
                     for (var i = 0; i < xmlmodel.count; i++) {
-                        var obj = {enable: true,
-                                     link: xmlmodel.get(i).link,
-                                       title: xmlmodel.get(i).title,
-                                         image: xmlmodel.get(i).image,
-                                           pDate: xmlmodel.get(i).pDate,
-                                             pDesc: xmlmodel.get(i).pDesc}
+                        var obj = {enable: true, link: xmlmodel.get(i).link, title: xmlmodel.get(i).title, image: xmlmodel.get(i).image, pDate: xmlmodel.get(i).pDate, pDesc: xmlmodel.get(i).pDesc}
                         RssCache.push(obj)
                         for (var j = 0; j < rssView.model.count; j++) {
                             if (rssView.model.get(j).title == obj.title) {
@@ -173,8 +167,8 @@ Rectangle {
                         }
                     }
                     Connections {
-                        target: basicMenuDrawer
-                        onPositionChanged: if((basicMenuDrawer.position === 1) == true) inerText.focus=false
+                        target: blankeDrawer
+                        onPositionChanged: if((blankeDrawer.position === 1) == true) {inerText.focus = false}
                     }
                     TextField {
                         id: inerText
@@ -233,6 +227,8 @@ Rectangle {
                             color: loader.menu5Color
                             anchors.right: parent.right;
                             anchors.verticalCenter: parent.verticalCenter
+                            width: 0.5*parent.width;
+                            height: parent.height-4;
                             Image {
                                 anchors.top: parent.top;
                                 anchors.right: parent.right
@@ -243,8 +239,6 @@ Rectangle {
                                 height: {facade.toPx(sourceSize.height);}
                                 source:"qrc:/ui/buttons/dialerButton.png"
                             }
-                            width: 0.5*parent.width;
-                            height: parent.height-4;
                         }
 
                         Rectangle {
@@ -308,22 +302,22 @@ Rectangle {
                                 }
                                 onClicked: {
                                     listView.friend = phone
-                                    windowsDialogs.show("Отправить заявку в друзья для <strong>" + login + " " + famil + "</strong>?", 2)
+                                    informDialog.show("Отправить заявку в друзья для <strong>" + login + " " + famil + "</strong>?", 2)
                                 }
                             }
 
                             Connections {
-                                target: windowsDialogs
+                                target: informDialog
                                 onChooseChanged: {
                                     if (listView.memIndex !== index) {
                                         var objct = JSON.parse((loader.frienList))
-                                        if (windowsDialogs.choose == false
+                                        if (informDialog.choose == false
                                                 && listView.friend != null) {
                                             if (objct === null) {objct = [];}
                                             var objs = objct.push(listView.friend)
                                             loader.frienList=JSON.stringify(objct)
                                             loader.addFriend(listView.friend)
-                                            windowsDialogs.choose=true
+                                            informDialog.choose=true
                                         }
                                     }
                                 }

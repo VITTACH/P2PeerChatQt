@@ -15,7 +15,7 @@ Item {
                         loader.tel = phone;
                         loader.famil = family
                         loader.login = login;
-                        windowsDialogs.show("Вы зарегистрированы",0)
+                        informDialog.show("Вы зарегистрированы",0)
                         event_handler.saveSet("phone", (loader.tel))
                         event_handler.saveSet("passw", password)
                         var objectFrnd= JSON.parse(loader.frienList)
@@ -25,9 +25,9 @@ Item {
                         loader.isLogin = true;
                         goTo("profile.qml")
                     } else if (request.responseText == "no") {
-                        windowsDialogs.show("Что-то пошло не так",0)
+                        informDialog.show("Что-то пошло не так",0)
                     }
-                    busyCircle.visible = false
+                    loadnrsMenu.visible= false
                 }
             }
         }
@@ -84,22 +84,22 @@ Item {
                     onClicked: {
                         if (index == 6) {
                             if (loader.fields[0].length < 2) {
-                                windowsDialogs.show("Ваше имя менее чем 2 символа",0)
+                                informDialog.show("Ваше имя менее чем 2 символа",0)
                             }
                             else
                             if (loader.fields[1].length < 2) {
-                                windowsDialogs.show("Фамилия короче двух символов",0)
+                                informDialog.show("Фамилия короче двух символов",0)
                             }
                             else
                             if (loader.fields[2].length < 5) {
-                                windowsDialogs.show("Ваш пароль < 5 - ти символов",0)
+                                informDialog.show("Ваш пароль < 5 - ти символов",0)
                             }
                             else
                             if (loader.fields[4].length <11) {
-                                windowsDialogs.show("Ваш номер короче 11 символов",0)
+                                informDialog.show("Ваш номер короче 11 символов",0)
                             }
                             else {
-                                busyCircle.visible = true
+                                loadnrsMenu.visible = true
                                 registration(loader.fields[0], loader.fields[1], loader.fields[2], loader.fields[4], loader.fields[3])
                             }
                         }

@@ -35,11 +35,11 @@ Rectangle {
         select = [];
         chatModel.clear()
         var firstLaunch = true;
-        busyCircle.visible = true
-        var i=basicMenuDrawer.cindex
+        loadnrsMenu.visible= true
+        var i =blankeDrawer.cindex
         for (var j = 0; j<loader.chats.length; j++) {
             if (loader.chats[j].message.length > 0) {
-                firstLaunch = false;
+                firstLaunch=false;
                 break;
             }
         }
@@ -56,21 +56,22 @@ Rectangle {
             appendMessage(objct.text,-objct.flag,objct.time)
         }
         chatScrenList.positionViewAtEnd();
-        busyCircle.visible = false
+        loadnrsMenu.visible=false;
     }
 
     Connections {
-        target: basicMenuDrawer
+        target: blankeDrawer
         onCindexChanged:loadChatsHistory()
     }
 
     function checkMessage(flag) {
-        if ((screenTextFieldPost.text.length) >= 1) {
-            buferText.text = screenTextFieldPost.text
-            var object = {text: buferText.text, flag: flag, time:new Date()}
-            loader.chats[(basicMenuDrawer.cindex)].message.push(object);
-            event_handler.saveSet("chats", JSON.stringify(loader.chats))
-            appendMessage(buferText.text,flag, object.time)
+        if (screenTextFieldPost.text.length >= 1) {
+            var text=buferText.text=screenTextFieldPost.text
+            var obj = {text:text, flag:flag, time:new Date()};
+            loader.chats[blankeDrawer.cindex].message.push(obj)
+            var c=JSON.stringify(loader.chats)
+            event_handler.saveSet("chats", c);
+            appendMessage(text,flag,obj.time);
             chatScrenList.positionViewAtEnd();
             screenTextFieldPost.text=""
         }
@@ -90,7 +91,7 @@ Rectangle {
                 var object = {text:buferText.text, flag:1, time: new Date()}
                 loader.chats[i].message.push((object))
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
-                if (i == basicMenuDrawer.getCurPeerInd()) {
+                if (i == blankeDrawer.getCurPeerInd()){
                     appendMessage(buferText.text,1,object.time)
                     chatScrenList.positionViewAtEnd();
                 }
@@ -122,28 +123,28 @@ Rectangle {
     }
 
     Connections {
-        target: contextDialog;
+        target: chatPopupLis;
         onActionChanged: {
-            if (contextDialog.action == (8)) {
-                loader.chats[basicMenuDrawer.cindex].message=[]
+            if (chatPopupLis.action == (8)) {
+                loader.chats[blankeDrawer.cindex].message = [];
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 chatModel.clear()
                 select=[];
             }
-            if (contextDialog.action == (3)) {
+            if (chatPopupLis.action == (3)) {
             event_handler.copyText(chatModel.get(select[select.length-1]).someText)
-            } else if (contextDialog.action === 1) {
+            } else if (chatPopupLis.action === 1) {
                 select.sort();
                 for(var i=0; i<select.length; i++) {
                     chatModel.remove(select[i] - i);
-                    var currentIndex = basicMenuDrawer.cindex;
+                    var currentIndex = blankeDrawer.cindex;
                     loader.chats[currentIndex].message.splice(select[i]-i,1)
                 }
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 for(var i=1; i<chatModel.count; i++)
                 chatModel.setProperty(i,"mySpacing",(chatModel.get(i-1).textColor=="#000000"&&chatModel.get(i).textColor=="#960f133d")||(chatModel.get(i).textColor=="#000000"&&chatModel.get(i-1).textColor=="#960f133d")? facade.toPx(30): facade.toPx(0));
-                contextDialog.menu = 1;
-                contextDialog.action=0;
+                chatPopupLis.menu = 1;
+                chatPopupLis.action=0;
                 select=[];
             }
         }
@@ -196,11 +197,11 @@ Rectangle {
             width: parent.width
             Item {
                 width: parent.width;
-                height: timeText.implicitHeight+mySpacing;
+                height: timeText.implicitHeight + mySpacing ? mySpacing : (0)
                 Rectangle {
                     height:parent.height
                     width: routeLine.width
-                    visible: {chatModel.get(index).mySpacing == 0}
+                    visible: mySpacing ? chatModel.get(index).mySpacing == 0: false
                     color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.37,0.84)
                     x: routeLine.x+baseRect.x;
                 }
@@ -304,7 +305,7 @@ Rectangle {
                                         if (p >= 0) {
                                             select.splice(p,1)
                                         } else {
-                                            contextDialog.menu = 0
+                                            chatPopupLis.menu = 0
                                             parent.color="#FFE9BF"
                                             select.push(index)
                                             return
@@ -313,13 +314,13 @@ Rectangle {
                                     baseRect.color = "transparent"
                                     parent.color = backgroundColor
                                     if (select.length === 0) {
-                                        contextDialog.menu = 1
+                                        chatPopupLis.menu = 1
                                     }
                                 }
                                 onPressAndHold: {
                                     if (select.indexOf(index) < 0)
                                         select.push(index);
-                                    contextDialog.menu = 0;
+                                    chatPopupLis.menu = 0;
                                     parent.color ="#FFE9BF"
                                     baseRect.color = "#FFF3E0"
                                     coloresRect.x = ((mouseX))
