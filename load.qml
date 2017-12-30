@@ -1,8 +1,8 @@
 import QtQuick 2.7
 import StatusBar 0.1
 import QtQuick.Window 2.0
-import QtQuick.Controls 2.0;
-import "P2PStyle"as P2PStyle
+import QtQuick.Controls 2.0
+import "P2PStyle" as P2PStyle
 import "js/xHRQuery.js" as XHRQuery;
 import "js/URLQuery.js" as URLQuery;
 import QtQuick.Controls.Material 2.0
@@ -10,22 +10,22 @@ import QtQuick.Controls.Material 2.0
 ApplicationWindow {
     x: 0
     y: 0
-    visible: {true}
+    visible:true
     title: "PeerMe"
     Material.theme: Material.Light
 
     StatusBar {color: ("#5D5A58")}
 
     Timer {
-        id: backTimer
+        id: back
         interval: 100
         onTriggered: loader.back()
     }
 
     Timer {
         id: connect
-        interval: 4000
-        onTriggered: {loader.logon(loader.tmpPhone, (loader.tmpLogin));}
+        interval:4000
+        onTriggered: loader.logon(loader.tmpPhone, loader.tmpLogin)
     }
 
     onClosing: {
@@ -34,8 +34,8 @@ ApplicationWindow {
         } else close.accepted=true
     }
 
-    width: {event_handler.currentOSys() > 0? facade.toPx(500): facade.toPx(1000)}
-    height:{event_handler.currentOSys() > 0? 900:Screen.height-facade.toPx(100);}
+    width: {if (event_handler.currentOSys()<1) {facade.toPx(1000)}}
+    height:{if (event_handler.currentOSys()<1) {Screen.height-facade.toPx(100)}}
 
     QtObject {
         id: facade
@@ -159,7 +159,8 @@ ApplicationWindow {
                 user_ids: loader.userId,
                 name_case: 'Nom'
             }
-            XHRQuery.sendXHR('POST', "https://api.vk.com/method/users.get?access_token=" + loader.aToken, callback, URLQuery.serializeParams(params))
+            var baseUrl="https://api.vk.com/method/users.get?access_token="+loader.aToken;
+            XHRQuery.sendXHR('POST', baseUrl, callback, URLQuery.serializeParams(params));
         }
 
         function logon(phone, password) {
@@ -206,7 +207,7 @@ ApplicationWindow {
                                 break;
                             case -1:
                                 blankeDrawer.close()
-                                informDialog.show("Временно нет доступа к интернету", 0)
+                                informDialog.show("Временно нету доступа до интернету", 0)
                                 break;
                         }
                     } else {
@@ -246,18 +247,19 @@ ApplicationWindow {
         property string menu3Color: "#96281B";
         property string menu4Color: "#6F6E6F";
         property string menu5Color: "#D85452";
-        property string menu6Color: "#A3A3A3";
+        property string menu6Color: "#004A7F";
         property string menu7Color: "#F1F1F1";
         property string menu8Color: "#666666";
         property string menu9Color: "#E5E5E5";
 
         property string menu10Color:"#545454";
         property string menu11Color:"#606060";
-        property string menu12Color:"#2E3D50";
+        property string menu12Color:"#C5D9FB";
         property string menu13Color:"#B1B1B1";
         property string menu14Color:"#B5B4B3";
         property string menu15Color:"#4879D8";
         property string menu16Color:"#496095";
+        property string menu17Color:"#4182EF";
 
         property string head1Color: "#777777";
 
@@ -319,9 +321,9 @@ ApplicationWindow {
 
     P2PStyle.InformDialog {id: informDialog}
 
-    P2PStyle.ChatPopupLis {id: chatPopupLis}
-
     P2PStyle.BlankeDrawer {id: blankeDrawer}
+
+    P2PStyle.ChatMenuList {id: chatMenuList}
 
     P2PStyle.LoadnrsMenu {id: loadnrsMenu}
 }

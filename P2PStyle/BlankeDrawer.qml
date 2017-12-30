@@ -432,7 +432,7 @@ Drawer {
                     Rectangle {
                         height: baseItem.height;
                         width: baseItem.width/2;
-                        color: loader.menu5Color
+                        color:loader.menu14Color
                         anchors.verticalCenter:parent.verticalCenter
                         Image {
                             x: {
@@ -459,7 +459,7 @@ Drawer {
                 height: parent.height
                 color: {
                     if (index === 0) {
-                        loader.menu14Color
+                        loader.menu5Color
                     } else
                     if (typeof loader.chats[index] !=='undefined') {
                         if (loader.chats[index].message.length == 0)
@@ -474,7 +474,7 @@ Drawer {
                     id: coloresRect
                     color: {
                         if (index === 0) {
-                            if (loader.isOnline) {loader.menu6Color}
+                            if (loader.isOnline) {loader.menu3Color}
                             else
                                loader.menu1Color
                         } else loader.menu9Color
@@ -865,7 +865,7 @@ Drawer {
                         implicitHeight:(facade.toPx(30))
                         color: {
                             if (parent.checked  == true)
-                                "red"
+                                loader.menu12Color
                             else loader.menu13Color
                         }
                         Rectangle {
@@ -893,11 +893,11 @@ Drawer {
                             }
                             color: {
                                 if (myswitcher.down) {
-                                    loader.menu8Color
+                                    loader.menu6Color
                                 }
                                 else {
                                     if (myswitcher.checked)
-                                        loader.menu12Color;
+                                        loader.menu17Color;
                                     else
                                         loader.feedColor
                                 }

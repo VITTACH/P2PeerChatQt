@@ -84,8 +84,8 @@ Button {
             height:facade.toPx(202);
             id: picDialogAndroidrow;
             anchors{
-                left: (parent.left);
-                right: parent.right;
+                left: parent.left
+                right: parent.right
                 bottom:parent.bottom
             }
 
@@ -165,19 +165,19 @@ Button {
             opacity: 0.2
             anchors {
                 fill: parent
-                topMargin: dialogWindow.radius;
-                leftMargin: dialogWindow.radius;
-                rightMargin:dialogWindow.radius;
+                topMargin: dialogWindow.radius
+                leftMargin: dialogWindow.radius
+                rightMargin: dialogWindow.radius
                 bottomMargin:dialogWindow.radius
             }
             gradient: Gradient {
                 GradientStop {
-                    position: 0.0
-                    color:"white"
+                    position: 0.0;
+                    color: "white"
                 }
                 GradientStop {
-                    position: 0.8
-                    color: "gray"
+                    position: 0.8;
+                    color: "gray";
                 }
             }
         }

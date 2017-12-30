@@ -123,17 +123,17 @@ Rectangle {
     }
 
     Connections {
-        target: chatPopupLis;
+        target: chatMenuList;
         onActionChanged: {
-            if (chatPopupLis.action == (8)) {
+            if (chatMenuList.action == (8)) {
                 loader.chats[blankeDrawer.cindex].message = [];
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 chatModel.clear()
                 select=[];
             }
-            if (chatPopupLis.action == (3)) {
+            if (chatMenuList.action == (3)) {
             event_handler.copyText(chatModel.get(select[select.length-1]).someText)
-            } else if (chatPopupLis.action === 1) {
+            } else if (chatMenuList.action === 1) {
                 select.sort();
                 for(var i=0; i<select.length; i++) {
                     chatModel.remove(select[i] - i);
@@ -143,8 +143,8 @@ Rectangle {
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 for(var i=1; i<chatModel.count; i++)
                 chatModel.setProperty(i,"mySpacing",(chatModel.get(i-1).textColor=="#000000"&&chatModel.get(i).textColor=="#960f133d")||(chatModel.get(i).textColor=="#000000"&&chatModel.get(i-1).textColor=="#960f133d")? facade.toPx(30): facade.toPx(0));
-                chatPopupLis.menu = 1;
-                chatPopupLis.action=0;
+                chatMenuList.menu = 1;
+                chatMenuList.action=0;
                 select=[];
             }
         }
@@ -305,7 +305,7 @@ Rectangle {
                                         if (p >= 0) {
                                             select.splice(p,1)
                                         } else {
-                                            chatPopupLis.menu = 0
+                                            chatMenuList.menu = 0
                                             parent.color="#FFE9BF"
                                             select.push(index)
                                             return
@@ -314,13 +314,14 @@ Rectangle {
                                     baseRect.color = "transparent"
                                     parent.color = backgroundColor
                                     if (select.length === 0) {
-                                        chatPopupLis.menu = 1
+                                        chatMenuList.menu = 1
                                     }
                                 }
                                 onPressAndHold: {
-                                    if (select.indexOf(index) < 0)
+                                    if (select.indexOf(index)<0) {
                                         select.push(index);
-                                    chatPopupLis.menu = 0;
+                                    }
+                                    chatMenuList.menu =0
                                     parent.color ="#FFE9BF"
                                     baseRect.color = "#FFF3E0"
                                     coloresRect.x = ((mouseX))
