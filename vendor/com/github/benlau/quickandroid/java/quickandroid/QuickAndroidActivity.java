@@ -40,7 +40,7 @@ public class QuickAndroidActivity
         mapIntent.setPackage("com.google.android.apps.maps");
 
         if ((mapIntent.resolveActivity(myContext.getPackageManager()) != null)) {
-        myContext.startActivity(mapIntent);
+            myContext.startActivity(mapIntent);
         }
     }
 

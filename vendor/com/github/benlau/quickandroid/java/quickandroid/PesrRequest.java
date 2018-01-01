@@ -1,27 +1,28 @@
 package quickandroid;
 
-import java.net.*;
-import java.math.BigInteger;
-import java.io.OutputStream;
-import org.json.simple.JSONObject;
-import java.nio.channels.SocketChannel;
+import java.io.*;
+import java.util.Random;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
-import org.qtproject.qt5.android.QtNative;
-
-import java.util.Random;
-import java.util.ArrayList;
-import java.io.*;
-import org.json.simple.parser.JSONParser;
-import java.nio.channels.ServerSocketChannel;
+import org.json.simple.JSONObject;
 
 import org.fourthline.cling.android.AndroidUpnpService;
 
+import java.nio.channels.SocketChannel;
+import org.json.simple.parser.JSONParser;
+import org.qtproject.qt5.android.QtNative;
 import de.javawi.jstun.header.MessageHeader;
+import java.nio.channels.ServerSocketChannel;
 import de.javawi.jstun.attribute.ChangeRequest;
 import de.javawi.jstun.attribute.MappedAddress;
 import de.javawi.jstun.attribute.MessageAttribute;
+
+import java.net.*;
+import android.util.Log;
+import java.io.OutputStream;
+import java.math.BigInteger;
 
 class UtilsForJavaNative {
     public static native void sendEventReceiveMsg(String m);
@@ -47,6 +48,8 @@ public class PesrRequest {
     JSONParser parser =new JSONParser();
     JSONObject jsonObj=new JSONObject();
 
+    private static String TAG = "PeersRequest";
+
     private String adaptExceptionsToLog(Exception excepts) {
         StringWriter writer=new StringWriter();
         PrintWriter printToWriter = new PrintWriter(writer);
@@ -63,6 +66,7 @@ public class PesrRequest {
 
         try {
             addr = getStun();
+            Log.d(TAG, String.format("addr = %s, port = %s", addr[0], addr[1]));
             startHoper(androidsUpnpServ);
         } catch (Exception exceptioned) {
             stackTrace += adaptExceptionsToLog(exceptioned);
@@ -122,7 +126,6 @@ public class PesrRequest {
             } else {
                 String myMessage = "name="+data+"&port="+addr[1]+"&ip="+addr[0];
                 UtilsForJavaNative.sendEventSTUNjarMsg(myMessage);
-                // pf.sendUdp(data);//
             }
         } catch (Exception e) {}
     }
@@ -133,29 +136,29 @@ public class PesrRequest {
             pf.runUPnP(upnpServices);
             while(flag) {
             try {
-            String recv=(String) pf.recieve();
+            String recv= (String) pf.recieve();
             if (!recv.isEmpty()) {
-            if (recv.contains("pubKey")) {
+                if (recv.contains("pubKey")) {
                 jsonObj=(JSONObject) parser.parse(recv);
                 himRSA.setModulu(new BigInteger((String)jsonObj.get("module")));
                 himRSA.setPublic(new BigInteger((String)jsonObj.get("pubKey")));
 
                 // TODO this code need function
                 InetAddress oldAddr;
-                int oldPort =pf.port;
-                oldAddr=pf.IPAddress;
+                int oldPort = pf.port;
+                oldAddr =pf.IPAddress;
                 pf.port = pf.RemPort;
                 pf.IPAddress = pf.RemIPAddress;
 
                 if (handsShakeDone) {
-                    sendPublicModuleKey();
-                    handsShakeDone= false;
+                sendPublicModuleKey();
+                handsShakeDone= false;
                 }
 
-                pf.IPAddress=oldAddr;
+                pf.IPAddress= oldAddr;
                 pf.port=oldPort;
                 continue;
-            }
+                }
             rmsg=new String(my_RSA.decrypt(new BigInteger(recv)).toByteArray());
             // magical call c++ listener from java layer!
             UtilsForJavaNative.sendEventReceiveMsg(rmsg);

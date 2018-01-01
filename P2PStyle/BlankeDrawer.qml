@@ -428,12 +428,13 @@ Drawer {
             }
             Row {
                 Repeater {
+                    anchors.verticalCenter:parent.verticalCenter
                     model: [("trashButton.png"), "dialerButton.png"]
                     Rectangle {
-                        height: baseItem.height;
+                        y: 2
+                        height:baseItem.height-4
                         width: baseItem.width/2;
-                        color:loader.menu14Color
-                        anchors.verticalCenter:parent.verticalCenter
+                        color: loader.menu5Color
                         Image {
                             x: {
                                 var fac = -facade.toPx(30)
@@ -459,7 +460,7 @@ Drawer {
                 height: parent.height
                 color: {
                     if (index === 0) {
-                        loader.menu5Color
+                        loader.menu14Color
                     } else
                     if (typeof loader.chats[index] !=='undefined') {
                         if (loader.chats[index].message.length == 0)
@@ -474,7 +475,7 @@ Drawer {
                     id: coloresRect
                     color: {
                         if (index === 0) {
-                            if (loader.isOnline) {loader.menu3Color}
+                            if (loader.isOnline) loader.menu15Color;
                             else
                                loader.menu1Color
                         } else loader.menu9Color
@@ -619,7 +620,7 @@ Drawer {
                     Text {
                         maximumLineCount: 3
                         wrapMode:Text.WordWrap
-                        color: {index == 0? "#FFFFFF" : loader.menu15Color}
+                        color: {index == 0 ? "#FFFFFF" : loader.menu3Color}
                         text: {
                             var i = 0;
                             if (typeof loader.chats[index] !== 'undefined')
@@ -808,23 +809,22 @@ Drawer {
                     }
                     TextField {
                         id: inerText
-                        color:"#BDBEBF"
-                        height: {(parent.parent.height)}
-                        width: parent.parent.width - inerImage.width - parent.spacing - facade.toPx(20);
-
+                        color: loader.menu15Color
+                        height: (parent.parent.height)
                         rightPadding: parent.parent.radius;
-                        onAccepted: filterList(text.toLowerCase())
-                        onTextChanged: {
-                            if (event_handler.currentOSys() !== 1 && event_handler.currentOSys() !== 2){
-                                filterList(text.toLowerCase())
-                            }
-                        }
+                        onAccepted:filterList(text.toLowerCase())
+                        width: parent.parent.width - inerImage.width - parent.spacing - facade.toPx(20);
                         placeholderText: "Найти друзей";
                         font.bold: true
-                        font.pixelSize: facade.doPx(20);
+                        font.pixelSize: facade.doPx(18);
                         font.family: trebu4etMsNorm.name
                         onActiveFocusChanged:find=false;
                         background: Rectangle{opacity:0}
+                        onTextChanged: {
+                            if (event_handler.currentOSys() !== 1 && event_handler.currentOSys() !== 2){
+                            filterList(text.toLowerCase());
+                            }
+                        }
                     }
                 }
             }

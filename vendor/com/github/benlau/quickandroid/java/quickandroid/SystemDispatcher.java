@@ -1,30 +1,47 @@
-// Author: Ben Lau (https://github.com/benlau)
 package quickandroid;
+
+import java.util.Map;
 import android.app.Activity;
 import org.qtproject.qt5.android.QtNative;
-import java.util.Map;
 import java.util.Set;
 import java.util.List;
 import java.util.Queue;
+import java.lang.Thread;
 import java.lang.String;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.lang.ClassLoader;
+import android.content.Intent;
 import java.lang.reflect.Method;
-import java.lang.Thread;
 import android.util.Log;
 import android.os.Looper;
 import android.os.Handler;
-import android.content.Intent;
 import java.util.concurrent.Semaphore;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class SystemDispatcher {
 
-    public interface Listener {
-        public void onDispatched(String type, Map message);
+    private static String TAG = "QuickAndroid";
+
+    private static boolean dispatching = false;
+
+    private static final Semaphore mutex= new Semaphore(1);
+
+    private static Queue<Payload> queue = new LinkedList();
+
+    private static List<Listener> listeners = new ArrayList<Listener>();
+
+    private static native void jniEmit(String emitName,Map emitMessage);
+
+    private static class Payload {
+        public String type;
+        public Map message;
+    }
+
+    public static void onActivityResume(){
+        dispatch(ACTIVITY_RESUME_MESSAGE);
     }
 
     public static void dispatch(String name) {
@@ -33,9 +50,7 @@ public class SystemDispatcher {
 
     public static void dispatch(String type, Map message) {
         try {
-
             Payload payload;
-
             mutex.acquire();
 
             if (dispatching) {
@@ -46,50 +61,20 @@ public class SystemDispatcher {
                 mutex.release();
                 return;
             }
-
-            dispatching = true;
+            dispatching =!false;
             mutex.release();
-
-            emit(type,message); // Emit
-
-            mutex.acquire();//Proces queued message
-
+            emit(type, message);
+            mutex.acquire();
             while (queue.size() > 0 ) {
                 payload = queue.poll();
                 mutex.release();
-
                 emit(payload.type,payload.message);
 
                 mutex.acquire();
             }
             dispatching = false;
             mutex.release();
-
         } catch (Exception e) {
-            Log.e(TAG, "exception", e);
-        }
-    }
-
-    public static void addListener(Listener list) {
-        try {
-            mutex.acquire();
-            listeners.add(list);
-            mutex.release();
-        }
-        catch (Exception e) {
-            Log.e(TAG, "exception", e);
-        }
-    }
-
-    public
-    static void removeListener(Listener listener) {
-        try {
-            mutex.acquire();
-            listeners.remove(listener);
-            mutex.release();
-        }
-        catch (Exception e) {
-            Log.e(TAG, "exception", e);
         }
     }
 
@@ -99,106 +84,90 @@ public class SystemDispatcher {
 
     public static String SYSTEM_DISPATCHER_LOAD_CLASS_MESSAGE = "quickandroid.SystemDispatcher.loadClass";
 
-    /** helper function to dispatch a massage when onResume is invoked in the Activity class
-     */
-
-    public static void onActivityResume(){
-        dispatch(ACTIVITY_RESUME_MESSAGE);
+    public static void onActivityResult(int rquestCode, int resultCode, Intent intentData) {
+        Map msg = new HashMap();
+        msg.put("requestCode", rquestCode);
+        msg.put("resultCode", resultCode);
+        msg.put("data", intentData);
+        dispatch(ACTIVITY_RESULT_MESSAGE, msg);
     }
 
-    public static void onActivityResult (int requestCode, int resultCode, Intent data) {
-        Map message = new HashMap();
-
-        message.put("requestCode", requestCode);
-        message.put("resultCode", resultCode);
-        message.put("data",data);
-
-        dispatch(ACTIVITY_RESULT_MESSAGE,message);
-    }
-
-    private static class Payload {
-        public String type;
-        public Map message;
-    }
-
-    private static String TAG = "QuickAndroid";
-
-    private static final Semaphore mutex= new Semaphore(1);
-
-    private static Queue<Payload> queue = new LinkedList();
-
-    private static List<Listener> listeners = new ArrayList<Listener>();
-
-    private static boolean dispatching = false;
-
-    private static native void jniEmit(String name,Map message);
-
-    /**Emit onDispatched signal to registered listenter
-     */
-    private static void emit(String name,Map message) {
-        for (int i = 0 ; i < listeners.size() ; i++ ) {
+    public static void emit(String name, Map message) {
+        for (int i = 0; i <= listeners.size()-1; i++) {
             Listener listener = listeners.get(i);
             try {
-                listener.onDispatched(name,message);
+                listener.onDispatched(name, (message));
             } catch (Exception e) {
                 Log.d(TAG, Log.getStackTraceString(e));
             }
         }
-
-        jniEmit(name,message);
+        jniEmit(name, message);
     }
 
     private static void printMap(Map data) {
-        if (data == null)
-            return;
+        if (data == null) {return;}
         try {
-            for (Map.Entry entry : (Set <Map.Entry> ) data.entrySet()) {
-                String key = (String) entry.getKey();
+            for (Map.Entry entry : (Set <Map.Entry>)(data.entrySet())) {
+                String key = (String) (entry.getKey());
                 Object value = entry.getValue();
                 if (value == null)
                     continue;
 
                 if (value instanceof String) {
-                    String stringValue = (String) value;
+                    String stringValue = (String)value;
                     Log.d(TAG,String.format("%s : %s",key,stringValue));
-                } else if (value instanceof Integer) {
-                    int intValue = (Integer) value;
-                    Log.d(TAG,String.format("%s : %d",key,intValue));
-                } else if (value instanceof Boolean) {
-                    Boolean booleanValue = (Boolean) value;
-                    Log.d(TAG,String.format("%s: %b",key,booleanValue));
+                } else if (value instanceof  Integer) {
+                    int integrValue = (Integer)(value);
+                    Log.d(TAG,String.format("%s : %d",key,integrValue));
+                } else if (value instanceof  Boolean) {
+                    Boolean boleanValue=(Boolean)value;
+                    Log.d(TAG,String.format("%s : %b",key,boleanValue));
                 } else {
-                    Log.d(TAG,String.format("%s : Non-supported data type[%s] is passed",key,value.getClass().getName()));
+                    Log.d(TAG,String.format("%s : No-supported type[%s]",key,value.getClass().getName()));
                 }
             }
-        } catch (Exception e) {
-            Log.d(TAG,e.getMessage());
-        }
-
+        }catch(Exception e){Log.d(TAG,e.getMessage());}
     }
 
-    public static void loadClass(String className) {
+    public static void loadClass(String classForName) {
         try {
-            ClassLoader classLoader = SystemDispatcher.class.getClassLoader();
-            Class aClass = Class.forName(className,true,classLoader);
-//          Log.d(TAG,"Class Loaded: " + className);
+            ClassLoader loader =SystemDispatcher.class.getClassLoader();
+            Class.forName(classForName, (true),loader);
         } catch (ClassNotFoundException e) {
-            Log.e(TAG,"Failed to load class: " + className);
+            Log.e(TAG, "Failed load: " + classForName);
             e.printStackTrace();
         }
-   }
+    }
 
 
-   public static void init() {
+    public static void init() {
        SystemDispatcher.addListener(new SystemDispatcher.Listener() {
            public void onDispatched(String type , Map message) {
-//             Log.d(TAG,String.format("%s %b",type ,type.equals(SYSTEM_DISPATCHER_LOAD_CLASS_MESSAGE)));
-
                if (type.equals(SYSTEM_DISPATCHER_LOAD_CLASS_MESSAGE)) {
                    String className= (String) message.get("className");
                    loadClass(className);
                }
            }
        });
-   }
+    }
+
+    public interface Listener {
+        public void onDispatched(String type, Map msg);
+    }
+
+    public static void addListener(Listener listener) {
+        try {
+            mutex.acquire();
+            listeners.add(listener);
+            mutex.release();
+        } catch(Exception e) {}
+    }
+
+    public static void removeListener(Listener handl) {
+        try {
+            mutex.acquire();
+            listeners.remove(handl);
+            mutex.release();
+        } catch(Exception e) {}
+    }
 }

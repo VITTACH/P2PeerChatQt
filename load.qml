@@ -34,8 +34,8 @@ ApplicationWindow {
         } else close.accepted=true
     }
 
-    width: {if (event_handler.currentOSys()<1) {facade.toPx(1000)}}
-    height:{if (event_handler.currentOSys()<1) {Screen.height-facade.toPx(100)}}
+    width: {event_handler.currentOSys() < 1? facade.toPx(1000): 0;}
+    height:event_handler.currentOSys()<1?Screen.height-facade.toPx(100):0
 
     QtObject {
         id: facade
@@ -50,15 +50,15 @@ ApplicationWindow {
     Loader {
         id: imagePicker
         source: {
-            if (event_handler.currentOSys() == 1) {"AndImagePicker.qml"}
+            if (event_handler.currentOSys() === 1) {"AndImagePicker.qml"}
             else
-            if (event_handler.currentOSys() == 2) "IOsImagesPicker.qml";
+            if (event_handler.currentOSys() === 2) "IOsImagesPicker.qml";
             else ""
         }
         onLoaded: {
             item.onChange=function(urlimage) {
                 loader.avatarPath = (urlimage)
-                event_handler.sendAvatar(decodeURIComponent((urlimage)))
+                event_handler.sendAvatar(decodeURIComponent((urlimage)));
             }
         }
     }
@@ -244,7 +244,7 @@ ApplicationWindow {
         // colors variables
         property string menu1Color: "#939393";
         property string menu2Color: "#D3D3D3";
-        property string menu3Color: "#96281B";
+        property string menu3Color: "#B22E20";
         property string menu4Color: "#6F6E6F";
         property string menu5Color: "#D85452";
         property string menu6Color: "#004A7F";
@@ -257,7 +257,7 @@ ApplicationWindow {
         property string menu12Color:"#C5D9FB";
         property string menu13Color:"#B1B1B1";
         property string menu14Color:"#B5B4B3";
-        property string menu15Color:"#4879D8";
+        property string menu15Color:"#A3A3A3";
         property string menu16Color:"#496095";
         property string menu17Color:"#4182EF";
 
@@ -297,13 +297,13 @@ ApplicationWindow {
             event.accepted= true
             if (loader.dialog ==true) {
                 loader.dialog = !loader.dialog
-            } else if(loader.context) {
-                loader.context=!loader.context
             } else if(loader.avatar) {
                 loader.avatar = !loader.avatar
+            } else if(loader.context) {
+                loader.context=!loader.context
             } else if(loader.webview) {
                 loader.webview=!loader.webview
-            } else backTimer.restart()
+            } else back.restart()
         }
     }
 

@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
 
-import org.fourthline.cling.android.AndroidUpnpService;
 import org.fourthline.cling.support.model.PortMapping;
+import org.fourthline.cling.android.AndroidUpnpService;
 import org.fourthline.cling.support.igd.PortMappingListener;
 
 /**
