@@ -431,9 +431,9 @@ Drawer {
                     anchors.verticalCenter:parent.verticalCenter
                     model: [("trashButton.png"), "dialerButton.png"]
                     Rectangle {
-                        y: 2
-                        height:baseItem.height-4
+                        y: 1
                         width: baseItem.width/2;
+                        height: baseItem.height- y*2;
                         color: loader.menu5Color
                         Image {
                             x: {
@@ -620,13 +620,10 @@ Drawer {
                     Text {
                         maximumLineCount: 3
                         wrapMode:Text.WordWrap
-                        color: {index == 0 ? "#FFFFFF" : loader.menu3Color}
+                        color:index==0?"white":loader.menu11Color
                         text: {
-                            var i = 0;
-                            if (typeof loader.chats[index] !== 'undefined')
-                            {
-                                i = loader.chats[index].message.length
-                            }
+                            var i = 0
+                            if (typeof loader.chats[index] !== 'undefined'){i=loader.chats[index].message.length}
                             if (i>=1)loader.chats[index].message[i-1].flag==1? "Вам: ":"Вы: "+loader.chats[index].message[i-1].text;
                             if (i==0)"Начните вашу новую беседу";
                         }
@@ -891,22 +888,8 @@ Drawer {
                                     parent.width - width - (parent.height - height)/2
                                 } else (parent.height - height)/2
                             }
-                            color: {
-                                if (myswitcher.down) {
-                                    loader.menu6Color
-                                }
-                                else {
-                                    if (myswitcher.checked)
-                                        loader.menu17Color;
-                                    else
-                                        loader.feedColor
-                                }
-                            }
-                            anchors {
-                                verticalCenter: {
-                                   parent.verticalCenter
-                                }
-                            }
+                            color:loader.feedColor;
+                            anchors.verticalCenter: parent.verticalCenter
                             width: myswitcher.height/2.3
                             height:myswitcher.height/2.3
                         }
@@ -933,7 +916,7 @@ Drawer {
                     font.pixelSize: facade.doPx(20)
                     font.family:trebu4etMsNorm.name
                     elide: {Text.ElideRight;}
-                    color: loader.menu11Color
+                    color: loader.menu16Color
                     text: {
                         if (index == 1) {
                             if (myswitcher.checked)

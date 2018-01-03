@@ -26,7 +26,6 @@ import java.math.BigInteger;
 
 class UtilsForJavaNative {
     public static native void sendEventReceiveMsg(String m);
-    public static native void sendEventSTUNjarMsg(String m);
 }
 
 /**
@@ -35,6 +34,7 @@ class UtilsForJavaNative {
 public class PesrRequest {
     private String[] addr;
     static String stackTrace = "";
+    httpRequest hr = new httpRequest();
     Integer port;
     boolean flag;
     boolean handsShakeDone = true;
@@ -65,7 +65,9 @@ public class PesrRequest {
         himRSA.setPublic(BigInteger.ONE);
 
         try {
-            addr = getStun();
+            addr =this.getStun();
+            String siteUrl = "http://www.hoppernet.hol.es/";
+            hr.setupURL(siteUrl);
             Log.d(TAG, String.format("addr = %s, port = %s", addr[0], addr[1]));
             startHoper(androidsUpnpServ);
         } catch (Exception exceptioned) {
@@ -125,7 +127,7 @@ public class PesrRequest {
                 pf.sendUdp(himRSA.encrypt(bigInteger).toString());
             } else {
                 String myMessage = "name="+data+"&port="+addr[1]+"&ip="+addr[0];
-                UtilsForJavaNative.sendEventSTUNjarMsg(myMessage);
+                hr.sendRequest(myMessage);
             }
         } catch (Exception e) {}
     }

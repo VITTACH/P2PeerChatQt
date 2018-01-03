@@ -66,8 +66,8 @@ Rectangle {
 
     function checkMessage(flag) {
         if (screenTextFieldPost.text.length >= 1) {
-            var text=buferText.text=screenTextFieldPost.text
-            var obj = {text:text, flag:flag, time:new Date()};
+            var text= buferText.text = screenTextFieldPost.text
+            var obj = {text:text, flag: flag, time: new Date()}
             loader.chats[blankeDrawer.cindex].message.push(obj)
             var c=JSON.stringify(loader.chats)
             event_handler.saveSet("chats", c);
@@ -126,14 +126,16 @@ Rectangle {
         target: chatMenuList;
         onActionChanged: {
             if (chatMenuList.action == (8)) {
-                loader.chats[blankeDrawer.cindex].message = [];
-                event_handler.saveSet("chats", JSON.stringify(loader.chats))
-                chatModel.clear()
                 select=[];
+                chatModel.clear()
+                chatMenuList.action=0;
+                var currentInd = blankeDrawer.cindex
+                loader.chats[currentInd].message=[];
+                event_handler.saveSet("chats", JSON.stringify(loader.chats))
             }
             if (chatMenuList.action == (3)) {
-            event_handler.copyText(chatModel.get(select[select.length-1]).someText)
-            } else if (chatMenuList.action === 1) {
+                event_handler.copyText(chatModel.get(select[select.length-1]).someText)
+            } else if (chatMenuList.action == (1)) {
                 select.sort();
                 for(var i=0; i<select.length; i++) {
                     chatModel.remove(select[i] - i);
@@ -197,17 +199,17 @@ Rectangle {
             width: parent.width
             Item {
                 width: parent.width;
-                height: timeText.implicitHeight + mySpacing ? mySpacing : (0)
+                height:timeText.implicitHeight + mySpacing
                 Rectangle {
                     height:parent.height
                     width: routeLine.width
-                    visible: mySpacing ? chatModel.get(index).mySpacing == 0: false
+                    x:routeLine.x+baseRect.x
+                    visible: index >= 1 && (chatModel.get(index).mySpacing == 0)
                     color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.37,0.84)
-                    x: routeLine.x+baseRect.x;
                 }
                 Text {
                     id: timeText
-                    text: relative(timeStamp);
+                    text:relative(timeStamp)
                     x: ((textarea.width) + (parentText.x - width))
                     anchors.verticalCenter: parent.verticalCenter;
                     font.family: trebu4etMsNorm.name
@@ -404,7 +406,7 @@ Rectangle {
                     wrapMode: TextEdit.Wrap;
                     Keys.onReleased: {
                         if (event.key === Qt.Key_Control || event.key === Qt.Key_Return) {
-                            if (pressCtrl == true && pressEntr == true) {checkMessage(0);}
+                            if (pressCtrl == true && pressEntr == true) {checkMessage(2);}
                         } else if (event.key ==Qt.Key_Back) {
                             hideKeyboard(event)
                         }
@@ -413,7 +415,7 @@ Rectangle {
                     }
                     MouseArea {
                         id: pressedArea
-                        width: parent.width - parent.rightPadding
+                        width: screenTextFieldPost.width -screenTextFieldPost.rightPadding
                         height: parent.height
                         visible:event_handler.currentOSys()>0
                         onClicked: {

@@ -22,11 +22,6 @@
       emit instance->reciving(messages);
   }
 
-  void JNICALL Java_quickandroid_UtilsForJavaNative_sendEventSTUNjarMsg(JNIEnv *env, jobject obj, jstring msg) {
-      QString messages(env->GetStringUTFChars(msg, 0));
-      // надо теперь послать этот messages на hoppernet
-  }
-
   #ifdef __cplusplus
   }
   #endif

@@ -171,8 +171,8 @@ Item {
             }
             onClicked: {
                 loader.focus = true
-                chatPopupLis.xPosition = rootItem.width-chatPopupLis.w-facade.toPx(20)
-                chatPopupLis.yPosition = facade.toPx(20)
+                chatMenuList.xPosition = rootItem.width-chatMenuList.w-facade.toPx(20)
+                chatMenuList.yPosition = facade.toPx(20)
                 loader.context=true
             }
         }

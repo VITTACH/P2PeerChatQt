@@ -21,16 +21,16 @@ Drawer {
         }
     }
 
-    closePolicy: Popup.CloseOnEscape;
+    closePolicy: {Popup.CloseOnEscape;}
 
     height:{(parent.height)}
     width: {Math.min(facade.toPx(520), 0.60*parent.width)}
 
     Rectangle {
         width: parent.width;
-        y:blankeDrawer.getProfHeight()
-        height: parent.height-blankeDrawer.getProfHeight();
-        color: "#DEDEE0"
+        color: loader.sets3Color
+        y: blankeDrawer.getProfHeight()
+        height: parent.height-blankeDrawer.getProfHeight()
 
         ListView {
             clip: true
@@ -49,7 +49,11 @@ Drawer {
                         width: 0
                         height: 0
                         id: coloresRect
-                        color: loader.sets2Color
+                        color: {
+                            if (index === 0)
+                                loader.menu15Color;
+                            else loader.sets2Color;
+                        }
 
                         transform: Translate {
                             x:-coloresRect.width /2
@@ -61,28 +65,23 @@ Drawer {
                         anchors.fill:parent
                         Image {
                             id: icon
-                            source:{
-                               if(index>0||element.ListView.isCurrentItem)
-                                    image1;
-                               else image2;
-                            }
+                            source: {if (index > 0) image1; else {image2}}
                             anchors.verticalCenter: parent.verticalCenter;
                             width: ((facade.toPx(sourceSize.width *1.5)));
                             height:((facade.toPx(sourceSize.height*1.5)));
                         }
                         Text {
                             text: target;
-                            color: {
-                               if(index>0||element.ListView.isCurrentItem)
-                                    loader.menu16Color; else "#FFFFFFFF"
-                            }
+                            color: index > 0 ? loader.menu16Color: "white"
                             width: parent.width-icon.width-facade.toPx(40)
                             anchors.verticalCenter: parent.verticalCenter;
-                            font.family: {trebu4etMsNorm.name}
-                            font.pixelSize: {facade.doPx(32);}
+                            font {
+                                family:trebu4etMsNorm.name
+                                pixelSize: facade.doPx(32)
+                            }
                             elide: Text.ElideRight;
                         }
-                        anchors.leftMargin: {facade.toPx(20);}
+                        anchors.leftMargin:facade.toPx(20)
                         spacing: {facade.toPx(25);}
                     }
 
@@ -124,9 +123,9 @@ Drawer {
                     }
 
                     color: {
-                        if (element.ListView.isCurrentItem&&!circleAnimation.running)
-                            loader.sets2Color
-                        else
+                        if (element.ListView.isCurrentItem&&!circleAnimation.running) {
+                            if (index === 0) loader.menu15Color; else loader.sets2Color
+                        } else
                             if(index==0) loader.menu3Color
                         else "#EEEDEEF0"
                     }

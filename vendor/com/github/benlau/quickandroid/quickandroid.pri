@@ -45,6 +45,7 @@ android {
     $$PWD/java/quickandroid/RsaEncrypt.java \
     $$PWD/java/quickandroid/PesrRequest.java \
     $$PWD/java/quickandroid/ImagePicker.java \
+    $$PWD/java/quickandroid/httpRequest.java \
     $$PWD/java/quickandroid/SystemDispatcher.java
 
     INSTALLS += QA_JAVASRC
@@ -57,6 +58,7 @@ DISTFILES += \
     $$PWD/java/quickandroid/PesrRequest.java \
     $$PWD/java/com/lasconic/QShareUtils.java \
     $$PWD/java/quickandroid/ImagePicker.java \
+    $$PWD/java/quickandroid/httpRequest.java \
     $$PWD/java/quickandroid/SystemDispatcher.java \
     $$PWD/gradle.properties.in
 
