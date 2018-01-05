@@ -46,14 +46,9 @@ Drawer {
     height: {parent.height;}
     width: {Math.min(facade.toPx(780), 0.9 * parent.width)}
 
-    function getPeersCount() {
-        return listView.count;
-    }
+    function getHelperHeight() {return (leftSlider.height)}
     function getProfHeight() {
-        return profile.height + profile.y - 1;
-    }
-    function getMenuHeight() {
-        return listMenu.height + getProfHeight();
+        return (profile.height) + (profile.y - 1)
     }
     function getCurPeerInd() {return listView.currentIndex}
     function getPeersModel(index, field) {
@@ -71,8 +66,7 @@ Drawer {
         return results
     }
 
-    function findPeer(phone)
-    {
+    function findPeer(phone) {
         for(var i = 0; i<usersModel.count; i++) {
             if (usersModel.get(i).phone == phone)
                 return i;
@@ -432,9 +426,15 @@ Drawer {
                     model: [("trashButton.png"), "dialerButton.png"]
                     Rectangle {
                         y: 1
-                        width: baseItem.width/2;
-                        height: baseItem.height- y*2;
+                        width:baseItem.width/2
                         color: loader.menu5Color
+                        height: baseItem.height- y*2;
+                        Rectangle {
+                            color: loader.menu6Color;
+                            x: index*(parent.width -width)
+                            width:parent.width/3
+                            height:parent.height
+                        }
                         Image {
                             x: {
                                 var fac = -facade.toPx(30)
@@ -461,11 +461,6 @@ Drawer {
                 color: {
                     if (index === 0) {
                         loader.menu14Color
-                    } else
-                    if (typeof loader.chats[index] !=='undefined') {
-                        if (loader.chats[index].message.length == 0)
-                            "#EDEDED";
-                        else "#FFFFFF"
                     } else "#FFEDEDED"
                 }
 
@@ -539,7 +534,7 @@ Drawer {
                     }
                     onReleased: {
                         presed = false
-                        if (parent.x >= drag.maximumX) {
+                        if (parent.x > drag.maximumX) {
                             if (usersModel.get(index).phone !== loader.tel) {
                                 drawer.close();
                                 listView.memIndex=index;
@@ -610,10 +605,13 @@ Drawer {
                 Column {
                     id: fo
                     Text {
-                        width:fo.width-facade.toPx(100)-bug.width
-                        color:index==0?"white":loader.menu10Color
-                        font.family:trebu4etMsNorm.name;
                         font.pixelSize: facade.doPx(30);
+                        font.family: trebu4etMsNorm.name
+                        width:fo.width-facade.toPx(100)-bug.width
+                        color: {
+                            if (index == 0) "white"
+                            else loader.menu10Color
+                        }
                         text: (login + " " + famil)
                         elide: Text.ElideRight
                     }
@@ -916,7 +914,7 @@ Drawer {
                     font.pixelSize: facade.doPx(20)
                     font.family:trebu4etMsNorm.name
                     elide: {Text.ElideRight;}
-                    color: loader.menu16Color
+                    color: loader.menu10Color
                     text: {
                         if (index == 1) {
                             if (myswitcher.checked)

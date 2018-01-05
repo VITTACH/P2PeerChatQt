@@ -27,10 +27,10 @@ Drawer {
     width: {Math.min(facade.toPx(520), 0.60*parent.width)}
 
     Rectangle {
-        width: parent.width;
         color: loader.sets3Color
         y: blankeDrawer.getProfHeight()
-        height: parent.height-blankeDrawer.getProfHeight()
+        height: blankeDrawer.getHelperHeight()
+        width: parent.width;
 
         ListView {
             clip: true
@@ -40,7 +40,7 @@ Drawer {
             delegate: Item {
                 id: element;
                 width: parent.width;
-                height:facade.toPx(123)
+                height:facade.toPx(111)
                 Rectangle {
                     id: body
                     clip: true
@@ -50,8 +50,9 @@ Drawer {
                         height: 0
                         id: coloresRect
                         color: {
-                            if (index === 0)
+                            if (index === 0) {
                                 loader.menu15Color;
+                            }
                             else loader.sets2Color;
                         }
 
@@ -72,7 +73,7 @@ Drawer {
                         }
                         Text {
                             text: target;
-                            color: index > 0 ? loader.menu16Color: "white"
+                            color: index > 0 ? loader.menu10Color: "white"
                             width: parent.width-icon.width-facade.toPx(40)
                             anchors.verticalCenter: parent.verticalCenter;
                             font {
@@ -101,7 +102,7 @@ Drawer {
                         onClicked: {
                             circleAnimation.stop();
                             switch(index) {
-                            case 5:
+                            case 4:
                                 helperDrawer.close()
                                 break
                             }
@@ -140,12 +141,12 @@ Drawer {
                 ListElement {
                     image1:"../ui/icons/imProfileBlue.png"
                     image2:"../ui/icons/imProfileLigh.png"
-                    target:qsTr("Мой Профиль")
+                    target: qsTr("Мой Профиль");
                 }
                 ListElement {
                     image1:"../ui/icons/mynotifyBlue.png";
                     image2:"../ui/icons/mynotifyLigh.png";
-                    target:qsTr("Уведомления")
+                    target: qsTr("Уведомления");
                 }
                 ListElement {
                     image1:"../ui/icons/myalgortBlue.png";
@@ -156,11 +157,6 @@ Drawer {
                     image1: "../ui/icons/myalgortBlue.png"
                     image2: "../ui/icons/myalgortLigh.png"
                     target: qsTr("Настройки")
-                }
-                ListElement {
-                    image1: "../ui/icons/manswerBlue.png";
-                    image2: "../ui/icons/manswerLigh.png";
-                    target: qsTr("Помощь")
                 }
                 ListElement {
                     image1: "qrc:/ui/icons/goBackBlue.png"

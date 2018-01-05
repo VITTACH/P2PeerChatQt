@@ -32,7 +32,7 @@ public class UPForward {
             if(interface_.isLoopback())continue;
             Enumeration<InetAddress> addr=interface_.getInetAddresses();
             for (InetAddress address:Collections.list(addr)) {
-                if (!address.isReachable(3000)) continue;
+                if (!address.isReachable((int)3000)) continue;
                 if (address instanceof Inet6Address) continue;
                 /*
                 try(SocketChannel socket=SocketChannel.open()) {
@@ -70,9 +70,8 @@ public class UPForward {
         clientSocket.send(sendPacket);
     }
 
-    public void runUPnP(AndroidUpnpService pnpServ) throws IOException {
-        Random rnd=new Random();
-        int uPNP = rnd.nextInt(49151 - 25087) + 25087;
+    public void runUPnP(AndroidUpnpService aServ, DatagramSocket clientSocket) throws IOException {
+        int uPNP = clientSocket.getLocalPort();
         PortMapping[] arr = new PortMapping[1];
         receivePacket=new DatagramPacket(receiveDat, receiveDat.length);
 
@@ -85,11 +84,11 @@ public class UPForward {
         PortMapping desiredMapping = new PortMapping(upnp, Formatter.formatIpAddress(wifiCon.getConnectionInfo().getIpAddress()), PortMapping.Protocol.UDP, "HopperNet10");
         UpnpService uPNPService =new UpnpServiceImpl(new AndroidUpnpServiceConfiguration(wifiCon));
         */
-        uPNPService=pnpServ;
+        this.uPNPService = aServ;
         uPNPService.getRegistry().addListener(portMaplistn);
 
         uPNPService.getControlPoint().search();
-        clientSocket= new DatagramSocket(uPNP);
+        this.clientSocket= clientSocket;
         clientSocket.setSoTimeout(1000);
 
         IPAddress = InetAddress.getByName ("91.122.37.152");

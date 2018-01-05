@@ -34,19 +34,22 @@ class UtilsForJavaNative {
 public class PesrRequest {
     private String[] addr;
     static String stackTrace = "";
-    httpRequest hr = new httpRequest();
+    httpRequest hr =new httpRequest();
+    static DatagramSocket datagramSocket;
     Integer port;
     boolean flag;
     boolean handsShakeDone = true;
-    Activity activ =QtNative.activity();
+    Activity activ = QtNative.activity();
     String rmsg = new String ("");
     UPForward pf= new UPForward();
-    BigInteger pbk =new BigInteger("1");
-    BigInteger mod =new BigInteger("1");
-    RsaEncrypt my_RSA =new RsaEncrypt();
-    RsaEncrypt himRSA =new RsaEncrypt();
-    JSONParser parser =new JSONParser();
-    JSONObject jsonObj=new JSONObject();
+    BigInteger pbk = new BigInteger("1");
+    BigInteger mod = new BigInteger("1");
+    RsaEncrypt my_RSA = new RsaEncrypt();
+    RsaEncrypt himRSA = new RsaEncrypt();
+    JSONParser parser = new JSONParser();
+    JSONObject jsonObj= new JSONObject();
+
+    private static String siteUrl="http://hoppernet.hol.es";
 
     private static String TAG = "PeersRequest";
 
@@ -66,9 +69,7 @@ public class PesrRequest {
 
         try {
             addr =this.getStun();
-            String siteUrl = "http://www.hoppernet.hol.es/";
             hr.setupURL(siteUrl);
-            Log.d(TAG, String.format("addr = %s, port = %s", addr[0], addr[1]));
             startHoper(androidsUpnpServ);
         } catch (Exception exceptioned) {
             stackTrace += adaptExceptionsToLog(exceptioned);
@@ -81,8 +82,8 @@ public class PesrRequest {
         jsonObj.put(("module"),mod.toString());
         try {
             pf.sendUdp(jsonObj.toJSONString());
-        } catch (IOException exception) {
-            exception.printStackTrace();
+        } catch (Exception exceptioned) {
+            stackTrace += adaptExceptionsToLog(exceptioned);
         }
     }
 
@@ -92,50 +93,55 @@ public class PesrRequest {
         sendMsHeader.addMessageAttribute(changeRequest);
 
         byte[] recData=sendMsHeader.getBytes();
-        DatagramSocket s =new DatagramSocket();
-        s.setReuseAddress(true);
-
+        datagramSocket=new DatagramSocket();
+        datagramSocket.setReuseAddress((true));
         DatagramPacket p = new DatagramPacket((recData), recData.length, InetAddress.getByName("stun.l.google.com"), (19302));
-        s.send(p);
+        datagramSocket.send(p);
+        DatagramPacket r = new DatagramPacket(new byte[(32)], (32));
+        datagramSocket.receive(r);
 
-        DatagramPacket r = new DatagramPacket(new byte[32],(32));
-        s.receive(r);
         MessageHeader receiveMH = new MessageHeader(MessageHeader.MessageHeaderType.BindingResponse);
         receiveMH.parseAttributes(r.getData());
         MappedAddress ma = (MappedAddress) receiveMH.getMessageAttribute(MessageAttribute.MessageAttributeType.MappedAddress);
-        System.out.println(ma.getAddress() + " " + ma.getPort());
-
-        return new String[]{ma.getAddress().toString(), String.valueOf(ma.getPort())};
+        Log.d(TAG, String.format("ip=%s,pt=%s", ma.getAddress(), ma.getPort()));
+        String[] a;
+        a=new String[]{ma.getAddress().toString(),String.valueOf(ma.getPort())};
+        return a;
     }
 
     public void RSASending(String data) {
+        Log.d(TAG,String.format("RSASending: the data = %s", data));
         try {
             if (data.contains("ip") == true) {
                 jsonObj=(JSONObject) parser.parse(data);
-                pf.port=Integer.valueOf((String)jsonObj.get("pt"));
+                pf.port=Integer.valueOf((String) jsonObj.get("pt"));
                 pf.IPAddress = InetAddress.getByName((String)jsonObj.get("ip"));
 
+                Log.d(TAG,String.format("RSASending: cal sendPublicModuleKey"));
                 sendPublicModuleKey();
                 return;
             }
             if (data.contains("close") != !(true)) {
+                Log.d(TAG,String.format("RSASending: cal closing"));
                 flag = !(true);return;
             }
 
             if (himRSA.getPublic()!=BigInteger.ONE){
                 BigInteger bigInteger = new BigInteger((" " + data).getBytes());
-                pf.sendUdp(himRSA.encrypt(bigInteger).toString());
+                Log.d(TAG,String.format("RSASending: cal sendUdp"));
+                pf.sendUdp(himRSA.encrypt((bigInteger)).toString());
             } else {
                 String myMessage = "name="+data+"&port="+addr[1]+"&ip="+addr[0];
+                Log.d(TAG,String.format("RSASending: myMessage=%s", myMessage));
                 hr.sendRequest(myMessage);
             }
-        } catch (Exception e) {}
+        } catch (Exception exception) {exception.printStackTrace();}
     }
 
     public void startHoper(AndroidUpnpService upnpServices) throws Exception {
         flag = true;
         try {
-            pf.runUPnP(upnpServices);
+            pf.runUPnP(upnpServices,datagramSocket);
             while(flag) {
             try {
             String recv= (String) pf.recieve();
@@ -144,6 +150,7 @@ public class PesrRequest {
                 jsonObj=(JSONObject) parser.parse(recv);
                 himRSA.setModulu(new BigInteger((String)jsonObj.get("module")));
                 himRSA.setPublic(new BigInteger((String)jsonObj.get("pubKey")));
+                Log.d(TAG,String.format("startHoper: the himRSA = %s", himRSA));
 
                 // TODO this code need function
                 InetAddress oldAddr;
@@ -163,6 +170,7 @@ public class PesrRequest {
                 }
             rmsg=new String(my_RSA.decrypt(new BigInteger(recv)).toByteArray());
             // magical call c++ listener from java layer!
+            Log.d(TAG,String.format("startHoper: magical call msg = %s", rmsg));
             UtilsForJavaNative.sendEventReceiveMsg(rmsg);
             }
             } catch (SocketTimeoutException exception) {}
