@@ -34,7 +34,7 @@ ApplicationWindow {
         } else close.accepted=true
     }
 
-    width: {event_handler.currentOSys() < 1? facade.toPx(1000): 0;}
+    width: {event_handler.currentOSys() < 1? facade.toPx(900): (0)}
     height:event_handler.currentOSys()<1?Screen.height-facade.toPx(100):0
 
     QtObject {
@@ -244,8 +244,8 @@ ApplicationWindow {
         // colors variables
         property string menu1Color: "#939393";
         property string menu2Color: "#D3D3D3";
-        property string menu3Color: "#B5B4B2";
-        property string menu4Color: "#6E6E6E";
+        property string menu3Color: "#7EB6BF";
+        property string menu4Color: "#6F7585";
         property string menu5Color: "#B24A3E";
         property string menu6Color: "#96281B";
         property string menu7Color: "#F1F1F1";
@@ -255,10 +255,11 @@ ApplicationWindow {
         property string menu11Color:"#437ECC";
         property string menu12Color:"#3060AD";
         property string menu13Color:"#B1B1B1";
-        property string menu14Color:"#839FAF";
+        property string menu14Color:"#6998B2";
         property string menu15Color:"#A3A3A3";
 
         property string head1Color: "#777777";
+        property string head2Color: "#A5A5A5";
 
         property string sets1Color: "#727273";
         property string sets2Color: "#D8D8D8";
@@ -267,7 +268,7 @@ ApplicationWindow {
         property string feed1Color: "#7F7875";
         property string feed2Color: "#8E8784";
 
-        property string chat1Color: "#BCBCBC";
+        property string chat1Color: "#EFEFEF";
         property string chat2Color: "#A7A7A7";
 
         property string feedColor: "#EDEDED";

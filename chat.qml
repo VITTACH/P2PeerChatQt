@@ -5,12 +5,14 @@ import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
 
 Rectangle {
-    property var input: false
+    property bool input;
     property var select:[]
 
-    anchors.fill: (parent)
+    anchors.fill: parent
+    color: loader.chat1Color
+
     function relative(str) {
-    var s = (+new Date()-Date.parse(str))/1e3,
+        var s = (+ new Date() - Date.parse(str))/1e3,
         m = s / 60,
         h = m / 60,
         d = h / 24,
@@ -19,7 +21,7 @@ Rectangle {
         M = y * 12;
 
       function approx(num) {
-        return num<5?'a few': Math.round(num);
+          return num < 5? ('a few'): Math.round(num);
       };
 
       return s <= 1? 'just now' : m < 1 ? approx(s)+' s ago'
@@ -162,12 +164,12 @@ Rectangle {
         flag = Math.abs(cflag = flag)
         chatModel.append({
             falg:flag,
-            lineColor: Math.random(),
-            mySpacing: sp = (chatModel.count > 0 ? ((chatModel.get(chatModel.count - 1).textColor == "#FFFFFF" && flag == 2) || (chatModel.get(chatModel.count - 1).textColor == "#656F92" && flag == 1)? facade.toPx(30): facade.toPx(0)): facade.toPx(20)),
+            mySpacing: sp = (chatModel.count > 0 ? ((chatModel.get(chatModel.count - 1).textColor == "#FFFFFF" && flag == 2) || (chatModel.get(chatModel.count - 1).textColor == "#FEFFFF" && flag == 1)? facade.toPx(30): facade.toPx(0)): facade.toPx(20)),
             someText: newmessage,
+            lineColor: Math.random(),
             timeStamp: String(timestamp),
-            textColor: (flag === 2)? "#656F92": "#FFFFFF",
-            backgroundColor: flag === 2? loader.feedColor: "#8BDDA3",
+            textColor: (flag === 2)? "#FEFFFF": "#FFFFFF",
+            backgroundColor:flag==2? "#94C0D3": "#86C2CC",
             image: sp == facade.toPx(0)? "": (flag == 2? "ui/chat/leFtMessage.png": "ui/chat/rightMessag.png")
         });
         if (cflag ==2) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0))
@@ -199,32 +201,33 @@ Rectangle {
             width: parent.width
             Item {
                 width: parent.width;
-                height:timeText.implicitHeight + mySpacing
                 Rectangle {
-                    height:parent.height
-                    width: routeLine.width
+                    height: parent.height
+                    width: {routeLine.width}
                     x:routeLine.x+baseRect.x
-                    visible: index >= 1 && (chatModel.get(index).mySpacing == 0)
+                    visible: (index >= 1) == true && (chatModel.get(index).mySpacing == 0)
                     color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.37,0.84)
                 }
+                height:timeText.implicitHeight + mySpacing
                 Text {
-                    id: timeText
+                    id: timeText;
                     text:relative(timeStamp)
-                    x: ((textarea.width) + (parentText.x - width))
+                    x: {textarea.width+parentText.x-width}
                     anchors.verticalCenter: parent.verticalCenter;
-                    font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(16);
+                    font.family: trebu4etMsNorm.name
                 }
             }
 
             Rectangle {
                 id: baseRect
-                width: parent.width
+                width:parent.width
                 color: ("transparent")
                 radius:facade.toPx(20)
-                height: parentText.height
+                height: {parentText.height;}
                 Image {
-                    source:{image;}
+                    source:{image}
+                    smooth: false;
                     width: {facade.toPx(sourceSize.width * (1.0))}
                     height:{facade.toPx(sourceSize.width * (1.0))}
                     y: parentText.y + parentText.height - (height)
@@ -237,9 +240,9 @@ Rectangle {
                 }
 
                 Rectangle {
-                    id: routeLine
+                    id: routeLine;
                     color: Qt.hsva(lineColor, 0.37,0.84)
-                    x: staMessage.x - width/2 + staMessage.width/2
+                    x: (Math.abs(falg-2)==0? staMessage.x:0) -width/2 + staMessage.width/2
                     visible: index<chatModel.count-1&&chatModel.get(index+1).mySpacing==0;
                     width: {facade.toPx(4);}
                     height: {parent.height;}
@@ -262,11 +265,10 @@ Rectangle {
                         readOnly: true;
                         background: Rectangle {
                             color: backgroundColor
-                            radius: {parent.padding}
-
+                            radius: (parent.padding);
                             Item {
                                 clip: true;
-                                height:parent.height
+                                height: parent.height
                                 width:parent.width-2*parent.radius
                                 anchors.horizontalCenter: {
                                     parent.horizontalCenter
@@ -274,8 +276,8 @@ Rectangle {
                                 Rectangle {
                                     width: 0
                                     height: 0
-                                    id: coloresRect;
-                                    color: "#FFF3E0"
+                                    id: coloresRect
+                                    color:loader.head2Color
 
                                     transform: Translate {
                                         x: -coloresRect.width /(2)
@@ -286,11 +288,11 @@ Rectangle {
 
                             PropertyAnimation {
                                 duration: 500
-                                target: coloresRect;
-                                id: circleAnimation;
+                                id:circleAnimation
+                                target: {coloresRect}
                                 properties:("width,height,radius")
                                 from: 0
-                                to: parent.width* 3;
+                                to: parent.width * 3;
 
                                 onStopped: {
                                     coloresRect.width  = 0;
@@ -299,7 +301,7 @@ Rectangle {
                             }
 
                             MouseArea {
-                                anchors.fill: {parent}
+                                anchors.fill: parent;
                                 onClicked: {
                                     var p= 0
                                     if(select.length > 0) {
@@ -307,8 +309,9 @@ Rectangle {
                                         if (p >= 0) {
                                             select.splice(p,1)
                                         } else {
-                                            chatMenuList.menu = 0
-                                            parent.color="#FFE9BF"
+                                            chatMenuList.menu = 0;
+                                            parent.color = loader.menu5Color
+                                            baseRect.color=loader.head2Color
                                             select.push(index)
                                             return
                                         }
@@ -320,12 +323,12 @@ Rectangle {
                                     }
                                 }
                                 onPressAndHold: {
-                                    if (select.indexOf(index)<0) {
+                                    if (select.indexOf(index) < 0) {
                                         select.push(index);
                                     }
                                     chatMenuList.menu =0
-                                    parent.color ="#FFE9BF"
-                                    baseRect.color = "#FFF3E0"
+                                    parent.color = loader.menu5Color
+                                    baseRect.color=loader.head2Color
                                     coloresRect.x = ((mouseX))
                                     coloresRect.y = ((mouseY))
                                     circleAnimation.start()
@@ -335,25 +338,29 @@ Rectangle {
                     }
                     x: Math.abs(falg - 2) * 2 * baseRect.x;
 
+                    DropShadow {
+                        radius: 10
+                        samples:15
+                        color: "#CC000000"
+                        source:staMessage;
+                        anchors.fill:staMessage
+                    }
                     Item {
                         id: staMessage
-                        width: facade.toPx(36)
-                        height:facade.toPx(36)
-                        x:Math.abs(falg-2)==0? textarea.width + parent.spacing: -parent.x;
+                        width: facade.toPx(36);
+                        height: facade.toPx(36)
+                        x: Math.abs(falg-2)==0? textarea.width + parent.spacing: -parent.x
                         Rectangle {
                             anchors.horizontalCenter: {
                                 parent.horizontalCenter
                             }
-                            smooth: true
                             width: {
                                 if (index < chatModel.count-1) {
-                                    parent.width-facade.toPx(6);
+                                    parent.width-facade.toPx(9);
                                 } else {(parent.width)}
                             }
                             height: width*1
                             color: Qt.hsva(lineColor,0.41,0.84);
-                            border.color: loader.chat2Color
-                            border.width: 4
                             radius: width/2
 
                             Rectangle {
@@ -394,7 +401,7 @@ Rectangle {
                         if (event_handler.currentOSys() <= 0) "CTRL+ENTER ДЛЯ ОТПРАВКИ..."
                         else "СООБЩЕНИЕ...";
                     }
-                    background: Rectangle {color:"#CFF8F8F8"}
+                    background: Rectangle {color:"#CFFEFEFE"}
                     Keys.onReturnPressed: {pressCtrl = !(false); event.accepted = (false)}
                     Keys.onPressed: if (event.key === Qt.Key_Control) {pressEntr = !false}
                     font {

@@ -13,7 +13,7 @@ Drawer {
                 position = 0
             } else if (position == 1) {
                 helperDrawer.visible(true)
-                if (loader.frienList == "") {
+                if (loader.frienList =="") {
                     var friend
                     friend = event_handler.loadValue("frd")
                     if (friend != "") {
@@ -26,7 +26,7 @@ Drawer {
                     }
                     loader.frienList=JSON.stringify(triend)
                 }
-                getMePeers(loader.frienList);
+                getMePeers(loader.frienList)
             } else if (position == 0) {
                 helperDrawer.visible(false);
                 loader.focus = !false
@@ -86,10 +86,10 @@ Drawer {
 
     function getFriends() {
         var request = new XMLHttpRequest()
-        request.open('POST',"http://www.hoppernet.hol.es")
+        request.open('POST', "http://www.hoppernet.hol.es")
         request.onreadystatechange =function() {
-            if (request.readyState==XMLHttpRequest.DONE) {
-                if (request.status&&request.status==200) {
+            if (request.readyState ==XMLHttpRequest.DONE) {
+                if (request.status&&request.status ==200) {
                     getMePeers(loader.frienList=request.responseText)
                 }
             }
@@ -100,16 +100,16 @@ Drawer {
 
     function getMePeers(name) {
         var request = new XMLHttpRequest(), obj,index
-        request.open('POST',"http://www.hoppernet.hol.es")
+        request.open('POST', "http://www.hoppernet.hol.es")
         request.onreadystatechange =function() {
-            if (request.readyState==XMLHttpRequest.DONE) {
-                if (request.status&&request.status==200) {
+            if (request.readyState ==XMLHttpRequest.DONE) {
+                if (request.status&&request.status ==200) {
                     try {
-                    obj = JSON.parse(request.responseText)
+                    obj = JSON.parse(request.responseText);
                     } catch(e) {}
                     for (var i = 0; obj != null && i < obj.length; i+=1) {
                         index = findPeer(obj[i].name)
-                        if (usersModel.count<1||index<0) {
+                        if (usersModel.count<1|| index<0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
                             usersModel.append({
                                 image: "http://lorempixel.com/200/20" + i + "/sports",
@@ -120,8 +120,9 @@ Drawer {
                                 ip: obj[i].ip,
                                 activity: 1
                             });
-                            if (obj[i].name == loader.tel)
-                                listView.currentIndex=i
+                            if (obj[i].name ==loader.tel) {
+                                listView.currentIndex = i
+                            }
                         }else {
                             if (usersModel.get(index).image == "") {
                                 usersModel.setProperty(index, "image", "http://lorempixel.com/200/20" + i + "/sports")
@@ -133,7 +134,7 @@ Drawer {
                         }
                     }
                     var friends = []
-                    for (i = 0; i<usersModel.count; i++) {
+                    for (i = 0; i <usersModel.count; i++) {
                         friends.push({famil: usersModel.get(i).famil, login: usersModel.get(i).login, phone: usersModel.get(i).phone, port: usersModel.get(i).port, ip: usersModel.get(i).ip})
                     }
                     event_handler.saveSet("frd" , JSON.stringify(friends))
@@ -205,10 +206,10 @@ Drawer {
             context.closePath()
             context.fill();
 
-            context.fillStyle = loader.isOnline==true? loader.menu2Color:loader.head1Color
+            context.fillStyle=loader.isOnline == true? loader.menu2Color:loader.head1Color
             context.beginPath()
             context.moveTo(0,height-leftRect.height+6)
-            context.lineTo(0,height - leftRect.height)
+            context.lineTo(0,height-leftRect.height+0)
             context.lineTo(width, 0)
             context.lineTo(width, 6)
             context.closePath()
@@ -218,26 +219,26 @@ Drawer {
 
     Column {
         id: profile
-        spacing: {facade.toPx(10);}
+        spacing:facade.toPx(10)
         anchors{
             horizontalCenter: parent.horizontalCenter;
         }
         Item{
-            width: {(parent.width)}
-            height: facade.toPx(10)
+            width: parent.width
+            height: facade.toPx(10);
         }
         Row {
             id: firstRow
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenter:parent.horizontalCenter
             spacing: {facade.toPx(30) - (facade.toPx(708) - drawer.width)/facade.toPx(10)}
             Column {
                 anchors {
-                    top: parent.top
+                    top: parent.top;
                     topMargin: facade.toPx(10)
                 }
                 Text {
-                    color:"#FFFFFF"
-                    font.bold: true
+                    color: "#FFFFFF"
+                    font.bold: !false
                     styleColor:"black";
                     style: Text.Raised;
                     font.family: trebu4etMsNorm.name
@@ -246,8 +247,8 @@ Drawer {
                     anchors.horizontalCenter:parent.horizontalCenter
                 }
                 Text {
-                    text: "Друзья";
-                    color: "white";
+                    text:qsTr("Друзья")
+                    color:qsTr("white")
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(24);
                     anchors.horizontalCenter:parent.horizontalCenter
@@ -276,11 +277,11 @@ Drawer {
                     clip: true
                     smooth: true
                     visible: false
-                    width: {parent.width - facade.toPx(45.0)}
-                    height: {parent.height - facade.toPx(45)}
+                    width: parent.width - facade.toPx(45.0);
+                    height: parent.height - facade.toPx(45);
                     anchors {
                         horizontalCenter: parent.horizontalCenter;
-                        verticalCenter: parent.verticalCenter
+                        verticalCenter:parent.verticalCenter
                     }
                     Image {
                         source:loader.avatarPath
@@ -309,7 +310,7 @@ Drawer {
                     smooth: true;
                     visible:false
                     source: "qrc:/ui/mask/round.png"
-                    sourceSize: Qt.size(bag.width,bag.height)
+                    sourceSize:Qt.size(bag.width,bag.height)
                 }
             }
             Column {
@@ -404,7 +405,7 @@ Drawer {
         snapMode: {ListView.SnapToItem;}
         Component.onCompleted:{
             if (loader.chats.length<1) {
-                var mchat = event_handler.loadValue("chats");
+                var mchat = event_handler.loadValue("chats")
                 if (mchat!= "")
                     loader.chats=JSON.parse(mchat)
             }
@@ -447,7 +448,7 @@ Drawer {
                             source: "qrc:/ui/buttons/" + (modelData)
                             width: {(facade.toPx(sourceSize.width))}
                             height: {facade.toPx(sourceSize.height)}
-                            fillMode: Image.PreserveAspectFit
+                            fillMode:Image.PreserveAspectFit
                         }
                     }
                 }
@@ -616,15 +617,34 @@ Drawer {
                         elide: Text.ElideRight
                     }
                     Text {
+                        id: preview
                         maximumLineCount: 3
-                        wrapMode:Text.WordWrap
-                        color:index==0?"white":loader.menu11Color
-                        text: {
-                            var i = 0
-                            if (typeof loader.chats[index] !== 'undefined'){i=loader.chats[index].message.length}
-                            if (i>=1)loader.chats[index].message[i-1].flag==1? "Вам: ":"Вы: "+loader.chats[index].message[i-1].text;
-                            if (i==0)"Начните вашу новую беседу";
+                        wrapMode: Text.WordWrap;
+                        function previewText() {
+                            var indx = 0, m = ""
+                            if (typeof loader.chats[index] !== ('undefined'))
+                                {indx = (loader.chats[index].message.length)}
+                            if (indx >= 1) {
+                                if (loader.chats[index].message[indx-1].flag)
+                                    m= qsTr("Вам: ")
+                                else m= qsTr("Вы: ")
+                                m += loader.chats[index].message[indx-1].text
+                            } else if (indx === 0) {
+                                m = qsTr("Начните новый диалог");
+                            }
+                            return m;
                         }
+                        Connections {
+                            target: drawer;
+                            onPositionChanged: {
+                                if (position == 1) {
+                                    var a = preview.previewText()
+                                    preview.text = a
+                                }
+                            }
+                        }
+                        text: previewText()
+                        color:index==0?"white":loader.menu11Color
                         width:fo.width-facade.toPx(100)-bug.width
                         font.family:trebu4etMsNorm.name;
                         font.pixelSize: facade.doPx(18);
@@ -734,11 +754,11 @@ Drawer {
         delegate:Rectangle {
             width: parent.width;
             height: facade.toPx(80)
-            color: ListView.isCurrentItem? "#D3D3D3": loader.menu9Color;
+            color: ListView.isCurrentItem? ("#D3D3D3"): "#E5E5E5"
             MouseArea {
                 id: menMouseArea
                 anchors.fill:parent
-                onEntered: if (index > 0) listMenu.currentIndex = index;
+                onEntered: if(index>0)listMenu.currentIndex=index
                 onClicked: {
                     switch(index) {
                     case 2:
@@ -815,6 +835,7 @@ Drawer {
                         font.family: trebu4etMsNorm.name
                         onActiveFocusChanged:find=false;
                         background: Rectangle{opacity:0}
+                        anchors.verticalCenter: parent.verticalCenter
                         onTextChanged: {
                             if (event_handler.currentOSys() !== 1 && event_handler.currentOSys() !== 2){
                             filterList(text.toLowerCase());

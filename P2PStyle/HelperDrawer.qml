@@ -15,7 +15,7 @@ Drawer {
     Connections {
         target: drawed
         onPositionChanged: {
-            if (blankeDrawer.position <= 0.01) {
+            if (blankeDrawer.position <= 0.01){
                 position = 0
             }
         }
@@ -27,10 +27,11 @@ Drawer {
     width: {Math.min(facade.toPx(520), 0.60*parent.width)}
 
     Rectangle {
+        opacity: 0.8
+        width: parent.width
         color: loader.sets3Color
         y: blankeDrawer.getProfHeight()
-        height: blankeDrawer.getHelperHeight()
-        width: parent.width;
+        height: blankeDrawer.getHelperHeight();
 
         ListView {
             clip: true

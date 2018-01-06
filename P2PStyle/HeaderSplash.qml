@@ -36,11 +36,11 @@ Item {
             Row {
                 spacing: facade.toPx(30)
                 anchors {
+                    verticalCenter: parent.verticalCenter;
                     left: (loader.isLogin)? parent.left:undefined
                     leftMargin: loader.isLogin? facade.toPx(40):0
                     centerIn: (loader.isLogin)? undefined: parent
                     horizontalCenter: loader.isLogin? undefined: parent.horizontalCenter
-                    verticalCenter: parent.verticalCenter
                 }
 
                 Item {
@@ -122,57 +122,90 @@ Item {
         DropShadow {
             radius: 10
             samples:20
-            color: "#CC000000"
+            color:"#CC000000"
             source: {hambrgrButton}
             anchors.fill: hambrgrButton
             visible: page==1?true:false
         }
         Button {
-            id: hambrgrButton;
+            id: hambrgrButton
             width: facade.toPx(150)
             height: {parent.height}
-            visible: page!=0 || loader.isLogin?true:false
-            anchors.verticalCenter: parent.verticalCenter
-            background:Image {
+            visible: page!=0 || loader.isLogin? true:false
+            anchors.verticalCenter: parent.verticalCenter;
+            background: Image {
                 id: hambrgrButtonImage;
                 fillMode: Image.PreserveAspectFit;
                 source: "qrc:/ui/buttons/" + (page == 1 || loader.source == "qrc:/chat.qml" || loader.webview ? "back" : "infor") + "Button.png"
                 anchors.centerIn:parent
-                height:facade.toPx(sourceSize.height*1.2)
-                width: facade.toPx(sourceSize.width *1.2)
+                height:facade.toPx(sourceSize.height* 1.2)
+                width: facade.toPx(sourceSize.width * 1.2)
             }
             onClicked: {
                 if (page == 1) {page -= 1}
-                else if(loader.source == "qrc:/chat.qml")
+                else if (loader.source == "qrc:/chat.qml")
                     loader.back()
                 else if (loader.webview) {
                     loader.webview = false
                 } else {
                     blankeDrawer.open()
                 }
-                loader.focus = true
+                loader.focus=true;
+            }
+        }
+
+        Canvas {
+            id: canva
+            height: parent.height;
+            anchors.right: parent.right
+            visible:loader.source=="qrc:/chat.qml"
+            width: hamMoreButton.width + (facade.toPx(90))
+            Connections {
+                target: loader;
+                onIsOnlineChanged: {canva.requestPaint();}
+            }
+            onPaint: {
+                var cntx =getContext("2d")
+                cntx.reset()
+                cntx.fillStyle = loader.head2Color
+                cntx.beginPath()
+                cntx.moveTo(0, height)
+                cntx.lineTo(width, height)
+                cntx.lineTo(width, 0);
+                cntx.lineTo(width- hamMoreButton.width, 0)
+                cntx.closePath()
+                cntx.fill();
+
+                cntx.fillStyle = (loader.isOnline?"white":loader.head1Color)
+                cntx.beginPath()
+                cntx.moveTo(0, height)
+                cntx.lineTo(6, height)
+                cntx.lineTo(width-hamMoreButton.width-0,0)
+                cntx.lineTo(width-hamMoreButton.width-6,0)
+                cntx.closePath()
+                cntx.fill();
             }
         }
 
         Button {
-            id: hamMoreButton;
-            visible: {(loader.source == "qrc:/chat.qml")}
-            width: facade.toPx(90);
+            id: hamMoreButton
+            visible:loader.source=="qrc:/chat.qml"
+            width: facade.toPx(150)
             height: {parent.height}
             x: parent.width-facade.toPx(20)-width;
-            anchors.verticalCenter: parent.verticalCenter
-            background: Image{
+            anchors.verticalCenter: parent.verticalCenter;
+            background: Image {
                 id: hamMoreButtonImage;
                 fillMode: Image.PreserveAspectFit;
                 anchors.centerIn:parent
-                source: "qrc:/ui/buttons/moreButton.png";
-                height:facade.toPx(sourceSize.height*1.2)
-                width: facade.toPx(sourceSize.width *1.2)
+                source: ("qrc:/ui/buttons/moreButton.png")
+                height:facade.toPx(sourceSize.height* 1.2)
+                width: facade.toPx(sourceSize.width * 1.2)
             }
             onClicked: {
                 loader.focus = true
                 chatMenuList.xPosition = rootItem.width-chatMenuList.w-facade.toPx(20)
-                chatMenuList.yPosition = facade.toPx(20)
+                chatMenuList.yPosition = facade.toPx((20))
                 loader.context=true
             }
         }
