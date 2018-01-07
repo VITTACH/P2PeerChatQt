@@ -148,7 +148,7 @@ Rectangle {
             lineColor: Math.random(),
             timeStamp: String(timestamp),
             textColor: (flag === 2)? "#545454": "#FFFFFF",
-            backgroundColor:flag==2? "#F4F4F4": "#CEC8C4",
+            backgroundColor:flag==2? "#F4F4F4": "#B2ADA9",
             image: sp == facade.toPx(0)? "": (flag == 2? "ui/chat/leFtMessage.png": "ui/chat/rightMessag.png")
         });
         if (cflag ==2) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0))
@@ -156,14 +156,11 @@ Rectangle {
 
     function hideKeyboard(event) {
         pressedArea.visible= true;
-        if (event !== 0) {
-            event.accepted = true;
-        }
-        screenTextFieldPost.focus = false;
+        if(event!=0)event.accepted = true
+        screenTextFieldPost.focus = false
         Qt.inputMethod.hide()
-        loader.focus= true
+        loader.focus = (true)
         input=false;
-
     }
 
     TextArea {

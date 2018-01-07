@@ -255,7 +255,7 @@ ApplicationWindow {
         property string menu11Color:"#597FB2";
         property string menu12Color:"#4F7E9E";
         property string menu13Color:"#B1B1B1";
-        property string menu14Color:"#749BAF";
+        property string menu14Color:"#99B285";
         property string menu15Color:"#B7B7B7";
 
         property string head1Color: "#777777";
