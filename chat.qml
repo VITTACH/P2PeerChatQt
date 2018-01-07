@@ -6,10 +6,15 @@ import "P2PStyle" as P2PStyle
 
 Rectangle {
     property bool input;
-    property var select:[]
+    property variant select;
 
     anchors.fill: parent
     color: loader.chat1Color
+
+    Connections {
+        target: blankeDrawer
+        onCindexChanged:loadChatsHistory()
+    }
 
     function relative(str) {
         var s = (+ new Date() - Date.parse(str))/1e3,
@@ -61,21 +66,16 @@ Rectangle {
         loadnrsMenu.visible=false;
     }
 
-    Connections {
-        target: blankeDrawer
-        onCindexChanged:loadChatsHistory()
-    }
-
     function checkMessage(flag) {
         if (screenTextFieldPost.text.length >= 1) {
-            var text= buferText.text = screenTextFieldPost.text
-            var obj = {text:text, flag: flag, time: new Date()}
-            loader.chats[blankeDrawer.cindex].message.push(obj)
-            var c=JSON.stringify(loader.chats)
-            event_handler.saveSet("chats", c);
-            appendMessage(text,flag,obj.time);
-            chatScrenList.positionViewAtEnd();
-            screenTextFieldPost.text=""
+        var text= buferText.text = screenTextFieldPost.text
+        var obj = {text:text, flag: flag, time: new Date()}
+        loader.chats[blankeDrawer.cindex].message.push(obj)
+        var c=JSON.stringify(loader.chats)
+        event_handler.saveSet("chats", c);
+        appendMessage(text,flag,obj.time);
+        chatScrenList.positionViewAtEnd();
+        screenTextFieldPost.text=""
         }
     }
 
@@ -98,29 +98,6 @@ Rectangle {
                     chatScrenList.positionViewAtEnd();
                 }
             }
-        }
-    }
-
-    function hideKeyboard(event) {
-        pressedArea.visible= true;
-        if (event !== 0) {
-            event.accepted = true;
-        }
-        screenTextFieldPost.focus = false;
-        Qt.inputMethod.hide()
-        loader.focus= true
-        input=false;
-
-    }
-
-    TextArea {
-        id: buferText;
-        wrapMode: {TextEdit.Wrap;}
-        width: {0.75*parent.width}
-        visible: false
-        font {
-            pixelSize: {facade.doPx((23))}
-            family: {trebu4etMsNorm.name;}
         }
     }
 
@@ -154,6 +131,8 @@ Rectangle {
         }
     }
 
+    Component.onCompleted: loadChatsHistory();
+
     function parseToJSON(message, phone, ip) {
         var JSONobj
         return JSON.stringify(JSONobj = {message: message, phone:phone,/*ip:ip*/});
@@ -164,18 +143,39 @@ Rectangle {
         flag = Math.abs(cflag = flag)
         chatModel.append({
             falg:flag,
-            mySpacing: sp = (chatModel.count > 0 ? ((chatModel.get(chatModel.count - 1).textColor == "#FFFFFF" && flag == 2) || (chatModel.get(chatModel.count - 1).textColor == "#FEFFFF" && flag == 1)? facade.toPx(30): facade.toPx(0)): facade.toPx(20)),
+            mySpacing: sp = (chatModel.count > 0 ? ((chatModel.get(chatModel.count - 1).textColor == "#FFFFFF" && flag == 2) || (chatModel.get(chatModel.count - 1).textColor == "#545454" && flag == 1)? facade.toPx(30): facade.toPx(0)): facade.toPx(20)),
             someText: newmessage,
             lineColor: Math.random(),
             timeStamp: String(timestamp),
-            textColor: (flag === 2)? "#FEFFFF": "#FFFFFF",
-            backgroundColor:flag==2? "#94C0D3": "#86C2CC",
+            textColor: (flag === 2)? "#545454": "#FFFFFF",
+            backgroundColor:flag==2? "#F4F4F4": "#CEC8C4",
             image: sp == facade.toPx(0)? "": (flag == 2? "ui/chat/leFtMessage.png": "ui/chat/rightMessag.png")
         });
         if (cflag ==2) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0))
     }
 
-    Component.onCompleted: loadChatsHistory();
+    function hideKeyboard(event) {
+        pressedArea.visible= true;
+        if (event !== 0) {
+            event.accepted = true;
+        }
+        screenTextFieldPost.focus = false;
+        Qt.inputMethod.hide()
+        loader.focus= true
+        input=false;
+
+    }
+
+    TextArea {
+        id: buferText;
+        wrapMode: TextEdit.Wrap
+        width: {75/100*parent.width}
+        visible: false
+        font {
+            pixelSize: {facade.doPx(23);}
+            family: {trebu4etMsNorm.name}
+        }
+    }
 
     ListView {
         id: chatScrenList
@@ -193,7 +193,8 @@ Rectangle {
             anchors.fill: {(parent)}
             propagateComposedEvents: true
             onClicked: {
-                hideKeyboard(mouse); mouse.accepted=false;
+                hideKeyboard(mouse);
+                mouse.accepted =(!(true))
             }
             visible: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2;
         }
@@ -201,6 +202,7 @@ Rectangle {
             width: parent.width
             Item {
                 width: parent.width;
+                height:timeText.implicitHeight + mySpacing
                 Rectangle {
                     height: parent.height
                     width: {routeLine.width}
@@ -208,14 +210,14 @@ Rectangle {
                     visible: (index >= 1) == true && (chatModel.get(index).mySpacing == 0)
                     color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.37,0.84)
                 }
-                height:timeText.implicitHeight + mySpacing
                 Text {
-                    id: timeText;
-                    text:relative(timeStamp)
+                    id: timeText
+                    font.pixelSize: {(facade.doPx((16)));}
+                    font.family: {((trebu4etMsNorm.name))}
                     x: {textarea.width+parentText.x-width}
                     anchors.verticalCenter: parent.verticalCenter;
-                    font.pixelSize: facade.doPx(16);
-                    font.family: trebu4etMsNorm.name
+                    text:relative(timeStamp)
+                    color: "gray";
                 }
             }
 
@@ -233,7 +235,7 @@ Rectangle {
                     y: parentText.y + parentText.height - (height)
                     x: {
                         var xpos = -width/2;
-                        if (Math.abs(falg - 2) != 0)
+                        if (Math.abs(falg - 2) !== 0)
                             xpos+= (textarea.width + parentText.x)
                         return xpos
                     }
@@ -268,7 +270,7 @@ Rectangle {
                             radius: (parent.padding);
                             Item {
                                 clip: true;
-                                height: parent.height
+                                height:parent.height;
                                 width:parent.width-2*parent.radius
                                 anchors.horizontalCenter: {
                                     parent.horizontalCenter
@@ -277,7 +279,7 @@ Rectangle {
                                     width: 0
                                     height: 0
                                     id: coloresRect
-                                    color:loader.head2Color
+                                    color:loader.chat3Color
 
                                     transform: Translate {
                                         x: -coloresRect.width /(2)
@@ -310,8 +312,8 @@ Rectangle {
                                             select.splice(p,1)
                                         } else {
                                             chatMenuList.menu = 0;
-                                            parent.color = loader.menu5Color
-                                            baseRect.color=loader.head2Color
+                                            parent.color = loader.chat4Color
+                                            baseRect.color=loader.chat3Color
                                             select.push(index)
                                             return
                                         }
@@ -327,8 +329,8 @@ Rectangle {
                                         select.push(index);
                                     }
                                     chatMenuList.menu =0
-                                    parent.color = loader.menu5Color
-                                    baseRect.color=loader.head2Color
+                                    parent.color = loader.chat4Color
+                                    baseRect.color=loader.chat3Color
                                     coloresRect.x = ((mouseX))
                                     coloresRect.y = ((mouseY))
                                     circleAnimation.start()
@@ -336,13 +338,13 @@ Rectangle {
                             }
                         }
                     }
-                    x: Math.abs(falg - 2) * 2 * baseRect.x;
+                    x: (Math.abs(falg - 2) * (2 * baseRect.x))
 
                     DropShadow {
-                        radius: 10
-                        samples:15
-                        color: "#CC000000"
-                        source:staMessage;
+                        radius: 12
+                        samples: 15
+                        color: "#DD000000"
+                        source: staMessage
                         anchors.fill:staMessage
                     }
                     Item {
@@ -397,6 +399,8 @@ Rectangle {
                     id: screenTextFieldPost;
                     property bool pressCtrl: false;
                     property bool pressEntr: false;
+                    leftPadding:facade.toPx(25)
+                    wrapMode: {(TextEdit.Wrap)}
                     placeholderText: {
                         if (event_handler.currentOSys() <= 0) "CTRL+ENTER ДЛЯ ОТПРАВКИ..."
                         else "СООБЩЕНИЕ...";
@@ -404,13 +408,11 @@ Rectangle {
                     background: Rectangle {color:"#CFFEFEFE"}
                     Keys.onReturnPressed: {pressCtrl = !(false); event.accepted = (false)}
                     Keys.onPressed: if (event.key === Qt.Key_Control) {pressEntr = !false}
+                    rightPadding: messageButton.width + facade.toPx(20)
                     font {
                         pixelSize: facade.doPx(24);
                         family:trebu4etMsNorm.name;
                     }
-                    leftPadding: facade.toPx(25)
-                    rightPadding: messageButton.width + facade.toPx(20)
-                    wrapMode: TextEdit.Wrap;
                     Keys.onReleased: {
                         if (event.key === Qt.Key_Control || event.key === Qt.Key_Return) {
                             if (pressCtrl == true && pressEntr == true) {checkMessage(2);}

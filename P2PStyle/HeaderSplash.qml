@@ -159,7 +159,7 @@ Item {
             height: parent.height;
             anchors.right: parent.right
             visible:loader.source=="qrc:/chat.qml"
-            width: hamMoreButton.width + (facade.toPx(90))
+            width: hamMoreButton.width + (facade.toPx(70))
             Connections {
                 target: loader;
                 onIsOnlineChanged: {canva.requestPaint();}
@@ -176,7 +176,7 @@ Item {
                 cntx.closePath()
                 cntx.fill();
 
-                cntx.fillStyle = (loader.isOnline?"white":loader.head1Color)
+                cntx.fillStyle = (loader.isOnline == true? "white": loader.head1Color)
                 cntx.beginPath()
                 cntx.moveTo(0, height)
                 cntx.lineTo(6, height)
@@ -187,12 +187,19 @@ Item {
             }
         }
 
+        Rectangle {
+            width: parent.width
+            height: facade.toPx(5)
+            color: loader.head2Color
+            anchors.bottom: parent.bottom
+        }
+
         Button {
             id: hamMoreButton
             visible:loader.source=="qrc:/chat.qml"
-            width: facade.toPx(150)
+            width: facade.toPx(140)
             height: {parent.height}
-            x: parent.width-facade.toPx(20)-width;
+            x: parent.width-facade.toPx(10)-width;
             anchors.verticalCenter: parent.verticalCenter;
             background: Image {
                 id: hamMoreButtonImage;
