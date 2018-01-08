@@ -27,7 +27,7 @@ Drawer {
     width: {Math.min(facade.toPx(520), 0.60*parent.width)}
 
     Rectangle {
-        opacity: 0.8
+        opacity: 0.78
         width: parent.width
         color: loader.sets3Color
         y: blankeDrawer.getProfHeight()
@@ -127,8 +127,7 @@ Drawer {
                     color: {
                         if (element.ListView.isCurrentItem&&!circleAnimation.running) {
                             if (index === 0) loader.menu15Color; else loader.sets2Color
-                        } else
-                            if(index==0) loader.menu3Color
+                        } else if (index< 1) loader.menu14Color;
                         else "#EEEDEEF0"
                     }
                 }
