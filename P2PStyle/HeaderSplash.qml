@@ -189,11 +189,10 @@ Item {
 
         Rectangle {
             width: parent.width
-            height: facade.toPx(5)
-            color: loader.head2Color
-            anchors.bottom: parent.bottom
+            height:{facade.toPx(5)}
+            color:loader.head2Color
+            anchors.bottom: parent.bottom;
         }
-
         Button {
             id: hamMoreButton
             visible:loader.source=="qrc:/chat.qml"

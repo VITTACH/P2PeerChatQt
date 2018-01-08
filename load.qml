@@ -5,14 +5,12 @@ import QtQuick.Controls 2.0
 import "P2PStyle" as P2PStyle
 import "js/xHRQuery.js" as XHRQuery;
 import "js/URLQuery.js" as URLQuery;
-import QtQuick.Controls.Material 2.0
 
 ApplicationWindow {
     x: 0
     y: 0
     visible:true
     title: "PeerMe"
-    Material.theme: Material.Light
 
     StatusBar {color: ("#5D5A58")}
 

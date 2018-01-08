@@ -130,7 +130,7 @@ Item {
                 }
                 Button {
                     id: loginButon
-                    text: plaseHolder
+                    text: typeof plaseHolder == "undefined"? "": plaseHolder
                     anchors.fill:parent
 
                     font.pixelSize: facade.doPx(29)
@@ -146,10 +146,10 @@ Item {
                                 informDialog.show("Пароль < 5ти символов",0)
                             }
                             else {
-                            var telephone = loader.fields[0];
-                            var passwords = loader.fields[1];
-                            loadnrsMenu.visible = true;
-                            loader.logon(telephone,passwords)
+                                var telephone = loader.fields[0]
+                                var passwords = loader.fields[1]
+                                loader.logon(telephone, (passwords))
+                                loadnrsMenu.visible = (true);
                             }
                             break;
                         case 4:
@@ -159,13 +159,25 @@ Item {
                     }
 
                     background: Rectangle {
-                        color: parent.down? (index == 3? "#FFC129": "#CD463E"): (index == 3? "#FFCC40": "#F15852")
+                        color: {
+                            if (parent.down) {
+                                (index == 3? "#F7DA71" : "#D86B68");
+                            } else {
+                                (index == 3? "#E2CE7A" : "#CC7D7A");
+                            }
+                        }
                         radius:facade.toPx(40)
                     }
 
                     contentItem: Text {
-                        color: parent.down? (index == 3? "#000000": "#EECFCF"): (index == 3?"#960f133d":"#FFFFFF")
-                        horizontalAlignment: Text.AlignHCenter
+                        color: {
+                            if (parent.down) {
+                                (index == 3? "#000000" : "#EECFCF");
+                            } else {
+                                (index == 3? "#0f133d" : "#FFFFFF");
+                            }
+                        }
+                        horizontalAlignment: {((Text.AlignHCenter))}
                         verticalAlignment: Text.AlignVCenter
                         text: parent.text
                         font: parent.font
@@ -174,82 +186,61 @@ Item {
             }
 
             Item {
-                height: facade.toPx(88)
-                visible:index == 1 || index == 2;
                 Image {
                     id: icon;
                     source: image
-                    width: facade.toPx(sourceSize.width * 1.5);
-                    height:facade.toPx(sourceSize.height* 1.5);
+                    width: {facade.toPx(sourceSize.width * 15 / 10)}
+                    height:{facade.toPx(sourceSize.height* 15 / 10)}
                 }
-                width: {
-                   Math.min(0.82*parent.width,facade.toPx(900))
-                }
-                anchors {
-                    horizontalCenter: (parent.horizontalCenter)
-                }
+
+                height:facade.toPx(88)
+                visible:{(index === 1) || (index === 2)}
+                width: Math.min(0.82*parent.width, facade.toPx(900))
+                anchors.horizontalCenter: (parent.horizontalCenter);
+
                 TextField {
                     color:"white"
                     height: facade.toPx(88)
-                    placeholderText: plaseHolder;
-                    onTextChanged: loader.fields[index-1]=text;
+                    placeholderText: typeof plaseHolder == "undefined"? "": plaseHolder
+                    onTextChanged: {loader.fields[index - 1] = text}
 
-                    onFocusChanged: {
-                        if (text.length==0 && index==1)text="8"
-                    }
-                    echoMode: {
-                        if (index == 2)
-                            TextInput.Password
-                        else TextInput.Normal;
-                    }
-                    inputMethodHints: {
-                        if (index == 1)
-                           Qt.ImhFormattedNumbersOnly
-                        else Qt.ImhNone
-                    }
-                    background:Rectangle {opacity: 0}
-                    anchors {
-                        left: icon.right
-                        leftMargin: (facade.toPx(20))
-                    }
-                    font {
-                        family: (trebu4etMsNorm.name)
-                        pixelSize:facade.doPx(38)
-                    }
+                    onFocusChanged: if (text.length === 0 && index === (1)){text = "8"}
+                    echoMode: if (index == 2) TextInput.Password; else TextInput.Normal
+                    inputMethodHints: index == 1? Qt.ImhFormattedNumbersOnly:Qt.ImhNone
+                    background: Rectangle {opacity: (0)}
+                    font.family: {(trebu4etMsNorm.name)}
+                    font.pixelSize: {(facade.doPx(38));}
+                    anchors.leftMargin: facade.toPx(20);
+                    anchors.left:icon.right
                 }
             }
 
             Button {
-                anchors {
-                    left: parent.left;
-                    leftMargin: 0.09*parent.width
-                    right:parent.right
-                    rightMargin:0.09*parent.width
-                }
-
                 contentItem: Text {
-                    color:parent.down? "lightgray": "white";
-                    horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
+                    color:parent.down == true? "#D3D3D3": "#FFFFFF";
                     text: parent.text;
                     font: parent.font;
-                    padding: - 8;
                 }
 
-                background: Rectangle {opacity:0}
+                anchors.left: {parent.left}
+                anchors.leftMargin: 0.09 * parent.width;
+                anchors.right: parent.right
+                anchors.rightMargin:0.09 * parent.width;
+
+                text: typeof plaseHolder=="undefined"?"":plaseHolder
                 font.pixelSize: {facade.doPx(26)}
                 font.family: trebu4etMsNorm.name;
-                onClicked: partnerHeader.page=1
-
-                visible: index == 5
-                text: plaseHolder
+                background: Rectangle {opacity:0}
+                onClicked: partnerHeader.page =1;
+                visible: (index == 5);
             }
 
             Rectangle {
                 anchors.horizontalCenter: {parent.horizontalCenter;}
-                width: Math.min(0.82*parent.width,facade.toPx(900));
-                visible: index == 1 || index == 2
-                height: 4
+                width: Math.min(0.82*parent.width, facade.toPx(900))
+                visible:index == 1 || index == 2;
+                height: facade.toPx(3)
             }
         }
     }

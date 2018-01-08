@@ -57,29 +57,26 @@ Item {
         }
 
         delegate: Column {
-            width: parent.width
+            width: {parent.width}
             height: index == 7? facade.toPx(150): (image == "-"? 0: facade.toPx(90));
 
             Item {
-                visible: image=="_"
-                height: facade.toPx(100)
+                visible:image == "_"
+                height: facade.toPx(100);
 
                 DropShadow {
                     radius: 12
                     samples: 20
-                    color: "#80000000";
-                    source: reginButon;
-                    anchors.fill: reginButon
+                    color: {"#80000000";}
+                    source: {reginButon;}
+                    anchors.fill: reginButon;
                 }
                 Button {
                     id: reginButon
-                    text: {plaseholder}
+                    text: (plaseholder)
                     anchors.fill: parent;
-
-                    font {
-                        pixelSize: facade.doPx(28)
-                        family:trebu4etMsNorm.name
-                    }
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(28);
 
                     onClicked: {
                         if (index == 6) {
@@ -107,41 +104,43 @@ Item {
 
                     background: Rectangle {
                         radius:facade.toPx(40)
-                        color: parent.down? (index === 6? "#3B569F": "#1494CC"): (index === 6? "#4F6CBD": "#16A8E7")
+                        color: {
+                            if (parent.down) {
+                                (index === 6? "#5D99BA": "#5DBA94")
+                            } else {
+                                (index === 6? "#84A8BC": "#84BCA6")
+                            }
+                        }
                     }
 
                     contentItem: Text {
-                        verticalAlignment: Text.AlignVCenter;
-                        horizontalAlignment: {(Text.AlignHCenter)}
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
                         color: ("#FFFFFF");
                         text: (parent.text)
                         font: (parent.font)
                     }
                 }
-                width:Math.min(0.76*parent.width,facade.toPx(800))
-                anchors.horizontalCenter: parent.horizontalCenter;
+                width: Math.min(0.76*parent.width,facade.toPx(800))
+                anchors.horizontalCenter: {parent.horizontalCenter}
             }
 
             Item {
                 visible:index < 5? 1:0;
                 height: {parent.height}
-                width:Math.min(0.82*parent.width,facade.toPx(900))
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                }
+                width: Math.min(0.82*parent.width,facade.toPx(900))
+                anchors.horizontalCenter: {parent.horizontalCenter}
                 Image {
                     id: icon
-                    width: facade.toPx(sourceSize.width *1.5)
-                    height:facade.toPx(sourceSize.height*1.5)
+                    width: facade.toPx(sourceSize.width * 15 / 10);
+                    height:facade.toPx(sourceSize.height* 15 / 10);
                     source: index < 5? image: "";
                 }
-
                 TextField {
                     id: textRow
                     color: "white"
                     height: parent.height
                     placeholderText: plaseholder;
-
                     anchors {
                         left: icon.right
                         leftMargin: (facade.toPx(20));
@@ -150,23 +149,14 @@ Item {
                         target: partnerHeader
                         onPageChanged: {
                             if (loader.aToken != "") {
-                            textRow.text=loader.fields[index]
+                                textRow.text = loader.fields[index]
                             }
                         }
                     }
-                    inputMethodHints: {
-                    if(index == 4) Qt.ImhFormattedNumbersOnly
-                    else Qt.ImhNone
-                    }
-                    onFocusChanged: {
-                        if(text.length==0 && index==4)
-                            text="8";
-                    }
-                    echoMode: {
-                        if (index == 2) {TextInput.Password;}
-                        else TextInput.Normal
-                    }
-                    onTextChanged: loader.fields[index]=text;
+                    inputMethodHints: index == 4? Qt.ImhFormattedNumbersOnly: Qt.ImhNone
+                    onFocusChanged: if(text.length < 1 && index==4) text = "8"
+                    echoMode: index == 2? TextInput.Password: TextInput.Normal
+                    onTextChanged: loader.fields[index - 0] = text;
                     font.pixelSize: {facade.doPx(28);}
                     font.family: {trebu4etMsNorm.name}
                     background: Rectangle {opacity: 0}
@@ -174,10 +164,10 @@ Item {
             }
 
             Rectangle {
-                anchors.horizontalCenter: parent.horizontalCenter;
-                width:Math.min(0.82*parent.width,facade.toPx(900))
-                visible:{index<5?true:false;}
-                height: 3
+                anchors.horizontalCenter: {parent.horizontalCenter}
+                width: Math.min(0.82*parent.width,facade.toPx(900))
+                height:facade.toPx(3);
+                visible: {index < (5)}
             }
         }
     }
