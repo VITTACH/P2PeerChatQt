@@ -175,17 +175,18 @@ Rectangle {
     }
 
     ListView {
-        id: chatScrenList
-        width: parent.width
         anchors {
             top: parent.top
             bottom:flickTextArea.top
             bottomMargin: facade.toPx(40)
             topMargin:partnerHeader.height+facade.toPx(10)
         }
+        width: parent.width
         displayMarginEnd: (height/2)
         displayMarginBeginning: height/2;
         model: ListModel {id: chatModel;}
+
+        id:chatScrenList
         MouseArea {
             anchors.fill: {(parent)}
             propagateComposedEvents: true
@@ -195,181 +196,190 @@ Rectangle {
             }
             visible: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2;
         }
-        delegate: Column {
-            width: parent.width
-            Item {
-                width: parent.width;
-                height:timeText.implicitHeight + mySpacing
-                Rectangle {
-                    height: parent.height
-                    width: {routeLine.width}
-                    x:routeLine.x+baseRect.x
-                    visible: (index >= 1) == true && (chatModel.get(index).mySpacing == 0)
-                    color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.37,0.84)
-                }
-                Text {
-                    id: timeText
-                    font.pixelSize: {(facade.doPx((16)));}
-                    font.family: {((trebu4etMsNorm.name))}
-                    x: {textarea.width+parentText.x-width}
-                    anchors.verticalCenter: parent.verticalCenter;
-                    text:relative(timeStamp)
-                    color: "gray";
-                }
-            }
 
-            Rectangle {
-                id: baseRect
-                width:parent.width
-                color: ("transparent")
-                radius:facade.toPx(20)
-                height: {parentText.height;}
-                Image {
-                    source:{image}
-                    smooth: false;
-                    width: {facade.toPx(sourceSize.width * (1.0))}
-                    height:{facade.toPx(sourceSize.width * (1.0))}
-                    y: parentText.y + parentText.height - (height)
-                    x: {
-                        var xpos = -width/2;
-                        if (Math.abs(falg - 2) !== 0)
-                            xpos+= (textarea.width + parentText.x)
-                        return xpos
+        delegate: Rectangle {
+            color: "transparent"
+            width: parent.width
+            height: {basedColumn.implicitHeight}
+
+            id: baseRect
+            Column {
+                id: basedColumn
+                width: parent.width;
+                Item {
+                    width: (parent.width)
+                    height: {timeText.height + mySpacing}
+                    Rectangle {
+                        height: {parent.height;}
+                        width: {routeLine.width}
+                        x:routeLine.x+baseItem.x
+                        visible: (index >= 1) == true && (chatModel.get(index).mySpacing == 0)
+                        color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.37,0.84)
+                    }
+                    Text {
+                        id: timeText
+                        text:relative(timeStamp)
+                        font.pixelSize: {facade.doPx(16)}
+                        font.family: trebu4etMsNorm.name;
+                        anchors {
+                            bottom:parent.bottom
+                            bottomMargin: facade.toPx(2);
+                        }
+                        x: textarea.width-width;
+                        color:"gray"
                     }
                 }
 
-                Rectangle {
-                    id: routeLine;
-                    color: Qt.hsva(lineColor, 0.37,0.84)
-                    x: (Math.abs(falg-2)==0? staMessage.x:0) -width/2 + staMessage.width/2
-                    visible: index<chatModel.count-1&&chatModel.get(index+1).mySpacing==0;
-                    width: {facade.toPx(4);}
-                    height: {parent.height;}
-                }
-                x: facade.toPx(40);
                 Item {
-                    id: parentText;
-                    height: textarea.height;
-                    property var spacing:facade.toPx(40)
-                    TextArea {
-                        id:textarea
-                        padding: baseRect.radius
-                        wrapMode: TextEdit.Wrap;
-                        width: baseRect.width-2*baseRect.x-staMessage.width-parent.spacing
-                        font.family: trebu4etMsNorm.name
-                        font.pixelSize: facade.doPx(23);
-                        text: someText;
+                    id: baseItem
+                    width: parent.width;
+                    height: {parentText.height;}
+                    Image {
+                        source: {image;}
+                        smooth: {false;}
+                        width: {facade.toPx(sourceSize.width * (1.0))}
+                        height:{facade.toPx(sourceSize.width * (1.0))}
+                        y: parentText.y + parentText.height - (height)
+                        x: {
+                            var xpos = -width/2;
+                            if (Math.abs(falg - 2) !== 0)
+                                xpos+= (textarea.width + parentText.x)
+                            return xpos;
+                        }
+                    }
 
-                        color:textColor
-                        readOnly: true;
-                        background: Rectangle {
-                            color: backgroundColor
-                            radius: (parent.padding);
-                            Item {
-                                clip: true;
-                                height:parent.height;
-                                width:parent.width-2*parent.radius
-                                anchors.horizontalCenter: {
-                                    parent.horizontalCenter
-                                }
-                                Rectangle {
-                                    width: 0
-                                    height: 0
-                                    id: coloresRect
-                                    color:loader.chat3Color
+                    Rectangle {
+                        id: routeLine
+                        color: Qt.hsva(lineColor, 0.37,0.84)
+                        x: (Math.abs(falg-2)==0? staMessage.x:0) -width/2 + staMessage.width/2
+                        visible: index<chatModel.count-1&&chatModel.get(index+1).mySpacing==0;
+                        width: {facade.toPx(4);}
+                        height: {parent.height;}
+                    }
+                    x:facade.toPx(40)
+                    Item {
+                        id:parentText
+                        height: textarea.height;
+                        property var spacing:facade.toPx(40)
+                        TextArea {
+                            id:textarea
+                            padding: facade.toPx(14)
+                            wrapMode: TextEdit.Wrap;
+                            width: baseItem.width-2*baseItem.x-staMessage.width-parent.spacing
+                            font.family: trebu4etMsNorm.name
+                            font.pixelSize: facade.doPx(23);
+                            text: someText;
 
-                                    transform: Translate {
-                                        x: -coloresRect.width /(2)
-                                        y: -coloresRect.height/(2)
+                            color:textColor
+                            readOnly: true;
+                            background: Rectangle {
+                                color: {backgroundColor}
+                                radius: {parent.padding}
+                                Item {
+                                    clip: true;
+                                    height:parent.height
+                                    width:parent.width-2*parent.radius
+                                    anchors.horizontalCenter: {
+                                        parent.horizontalCenter
                                     }
-                                }
-                            }
+                                    Rectangle {
+                                        width: 0
+                                        height: 0
+                                        id: coloresRect;
+                                        color:loader.chat3Color
 
-                            PropertyAnimation {
-                                duration: 500
-                                id:circleAnimation
-                                target: {coloresRect}
-                                properties:("width,height,radius")
-                                from: 0
-                                to: parent.width * 3;
-
-                                onStopped: {
-                                    coloresRect.width  = 0;
-                                    coloresRect.height = 0;
-                                }
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent;
-                                onClicked: {
-                                    var p= 0
-                                    if(select.length > 0) {
-                                        p = select.indexOf(index);
-                                        if (p >= 0) {
-                                            select.splice(p,1)
-                                        } else {
-                                            chatMenuList.menu = 0;
-                                            parent.color = loader.chat4Color
-                                            baseRect.color=loader.chat3Color
-                                            select.push(index)
-                                            return
+                                        transform: Translate {
+                                            x: -coloresRect.width /(2)
+                                            y: -coloresRect.height/(2)
                                         }
                                     }
-                                    baseRect.color = "transparent"
-                                    parent.color = backgroundColor
-                                    if (select.length === 0) {
-                                        chatMenuList.menu = 1
+                                }
+
+                                PropertyAnimation {
+                                    duration: 500
+                                    id: circleAnimation;
+                                    target: coloresRect;
+                                    properties:("width,height,radius")
+                                    from: 0
+                                    to: (parent.width*3)
+
+                                    onStopped: {
+                                        coloresRect.width  = 0;
+                                        coloresRect.height = 0;
                                     }
                                 }
-                                onPressAndHold: {
-                                    if (select.indexOf(index) < 0) {
-                                        select.push(index);
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        var p= 0
+                                        if(select.length > 0) {
+                                            p = select.indexOf(index);
+                                            if(p >= 0) {
+                                                select.splice(p,1)
+                                            } else {
+                                                chatMenuList.menu = 0;
+                                                parent.color = loader.chat4Color
+                                                baseRect.color="white"
+                                                select.push(index)
+                                                return
+                                            }
+                                        }
+                                        baseRect.color = "transparent"
+                                        parent.color = backgroundColor
+                                        if (select.length === 0) {
+                                            chatMenuList.menu = 1
+                                        }
                                     }
-                                    chatMenuList.menu =0
-                                    parent.color = loader.chat4Color
-                                    baseRect.color=loader.chat3Color
-                                    coloresRect.x = ((mouseX))
-                                    coloresRect.y = ((mouseY))
-                                    circleAnimation.start()
+                                    onPressAndHold: {
+                                        if (select.indexOf(index)<0) {
+                                            select.push(index);
+                                        }
+                                        chatMenuList.menu =0
+                                        parent.color=loader.chat4Color
+                                        baseRect.color = "#FFFFFF"
+                                        coloresRect.x = ((mouseX))
+                                        coloresRect.y = ((mouseY))
+                                        circleAnimation.start()
+                                    }
                                 }
                             }
                         }
-                    }
-                    x: (Math.abs(falg - 2) * (2 * baseRect.x))
+                        x: (Math.abs(falg - 2) * (2 * baseItem.x))
 
-                    DropShadow {
-                        radius: 12
-                        samples: 15
-                        color: "#DD000000"
-                        source: staMessage
-                        anchors.fill:staMessage
-                    }
-                    Item {
-                        id: staMessage
-                        width: facade.toPx(36);
-                        height: facade.toPx(36)
-                        x: Math.abs(falg-2)==0? textarea.width + parent.spacing: -parent.x
-                        Rectangle {
-                            anchors.horizontalCenter: {
-                                parent.horizontalCenter
-                            }
-                            width: {
-                                if (index < chatModel.count-1) {
-                                    parent.width-facade.toPx(9);
-                                } else {(parent.width)}
-                            }
-                            height: width*1
-                            color: Qt.hsva(lineColor,0.41,0.84);
-                            radius: width/2
-
+                        DropShadow {
+                            radius: 10
+                            samples: 15
+                            color: "#DD000000"
+                            source: staMessage
+                            anchors.fill:staMessage
+                        }
+                        Item {
+                            id: staMessage
+                            width: facade.toPx(31);
+                            height:facade.toPx(31);
+                            x: Math.abs(falg-2)==0? textarea.width + parent.spacing: -parent.x
                             Rectangle {
+                                anchors.horizontalCenter: {
+                                    parent.horizontalCenter
+                                }
+                                width: {
+                                    if (index < chatModel.count - 1) {
+                                        parent.width - facade.toPx(9);
+                                    } else {(parent.width)}
+                                }
                                 height: width
                                 radius: width/2
-                                width: parent.width/2.2
-                                anchors.centerIn: {parent;}
-                                border.color: loader.chat2Color;
-                                border.width: 3
-                                visible:index==chatModel.count-1
+                                color: Qt.hsva(lineColor, 0.41, 0.84);
+                                Rectangle {
+                                    height: width
+                                    radius: width/2
+                                    width: parent.width/2.2
+                                    anchors.centerIn: {parent;}
+                                    border.color: {loader.chat2Color;}
+                                    border.width: 3
+                                    visible:index == chatModel.count-1
+                                }
                             }
                         }
                     }

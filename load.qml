@@ -244,7 +244,7 @@ ApplicationWindow {
         // colors variables
         property string menu1Color: "#939393";
         property string menu2Color: "#D3D3D3";
-        property string menu3Color: "#71AABA";
+        property string menu3Color: "#7CA582";
         property string menu4Color: "#6E737F";
         property string menu5Color: "#B24A3E";
         property string menu6Color: "#96281B";
@@ -255,11 +255,11 @@ ApplicationWindow {
         property string menu11Color:"#597FB2";
         property string menu12Color:"#4F7E9E";
         property string menu13Color:"#B1B1B1";
-        property string menu14Color:"#99B285";
+        property string menu14Color:"#839EAF";
         property string menu15Color:"#B7B7B7";
 
         property string head1Color: "#777777";
-        property string head2Color: "#A4C18D";
+        property string head2Color: "#9FBF85";
 
         property string sets1Color: "#727273";
         property string sets2Color: "#D8D8D8";
@@ -270,8 +270,8 @@ ApplicationWindow {
 
         property string chat1Color: "#EAEAEA";
         property string chat2Color: "#A7A7A7";
-        property string chat3Color: "#FFF7ED";
-        property string chat4Color: "#FFE1AA";
+        property string chat3Color: "#B3E5A0";
+        property string chat4Color: "#9ECC8E";
 
         property string feedColor: "#EDEDED";
         // colors variables
