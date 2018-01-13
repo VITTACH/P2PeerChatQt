@@ -38,8 +38,6 @@ Drawer {
             id: listMenu
             anchors.fill: parent
             spacing: -1;
-            anchors.topMargin: Math.max(displayMarginBeginning, 0);
-            displayMarginBeginning: (parent.height-contentHeight)/2
             delegate: Item {
                 id: element;
                 width: parent.width

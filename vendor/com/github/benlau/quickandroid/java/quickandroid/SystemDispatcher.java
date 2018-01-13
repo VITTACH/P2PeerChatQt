@@ -123,7 +123,6 @@ public class SystemDispatcher {
                     Boolean boleanValue=(Boolean)value;
                     Log.d(TAG,String.format("%s : %b",key,boleanValue));
                 } else {
-                    Log.d(TAG,String.format("%s : No-supported type[%s]",key,value.getClass().getName()));
                 }
             }
         }catch(Exception e){Log.d(TAG,e.getMessage());}

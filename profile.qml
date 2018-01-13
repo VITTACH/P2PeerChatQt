@@ -5,6 +5,7 @@ Item {
     Connections {
         target: loader
         onIsOnlineChanged: changeState()
+        onWebviewChanged: if (loader.webview==false)changeState()
         onAvatarPathChanged: partnerHeader.phot=loader.avatarPath
     }
 

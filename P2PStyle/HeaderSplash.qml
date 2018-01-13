@@ -90,12 +90,12 @@ Item {
                 }
 
                 Column {
-                    visible: loader.source != "qrc:/profile.qml";
                     Text {
                         color: "white"
-                        elide: {Text.ElideLeft}
+                        elide: {loader.webview == true? Text.ElideRight: Text.ElideLeft}
                         width: {
-                        Math.min(inerItem.width-bug.width-facade.toPx(90),implicitWidth)
+                            var myPofileName = inerItem.width -bug.width-facade.toPx(90)
+                            Math.min(myPofileName, implicitWidth)
                         }
                         text:  {rootItem.text.replace("\n" , "")}
 
@@ -104,13 +104,16 @@ Item {
                     }
                     Text {
                         text: str
-                        visible: loader.isLogin
-                        color: str == "Online"? "white":"darkgrey"
-                        property string str: rootItem.stat.replace("\n" , "")
 
                         font.bold: true
                         font.pixelSize: facade.doPx(20)
                         font.family:trebu4etMsNorm.name
+
+                        visible: loader.isLogin && !loader.webview
+                        color: str == "Online"? "white":"darkgrey"
+                        property string str: {
+                            return rootItem.stat.replace("\n", "")
+                        }
                     }
                 }
             }
@@ -131,6 +134,17 @@ Item {
             id: hambrgrButton
             width: facade.toPx(150)
             height: {parent.height}
+            onClicked: {
+                if (page == 1) {page -= 1}
+                else if (loader.source == "qrc:/chat.qml")
+                    loader.back();
+                else if (loader.webview) {
+                    loader.webview = false
+                } else {
+                    blankeDrawer.open()
+                }
+                loader.focus=true;
+            }
             visible: page!=0 || loader.isLogin? true:false
             anchors.verticalCenter: parent.verticalCenter;
             background: Image {
@@ -140,17 +154,6 @@ Item {
                 anchors.centerIn:parent
                 height:facade.toPx(sourceSize.height* 1.2)
                 width: facade.toPx(sourceSize.width * 1.2)
-            }
-            onClicked: {
-                if (page == 1) {page -= 1}
-                else if (loader.source == "qrc:/chat.qml")
-                    loader.back()
-                else if (loader.webview) {
-                    loader.webview = false
-                } else {
-                    blankeDrawer.open()
-                }
-                loader.focus=true;
             }
         }
 

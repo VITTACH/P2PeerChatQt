@@ -40,12 +40,12 @@ Drawer {
         onIsOnlineChanged: if(loader.isOnline) getFriends()
     }
 
+    dragMargin:facade.toPx(40)
     property bool find: (true)
     property alias cindex: listView.currentIndex;
     background: Rectangle {color: "transparent";}
-    height: {parent.height;}
     width: {Math.min(facade.toPx(780), 0.9 * parent.width)}
-
+    height: parent.height;
     function getHelperHeight() {return (leftSlider.height)}
     function getProfHeight() {
         return (profile.height) + (profile.y - 1)

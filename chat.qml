@@ -7,12 +7,12 @@ import "P2PStyle" as P2PStyle
 Rectangle {
     property bool input;
     property var select;
-    anchors.fill: parent
-    color: loader.chat1Color
+    anchors.fill:parent;
 
+    color: loader.chat1Color
     Connections {
         target: blankeDrawer
-        onCindexChanged:loadChatsHistory()
+        onCindexChanged: loadChatsHistory()
     }
 
     function relative(str) {
@@ -189,7 +189,7 @@ Rectangle {
             propagateComposedEvents: true
             onClicked: {
                 hideKeyboard(mouse);
-                mouse.accepted =(!(true))
+                mouse.accepted = !(true);
             }
             visible: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2;
         }
@@ -387,11 +387,11 @@ Rectangle {
     }
 
     Column {
-        clip:true
+        clip: true
         id: flickTextArea
         width: parent.width
         anchors {
-            bottom: {parent.bottom}
+            bottom: parent.bottom
             bottomMargin:input?parent.height*0.43:0
         }
         Item {
@@ -428,14 +428,16 @@ Rectangle {
                     }
                     MouseArea {
                         id: pressedArea
-                        width: screenTextFieldPost.width -screenTextFieldPost.rightPadding
+                        width: {
+                            parent.width-messageButton.width;
+                        }
                         height: parent.height
                         visible:event_handler.currentOSys()>0
                         onClicked: {
-                            input = !(false);
-                            visible = (false)
                             chatScrenList.positionViewAtEnd()
                             screenTextFieldPost.focus = true;
+                            visible = (false)
+                            input =true
                         }
                     }
                 }
@@ -456,54 +458,25 @@ Rectangle {
                 id: messageButton
                 anchors {
                     right: parent.right
-                    rightMargin: facade.toPx(20)
                     verticalCenter: {
                         screenTextFieldPost.lineCount==1? parent.verticalCenter: undefined
                     }
+                }
+                background: Image {
+                    anchors.verticalCenter: {
+                        parent.verticalCenter
+                    }
+                    width: facade.toPx(sourceSize.width);
+                    height:facade.toPx(sourceSize.height)
+                    source: {"ui/buttons/sendButton.png"}
                 }
                 onClicked: {
                     if (event_handler.currentOSys() >= 1)
                         hideKeyboard(0)
                     checkMessage(2)
                 }
-                background: Image {
-                    source: ("ui/buttons/sendButton.png")
-                    height:facade.toPx(sourceSize.height)
-                    width: facade.toPx(sourceSize.width);
-                }
-                width: {background.width}
-                height:background.height;
-            }
-        }
-
-        Rectangle {
-            width: parent.width
-            height: facade.toPx(80)
-            color: loader.feedColor
-            ListView {
-                spacing: facade.toPx(20);
-                orientation:Qt.Horizontal
-                anchors.verticalCenter: parent.verticalCenter
-                x:facade.toPx(30)
-                model:ListModel {
-                    id:stickModel
-                    ListElement {
-                        image: "http://lorempixel.com/63/64";
-                    }
-                    ListElement {
-                        image: "http://lorempixel.com/64/64";
-                    }
-                    ListElement {
-                        image: "http://lorempixel.com/65/64";
-                    }
-                }
-                width: parent.width - x
-                height: parent.height - spacing
-                delegate: Image {
-                    source: image
-                    height:facade.toPx(sourceSize.height)
-                    width: facade.toPx(sourceSize.width);
-                }
+                width: background.width + facade.toPx(20)
+                height:{parent.height;}
             }
         }
     }
