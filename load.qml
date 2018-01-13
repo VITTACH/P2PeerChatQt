@@ -313,7 +313,7 @@ ApplicationWindow {
         id: trebu4etMsNorm
     }
 
-    P2PStyle.AvatarDialog {id: avatarDialog}
+    P2PStyle.ImagesDialog {id: avatarDialog}
 
     P2PStyle.InformDialog {id: informDialog}
 
