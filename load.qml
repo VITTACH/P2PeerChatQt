@@ -23,16 +23,14 @@ ApplicationWindow {
     Timer {
         id: connect
         interval:4000
-        onTriggered: loader.logon(loader.tmpPhone, loader.tmpLogin)
+        onTriggered:loader.logon(loader.tmpPhone,loader.tmpLogin)
     }
 
     onClosing: {
-        if (event_handler.currentOSys() > 0) {
-            close.accepted = false
-        } else close.accepted=true
+        if (event_handler.currentOSys()>0) close.accepted =false; else close.accepted=true
     }
 
-    width: {event_handler.currentOSys() < 1? facade.toPx(900): (0)}
+    width: {event_handler.currentOSys() < 1? facade.toPx(900): 0}
     height:event_handler.currentOSys()<1?Screen.height-facade.toPx(100):0
 
     QtObject {
@@ -167,7 +165,6 @@ ApplicationWindow {
             blankeDrawer.open()
             request.onreadystatechange = function() {
                 if (request.readyState == XMLHttpRequest.DONE) {
-                    loadnrsMenu.visible = false;
                     if (request.status && request.status==200) {
                         if (request.responseText == "") response = -1;
                         else if (request.responseText != "no") {
@@ -259,9 +256,9 @@ ApplicationWindow {
         property string head1Color: "#777777";
         property string head2Color: "#9FBF85";
 
-        property string sets1Color: "#727273";
+        property string sets1Color: "#4B4E55";
         property string sets2Color: "#D8D8D8";
-        property string sets3Color: "#DEDEE0";
+        property string sets3Color: "#EDEEF0";
 
         property string feed1Color: "#7F7875";
         property string feed2Color: "#8E8784";
@@ -269,7 +266,7 @@ ApplicationWindow {
         property string chat1Color: "#EAEAEA";
         property string chat2Color: "#A7A7A7";
         property string chat3Color: "#B3E5A0";
-        property string chat4Color: "#9ECC8E";
+        property string chat4Color: "#A5D394";
 
         property string feedColor: "#EDEDED";
         // colors variables
@@ -322,7 +319,5 @@ ApplicationWindow {
 
     P2PStyle.BlankeDrawer {id: blankeDrawer}
 
-    P2PStyle.ChatMenuList {id: chatMenuList}
-
-    P2PStyle.LoadnrsMenu {id: loadnrsMenu}
+    P2PStyle.ChatMenuList {id:chatMenuList}
 }

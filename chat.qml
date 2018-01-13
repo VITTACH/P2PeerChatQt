@@ -6,8 +6,7 @@ import "P2PStyle" as P2PStyle
 
 Rectangle {
     property bool input;
-    property variant select;
-
+    property var select;
     anchors.fill: parent
     color: loader.chat1Color
 
@@ -42,11 +41,10 @@ Rectangle {
         select = [];
         chatModel.clear()
         var firstLaunch = true;
-        loadnrsMenu.visible= true
-        var i =blankeDrawer.cindex
+        var i = blankeDrawer.cindex
         for (var j = 0; j<loader.chats.length; j++) {
             if (loader.chats[j].message.length > 0) {
-                firstLaunch=false;
+                firstLaunch = false
                 break;
             }
         }
@@ -63,7 +61,6 @@ Rectangle {
             appendMessage(objct.text,-objct.flag,objct.time)
         }
         chatScrenList.positionViewAtEnd();
-        loadnrsMenu.visible=false;
     }
 
     function checkMessage(flag) {
@@ -148,7 +145,7 @@ Rectangle {
             lineColor: Math.random(),
             timeStamp: String(timestamp),
             textColor: (flag === 2)? "#545454": "#FFFFFF",
-            backgroundColor:flag==2? "#F4F4F4": "#B2ADA9",
+            backgroundColor:flag==2? "#F4F4F4": "#D1D1D1",
             image: sp == facade.toPx(0)? "": (flag == 2? "ui/chat/leFtMessage.png": "ui/chat/rightMessag.png")
         });
         if (cflag ==2) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0))
@@ -410,7 +407,7 @@ Rectangle {
                     wrapMode: {(TextEdit.Wrap)}
                     placeholderText: {
                         if (event_handler.currentOSys() <= 0) "CTRL+ENTER ДЛЯ ОТПРАВКИ..."
-                        else "СООБЩЕНИЕ...";
+                        else {qsTr("СООБЩЕНИЕ...")}
                     }
                     background: Rectangle {color:"#CFFEFEFE"}
                     Keys.onReturnPressed: {pressCtrl = !(false); event.accepted = (false)}

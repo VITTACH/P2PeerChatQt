@@ -63,7 +63,6 @@
         <file>P2PStyle/HelperDrawer.qml</file>
         <file>P2PStyle/InformDialog.qml</file>
         <file>P2PStyle/AvatarDialog.qml</file>
-        <file>P2PStyle/LoadnrsMenu.qml</file>
         <file>P2PStyle/ColorAnimate.qml</file>
         <file>P2PStyle/BlankeDrawer.qml</file>
         <file>P2PStyle/ChatMenuList.qml</file>

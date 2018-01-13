@@ -6,10 +6,10 @@ import QtQuick.XmlListModel 2.0
 Rectangle {
     id: rootPage;
     color: loader.feedColor
-    property bool find:true
 
-    property var nWidth;
+    property var nWidth
     property int curInd: 0;
+    property bool find: true;
     property int oldContentY: 0
     property int newsCardHgt: 0
 
@@ -109,26 +109,22 @@ Rectangle {
             function restoreFromPref() {
                 if (xmlmodel.count > 0) {
                     var RssCache = [];
-                    for (var i = 0; i < xmlmodel.count; i++) {
+                    for (var i = 0; i < xmlmodel.count; i+= 1) {
                         var obj = {enable: true, link: xmlmodel.get(i).link, title: xmlmodel.get(i).title, image: xmlmodel.get(i).image, pDate: xmlmodel.get(i).pDate, pDesc: xmlmodel.get(i).pDesc}
                         RssCache.push(obj)
                         for (var j = 0; j < rssView.model.count; j++) {
-                            if (rssView.model.get(j).title == obj.title) {
-                                break;
-                            }
+                            if (rssView.model.get(j).title == obj.title) break
                         }
-                        if(j == rssView.model.count){
-                            rssView.model.append(obj)
-                        }
+                        if (j == rssView.model.count)rssView.model.append(obj)
                     }
-                    event_handler.saveSet("rss", JSON.stringify(RssCache))
+                    event_handler.saveSet(("rss"), JSON.stringify((RssCache)))
                 } else {
                     var rssNews = event_handler.loadValue("rss");
                     if (rssNews !== "") {
                         var rssOld = JSON.parse(rssNews);
                         for (var i = 0; i <rssOld.length; i+=1) {
-                            var myNews = {enable:true,link: rssOld[i].link, title:rssOld[i].title,
-                                image:rssOld[i].image,pDate:rssOld[i].pDate,pDesc:rssOld[i].pDesc}
+                            var myNews = {enable:true, link: rssOld[i].link, title:rssOld[i].title,
+                                image:rssOld[i].image, pDate:rssOld[i].pDate,pDesc:rssOld[i].pDesc}
                             rssView.model.append(myNews);
                         }
                     }
@@ -196,7 +192,7 @@ Rectangle {
                 height: {
                     var cunter = 0;
                     for (var i = 0; i < listView.count; i ++) {
-                        if (humanModel.get(i).activity == 1 && visible) {
+                        if (humanModel.get(i).activity==1 && visible ==true) {
                             cunter++;
                         }
                     }
@@ -211,34 +207,20 @@ Rectangle {
                     id: listView
                     spacing: 1
                     anchors.fill:parent
-                    snapMode: {ListView.SnapToItem;}
-                    boundsBehavior: {(Flickable.StopAtBounds);}
+                    snapMode: ListView.SnapToItem;
+                    boundsBehavior: Flickable.StopAtBounds;
 
                     property var friend
 
-                    model:ListModel{id: humanModel;}
+                    model:ListModel{id:humanModel}
                     delegate: Item {
                         id: baseItem
                         visible: activity
                         width: parent.width
-                        height: activity == 1? facade.toPx(20) + Math.max(bug.height, fo.height): 0
-
-                        Rectangle {
-                            color: loader.menu5Color
-                            anchors.right: parent.right;
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: 0.5*parent.width;
-                            height: parent.height-4;
-                            Image {
-                                anchors.top: parent.top;
-                                anchors.right: parent.right
-                                anchors.bottom: parent.bottom
-                                anchors.rightMargin: facade.toPx(30)
-                                fillMode: {Image.PreserveAspectFit;}
-                                width: facade.toPx(sourceSize.width)
-                                height: {facade.toPx(sourceSize.height);}
-                                source:"qrc:/ui/buttons/dialerButton.png"
-                            }
+                        height: {
+                            if (activity) {
+                                facade.toPx(20)+Math.max(bug.height,fo.height)
+                            } else 0
                         }
 
                         Rectangle {
@@ -292,8 +274,7 @@ Rectangle {
                                 onReleased: {
                                     presed = false
                                     if (parent.x <= drag.minimumX) {
-                                        if (event_handler.currentOSys() != 1){
-                                            Qt.openUrlExternally("tel:"+phone)
+                                        if (event_handler.currentOSys()!= 1) {
                                         } else {
                                             caller.directCall(phone)
                                         }
@@ -311,8 +292,7 @@ Rectangle {
                                 onChooseChanged: {
                                     if (listView.memIndex !== index) {
                                         var objct = JSON.parse((loader.frienList))
-                                        if (informDialog.choose == false
-                                                && listView.friend != null) {
+                                        if (informDialog.choose== false && listView.friend!=null) {
                                             if (objct === null) {objct = [];}
                                             var objs = objct.push(listView.friend)
                                             loader.frienList=JSON.stringify(objct)
@@ -330,21 +310,6 @@ Rectangle {
                                 color:"#90000000"
                                 anchors.fill:bug;
                             }
-                            /*
-                            OpacityMask {
-                                id: beg
-                                source: bug
-                                maskSource: mask;
-                                anchors.fill:bug;
-                            }
-                            Image {
-                                id: mask
-                                smooth: true;
-                                visible:false
-                                source:"qrc:/ui/mask/round.png"
-                                sourceSize: {Qt.size(bug.width , bug.height);}
-                            }*/
-
                             Rectangle {
                                 id: bug
                                 clip: true
@@ -418,10 +383,10 @@ Rectangle {
                 id: xmlmodel
                 query: {"/rss/channel/item"}
                 XmlRole {name: "link"; query : "link/string()";}
-                XmlRole {name: "title"; query: "title/string()";}
-                XmlRole {name: "pDate"; query: "pubDate/string()"}
-                XmlRole {name: "pDesc"; query: "description/string()"}
-                XmlRole {name: "image"; query: "media:content/@url/string()";}
+                XmlRole {name: "title";query: "title/string()";}
+                XmlRole {name: "pDate";query:"pubDate/string()"}
+                XmlRole {name: "pDesc";query: "description/string()"}
+                XmlRole {name: "image";query : "media:content/@url/string()";}
                 source:"http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
                 namespaceDeclarations: "declare namespace media=\"http://search.yahoo.com/mrss/\";"
                 onStatusChanged: {
@@ -485,7 +450,7 @@ Rectangle {
                                 color:"transparent"
                                 anchors {
                                     fill: {parent;}
-                                    rightMargin: {(parent.radius)}
+                                    rightMargin: parent.radius
                                 }
                                 Rectangle {
                                     width: 0
@@ -494,8 +459,8 @@ Rectangle {
                                     color:"#EDEDED"
 
                                     transform:Translate {
-                                        x: -coloresRect2.width /2;
-                                        y: -coloresRect2.height/2;
+                                        x:-coloresRect2.width /2
+                                        y:-coloresRect2.height/2
                                     }
                                 }
                             }
@@ -503,7 +468,7 @@ Rectangle {
                                 duration: 500
                                 target:coloresRect2
                                 id:circleAnimation2
-                                properties: "width,height,radius";
+                                properties:"width,height,radius"
                                 from: 0
                                 to: parent.width/2;
 
@@ -517,11 +482,13 @@ Rectangle {
                         MouseArea {
                             anchors.fill:parent
                             onClicked: {
-                                if (event_handler.currentOSys() >= 1) {
-                                    loader.urlLink = link
+                                loader.urlLink = link
+                                if (event_handler.currentOSys() > (0)) {
+                                    var t = title;
                                     loader.webview = true
+                                    partnerHeader.text=t;
                                 } else {
-                                    Qt.openUrlExternally(link);
+                                    Qt.openUrlExternally(loader.urlLink)
                                 }
                             }
                             onEntered: {
@@ -564,7 +531,7 @@ Rectangle {
                             id: misk
                             smooth: true;
                             visible:false
-                            source: {"ui/mask/round.png"}
+                            source: {"ui/mask/round.png";}
                             sourceSize: {Qt.size(bag.width, bag.height)}
                         }
 
@@ -572,30 +539,30 @@ Rectangle {
                             anchors {
                                 left: bag.right
                                 right: parent.right
-                                leftMargin: facade.toPx(20)
+                                leftMargin:facade.toPx(20)
                                 verticalCenter: {parent.verticalCenter;}
                             }
                             Text {
                                 text: title
-                                elide: {Text.ElideRight;}
+                                elide: {(Text.ElideRight)}
                                 width: {parent.width - facade.toPx(30);}
                                 font.bold: true
-                                font.family:trebu4etMsNorm.name
-                                font.pixelSize: facade.doPx(24)
+                                font.family: trebu4etMsNorm.name
+                                font.pixelSize: facade.doPx(24);
                             }
                             Text {
                                 text: pDate
                                 lineHeight: 1.4
-                                font.family:trebu4etMsNorm.name
-                                font.pixelSize: facade.doPx(15)
+                                font.family: trebu4etMsNorm.name
+                                font.pixelSize: facade.doPx(15);
                             }
                             Text {
                                 text: pDesc
                                 maximumLineCount: 2
                                 width: {parent.width - facade.toPx(30);}
                                 wrapMode:Text.Wrap;
-                                font.family:trebu4etMsNorm.name
-                                font.pixelSize: facade.doPx(20)
+                                font.family: trebu4etMsNorm.name
+                                font.pixelSize: facade.doPx(20);
                             }
                         }
                     }
@@ -604,35 +571,23 @@ Rectangle {
 
             ListView {
                 clip: true
-                visible: index == 2
-                spacing: {facade.toPx(27)}
                 width: parent.width
-                height: facade.toPx(200)
+                height:facade.toPx(200)
+                spacing: facade.toPx((27))
                 orientation: Qt.Horizontal
                 boundsBehavior: Flickable.StopAtBounds;
+                visible: index==2
                 model:ListModel {
-                    ListElement {image:"mus.png"; text:"music"}
-                    ListElement {image:"img.png"; text:"image"}
-                    ListElement {image:"vide.png";text:"video"}
-                    ListElement {image:"play.png";text:"games"}
+                    ListElement {image:"mus.png"; text: "music"}
+                    ListElement {image:"img.png"; text: "image"}
+                    ListElement {image:"vide.png";text: "video"}
+                    ListElement {image:"play.png";text: "games"}
                 }
                 delegate: Image {
                     clip: true
                     width: facade.toPx(sourceSize.width / 3.5)
-                    height: facade.toPx(sourceSize.height/ 3.5)
-                    source: {"qrc:/ui/buttons/feeds/" + image;}
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onExited: {
-                            squareAnimation.stop();
-                        }
-                        onPressed: {
-                            colorSquare.x = mouseX;
-                            colorSquare.y = mouseY;
-                            squareAnimation.start()
-                        }
-                    }
+                    height: facade.toPx(sourceSize.height / 3.5)
+                    source: {"qrc:/ui/buttons/feeds/" + (image)}
 
                     Rectangle {
                         width: 0
@@ -647,11 +602,23 @@ Rectangle {
                         }
                     }
 
+                    MouseArea {
+                        anchors.fill: parent
+                        onExited: {
+                            squareAnimation.stop()
+                        }
+                        onPressed: {
+                            colorSquare.x = mouseX;
+                            colorSquare.y = mouseY;
+                            squareAnimation.start()
+                        }
+                    }
+
                     PropertyAnimation {
                         duration: 1000
                         target: colorSquare;
                         id: squareAnimation;
-                        properties: {("width, height, radius")}
+                        properties: {("width, height, radius");}
                         from: 0
                         to: (parent.width*3)
 

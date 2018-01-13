@@ -6,16 +6,16 @@ Drawer {
     id: drawed
     property var vtate: false
 
-    dragMargin: {this.vtate? facade.toPx(40):0}
+    dragMargin: {this.vtate?facade.toPx(40):0}
 
-    function visible(state) {this.vtate =state}
+    function visible(state){this.vtate =state}
 
-    background: Rectangle {color:"transparent"}
+    background: Rectangle{color:"transparent"}
 
     Connections {
         target: drawed
         onPositionChanged: {
-            if (blankeDrawer.position <= 0.01){
+            if (blankeDrawer.position < 0.01){
                 position = 0
             }
         }
@@ -23,24 +23,26 @@ Drawer {
 
     closePolicy: {Popup.CloseOnEscape;}
 
-    height:{(parent.height)}
+    height:(parent.height)
     width: {Math.min(facade.toPx(520), 0.60*parent.width)}
 
     Rectangle {
-        opacity: 0.78
-        width: parent.width
-        color: loader.sets3Color
+        clip: true
+        width:parent.width
+        color:loader.menu14Color
         y: blankeDrawer.getProfHeight()
-        height: blankeDrawer.getHelperHeight();
+        height: blankeDrawer.getHelperHeight()
 
         ListView {
             clip: true
             id: listMenu
             anchors.fill: parent
-            spacing: facade.toPx(10)
+            spacing: -1;
+            anchors.topMargin: Math.max(displayMarginBeginning, 0);
+            displayMarginBeginning: (parent.height-contentHeight)/2
             delegate: Item {
                 id: element;
-                width: parent.width;
+                width: parent.width
                 height:facade.toPx(111)
                 Rectangle {
                     id: body
@@ -52,7 +54,7 @@ Drawer {
                         id: coloresRect
                         color: {
                             if (index === 0) {
-                                loader.menu15Color;
+                                loader.sets1Color
                             }
                             else loader.sets2Color;
                         }
@@ -126,16 +128,19 @@ Drawer {
 
                     color: {
                         if (element.ListView.isCurrentItem&&!circleAnimation.running) {
-                            if (index === 0) loader.menu15Color; else loader.sets2Color
-                        } else if (index< 1) loader.menu14Color;
-                        else "#EEEDEEF0"
+                            if (index == 0)
+                                loader.sets1Color;
+                            else loader.sets2Color
+                        } else if (index < 1)
+                            loader.menu3Color;
+                        else loader.sets3Color
                     }
                 }
             }
 
-            boundsBehavior:Flickable.StopAtBounds
+            boundsBehavior: Flickable.StopAtBounds
 
-            Component.onCompleted:currentIndex=-1
+            Component.onCompleted: currentIndex=-1
 
             model:ListModel {
                 ListElement {
