@@ -112,7 +112,7 @@ Drawer {
                         if (usersModel.count<1|| index<0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
                             usersModel.append({
-                                image: "http://lorempixel.com/200/20" + i + "/sports",
+                                image: "http://lorempixel.com/200/20" + i,
                                 famil: obj[i].family,
                                 login: obj[i].login,
                                 phone: obj[i].name,
@@ -154,7 +154,7 @@ Drawer {
     Rectangle {
         Rectangle {
             width: (parent.width)
-            color: loader.isOnline?loader.menu2Color:loader.head1Color
+            color: loader.isOnline?loader.menu2Color:loader.menu4Color
             height: 6
         }
         id: rightRect
@@ -172,7 +172,7 @@ Drawer {
         Rectangle {
             height: 6
             width: (parent.width)
-            color: loader.isOnline?loader.menu2Color:loader.head1Color
+            color: loader.isOnline?loader.menu2Color:loader.menu4Color
         }
         color: (loader.isOnline? loader.menu3Color: loader.menu3Color)
         width: (drawer.width - avatarButton.width)/2 + facade.toPx(14)
@@ -206,7 +206,7 @@ Drawer {
             context.closePath()
             context.fill();
 
-            context.fillStyle=loader.isOnline == true? loader.menu2Color:loader.head1Color
+            context.fillStyle=loader.isOnline == true? loader.menu2Color:loader.menu4Color
             context.beginPath()
             context.moveTo(0,height-leftRect.height+6)
             context.lineTo(0,height-leftRect.height+0)
@@ -382,7 +382,7 @@ Drawer {
 
         Item{
             width: {(parent.width)}
-            height: facade.toPx(10)
+            height: facade.toPx(30)
         }
     }
 
@@ -702,7 +702,7 @@ Drawer {
         width: 6;
         color: {
             if (loader.isOnline==true) loader.menu2Color
-            else loader.head1Color;
+            else loader.menu4Color;
         }
         anchors.left: parent.right;
         anchors {

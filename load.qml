@@ -30,7 +30,7 @@ ApplicationWindow {
         if (event_handler.currentOSys()>0) close.accepted =false; else close.accepted=true
     }
 
-    width: {event_handler.currentOSys() < 1? facade.toPx(900): 0}
+    width: {event_handler.currentOSys() < 1? facade.toPx(820): 0}
     height:event_handler.currentOSys()<1?Screen.height-facade.toPx(100):0
 
     QtObject {
@@ -238,7 +238,7 @@ ApplicationWindow {
 
         // colors variables
         property string menu1Color: "#939393";
-        property string menu2Color: "#D3D3D3";
+        property string menu2Color: "#E0E0E0";
         property string menu3Color: "#71AABA";
         property string menu4Color: "#6E737F";
         property string menu5Color: "#B24A3E";
@@ -258,8 +258,8 @@ ApplicationWindow {
 
         property string sets1Color: "#4B4E55";
         property string sets2Color: "#D8D8D8";
-        property string sets3Color: "#EEEDEEF0";
-        property string sets4Color: "#9E9E9E";
+        property string sets3Color: "#B2B2B2";
+        property string sets4Color: "#6D7A82";
 
         property string feed1Color: "#7F7875";
         property string feed2Color: "#8E8784";

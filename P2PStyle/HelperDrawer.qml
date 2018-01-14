@@ -170,7 +170,7 @@ Drawer {
         }
         LinearGradient {
             width:parent.width
-            height: facade.toPx(30)
+            height: facade.toPx(40)
             start: Qt.point(0, (0))
             end: Qt.point(0,height)
             anchors.bottom: parent.bottom
@@ -181,7 +181,7 @@ Drawer {
                 }
                 GradientStop {
                     position: 1;
-                    color: ("#44000000");
+                    color: ("#40000000");
                 }
             }
         }

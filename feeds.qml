@@ -80,7 +80,7 @@ Rectangle {
                                 if (humanModel.count<1||index<0) {
                                     loader.chats.push({phone:obj[i].name, message:[]})
                                     humanModel.append({
-                                        image: "http://lorempixel.com/200/20" + i + "/sports",
+                                        image: "http://lorempixel.com/200/20"+(i),
                                         famil: obj[i].family,
                                         login: obj[i].login,
                                         phone: obj[i].name,
@@ -96,7 +96,8 @@ Rectangle {
                         }
                     }
                 }
-                request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                var contype = 'Content-Type'
+                request.setRequestHeader(contype, 'application/x-www-form-urlencoded')
                 request.send("READ=4")
             }
 
@@ -110,7 +111,7 @@ Rectangle {
                 if (xmlmodel.count > 0) {
                     var RssCache = [];
                     for (var i = 0; i < xmlmodel.count; i+= 1) {
-                        var obj = {enable: true, link: xmlmodel.get(i).link, title: xmlmodel.get(i).title, image: xmlmodel.get(i).image, pDate: xmlmodel.get(i).pDate, pDesc: xmlmodel.get(i).pDesc}
+                        var obj= {enable: true, link: xmlmodel.get(i).link, title: xmlmodel.get(i).title, image: xmlmodel.get(i).image, pDate: xmlmodel.get(i).pDate, pDesc: xmlmodel.get(i).pDesc}
                         RssCache.push(obj)
                         for (var j = 0; j < rssView.model.count; j++) {
                             if (rssView.model.get(j).title == obj.title) break
@@ -123,9 +124,7 @@ Rectangle {
                     if (rssNews !== "") {
                         var rssOld = JSON.parse(rssNews);
                         for (var i = 0; i <rssOld.length; i+=1) {
-                            var myNews = {enable:true, link: rssOld[i].link, title:rssOld[i].title,
-                                image:rssOld[i].image, pDate:rssOld[i].pDate,pDesc:rssOld[i].pDesc}
-                            rssView.model.append(myNews);
+                            rssView.model.append({enable: (true), link: (rssOld[i].link), title: (rssOld[i].title), image: (rssOld[i].image), pDate: (rssOld[i].pDate), pDesc: (rssOld[i].pDesc)});
                         }
                     }
                 }
@@ -173,7 +172,7 @@ Rectangle {
 
                         rightPadding: parent.parent.radius;
                         onAccepted: filterList(text.toLowerCase())
-                        onTextChanged: if (event_handler.currentOSys()!=1 && event_handler.currentOSys()!=2) filterList(text.toLowerCase());
+                        onTextChanged: if (event_handler.currentOSys() != 1 && event_handler.currentOSys() != 2) filterList(text.toLowerCase())
                         placeholderText: "Найти друзей";
                         font.bold: true;
                         font.pixelSize: facade.doPx(20);
@@ -228,13 +227,13 @@ Rectangle {
                             id: delegaRect
                             width: parent.width
                             height: parent.height;
-                            color: baseItem.ListView.isCurrentItem? (loader.isOnline==true? loader.feed1Color: loader.menu4Color):"white"
+                            color: (baseItem.ListView.isCurrentItem)? (loader.isOnline == true? loader.feed1Color: loader.menu4Color): "white";
 
                             Rectangle {
                                 width: 0
                                 height: 0
                                 id: coloresRect
-                                color:baseItem.ListView.isCurrentItem? (loader.isOnline?loader.feed2Color: "darkgray"): loader.menu9Color
+                                color: (baseItem.ListView.isCurrentItem)? (loader.isOnline? loader.feed2Color: "darkgray"): (loader.menu9Color)
 
                                 transform: Translate {
                                     x:-coloresRect.width /2
@@ -322,8 +321,8 @@ Rectangle {
                                 Image {
                                     source: image
                                     anchors.centerIn: parent
-                                    height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
-                                    width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                                    height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width)
+                                    width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width
                                 }
                             }
 
@@ -350,7 +349,7 @@ Rectangle {
                                 Text {
                                     id: telPhone
                                     elide: Text.ElideRight
-                                    text:phone.substring(0,1)+"("+phone.substring(1,4)+")"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port;
+                                    text:phone.substring(0,1)+"("+phone.substring(1,4)+")"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
                                     font.family:trebu4etMsNorm.name
                                     font.pixelSize: facade.doPx(20)
                                     width: delegaRect.width - bug.width - bug.x - fullName.implicitWidth - 3 * facade.toPx(30);
@@ -510,8 +509,8 @@ Rectangle {
                             Image {
                                 source: {image.replace("https", "http")}
                                 anchors.centerIn: parent;
-                                height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
-                                width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                                height:sourceSize.width > sourceSize.height? parent.height: sourceSize.height*(parent.width / sourceSize.width)
+                                width: sourceSize.width > sourceSize.height? sourceSize.width*(parent.height / sourceSize.height): parent.width
                             }
                         }
                         DropShadow {
