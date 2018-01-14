@@ -33,7 +33,7 @@ Item {
                 anchors {
                     verticalCenter: parent.verticalCenter;
                     left: (loader.isLogin)? parent.left:undefined
-                    leftMargin: loader.isLogin? facade.toPx(40):0
+                    leftMargin: loader.isLogin? facade.toPx(20):0
                     centerIn: (loader.isLogin)? undefined: parent
                     horizontalCenter: loader.isLogin? undefined: parent.horizontalCenter
                 }
@@ -129,6 +129,7 @@ Item {
             id: hambrgrButton
             width: facade.toPx(150)
             height: {parent.height}
+
             onClicked: {
                 if (page == 1) {page -= 1}
                 else if (loader.source == "qrc:/chat.qml")
@@ -140,8 +141,10 @@ Item {
                 }
                 loader.focus=true;
             }
+
             visible: page!=0 || loader.isLogin? true:false
             anchors.verticalCenter: parent.verticalCenter;
+
             background: Image {
                 id: hambrgrButtonImage;
                 fillMode: Image.PreserveAspectFit;
@@ -162,6 +165,7 @@ Item {
                 target: loader;
                 onIsOnlineChanged: {canva.requestPaint();}
             }
+
             onPaint: {
                 var cntx =getContext("2d")
                 cntx.reset()
@@ -187,10 +191,13 @@ Item {
 
         Rectangle {
             width: parent.width
-            height:{facade.toPx(5)}
-            color:loader.head2Color
-            anchors.bottom: parent.bottom;
+            height: facade.toPx(5);
+            color: {loader.head2Color}
+            anchors {
+                bottom: parent.bottom;
+            }
         }
+
         Button {
             id: hamMoreButton
             visible:loader.source=="qrc:/chat.qml"
@@ -198,6 +205,7 @@ Item {
             height: {parent.height}
             x: parent.width-facade.toPx(10)-width;
             anchors.verticalCenter: parent.verticalCenter;
+
             background: Image {
                 id: hamMoreButtonImage;
                 fillMode: Image.PreserveAspectFit;
@@ -206,6 +214,7 @@ Item {
                 height:facade.toPx(sourceSize.height* 1.2)
                 width: facade.toPx(sourceSize.width * 1.2)
             }
+
             onClicked: {
                 loader.focus = true
                 chatMenuList.xPosition = rootItem.width-chatMenuList.w-facade.toPx(20)

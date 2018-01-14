@@ -28,7 +28,7 @@ Rectangle {
           return num < 5? ('a few'): Math.round(num);
       };
 
-      return s <= 1? 'just now' : m < 1 ? approx(s)+' s ago'
+      return s <= 1? 'just now' : m < 0 ? approx(s)+' s ago'
            : m <= 1? 'minute ago': h < 1? approx(m)+' m ago'
            : h <= 1? 'hour ago' : d < 1 ? approx(h)+' h ago'
            : d <= 1? 'yesterday' : w < 1? approx(d)+' d ago'
@@ -185,13 +185,13 @@ Rectangle {
 
         id:chatScrenList
         MouseArea {
-            anchors.fill: {(parent)}
+            anchors.fill: parent
             propagateComposedEvents: true
+            visible: event_handler.currentOSys()
             onClicked: {
                 hideKeyboard(mouse);
                 mouse.accepted = !(true);
             }
-            visible: event_handler.currentOSys() == 1 || event_handler.currentOSys() == 2;
         }
 
         delegate: Rectangle {
@@ -434,10 +434,9 @@ Rectangle {
                         height: parent.height
                         visible:event_handler.currentOSys()>0
                         onClicked: {
+                            visible = !(input = true)
                             chatScrenList.positionViewAtEnd()
                             screenTextFieldPost.focus = true;
-                            visible = (false)
-                            input =true
                         }
                     }
                 }
