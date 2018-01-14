@@ -521,7 +521,7 @@ Drawer {
                     onPressAndHold: presed=true
                     drag.target: presed?parent:undefined
                     drag.maximumX: {
-                        if (usersModel.count> index+1) {
+                        if (usersModel.count>=index+1) {
                             -drag.minimumX;
                         } else 0
                     }
@@ -535,7 +535,7 @@ Drawer {
                     }
                     onReleased: {
                         presed = false
-                        if (parent.x > drag.maximumX) {
+                        if (parent.x >= drag.maximumX) {
                             if (usersModel.get(index).phone !== loader.tel) {
                                 drawer.close();
                                 listView.memIndex=index;
@@ -685,7 +685,7 @@ Drawer {
             x: facade.toPx(10);
             spacing: {facade.toPx(6)}
             height:0.25*parent.height
-            anchors.verticalCenter: parent.verticalCenter;
+            anchors.verticalCenter:parent.verticalCenter
             Repeater {
                 model: 1
                 Rectangle {
@@ -700,7 +700,10 @@ Drawer {
     HelperDrawer {id: helperDrawer}
     Rectangle {
         width: 6;
-        color:loader.isOnline?loader.menu2Color:loader.head1Color
+        color: {
+            if (loader.isOnline==true) loader.menu2Color
+            else loader.head1Color;
+        }
         anchors.left: parent.right;
         anchors {
             bottom: {parent.bottom}
@@ -714,9 +717,7 @@ Drawer {
         source: listMenu
         color: "#80000000";
         verticalOffset: -10
-        anchors {
-            fill: listMenu;
-        }
+        anchors.fill: listMenu
     }
     ListView {
         clip: true
@@ -725,9 +726,9 @@ Drawer {
         snapMode:ListView.SnapOneItem
         property bool isShowed: false
         height: {
-            var length=parent.height;
-            length -= (facade.toPx(540) + getProfHeight())
-            var count = Math.ceil(length /facade.toPx(80))
+            var length= parent.height
+            length -= facade.toPx(540) + getProfHeight()
+            var count= Math.ceil(length/facade.toPx(80))
             if (count >navigateDownModel.count)
                count = navigateDownModel.count;
             if (count < 1) count = 1;
@@ -735,22 +736,21 @@ Drawer {
         }
         anchors.bottom: parent.bottom
         boundsBehavior: Flickable.StopAtBounds;
-
         Component.onCompleted: currentIndex=-1;
 
-        model:  ListModel {
-                id: navigateDownModel
-                ListElement{image:"";target:""}
-                ListElement{image:"";target:""}
-                ListElement{
-                    image:"qrc:/ui/icons/DevsIconBlue.png"
-                    target: "Настройки"
-                }
-                ListElement{
-                    image:"qrc:/ui/icons/doorIconBlue.png"
-                    target: "Выйти"
-                }
+        model:ListModel {
+            id: navigateDownModel
+            ListElement {image: ""; target: ""}
+            ListElement {image: ""; target: ""}
+            ListElement {
+                image : "qrc:/ui/icons/devIconBlue.png";
+                target: "Настройки"
             }
+            ListElement {
+                image : "qrc:/ui/icons/outIconBlue.png";
+                target: "Выйти"
+            }
+        }
         delegate:Rectangle {
             width: parent.width;
             height: facade.toPx(80)
@@ -762,20 +762,20 @@ Drawer {
                 onClicked: {
                     switch(index) {
                     case 2:
-                        if (helperDrawer.position <= 1) {
+                        if (helperDrawer.position <=1) {
                             helperDrawer.open()
                         }
                         break;
                     case 3:
                         drawer.close()
-                        event_handler.saveSet("user", "")
+                        event_handler.saveSet("user","")
                         loader.goTo("qrc:/loginanDregister.qml");
                         helperDrawer.visible((false))
                         loader.restores()
                     }
                     if (index == 1) {
                         myswitcher.checked = !myswitcher.checked;
-                    } else if (index > 1 && index <= 2) {
+                    } else if (index > 1 && index <=2) {
                         listMenu.currentIndex = index
                     }
                 }
@@ -806,7 +806,7 @@ Drawer {
                             width: {facade.toPx(sourceSize.width /1.3);}
                             height:{facade.toPx(sourceSize.height/1.3);}
                             anchors.verticalCenter:parent.verticalCenter
-                            source: "qrc:/ui/icons/"+(find? "searchIconWhite": "closedIconWhite")+".png"
+                            source: "qrc:/ui/icons/"+(find? "searchIconWhite": "DeleteIconWhite")+".png"
                         }
                         onClicked: {
                             if(find == false) find=true;

@@ -43,7 +43,7 @@ Item {
                 image: "ui/icons/phoneIconWhite.png"; plaseHolder: "Номер телефона"
             }
             ListElement {
-                image: "ui/icons/passWIconWhite.png"; plaseHolder: "Введите пароль"
+                image: "ui/icons/PassWIconWhite.png"; plaseHolder: "Введите пароль"
             }
             ListElement {image: ""; plaseHolder: "Начать Общение";}
             ListElement {image: ""; plaseHolder: "Вход по QR-коду"}

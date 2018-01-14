@@ -4,12 +4,7 @@ import QtGraphicalEffects 1.0
 
 Item {
     id: rootItem
-    property int page
-    property string stat
-    property string phot
-    property string text
-
-    width: parent.width;
+    width: parent.width
     height:facade.toPx(150)
     DropShadow {
         radius: 15
@@ -92,10 +87,10 @@ Item {
                 Column {
                     Text {
                         color: "white"
-                        elide: {loader.webview == true? Text.ElideRight: Text.ElideLeft}
+                        elide: Text.ElideRight
                         width: {
-                            var myPofileName = inerItem.width -bug.width-facade.toPx(90)
-                            Math.min(myPofileName, implicitWidth)
+                            var margin= loader.source=="qrc:/chat.qml"?facade.toPx(90):0
+                            Math.min(inerItem.width - bug.width - margin, implicitWidth)
                         }
                         text:  {rootItem.text.replace("\n" , "")}
 
@@ -160,7 +155,7 @@ Item {
         Canvas {
             id: canva
             height: parent.height;
-            anchors.right: parent.right
+            anchors.right:parent.right;
             visible:loader.source=="qrc:/chat.qml"
             width: hamMoreButton.width + (facade.toPx(70))
             Connections {
@@ -172,17 +167,17 @@ Item {
                 cntx.reset()
                 cntx.fillStyle = loader.head2Color
                 cntx.beginPath()
-                cntx.moveTo(0, height)
+                cntx.moveTo(0, height);
                 cntx.lineTo(width, height)
-                cntx.lineTo(width, 0);
+                cntx.lineTo(width, (0))
                 cntx.lineTo(width- hamMoreButton.width, 0)
                 cntx.closePath()
                 cntx.fill();
 
                 cntx.fillStyle = (loader.isOnline == true? "white": loader.head1Color)
                 cntx.beginPath()
-                cntx.moveTo(0, height)
-                cntx.lineTo(6, height)
+                cntx.moveTo(0, height);
+                cntx.lineTo(6, height);
                 cntx.lineTo(width-hamMoreButton.width-0,0)
                 cntx.lineTo(width-hamMoreButton.width-6,0)
                 cntx.closePath()
@@ -219,4 +214,8 @@ Item {
             }
         }
     }
+    property string stat
+    property string phot
+    property string text
+    property int page
 }

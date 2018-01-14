@@ -42,7 +42,7 @@ Item {
         model:ListModel {
             ListElement {image:"ui/icons/personIconwhite.png"; plaseholder: "Логин";}
             ListElement {image:"ui/icons/personIconwhite.png"; plaseholder:"Фамилия"}
-            ListElement {image:"ui/icons/passWIconWhite.png"; plaseholder: "Ваш личный пароль"}
+            ListElement {image:"ui/icons/PassWIconWhite.png"; plaseholder: "Ваш личный пароль"}
             ListElement {image:"ui/icons/phoneIconWhite.png"; plaseholder: "Электронная почта"}
             ListElement {image:"ui/icons/phoneIconWhite.png"; plaseholder: "Телефон"}
             ListElement {image: "-"; plaseholder: ""}

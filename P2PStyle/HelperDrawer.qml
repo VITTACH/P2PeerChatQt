@@ -12,36 +12,58 @@ Drawer {
 
     background: Rectangle{color:"transparent"}
 
+    closePolicy: {Popup.CloseOnEscape;}
+    width: {
+        var variable1= facade.toPx(520)
+        Math.min(variable1, 0.6*parent.width);
+    }
+    height:(parent.height)
+
     Connections {
         target: drawed
         onPositionChanged: {
-            if (blankeDrawer.position < 0.01){
+            if (blankeDrawer.position <0.01) {
                 position = 0
             }
         }
     }
 
-    closePolicy: {Popup.CloseOnEscape;}
-
-    height:(parent.height)
-    width: {Math.min(facade.toPx(520), 0.60*parent.width)}
-
     Rectangle {
         clip: true
-        width:parent.width
-        color:loader.menu14Color
-        y: blankeDrawer.getProfHeight()
+        color: "#FF909090";
+        width: parent.width
+        y: blankeDrawer.getProfHeight();
         height: blankeDrawer.getHelperHeight()
 
         ListView {
             clip: true
             id: listMenu
-            anchors.fill: parent
+            anchors.fill: parent;
             spacing: -1;
+
+            model:ListModel {
+                ListElement {
+                    image2:
+                    "../ui/icons/userBackLigh.png";
+                    target:"Мой Профиль"
+                }
+                ListElement {target:"Уведомления";}
+                ListElement {target:"Безопасность"}
+                ListElement {target:"Внешний вид";}
+                ListElement {target:"Разработчик";}
+                ListElement {target:"Настройки"}
+                ListElement {target:qsTr("Назад");}
+                ListElement {target:"";}
+            }
+
+            boundsBehavior: Flickable.StopAtBounds;
+            Component.onCompleted: currentIndex=-1;
+
             delegate: Item {
                 id: element;
                 width: parent.width
                 height:facade.toPx(111)
+                visible: index != listMenu.count-1;
                 Rectangle {
                     id: body
                     clip: true
@@ -67,10 +89,17 @@ Drawer {
                         anchors.fill:parent
                         Image {
                             id: icon
-                            source: {if (index > 0) image1; else {image2}}
-                            anchors.verticalCenter: parent.verticalCenter;
-                            width: ((facade.toPx(sourceSize.width *1.5)));
-                            height:((facade.toPx(sourceSize.height*1.5)));
+                            source: {
+                                if (index == 0) {image2;}
+                                else ""
+                            }
+                            anchors.verticalCenter:{parent.verticalCenter}
+                            width: {
+                                return facade.toPx(sourceSize.width *1.5);
+                            }
+                            height:{
+                                return facade.toPx(sourceSize.height*1.5);
+                            }
                         }
                         Text {
                             text: target;
@@ -94,7 +123,7 @@ Drawer {
                             listMenu.currentIndex= -1
                         }
                         onEntered: {
-                            listMenu.currentIndex = index
+                            listMenu.currentIndex = index;
                             coloresRect.x = mouseX;
                             coloresRect.y = mouseY;
                             circleAnimation.start()
@@ -103,68 +132,56 @@ Drawer {
                         onClicked: {
                             circleAnimation.stop();
                             switch(index) {
-                            case 4:
-                                helperDrawer.close()
-                                break
+                            case 6:
+                                helperDrawer.close();break
                             }
                         }
                     }
 
                     PropertyAnimation {
-                        duration: 500
-                        target: coloresRect;
-                        id: circleAnimation;
-                        properties: "width,height,radius"
+                        duration: (500)
+                        id: circleAnimation
+                        target: {coloresRect;}
+                        properties: "width,height,radius";
                         from: 0
-                        to: body.width*3
+                        to:body.width*3
 
                         onStopped: {
-                        coloresRect.width =0
-                        coloresRect.height=0
+                        coloresRect.width  =0
+                        coloresRect.height =0
                         }
                     }
 
                     color: {
-                        if (element.ListView.isCurrentItem&&!circleAnimation.running) {
-                            if (index == 0)
-                                loader.sets1Color;
-                            else loader.sets2Color
-                        } else if (index < 1)
-                            loader.menu3Color;
-                        else loader.sets3Color
+                        if (element.ListView.isCurrentItem && !circleAnimation.running){
+                            if (index == 0) {
+                            loader.sets1Color
+                            } else {
+                            loader.sets2Color
+                            }
+                        } else if (index<1) {
+                            loader.sets4Color
+                        } else {
+                            loader.sets3Color
+                        }
                     }
                 }
             }
-
-            boundsBehavior: Flickable.StopAtBounds
-
-            Component.onCompleted: currentIndex=-1
-
-            model:ListModel {
-                ListElement {
-                    image1:"../ui/icons/imProfileBlue.png"
-                    image2:"../ui/icons/imProfileLigh.png"
-                    target: qsTr("Мой Профиль");
+        }
+        LinearGradient {
+            width:parent.width
+            height: facade.toPx(30)
+            start: Qt.point(0, (0))
+            end: Qt.point(0,height)
+            anchors.bottom: parent.bottom
+            gradient:Gradient{
+                GradientStop {
+                    position: 0;
+                    color: "transparent";
                 }
-                ListElement {
-                    image1:"../ui/icons/mynotifyBlue.png";
-                    image2:"../ui/icons/mynotifyLigh.png";
-                    target: qsTr("Уведомления");
-                }
-                ListElement {
-                    image1:"../ui/icons/myalgortBlue.png";
-                    image2:"../ui/icons/myalgortLigh.png";
-                    target: qsTr("Безопасность")
-                }
-                ListElement {
-                    image1: "../ui/icons/myalgortBlue.png"
-                    image2: "../ui/icons/myalgortLigh.png"
-                    target: qsTr("Настройки")
-                }
-                ListElement {
-                    image1: "qrc:/ui/icons/goBackBlue.png"
-                    image2: "qrc:/ui/icons/goBackLigh.png"
-                    target: qsTr("Назад")
+                GradientStop {
+                    position: 1;
+                    color: ("#44000000");
                 }
             }
         }

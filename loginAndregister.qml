@@ -9,7 +9,7 @@ SwipeView {
         partnerHeader.page = currentIndex
         switch (currentIndex) {
         case 0: partnerHeader.text =qsTr("Вход"); break;
-        case 1: partnerHeader.text ="Регистрация";break;
+        case 1: partnerHeader.text="Регистрация"; break;
         }
         Qt.inputMethod.hide()
         loader.focus = (true)

@@ -7,7 +7,7 @@ Rectangle {
     id: rootPage;
     color: loader.feedColor
 
-    property var nWidth
+    property var nWidth;
     property int curInd: 0;
     property bool find: true;
     property int oldContentY: 0
@@ -159,7 +159,7 @@ Rectangle {
                             width: {facade.toPx(sourceSize.width /1.3);}
                             height:{facade.toPx(sourceSize.height/1.3);}
                             anchors.verticalCenter:parent.verticalCenter
-                            source: "qrc:/ui/icons/" + (find? "searchIconWhite": "closedIconWhite") + ".png"
+                            source: "qrc:/ui/icons/" + (find? "searchIconWhite": "DeleteIconWhite") + ".png"
                         }
                     }
                     Connections {
