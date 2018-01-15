@@ -42,11 +42,7 @@ Drawer {
             spacing: -1;
 
             model:ListModel {
-                ListElement {
-                    image2:
-                    "../ui/icons/userBackLigh.png";
-                    target:"Мой Профиль"
-                }
+                ListElement {target:"Мой Профиль";}
                 ListElement {target:"Уведомления";}
                 ListElement {target:"Безопасность"}
                 ListElement {target:"Внешний вид";}
@@ -84,36 +80,21 @@ Drawer {
                             y:-coloresRect.height/2
                         }
                     }
-                    Row {
+                    Text {
                         id: navigate
-                        anchors.fill:parent
-                        Image {
-                            id: icon
-                            source: {
-                                if (index == 0) {image2;}
-                                else ""
-                            }
-                            anchors.verticalCenter:{parent.verticalCenter}
-                            width: {
-                                return facade.toPx(sourceSize.width *1.5);
-                            }
-                            height:{
-                                return facade.toPx(sourceSize.height*1.5);
-                            }
+                        text: target
+                        color: {
+                            if (index>0)loader.menu10Color
+                            else loader.sets3Color;
                         }
-                        Text {
-                            text: target;
-                            color: index > 0 ? loader.menu10Color: "white"
-                            width: parent.width-icon.width-facade.toPx(40)
-                            anchors.verticalCenter: parent.verticalCenter;
-                            font {
-                                family:trebu4etMsNorm.name
-                                pixelSize: facade.doPx(32)
-                            }
-                            elide: Text.ElideRight;
+                        width:parent.width-facade.toPx(40)
+                        x: facade.toPx(30);
+                        anchors.verticalCenter: {
+                            parent.verticalCenter
                         }
-                        anchors.leftMargin:facade.toPx(20)
-                        spacing: {facade.toPx(25);}
+                        font.family: {trebu4etMsNorm.name}
+                        font.pixelSize: facade.doPx(32)
+                        elide: Text.ElideRight
                     }
 
                     MouseArea {
@@ -133,7 +114,8 @@ Drawer {
                             circleAnimation.stop();
                             switch(index) {
                             case 6:
-                                helperDrawer.close();break
+                                helperDrawer.close()
+                                break
                             }
                         }
                     }
@@ -170,7 +152,7 @@ Drawer {
         }
         LinearGradient {
             width:parent.width
-            height: facade.toPx(40)
+            height: facade.toPx(10)
             start: Qt.point(0, (0))
             end: Qt.point(0,height)
             anchors.bottom: parent.bottom
@@ -181,7 +163,7 @@ Drawer {
                 }
                 GradientStop {
                     position: 1;
-                    color: ("#40000000");
+                    color: ("#20000000");
                 }
             }
         }

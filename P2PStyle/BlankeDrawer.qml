@@ -835,7 +835,7 @@ Drawer {
                         font.family: trebu4etMsNorm.name
                         onActiveFocusChanged:find=false;
                         background: Rectangle{opacity:0}
-                        anchors.verticalCenter: parent.verticalCenter
+                        verticalAlignment:Text.AlignVCenter
                         onTextChanged: {
                             if (event_handler.currentOSys() !== 1 && event_handler.currentOSys() !== 2){
                             filterList(text.toLowerCase());

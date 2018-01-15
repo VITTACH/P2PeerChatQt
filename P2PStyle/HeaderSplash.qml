@@ -6,6 +6,7 @@ Item {
     id: rootItem
     width: parent.width
     height:facade.toPx(150)
+
     DropShadow {
         radius: 15
         samples: 16
@@ -14,6 +15,7 @@ Item {
         color: "#60000000";
         source: headerRect;
     }
+
     Rectangle {
         id: headerRect
         width: parent.width
@@ -112,34 +114,23 @@ Item {
                     }
                 }
             }
-            height: {parent.height}
+            height: parent.height
             anchors.left: page != 0 || loader.isLogin? hambrgrButton.right: parent.left;
             anchors.right:page != 0 || loader.isLogin? hamMoreButton.left: parent.right;
         }
 
-        DropShadow {
-            radius: 10
-            samples:20
-            color:"#CC000000"
-            source: {hambrgrButton}
-            anchors.fill: hambrgrButton
-            visible: page==1?true:false
-        }
         Button {
-            id: hambrgrButton
-            width: facade.toPx(150)
-            height: {parent.height}
-
+            id: hambrgrButton;
+            height:parent.height
+            width: facade.toPx(140)
             onClicked: {
                 if (page == 1) {page -= 1}
                 else if (loader.source == "qrc:/chat.qml")
-                    loader.back();
+                    loader.back()
                 else if (loader.webview) {
                     loader.webview = false
-                } else {
-                    blankeDrawer.open()
-                }
-                loader.focus=true;
+                } else blankeDrawer.open()
+                loader.focus=true
             }
 
             visible: page!=0 || loader.isLogin? true:false
@@ -157,12 +148,12 @@ Item {
 
         Canvas {
             id: canva
-            height: parent.height;
+            height: parent.height
             anchors.right:parent.right;
             visible:loader.source=="qrc:/chat.qml"
-            width: hamMoreButton.width + (facade.toPx(70))
+            width: hamMoreButton.width + (facade.toPx(40))
             Connections {
-                target: loader;
+                target: {loader;}
                 onIsOnlineChanged: {canva.requestPaint();}
             }
 
@@ -170,59 +161,56 @@ Item {
                 var cntx =getContext("2d")
                 cntx.reset()
                 cntx.fillStyle = loader.head2Color
-                cntx.beginPath()
+                cntx.beginPath();
                 cntx.moveTo(0, height);
                 cntx.lineTo(width, height)
                 cntx.lineTo(width, (0))
                 cntx.lineTo(width- hamMoreButton.width, 0)
-                cntx.closePath()
+                cntx.closePath();
                 cntx.fill();
 
                 cntx.fillStyle = (loader.isOnline == true? "white": loader.head1Color)
-                cntx.beginPath()
+                cntx.beginPath();
                 cntx.moveTo(0, height);
-                cntx.lineTo(6, height);
+                cntx.lineTo(4, height);
                 cntx.lineTo(width-hamMoreButton.width-0,0)
-                cntx.lineTo(width-hamMoreButton.width-6,0)
-                cntx.closePath()
+                cntx.lineTo(width-hamMoreButton.width-4,0)
+                cntx.closePath();
                 cntx.fill();
             }
         }
 
         Rectangle {
-            width: parent.width
-            height: facade.toPx(5);
-            color: {loader.head2Color}
-            anchors {
-                bottom: parent.bottom;
-            }
+            height: facade.toPx(5)
+            width: headerRect.width;
+            color: loader.head2Color
+            anchors.bottom: parent.bottom;
         }
 
         Button {
             id: hamMoreButton
-            visible:loader.source=="qrc:/chat.qml"
-            width: facade.toPx(140)
-            height: {parent.height}
-            x: parent.width-facade.toPx(10)-width;
-            anchors.verticalCenter: parent.verticalCenter;
+            height: parent.height
+            width: facade.toPx(100);
+            visible:loader.source == "qrc:/chat.qml";
+            x:parent.width - width - facade.toPx(10);
+            anchors.verticalCenter:(parent.verticalCenter)
+
+            onClicked: {
+                loader.focus = loader.context = true;
+                chatMenuList.xPosition = rootItem.width-chatMenuList.w-facade.toPx(20)
+                chatMenuList.yPosition = (facade.toPx(20))
+            }
 
             background: Image {
-                id: hamMoreButtonImage;
+                anchors.centerIn: (parent)
                 fillMode: Image.PreserveAspectFit;
-                anchors.centerIn:parent
                 source: ("qrc:/ui/buttons/moreButton.png")
                 height:facade.toPx(sourceSize.height* 1.2)
                 width: facade.toPx(sourceSize.width * 1.2)
             }
-
-            onClicked: {
-                loader.focus = true
-                chatMenuList.xPosition = rootItem.width-chatMenuList.w-facade.toPx(20)
-                chatMenuList.yPosition = facade.toPx((20))
-                loader.context=true
-            }
         }
     }
+
     property string stat
     property string phot
     property string text

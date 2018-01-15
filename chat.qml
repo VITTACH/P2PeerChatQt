@@ -64,15 +64,16 @@ Rectangle {
     }
 
     function checkMessage(flag) {
-        if (screenTextFieldPost.text.length >= 1) {
-        var text= buferText.text = screenTextFieldPost.text
-        var obj = {text:text, flag: flag, time: new Date()}
-        loader.chats[blankeDrawer.cindex].message.push(obj)
-        var c=JSON.stringify(loader.chats)
-        event_handler.saveSet("chats", c);
-        appendMessage(text,flag,obj.time);
-        chatScrenList.positionViewAtEnd();
-        screenTextFieldPost.text=""
+        if (textField.text.length >= 1) {
+            var text= buferText.text = textField.text;
+            var obj = {text:text, flag:flag,time:new Date()}
+            var nd = blankeDrawer.cindex
+            loader.chats[nd].message.push(obj)
+            var c=JSON.stringify(loader.chats)
+            event_handler.saveSet("chats", c);
+            appendMessage(text,flag,obj.time);
+            chatScrenList.positionViewAtEnd();
+            textField.text=""
         }
     }
 
@@ -83,7 +84,7 @@ Rectangle {
             if(response!="") {
                 var obj = JSON.parse(response)
                 for (i=0; i<loader.chats.length;i++) {
-                    if (obj.phone == loader.chats[i].phone)
+                    if (obj.phone === loader.chats[i].phone)
                         break;
                 }
                 buferText.text = (obj.message)
@@ -91,7 +92,7 @@ Rectangle {
                 loader.chats[i].message.push((object))
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 if (i == blankeDrawer.getCurPeerInd()){
-                    appendMessage(buferText.text,1,object.time)
+                    appendMessage(buferText.text, 1,object.time)
                     chatScrenList.positionViewAtEnd();
                 }
             }
@@ -115,7 +116,7 @@ Rectangle {
                 select.sort();
                 for(var i=0; i<select.length; i++) {
                     chatModel.remove(select[i] - i);
-                    var currentIndex = blankeDrawer.cindex;
+                    var currentIndex = (blankeDrawer.cindex)
                     loader.chats[currentIndex].message.splice(select[i]-i,1)
                 }
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
@@ -132,7 +133,7 @@ Rectangle {
 
     function parseToJSON(message, phone, ip) {
         var JSONobj
-        return JSON.stringify(JSONobj = {message: message, phone:phone,/*ip:ip*/});
+        return JSON.stringify(JSONobj = {message: message, phone:phone})
     }
 
     function appendMessage(newmessage, flag , timestamp) {
@@ -146,18 +147,11 @@ Rectangle {
             timeStamp: String(timestamp),
             textColor: (flag === 2)? "#545454": "#FFFFFF",
             backgroundColor:flag==2? "#F4F4F4": "#D1D1D1",
-            image: sp == facade.toPx(0)? "": (flag == 2? "ui/chat/leFtMessage.png": "ui/chat/rightMessag.png")
+            image: ""
         });
-        if (cflag ==2) event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0))
-    }
-
-    function hideKeyboard(event) {
-        pressedArea.visible= true;
-        if(event!=0)event.accepted = true
-        screenTextFieldPost.focus = false
-        Qt.inputMethod.hide()
-        loader.focus = (true)
-        input=false;
+        if (cflag ==2) {
+            event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0))
+        }
     }
 
     TextArea {
@@ -174,7 +168,7 @@ Rectangle {
     ListView {
         anchors {
             top: parent.top
-            bottom:flickTextArea.top
+            bottom:textArea.top
             bottomMargin: facade.toPx(40)
             topMargin:partnerHeader.height+facade.toPx(10)
         }
@@ -386,88 +380,92 @@ Rectangle {
         boundsBehavior: {(Flickable.StopAtBounds);}
     }
 
+    DropShadow {
+        radius: 10
+        samples: 15
+        color:"#90000000"
+        source: textArea;
+        anchors.fill: textArea;
+    }
     Column {
         clip: true
-        id: flickTextArea
+        id: textArea
         width: parent.width
         anchors {
             bottom: parent.bottom
             bottomMargin:input?parent.height*0.43:0
         }
         Item {
-            width: parent.width
-            height: {screenTextFieldPost.memHeight}
+            width: {parent.width}
+            height: textField.memHeight
             Flickable {
                 TextArea.flickable: TextArea {
-                    property var memHeight
-                    id: screenTextFieldPost;
+                    id: textField
+                    property variant memHeight
                     property bool pressCtrl: false;
                     property bool pressEntr: false;
-                    leftPadding:facade.toPx(25)
-                    wrapMode: {(TextEdit.Wrap)}
                     placeholderText: {
-                        if (event_handler.currentOSys() <= 0) "CTRL+ENTER ДЛЯ ОТПРАВКИ..."
-                        else {qsTr("СООБЩЕНИЕ...")}
+                        if (event_handler.currentOSys() <= 0) "Ctrl+Enter Для Отправки..."
+                        else qsTr("Ваше Сообщение")
                     }
+                    wrapMode: {TextEdit.Wrap;}
+                    verticalAlignment: {(Text.AlignVCenter);}
                     background: Rectangle {color:"#CFFEFEFE"}
                     Keys.onReturnPressed: {pressCtrl = !(false); event.accepted = (false)}
                     Keys.onPressed: if (event.key === Qt.Key_Control) {pressEntr = !false}
-                    rightPadding: messageButton.width + facade.toPx(20)
-                    font {
-                        pixelSize: facade.doPx(24);
-                        family:trebu4etMsNorm.name;
-                    }
+                    rightPadding: sendButton.width + facade.toPx(40);
+                    font.family:trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(24)
                     Keys.onReleased: {
                         if (event.key === Qt.Key_Control || event.key === Qt.Key_Return) {
                             if (pressCtrl == true && pressEntr == true) {checkMessage(2);}
                         } else if (event.key ==Qt.Key_Back) {
                             hideKeyboard(event)
                         }
-                        pressCtrl = (false);
-                        pressEntr = (false);
+                        pressCtrl = pressEntr=false
                     }
+                    leftPadding:facade.toPx(40)
                     MouseArea {
                         id: pressedArea
-                        width: {
-                            parent.width-messageButton.width;
-                        }
+                        width: parent.width-sendButton.width;
                         height: parent.height
                         visible:event_handler.currentOSys()>0
                         onClicked: {
-                            visible = !(input = true)
+                            visible = !(input=true)
                             chatScrenList.positionViewAtEnd()
-                            screenTextFieldPost.focus = true;
+                            textField.focus = true;
                         }
                     }
                 }
                 flickableDirection: {Flickable.VerticalFlick}
                 width: parent.width
                 height: {
-                    if (screenTextFieldPost.lineCount == 1) {
-                        screenTextFieldPost.memHeight =facade.toPx(85)
+                    if (textField.lineCount == 1) {
+                        textField.memHeight = facade.toPx(99)
                     }
-                    else if (screenTextFieldPost.lineCount<6)
-                        screenTextFieldPost.memHeight = screenTextFieldPost.implicitHeight
+                    else if (textField.lineCount<6)
+                        textField.memHeight =textField.implicitHeight
                     else {
-                        screenTextFieldPost.memHeight
+                        textField.memHeight
                     }
                 }
             }
+
             Button {
-                id: messageButton
-                anchors {
-                    right: parent.right
-                    verticalCenter: {
-                        screenTextFieldPost.lineCount==1? parent.verticalCenter: undefined
-                    }
-                }
+                id: sendButton
+                anchors.right: {parent.right}
                 background: Image {
-                    anchors.verticalCenter: {
-                        parent.verticalCenter
-                    }
                     width: facade.toPx(sourceSize.width);
                     height:facade.toPx(sourceSize.height)
                     source: {"ui/buttons/sendButton.png"}
+                    anchors {
+                        bottom: parent.bottom
+                        bottomMargin: {
+                            if (textField.lineCount <= 1)
+                                (parent.height-height)/2;
+                            else facade.toPx(22)
+                        }
+                    }
                 }
                 onClicked: {
                     if (event_handler.currentOSys() >= 1)
@@ -478,5 +476,15 @@ Rectangle {
                 height:{parent.height;}
             }
         }
+    }
+
+    function hideKeyboard(event) {
+        pressedArea.visible= true;
+        if (event !=0)
+            event.accepted = true;
+        textField.focus=false
+        Qt.inputMethod.hide()
+        loader.focus = (true)
+        input = false;
     }
 }
