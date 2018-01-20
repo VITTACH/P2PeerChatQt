@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<manifest package="org.qtproject.example.vittachpeer" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0" android:versionCode="1" android:installLocation="auto">
-    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="vittachpeer" android:icon="@drawable/icon">
-        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="quickandroid.QuickAndroidActivity" android:label="vittachpeer" android:icon="@drawable/icon" android:screenOrientation="unspecified" android:launchMode="singleTop">
+<manifest package="org.qtproject.example.friendup" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0" android:versionCode="1" android:installLocation="auto">
+    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="friendup" android:icon="@drawable/icon">
+        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="quickandroid.QuickAndroidActivity" android:label="friendup" android:icon="@drawable/icon" android:screenOrientation="unspecified" android:launchMode="singleTop">
 
             <meta-data android:name="android.app.repository" android:value="default"/>
-            <meta-data android:name="android.app.lib_name" android:value="vittachpeer"/>
+            <meta-data android:name="android.app.lib_name" android:value="friendup"/>
             <meta-data android:name="android.app.background_running" android:value="true"/>
             <meta-data android:name="android.app.extract_android_style" android:value="full"/>
             <meta-data android:name="android.app.auto_screen_scale_factor" android:value="false"/>
@@ -22,17 +22,17 @@
             <meta-data android:name="android.app.bundled_in_assets_resource_id" android:resource="@array/bundled_in_assets"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                   <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <!-- For adding service(s) please, check this: https://wiki.qt.io/AndroidServices -->
-        <service android:name="org.qtproject.example.vittachpeer.MyFirebaseMessagingService">
+        <!-- For adding service please, check this: https://wiki.qt.io/AndroidServices/ -->
+        <service android:name="org.qtproject.example.friendup.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                  <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-        <service android:name="org.qtproject.example.vittachpeer.MyFirebaseInstanceIDService">
+        <service android:name="org.qtproject.example.friendup.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>

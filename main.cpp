@@ -32,7 +32,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *javm, void*) {
     Q_UNUSED(javm);
     currentSys = 1;
     QASystemDispatcher::registerNatives();
-    QAndroidJniObject::callStaticMethod<void>("org/qtproject/example/vittachpeer/PushService","start", "()V");
+    QAndroidJniObject::callStaticMethod<void>("org/qtproject/example/friendup/PushService", "start", "()V");
     QAndroidJniObject::callStaticMethod<void>("quickandroid/QuickAndroidActivity","startUpNpForwards", "()V");
     return JNI_VERSION_1_6;
 }

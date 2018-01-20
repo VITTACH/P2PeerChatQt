@@ -13,7 +13,7 @@ Drawer {
                 position = 0
             } else if (position == 1) {
                 helperDrawer.visible(true)
-                if (loader.frienList =="") {
+                if (typeof loader.frienList == "undefined") {
                     var friend
                     friend = event_handler.loadValue("frd")
                     if (friend != "") {
@@ -44,7 +44,7 @@ Drawer {
     property bool find: (true)
     property alias cindex: listView.currentIndex;
     background: Rectangle {color: "transparent";}
-    width: {Math.min(facade.toPx(780), 0.9 * parent.width)}
+    width: {Math.min(facade.toPx(640), 0.9 * parent.width)}
     height: parent.height;
     function getHelperHeight() {return (leftSlider.height)}
     function getProfHeight() {
@@ -288,6 +288,13 @@ Drawer {
                         height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                         width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                         anchors.centerIn: parent
+                        RadialGradient {
+                            anchors.fill: parent
+                            gradient: Gradient {
+                                GradientStop { position: 0.4; color: "#30000000"}
+                                GradientStop { position: 0.8; color: "#90000000"}
+                            }
+                        }
                     }
                 }
 
@@ -397,7 +404,7 @@ Drawer {
             right: parent.right
             top: profile.bottom
             bottom:listMenu.top
-            leftMargin: leftSlider.width
+            leftMargin:leftSlider.opacity?leftSlider.width:0
         }
         boundsBehavior: {(Flickable.StopAtBounds)}
 
@@ -659,11 +666,14 @@ Drawer {
 
     Rectangle {
         id: leftSlider
-        width: {facade.toPx(40)}
-        anchors.topMargin: (-1);
+        opacity: 0
+        width: facade.toPx(40)
         color: loader.menu4Color
-        anchors.top: {profile.bottom}
-        anchors.bottom: listMenu.top;
+        anchors {
+            topMargin: -1;
+            top: profile.bottom;
+            bottom: listMenu.top
+        }
         x:helperDrawer.position==0?0: helperDrawer.x + helperDrawer.width-1;
         MouseArea {
             property int p

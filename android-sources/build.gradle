@@ -60,9 +60,7 @@ android {
             resources.srcDirs = ['src']
        }
     }
-    defaultConfig {
-        applicationId "org.qtproject.example.vittachpeer";
-    }
+    defaultConfig {applicationId "org.qtproject.example.friendup"}
     packagingOptions {exclude 'META-INF/beans.xml'}
     lintOptions {abortOnError false}
 }

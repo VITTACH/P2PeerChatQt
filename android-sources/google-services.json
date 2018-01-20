@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "350989405620",
-    "firebase_url": "https://vittachpeer.firebaseio.com",
-    "project_id": "vittachpeer",
-    "storage_bucket": "vittachpeer.appspot.com"
+    "project_number": "540951490406",
+    "firebase_url": "https://friendup-64c19.firebaseio.com",
+    "project_id": "friendup-64c19",
+    "storage_bucket": "friendup-64c19.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:350989405620:android:e553ffd9c1968a9b",
+        "mobilesdk_app_id": "1:540951490406:android:de9f82963dcba57a",
         "android_client_info": {
-          "package_name": "org.qtproject.example.vittachpeer"
+          "package_name": "org.qtproject.example.friendup"
         }
       },
       "oauth_client": [
         {
-          "client_id": "350989405620-msvpnn3p2n53kibej66nev4itfu0u9ki.apps.googleusercontent.com",
+          "client_id": "540951490406-84kbut0l5vfqi9aetmm27vf89c060mmj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBLXeostvAHhrf_dHC34iMgm_ymJP_JeAU"
+          "current_key": "AIzaSyCka0fWUvAjikpAp6JwGgdiNqtuVMgJCvs"
         }
       ],
       "services": {

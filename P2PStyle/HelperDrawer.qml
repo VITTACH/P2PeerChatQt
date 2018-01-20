@@ -129,31 +129,28 @@ Drawer {
                         to:body.width*3
 
                         onStopped: {
-                        coloresRect.width  =0
-                        coloresRect.height =0
+                            coloresRect.width  = 0;
+                            coloresRect.height = 0;
                         }
                     }
 
                     color: {
                         if (element.ListView.isCurrentItem && !circleAnimation.running){
                             if (index == 0) {
-                            loader.sets1Color
+                                (loader.sets1Color)
                             } else {
-                            loader.sets2Color
+                                (loader.sets2Color)
                             }
-                        } else if (index<1) {
-                            loader.sets4Color
-                        } else {
-                            loader.sets3Color
-                        }
+                        } else if (index<1) loader.sets4Color
+                        else loader.sets3Color
                     }
                 }
             }
         }
         LinearGradient {
             width:parent.width
-            height: facade.toPx(10)
-            start: Qt.point(0, (0))
+            height: facade.toPx(8)
+            start: Qt.point(0,0)
             end: Qt.point(0,height)
             anchors.bottom: parent.bottom
             gradient:Gradient{
@@ -163,7 +160,7 @@ Drawer {
                 }
                 GradientStop {
                     position: 1;
-                    color: ("#20000000");
+                    color: ("#30000000");
                 }
             }
         }

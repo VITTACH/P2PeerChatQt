@@ -1,4 +1,4 @@
-package org.qtproject.example.vittachpeer;
+package org.qtproject.example.friendup;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;

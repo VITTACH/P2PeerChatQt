@@ -257,8 +257,8 @@ ApplicationWindow {
         property string head2Color: "#92AF7B";
 
         property string sets1Color: "#4B4E55";
-        property string sets2Color: "#E8E8E8";
-        property string sets3Color: "#DBDBDB";
+        property string sets2Color: "#C4C4C4";
+        property string sets3Color: "#D6D6D6";
         property string sets4Color: "#6D7A82";
 
         property string feed1Color: "#7F7875";
@@ -274,17 +274,16 @@ ApplicationWindow {
     }
 
     function strartPage() {
-        var usa
-        usa = event_handler.loadValue("user");
-        if (usa != "") {
-           var objct = JSON.parse(usa)
-           loader.avatarPath = ((objct.image))
-           loader.famil = objct.family
-           loader.login = objct.login;
-           loader.logon(objct.tel, objct.pass)
-           loader.tel = objct.tel;
+        var eh =event_handler.loadValue("user")
+        if (eh!="") {
+            var objct = JSON.parse(eh);
+            loader.avatarPath = objct.image
+            loader.logon(objct.tel, objct.pass)
+            loader.login = objct.login;
+            loader.famil = objct.family
+            loader.tel = objct.tel;
         } else {
-           loader.goTo("loginanDregister.qml")
+            loader.goTo("loginanDregister.qml")
         }
     }
 
@@ -293,13 +292,13 @@ ApplicationWindow {
         if (event.key === Qt.Key_Back || event.key === Qt.Key_Escape || event === true) {
             event.accepted= true
             if (loader.dialog ==true) {
-                loader.dialog = !loader.dialog
+                loader.dialog = !loader.dialog;
             } else if (loader.avatar) {
-                loader.avatar = !loader.avatar
+                loader.avatar = !loader.avatar;
             } else if(loader.context) {
-                loader.context=!loader.context
+                loader.context=!loader.context;
             } else if(loader.webview) {
-                loader.webview=!loader.webview
+                loader.webview=!loader.webview;
             } else back.restart()
         }
     }
