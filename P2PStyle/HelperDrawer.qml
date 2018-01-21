@@ -14,7 +14,7 @@ Drawer {
 
     closePolicy: {Popup.CloseOnEscape;}
     width: {
-        var variable1= facade.toPx(520)
+        var variable1= facade.toPx(430)
         Math.min(variable1, 0.6*parent.width);
     }
     height:(parent.height)
@@ -30,8 +30,8 @@ Drawer {
 
     Rectangle {
         clip: true
-        color: "#FF909090";
         width: parent.width
+        color: "#FF909090";
         y: blankeDrawer.getProfHeight();
         height: blankeDrawer.getHelperHeight()
 
