@@ -3,8 +3,8 @@ import StatusBar 0.1
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
 import "P2PStyle" as P2PStyle
-import "js/xHRQuery.js" as XHRQuery;
-import "js/URLQuery.js" as URLQuery;
+import "js/xHRQuery.js"as XHRQuery
+import "js/URLQuery.js"as URLQuery
 
 ApplicationWindow {
     x: 0
@@ -233,7 +233,7 @@ ApplicationWindow {
             request.open('POST',"http://www.hoppernet.hol.es")
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             console.log("name=" + loader.tel + "&friend=" + friend + "&remove=" + flag)
-            request.send("name=" + loader.tel + "&friend=" + friend + "&remove=" + flag)
+            request.send("name="+ loader.tel + "&friend=" + friend + "&remove=" + flag)
         }
 
         // colors variables
@@ -259,7 +259,7 @@ ApplicationWindow {
         property string sets1Color: "#4B4E55";
         property string sets2Color: "#C4C4C4";
         property string sets3Color: "#D6D6D6";
-        property string sets4Color: "#6D7A82";
+        property string sets4Color: "#565960";
 
         property string feed1Color: "#7F7875";
         property string feed2Color: "#8E8784";
@@ -270,7 +270,6 @@ ApplicationWindow {
         property string chat4Color: "#A5D394";
 
         property string feedColor: "#EDEDED";
-        // colors variables
     }
 
     function strartPage() {

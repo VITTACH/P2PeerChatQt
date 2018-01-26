@@ -165,19 +165,16 @@ Button {
             opacity: 0.2
             anchors {
                 fill: parent
-                topMargin: dialogWindow.radius
-                leftMargin: dialogWindow.radius
-                rightMargin: dialogWindow.radius
-                bottomMargin:dialogWindow.radius
+                margins: dialogWindow.radius
             }
             gradient: Gradient {
                 GradientStop {
-                    position: 0.0;
-                    color: "white"
+                    position: (0.0)
+                    color:"#ffffff"
                 }
                 GradientStop {
-                    position: 0.8;
-                    color: "gray";
+                    position: (0.8)
+                    color:"#999999"
                 }
             }
         }

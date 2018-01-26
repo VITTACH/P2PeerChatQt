@@ -32,7 +32,7 @@ Drawer {
         clip: true
         width: parent.width
         color: "#FF909090";
-        y: blankeDrawer.getProfHeight();
+        y: blankeDrawer.getProfHeight()
         height: blankeDrawer.getHelperHeight()
 
         ListView {
@@ -42,14 +42,14 @@ Drawer {
             spacing: -1;
 
             model:ListModel {
-                ListElement {target:"Мой Профиль";}
+                ListElement {target:""}
+                ListElement {target:"Мой профиль";}
                 ListElement {target:"Уведомления";}
                 ListElement {target:"Безопасность"}
                 ListElement {target:"Внешний вид";}
                 ListElement {target:"Разработчик";}
                 ListElement {target:"Настройки"}
-                ListElement {target:qsTr("Назад");}
-                ListElement {target:"";}
+                ListElement {target:"Назад"}
             }
 
             boundsBehavior: Flickable.StopAtBounds;
@@ -59,19 +59,15 @@ Drawer {
                 id: element;
                 width: parent.width
                 height:facade.toPx(111)
-                visible: index != listMenu.count-1;
                 Rectangle {
                     id: body
                     clip: true
-                    anchors.fill:parent
                     Rectangle {
                         width: 0
                         height: 0
                         id: coloresRect
                         color: {
-                            if (index === 0) {
-                                loader.sets1Color
-                            }
+                            if (index<1) loader.sets1Color
                             else loader.sets2Color;
                         }
 
@@ -80,40 +76,41 @@ Drawer {
                             y:-coloresRect.height/2
                         }
                     }
+                    anchors.fill:parent
                     Text {
                         id: navigate
-                        text: target
                         color: {
                             if (index>0)loader.menu10Color
                             else loader.sets3Color;
                         }
+                        text: target
                         width:parent.width-facade.toPx(40)
-                        x: facade.toPx(30);
+                        x: facade.toPx(20);
                         anchors.verticalCenter: {
                             parent.verticalCenter
                         }
                         font.family: {trebu4etMsNorm.name}
-                        font.pixelSize: facade.doPx(32)
-                        elide: Text.ElideRight
+                        font.pixelSize: facade.doPx(30)
+                        elide: Text.ElideRight;
                     }
 
                     MouseArea {
                         anchors.fill:parent
                         onExited: {
                             circleAnimation.stop();
-                            listMenu.currentIndex= -1
+                            listMenu.currentIndex=-1
                         }
                         onEntered: {
                             listMenu.currentIndex = index;
-                            coloresRect.x = mouseX;
-                            coloresRect.y = mouseY;
-                            circleAnimation.start()
+                            coloresRect.x = (mouseX)
+                            coloresRect.y = (mouseY)
+                            circleAnimation.start();
                         }
 
                         onClicked: {
-                            circleAnimation.stop();
+                            (circleAnimation.stop())
                             switch(index) {
-                            case 6:
+                            case 7:
                                 helperDrawer.close()
                                 break
                             }
@@ -141,7 +138,8 @@ Drawer {
                             } else {
                                 (loader.sets2Color)
                             }
-                        } else if (index<1) loader.sets4Color
+                        }
+                        else if (index<1)loader.sets4Color
                         else loader.sets3Color
                     }
                 }
@@ -149,18 +147,18 @@ Drawer {
         }
         LinearGradient {
             width:parent.width
-            height: facade.toPx(8)
-            start: Qt.point(0,0)
+            start: Qt.point(0, 0)
+            height: facade.toPx(18)
             end: Qt.point(0,height)
-            anchors.bottom: parent.bottom
+            anchors.top: parent.top
             gradient:Gradient{
                 GradientStop {
-                    position: 0;
-                    color: "transparent";
+                    position: (1.0)
+                    color: ("#40000000");
                 }
                 GradientStop {
-                    position: 1;
-                    color: ("#30000000");
+                    position: (0.3)
+                    color: "transparent";
                 }
             }
         }

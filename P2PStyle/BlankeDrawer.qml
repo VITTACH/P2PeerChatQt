@@ -154,7 +154,7 @@ Drawer {
     Rectangle {
         Rectangle {
             width: (parent.width)
-            color: loader.isOnline?loader.menu2Color:loader.menu4Color
+            color: loader.isOnline?loader.menu4Color:loader.menu2Color
             height: 6
         }
         id: rightRect
@@ -172,7 +172,7 @@ Drawer {
         Rectangle {
             height: 6
             width: (parent.width)
-            color: loader.isOnline?loader.menu2Color:loader.menu4Color
+            color: loader.isOnline?loader.menu4Color:loader.menu2Color
         }
         color: (loader.isOnline? loader.menu3Color: loader.menu3Color)
         width: (drawer.width - avatarButton.width)/2 + facade.toPx(14)
@@ -206,7 +206,7 @@ Drawer {
             context.closePath()
             context.fill();
 
-            context.fillStyle=loader.isOnline == true? loader.menu2Color:loader.menu4Color
+            context.fillStyle=loader.isOnline == true? loader.menu4Color:loader.menu2Color
             context.beginPath()
             context.moveTo(0,height-leftRect.height+6)
             context.lineTo(0,height-leftRect.height+0)
@@ -291,7 +291,7 @@ Drawer {
                         RadialGradient {
                             anchors.fill: parent
                             gradient: Gradient {
-                                GradientStop { position: 0.4; color: "#30000000"}
+                                GradientStop { position: 0.4; color: "#20000000"}
                                 GradientStop { position: 0.8; color: "#90000000"}
                             }
                         }
@@ -711,23 +711,25 @@ Drawer {
     Rectangle {
         width: 6;
         color: {
-            if (loader.isOnline==true) loader.menu2Color
-            else loader.menu4Color;
+            if(loader.isOnline==true) loader.menu4Color;
+            else {loader.menu2Color;}
         }
-        anchors.left: parent.right;
+        anchors.left: {parent.right;}
         anchors {
-            bottom: {parent.bottom}
+            bottom: {(parent.bottom)}
             top: rightRect.top
         }
     }
 
     DropShadow {
-        radius: 40
-        samples: 40
-        source: listMenu
-        color: "#80000000";
+        samples:20
+        radius: 20
+        source: {listMenu;}
+        color: "#40000000";
         verticalOffset: -10
-        anchors.fill: listMenu
+        anchors {
+            fill: listMenu;
+        }
     }
     ListView {
         clip: true
@@ -735,15 +737,6 @@ Drawer {
         width: parent.width
         snapMode:ListView.SnapOneItem
         property bool isShowed: false
-        height: {
-            var length= parent.height
-            length -= facade.toPx(540) + getProfHeight()
-            var count= Math.ceil(length/facade.toPx(80))
-            if (count >navigateDownModel.count)
-               count = navigateDownModel.count;
-            if (count < 1) count = 1;
-            (count)*facade.toPx(80)
-        }
         anchors.bottom: parent.bottom
         boundsBehavior: Flickable.StopAtBounds;
         Component.onCompleted: currentIndex=-1;
@@ -758,46 +751,54 @@ Drawer {
             }
             ListElement {
                 image : "qrc:/ui/icons/outIconBlue.png";
-                target: "Выйти"
+                target: qsTr("Выйти")
             }
         }
+        height: {
+            var length= parent.height
+            length-= facade.toPx(540) + getProfHeight();
+            var count= Math.ceil(length/facade.toPx(80))
+            if (count >navigateDownModel.count)
+               count = navigateDownModel.count;
+            if (count < 1) count = 1;
+            (count) * facade.toPx(80)
+        }
+
         delegate:Rectangle {
-            width: parent.width;
-            height: facade.toPx(80)
+            width: (parent.width)
+            height: {facade.toPx(80)}
             color: ListView.isCurrentItem? ("#D3D3D3"): "#E5E5E5"
             MouseArea {
-                id: menMouseArea
-                anchors.fill:parent
+                id: menMouseArea;
+                anchors.fill: parent;
                 onEntered: if(index>0)listMenu.currentIndex=index
                 onClicked: {
                     switch(index) {
                     case 2:
-                        if (helperDrawer.position <=1) {
+                        if (helperDrawer.position <=1)
                             helperDrawer.open()
-                        }
                         break;
                     case 3:
-                        drawer.close()
-                        event_handler.saveSet("user","")
                         loader.goTo("qrc:/loginanDregister.qml");
-                        helperDrawer.visible((false))
-                        loader.restores()
+                        event_handler.saveSet("user","")
+                        loader.restores();drawer.close()
+                        helperDrawer.visible(false)
                     }
                     if (index == 1) {
                         myswitcher.checked = !myswitcher.checked;
                     } else if (index > 1 && index <=2) {
-                        listMenu.currentIndex = index
+                        listMenu.currentIndex = index;
                     }
                 }
-                onExited: listMenu.currentIndex = -1;
+                onExited: {listMenu.currentIndex = -1}
             }
 
             Rectangle {
-                visible: (index == 0)
-                color: loader.menu7Color;
+                visible: index == 0
                 width: firstRow.width
                 height: facade.toPx(50)
                 radius: facade.toPx(25)
+                color: loader.menu7Color;
                 anchors.verticalCenter: {(parent.verticalCenter)}
                 anchors.horizontalCenter: parent.horizontalCenter
 

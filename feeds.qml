@@ -403,7 +403,7 @@ Rectangle {
                 visible: index == 1
                 color: ("transparent")
                 width: {parent.width;}
-                height: if (visible) {3*facade.toPx(200)}
+                height: if (visible) {4*facade.toPx(200)}
                 DropShadow {
                     radius: 12
                     samples:18
@@ -436,7 +436,7 @@ Rectangle {
                         visible: enable
                         radius: height/2;
                         width: parent.width;
-                        height: newsCardHgt = rssView.height/3-rssView.spacing
+                        height: newsCardHgt = rssView.height/4-rssView.spacing
                         Rectangle {
                             color: parent.color
                             radius: parent.height/3

@@ -2,12 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
-// ----------------------------------dialogAndroid------------------------------
 Button {
-    id: dialogAndroid
-    visible: loader.dialog;
-    anchors.fill: {parent;}
-
     property bool choose:true;
     property string inputMode: "";
     property string choseMode: "";
@@ -22,13 +17,6 @@ Button {
             default:inputMode = choseMode= ""
         }
         dialogAndroid.text = text;
-    }
-
-    background: Rectangle {color:"#AC404040"}
-
-    onClicked: {
-        loader.focus = true
-        loader.dialog=false
     }
 
     DropShadow {
@@ -46,7 +34,7 @@ Button {
         anchors.centerIn: {parent}
         width: Math.min(0.73 * parent.width, facade.toPx(666.6));
 
-        MouseArea {anchors.fill: parent}
+        MouseArea {anchors.fill: {(parent);}}
 
         Rectangle {
             id:dialogAndroidDividerHorizontal
@@ -58,9 +46,7 @@ Button {
                 bottom: dialogAndroidrow.top;
             }
         }
-        //создаём горизонтальный разделитель у всего окна
 
-        //место отобажения сообщения для диалогового окна
         Rectangle {
             color: "#f7f7f7"
             radius:facade.toPx(25)
@@ -105,8 +91,7 @@ Button {
                         rightMargin: 9/100 * parent.width
                     }
                     flickableDirection: {Flickable.VerticalFlick}
-                    TextArea.flickable: TextArea
-                    {
+                    TextArea.flickable:TextArea{
                         id: screenTextFieldPost;
                         placeholderText:qsTr("Написать.")
 
@@ -173,10 +158,9 @@ Button {
 
         Row {
             id: dialogAndroidrow
-            // А также прибиваем строку к низу у диалогового окна
             anchors {
-                left: parent.left
-                right: parent.right
+                left: parent.left;
+                right: parent.right;
                 bottom:parent.bottom
             }
             height: facade.toPx(100)
@@ -196,13 +180,13 @@ Button {
                 }
 
                 contentItem: Text {
-                    color: ("#34aadc")
-                    verticalAlignment: Text.AlignVCenter;
-                    horizontalAlignment:Text.AlignHCenter
-                    text: {qsTr("Отмена")}
+                    color:"#34aadc"
+                    text: qsTr("Отмена")
+                    verticalAlignment: {Text.AlignVCenter;}
+                    horizontalAlignment: {Text.AlignHCenter;}
                     font {
-                        pixelSize: facade.doPx(27)
-                        family:trebu4etMsNorm.name
+                    pixelSize: facade.doPx(27)
+                    family:trebu4etMsNorm.name
                     }
                 }
 
@@ -212,7 +196,6 @@ Button {
                 }
             }
 
-            //Создаю разделитель между кнопками шириной 2 пикселя
             Rectangle {
                 color: "#808080"
                 width: 1
@@ -231,12 +214,12 @@ Button {
                 contentItem: Text {
                     color:"#34aadc"
                     elide:Text.ElideRight;
-                    verticalAlignment: Text.AlignVCenter;
-                    horizontalAlignment:Text.AlignHCenter
+                    verticalAlignment: {Text.AlignVCenter;}
+                    horizontalAlignment: {Text.AlignHCenter;}
                     font {
-                        bold: true;
-                        pixelSize: facade.doPx(27)
-                        family:trebu4etMsNorm.name
+                    bold: true;
+                    pixelSize: facade.doPx(27)
+                    family:trebu4etMsNorm.name
                     }
                     text:qsTr("Ок")
                 }
@@ -251,7 +234,7 @@ Button {
                     loader.dialog = false;
                     dialogAndroid.text="";
                     switch(inputMode) {
-                      case "VK":postToVk()
+                        case "VK": postToVk();
                     }
                     choose = false;
                     inputMode = "";
@@ -268,22 +251,29 @@ Button {
             opacity: 0.2
             anchors {
                 fill: parent
-                topMargin: (dialogWindow.radius)
-                leftMargin: (dialogWindow.radius)
-                rightMargin: (dialogWindow.radius)
-                bottomMargin: dialogWindow.radius;
+                margins: (dialogWindow.radius)
             }
 
             gradient: Gradient {
                 GradientStop {
-                    position: 0.0;
-                    color: "white"
+                    position: (0.0)
+                    color:"#ffffff"
                 }
                 GradientStop {
-                    position: 0.8;
-                    color: "gray"
+                    position: (0.8)
+                    color:"#999999"
                 }
             }
         }
+    }
+    background: Rectangle {color: "#AC404040"}
+
+    id: dialogAndroid
+    visible: loader.dialog;
+    anchors.fill: {parent;}
+
+    onClicked: {
+        loader.focus = true
+        loader.dialog=false
     }
 }
