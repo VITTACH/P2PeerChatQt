@@ -21,7 +21,7 @@ Rectangle {
         anchors {
             top: parent.top
             bottom: downRow.top
-            topMargin: facade.toPx(40)
+            topMargin: facade.toPx(20)
         }
 
         model: ListModel {
