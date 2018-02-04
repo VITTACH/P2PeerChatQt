@@ -105,9 +105,12 @@ Drawer {
             if (request.readyState ==XMLHttpRequest.DONE) {
                 if (request.status&&request.status ==200) {
                     try {
-                    obj = JSON.parse(request.responseText);
-                    } catch(e) {}
-                    for (var i = 0; obj != null && i < obj.length; i+=1) {
+                        obj=JSON.parse(request.responseText)
+                    } catch(e) {
+                        console.log("parse: "+e)
+                        return
+                    }
+                    for (var i = 0; i < obj.length; i+=1) {
                         index = findPeer(obj[i].name)
                         if (usersModel.count<1|| index<0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
@@ -120,10 +123,8 @@ Drawer {
                                 ip: obj[i].ip,
                                 activity: 1
                             });
-                            if (obj[i].name ==loader.tel) {
-                                listView.currentIndex = i
-                            }
-                        }else {
+                            if(obj[i].name==loader.tel)listView.currentIndex=i
+                        } else {
                             if (usersModel.get(index).image == "") {
                                 usersModel.setProperty(index, "image", "http://lorempixel.com/200/20" + i + "/sports")
                             }
@@ -142,76 +143,63 @@ Drawer {
             }
         }
         request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        request.send("READ=2&name=" + name)
+        request.send("READ=2&name=" +name)
     }
 
     Rectangle {
-        anchors.fill: parent
-        color: loader.menu9Color;
-        anchors.topMargin:profile.height
+        anchors.fill: (parent)
+        color: (loader.menu9Color)
+        anchors.topMargin: profile.height;
     }
 
     Rectangle {
         Rectangle {
-            width: (parent.width)
+            id: iner
+            width: {parent.width;}
             color: loader.isOnline?loader.menu4Color:loader.menu2Color
             height: 6
         }
-        id: rightRect
-        color: (loader.isOnline? loader.menu3Color: loader.menu3Color)
-        width: (drawer.width - avatarButton.width)/2 + facade.toPx(13)
-        anchors {
-            top: profile.top
-            right: parent.right
-            bottom:profile.bottom
-            topMargin: 1*profile.height/4
-        }
-    }
-    Rectangle {
         id: leftRect;
-        Rectangle {
-            height: 6
-            width: (parent.width)
-            color: loader.isOnline?loader.menu4Color:loader.menu2Color
-        }
         color: (loader.isOnline? loader.menu3Color: loader.menu3Color)
-        width: (drawer.width - avatarButton.width)/2 + facade.toPx(14)
+        width: parent.width - canva.width;
         anchors {
-            top: profile.top
-            bottom:profile.bottom
-            topMargin: 3*profile.height/4-myRow.height
+            top: (profile.top)
+            bottom: profile.bottom
+            topMargin:partnerHeader.height-facade.toPx(11)-iner.height
         }
     }
+
     Canvas {
         id: canva
         anchors {
-            bottomMargin: -1
-            top: (rightRect.top);
-            left: leftRect.right;
-            right: rightRect.left
-            bottom:profile.bottom
+            top: leftRect.top;
+            left: leftRect.right
+            bottom: profile.bottom
         }
+        width: facade.toPx(120)
         Connections {
             target: loader;
-            onIsOnlineChanged: {canva.requestPaint();}
+            onIsOnlineChanged: canva.requestPaint();
         }
+        antialiasing: true;
+        smooth: false
         onPaint: {
-            var context =getContext("2d");
+            var context=getContext("2d")
             context.reset()
             context.fillStyle=loader.isOnline == true? loader.menu3Color:loader.menu3Color
-            context.moveTo(0,height - leftRect.height)
+            context.moveTo(0,0)
+            context.lineTo(width, width)
+            context.lineTo(width,height)
             context.lineTo(0,height)
-            context.lineTo(width, height);
-            context.lineTo(width, 0)
             context.closePath()
             context.fill();
 
             context.fillStyle=loader.isOnline == true? loader.menu4Color:loader.menu2Color
             context.beginPath()
-            context.moveTo(0,height-leftRect.height+6)
-            context.lineTo(0,height-leftRect.height+0)
-            context.lineTo(width, 0)
-            context.lineTo(width, 6)
+            context.moveTo(0,0)
+            context.lineTo(width-0,width)
+            context.lineTo(width-6,width)
+            context.lineTo(0,6)
             context.closePath()
             context.fill();
         }
@@ -220,35 +208,33 @@ Drawer {
     Column {
         id: profile
         spacing:facade.toPx(10)
-        anchors{
-            horizontalCenter: parent.horizontalCenter;
+        anchors {
+            horizontalCenter:parent.horizontalCenter
         }
         Item{
+            id: firstItem
             width: parent.width
             height: facade.toPx(10);
         }
         Row {
-            id: firstRow
+            id: firstRow;
             anchors.horizontalCenter:parent.horizontalCenter
             spacing: {facade.toPx(30) - (facade.toPx(708) - drawer.width)/facade.toPx(10)}
             Column {
-                anchors {
-                    top: parent.top;
-                    topMargin: facade.toPx(10)
-                }
+                anchors.bottom: parent.bottom
                 Text {
-                    color: "#FFFFFF"
-                    font.bold: !false
-                    styleColor:"black";
-                    style: Text.Raised;
+                    font.bold: true;
+                    style: Text.Raised
+                    styleColor: "black";
+                    color: {"#FFFFFFFF"}
                     font.family: trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(46);
-                    text: usersModel.count > 0?usersModel.count-1: 0
+                    font.pixelSize: facade.doPx(30);
+                    text: usersModel.count > 0 ? usersModel.count: 0
                     anchors.horizontalCenter:parent.horizontalCenter
                 }
                 Text {
-                    text:qsTr("Друзья")
-                    color:qsTr("white")
+                    text: qsTr("Друзья")
+                    color: qsTr("white")
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(24);
                     anchors.horizontalCenter:parent.horizontalCenter
@@ -256,20 +242,20 @@ Drawer {
             }
             Button {
                 id: avatarButton
-                width: facade.toPx(225)
-                height:facade.toPx(225)
+                width: facade.toPx(225);
+                height: facade.toPx(225)
                 background: Rectangle {
-                    radius: width * 0.5
-                    color:"transparent"
+                    radius: width * 0.5;
+                    color: "transparent"
                     border {
                       width: 1.4
-                      color:"#50FFFFFF"
+                      color: "#50FFFFFF"
                     }
                 }
 
                 onClicked: {
                     drawer.close()
-                    loader.avatar= true
+                    loader.avatar = true
                 }
 
                 Rectangle {
@@ -321,10 +307,8 @@ Drawer {
                 }
             }
             Column {
-                anchors {
-                    bottom: parent.bottom
-                    bottomMargin: facade.toPx(20)
-                }
+                opacity: 0
+                anchors.bottom: parent.bottom
                 Text {
                     text: "0"
                     color: "white"
@@ -332,7 +316,7 @@ Drawer {
                     styleColor:"black";
                     style: Text.Raised;
                     font.family: trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(46);
+                    font.pixelSize: facade.doPx(30);
                     anchors.horizontalCenter:parent.horizontalCenter
                 }
                 Text {
@@ -664,6 +648,10 @@ Drawer {
         }
     }
 
+    HelperDrawer {
+        id: helperDrawer;
+    }
+
     Rectangle {
         id: leftSlider
         opacity: 0
@@ -706,41 +694,24 @@ Drawer {
         }
     }
 
-
-    HelperDrawer {id: helperDrawer}
-    Rectangle {
-        width: 6;
-        color: {
-            if(loader.isOnline==true) loader.menu4Color;
-            else {loader.menu2Color;}
-        }
-        anchors.left: {parent.right;}
-        anchors {
-            bottom: {(parent.bottom)}
-            top: rightRect.top
-        }
-    }
-
     DropShadow {
-        samples:20
         radius: 20
-        source: {listMenu;}
+        samples:radius
+        source: listMenu;
         color: "#40000000";
         verticalOffset: -10
-        anchors {
-            fill: listMenu;
-        }
+        anchors.fill: listMenu
     }
     ListView {
-        clip: true
         id: listMenu
         width: parent.width
+        property bool isShowed
         snapMode:ListView.SnapOneItem
-        property bool isShowed: false
         anchors.bottom: parent.bottom
         boundsBehavior: Flickable.StopAtBounds;
         Component.onCompleted: currentIndex=-1;
 
+        clip: true
         model:ListModel {
             id: navigateDownModel
             ListElement {image: ""; target: ""}
@@ -795,7 +766,7 @@ Drawer {
 
             Rectangle {
                 visible: index == 0
-                width: firstRow.width
+                width: firstRow.width;
                 height: facade.toPx(50)
                 radius: facade.toPx(25)
                 color: loader.menu7Color;
@@ -819,9 +790,7 @@ Drawer {
                             anchors.verticalCenter:parent.verticalCenter
                             source: "qrc:/ui/icons/"+(find? "searchIconWhite": "DeleteIconWhite")+".png"
                         }
-                        onClicked: {
-                            if(find == false) find=true;
-                        }
+                        onClicked: if(find == false) find = true;
                     }
                     Connections {
                         target: drawer;
@@ -829,15 +798,15 @@ Drawer {
                             if (find) {
                                 inerText.focus = (false)
                                 inerText.clear();
-                                filterList("");
+                                filterList("")
                             }
                         }
                     }
                     TextField {
                         id: inerText
                         color: loader.menu15Color
-                        height: (parent.parent.height)
-                        rightPadding: parent.parent.radius;
+                        height: parent.parent.height
+                        rightPadding: parent.parent.radius
                         onAccepted:filterList(text.toLowerCase())
                         width: parent.parent.width - inerImage.width - parent.spacing - facade.toPx(20);
                         placeholderText: "Найти друзей";
@@ -846,116 +815,116 @@ Drawer {
                         font.family: trebu4etMsNorm.name
                         onActiveFocusChanged:find=false;
                         background: Rectangle{opacity:0}
-                        verticalAlignment:Text.AlignVCenter
+                        verticalAlignment: {Text.AlignVCenter}
                         onTextChanged: {
                             if (event_handler.currentOSys() !== 1 && event_handler.currentOSys() !== 2){
-                            filterList(text.toLowerCase());
+                                filterList(text.toLowerCase())
                             }
                         }
                     }
                 }
             }
 
-            Row {
-                spacing:facade.toPx(25)
+            Item {
                 anchors {
                     fill: parent;
-                    leftMargin: facade.toPx(20)
+                    leftMargin: facade.toPx(30)
                 }
+
                 Image {
-                    id: icon
-                    source:image;
+                    source: image
                     visible: index >= 2
-                    width: {
-                      facade.toPx(sourceSize.width* 1.5)
-                    }
-                    height:{
-                      facade.toPx(sourceSize.height*1.5)
-                    }
                     anchors.verticalCenter: {
                         parent.verticalCenter
                     }
+                    width: facade.toPx(sourceSize.width)
+                    height: facade.toPx(sourceSize.height)
+                    horizontalAlignment:Image.AlignHCenter
                 }
+
                 Connections {
-                    target: loader
+                    target:loader
                     onIsOnlineChanged: {
-                      myswitcher.checked=loader.isOnline
+                        myswitcher.checked=loader.isOnline
                     }
                 }
                 Switch {
-                    id: myswitcher
-                    visible: index == 1
+                    id:myswitcher
+                    visible: index==1;
                     indicator: Rectangle {
                         radius: facade.toPx(25)
-                        y: (parent.height/2 - height/2);
-                        implicitWidth: (facade.toPx(60))
-                        implicitHeight:(facade.toPx(30))
+                        y: parent.height/2-height/2
+                        implicitWidth: facade.toPx(60)
+                        implicitHeight:facade.toPx(30)
                         color: {
-                            if (parent.checked  == true)
+                            if (parent.checked  == true) {
                                 loader.menu12Color
-                            else loader.menu13Color
+                            } else loader.menu13Color
+                        }
+                        DropShadow {
+                            radius: 15
+                            samples: 15
+                            source: {switcher}
+                            color: "#90000000"
+                            anchors.fill: {switcher;}
                         }
                         Rectangle {
-                            color:"#76CCCCCC"
+                            id: switcher
+                            width: myswitcher.height/2.3;
+                            height:myswitcher.height/2.3;
+                            radius:width/2
                             x: {
-                                if(myswitcher.checked) {
+                                if (myswitcher.checked) {
                                     parent.width - width - (parent.height - height)/2
                                 } else (parent.height - height)/2
                             }
-                            anchors {
-                                verticalCenter: {
-                                   parent.verticalCenter
-                                }
+                            color: {loader.feedColor}
+                            anchors.verticalCenter: {
+                                parent.verticalCenter
                             }
-                            width: (myswitcher.height/2)
-                            height:(myswitcher.height/2)
-                            radius: {width/2}
-                        }
-                        Rectangle {
-                            radius: {width/2}
-                            x: {
-                                if(myswitcher.checked) {
-                                    parent.width - width - (parent.height - height)/2
-                                } else (parent.height - height)/2
-                            }
-                            color:loader.feedColor;
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: myswitcher.height/2.3
-                            height:myswitcher.height/2.3
                         }
                     }
-                    onCheckedChanged: {
-                        loader.isOnline = checked;
-                    }
-                    anchors.verticalCenter: {
-                        parent.verticalCenter
-                    }
-                    width: {facade.toPx(64);}
-                    height: {facade.toPx(80)}
+                    onCheckedChanged: loader.isOnline=checked
+                    width: facade.toPx(64)
+                    height:facade.toPx(80)
                 }
+
                 Text {
-                    width: {
-                        var par3 = icon.width
-                        var par1 = ((parent.width))
-                        var par2 = facade.toPx(40);
-                        return (par1 - par3 - par2)
-                    }
-                    anchors.verticalCenter: {
-                        parent.verticalCenter
+                    anchors {
+                        left: myswitcher.right
+                        leftMargin: facade.toPx(30)
+                        verticalCenter: parent.verticalCenter
                     }
                     font.pixelSize: facade.doPx(20)
                     font.family:trebu4etMsNorm.name
-                    elide: {Text.ElideRight;}
-                    color: loader.menu10Color
+                    color: loader.menu10Color;
                     text: {
                         if (index == 1) {
                             if (myswitcher.checked)
-                                "В сети"
+                                qsTr("В сети")
                             else "Невидимый";
                         } else target
                     }
                 }
             }
+        }
+    }
+
+    Rectangle {
+        width: 6;
+        color: {
+            if (loader.isOnline) {
+                loader.menu4Color;
+            } else {
+                loader.menu2Color;
+            }
+        }
+        anchors {
+            left: parent.right;
+            leftMargin: -width;
+            topMargin: canva.width
+            bottom: parent.bottom;
+            top: leftRect.top
         }
     }
 }

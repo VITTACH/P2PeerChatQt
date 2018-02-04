@@ -67,7 +67,7 @@ Rectangle {
         if (textField.text.length >= 1) {
             var text= buferText.text = textField.text;
             var obj = {text:text, flag:flag,time:new Date()}
-            var nd = blankeDrawer.cindex
+            var nd = blankeDrawer.cindex;
             loader.chats[nd].message.push(obj)
             var c=JSON.stringify(loader.chats)
             event_handler.saveSet("chats", c);
@@ -91,7 +91,7 @@ Rectangle {
                 var object = {text:buferText.text, flag:1, time: new Date()}
                 loader.chats[i].message.push((object))
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
-                if (i == blankeDrawer.getCurPeerInd()){
+                if(i == blankeDrawer.getCurPeerInd()){
                     appendMessage(buferText.text, 1,object.time)
                     chatScrenList.positionViewAtEnd();
                 }

@@ -571,9 +571,9 @@ Rectangle {
             ListView {
                 clip: true
                 width: parent.width
-                height:facade.toPx(200)
-                spacing: facade.toPx((27))
-                orientation: Qt.Horizontal
+                height: facade.toPx(160);
+                spacing: facade.toPx(27);
+                orientation:Qt.Horizontal
                 boundsBehavior: Flickable.StopAtBounds;
                 visible: index==2
                 model:ListModel {
