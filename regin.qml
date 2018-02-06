@@ -40,6 +40,7 @@ Item {
         }
 
         model:ListModel {
+            id: listModel
             ListElement {image:"ui/icons/personIconwhite.png"; plaseholder: "Логин";}
             ListElement {image:"ui/icons/personIconwhite.png"; plaseholder:"Фамилия"}
             ListElement {image:"ui/icons/PassWIconWhite.png"; plaseholder: "Ваш личный пароль"}
@@ -51,7 +52,13 @@ Item {
         }
 
         spacing:facade.toPx(50)
-        displayMarginBeginning: facade.toPx(200)
+        displayMarginBeginning: {
+            var disp=(parent.height-(facade.toPx(90)+spacing)*(listModel.count-2))/2;
+            if (disp > partnerHeader.height+facade.toPx(40)) {disp}
+            else {
+                partnerHeader.height+facade.toPx(40)
+            }
+        }
 
         delegate: Column {
             width: parent.width
@@ -131,6 +138,7 @@ Item {
                 TextField {
                     id: textRow
                     color: "white"
+                    width: parent.width-facade.toPx(20)-icon.width;
                     height:parent.height
                     placeholderText: plaseholder;
                     anchors {
@@ -158,7 +166,9 @@ Item {
                             TextInput.Password
                         else TextInput.Normal;
                     }
-                    onTextChanged: loader.fields[index - 0] = text;
+                    onTextChanged: {
+                        loader.fields[index-0] = text;
+                    }
                     font.pixelSize: {facade.doPx(28);}
                     font.family: {trebu4etMsNorm.name}
                     background: Rectangle {opacity: 0}
@@ -166,10 +176,16 @@ Item {
             }
 
             Rectangle {
-                anchors.horizontalCenter: {parent.horizontalCenter}
-                width: Math.min(0.82*parent.width,facade.toPx(900))
-                height:facade.toPx(3);
-                visible: {index < (5)}
+                anchors.horizontalCenter: {
+                    parent.horizontalCenter
+                }
+                width: {
+                    var a=0.82*parent.width
+                    var b=facade.toPx(900);
+                    Math.min(a, b);
+                }
+                height: facade.toPx(3)
+                visible:index < (5)
             }
         }
     }

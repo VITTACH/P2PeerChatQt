@@ -7,27 +7,26 @@ import "js/URLQuery.js" as URLQuery
 Item {
     property variant oldsWidth;
     property variant pageWidth;
-    property variant limsWidth: facade.toPx((1080));
 
     Component.onCompleted: partnerHeader.text="Вход"
 
     Item {
-        width:2*parent.width
-        height: {parent.height}
         P2PStyle.ColorAnimate {
-            anchors.fill: {(parent)}
+            anchors.fill: (parent)
             Component.onCompleted: setColors([[180, 180, 180], [107,107,107]], 500)
         }
+
+        width: 2*parent.width
+        height: {parent.height}
         Image {
-            y:(parent.height-height)
-            x:(parent.width-width)/2
+            anchors.bottom: parent.bottom
             source: {("qrc:/ui/backind/back1.png");}
             height: {facade.doPx(sourceSize.height)}
+            x: (parent.width-width)/2;
             width: {
-                if (parent.width > facade.toPx(sourceSize.width)) {
-                    parent.width
-                }
-                else {facade.toPx(sourceSize.width)}
+                var wh=facade.toPx(sourceSize.width)
+                if (parent.width > wh) parent.width;
+                else wh
             }
         }
     }
@@ -35,7 +34,7 @@ Item {
     ListView {
         id: listView
         width: parent.width
-        spacing: facade.toPx(50)
+        spacing: facade.toPx(50);
         model:ListModel {
             id: listModel
             ListElement {image: ""; placeholder: "develop VITTACH"}
@@ -52,13 +51,12 @@ Item {
 
         anchors {
             top: parent.top
-            bottom:parent.bottom
+            bottom: parent.bottom
             topMargin: displayMarginBeginning
         }
         displayMarginBeginning: {
-            partnerHeader.height+facade.toPx(50)+
-               ((parent.height - partnerHeader.height - pageWidth-(listModel.count-1)*facade.toPx(90)-listModel.count*listView.spacing)/2>0?
-                    (parent.height-partnerHeader.height-pageWidth-(listModel.count-1)*facade.toPx(90)-listModel.count*listView.spacing)/2:0)
+            var res=parent.height-partnerHeader.height-pageWidth-(listModel.count-1)*facade.toPx(90)-listModel.count*listView.spacing;
+            partnerHeader.height+facade.toPx(50)+(res/2>0? res/2:0)
         }
 
         delegate: Column {
@@ -68,9 +66,9 @@ Item {
             ListView {
                 visible:index<1
                 height: pageWidth
-                width: {links.count*(pageWidth + spacing)}
-                spacing: facade.toPx(10);
+                width: links.count*(pageWidth + spacing);
                 orientation:Qt.Horizontal
+                spacing: facade.toPx(10);
                 anchors.horizontalCenter: {parent.horizontalCenter}
 
                 model:ListModel {
@@ -81,9 +79,11 @@ Item {
                 }
                 delegate: Image {
                     source: image
-                    width: pageWidth = (facade.toPx(sourceSize.width*1.5*(listView.width>limsWidth? 1: listView.width/limsWidth)) > 0?
-                            oldsWidth = facade.toPx(sourceSize.width*1.5*(listView.width>limsWidth? 1: listView.width/limsWidth)):oldsWidth)
-                    height:pageWidth
+                    height: width
+                    width: {
+                        var res = sourceSize.width * 1.5 * (listView.width > facade.toPx(1080) ? 1 : listView.width/facade.toPx(1080))
+                        pageWidth = (facade.toPx(res) > 0 ? oldsWidth = facade.toPx(res) : oldsWidth);
+                    }
                     MouseArea {
                         onClicked: {
                             var params
@@ -103,7 +103,7 @@ Item {
                                     client_id: '5813771',
                                     scope: 'wall, offline',
                                     response_type: 'token',
-                                    redirect_uri:'http://oauth.vk.com/blank.html'
+                                    redirect_uri: 'https://oauth.vk.com/blank.html'
                                 }
                                 loader.urlLink = (String) ("https://oauth.vk.com/authorize?%1".arg(URLQuery.serializeParams(params)));
                                 partnerHeader.text = "Вконтакте"
@@ -111,13 +111,13 @@ Item {
                             }
                             loader.goTo("qrc:/webview.qml")
                         }
-                        anchors.fill: parent
+                        anchors.fill: {parent}
                     }
                 }
             }
 
             Item {
-                height:facade.toPx(100)
+                height: facade.toPx(100)
                 visible: (index == 3 || index == 4)
                 width: Math.min(0.82*parent.width,facade.toPx(900))
                 anchors.horizontalCenter: {parent.horizontalCenter}
@@ -125,14 +125,17 @@ Item {
                 DropShadow {
                     radius: 12
                     samples: 20
-                    anchors.fill: loginButon
-                    color: "#80000000";
-                    source: loginButon;
+                    color: {"#80000000"}
+                    source: {loginButon}
+                    anchors.fill: {loginButon}
                 }
                 Button {
                     id: loginButon
-                    text: typeof plaseHolder == "undefined"? "": plaseHolder
-                    anchors.fill:parent
+                    anchors.fill: parent
+                    text: {
+                        if (typeof plaseHolder == "undefined") {""}
+                        else plaseHolder
+                    }
 
                     font.pixelSize: facade.doPx(29)
                     font.family:trebu4etMsNorm.name
@@ -141,10 +144,12 @@ Item {
                         switch(index) {
                         case 3:
                             if (loader.fields[0].length <= 10) {
-                                informDialog.show("Телефон не правильный",0)
+                                var text1 = "Телефон не правильный"
+                                informDialog.show(text1, 0);
                             }
                             else if(loader.fields[1].length<5) {
-                                informDialog.show("Пароль < 5ти символов",0)
+                                var text2 = "Пароль < 5ти символов"
+                                informDialog.show(text2, 0);
                             }
                             else {
                                 var telephone = loader.fields[(0)];
@@ -153,7 +158,7 @@ Item {
                             }
                             break;
                         case 4:
-                            loader.goTo("qrc:/qrscaner.qml");
+                            loader.goTo("qrc:/qrscaner.qml")
                             break;
                         }
                     }
@@ -201,8 +206,9 @@ Item {
                 TextField {
                     color:"white"
                     height: facade.toPx(88)
-                    placeholderText: typeof plaseHolder == "undefined"? "": plaseHolder
+                    width: parent.width-facade.toPx(20)-icon.width;
                     onTextChanged: loader.fields[index - 1] = text;
+                    placeholderText: typeof plaseHolder == "undefined"? "": plaseHolder
 
                     onFocusChanged: if (text.length === 0 && index === (1)){text = "8"}
                     echoMode: if (index == 2) TextInput.Password; else TextInput.Normal

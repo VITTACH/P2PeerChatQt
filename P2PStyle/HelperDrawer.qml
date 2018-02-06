@@ -42,11 +42,18 @@ Drawer {
                 fill: parent
                 topMargin: facade.toPx(20)
             }
+
             spacing: anchors.topMargin;
+
             model: ListModel {
-                ListElement {target: "[\"Мой профиль\",\"Уведомления\",\"Безопасность\"]"}
-                ListElement {target: "[\"Внешний вид\",\"Разработчик\",\"Конфигурация\"]"}
+                ListElement {
+                    target: "[\"Мой профиль\",\"Уведомления\",\"Безопасность\"]"
+                }
+                ListElement {
+                    target: "[\"Внешний вид\",\"Разработчик\",\"Конфигурация\"]"
+                }
             }
+
             delegate: Column {
                 width: parent.width
                 Row {

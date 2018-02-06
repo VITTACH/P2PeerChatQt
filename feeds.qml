@@ -17,11 +17,11 @@ Rectangle {
     ListView {
         id: basView
         width: parent.width
-        spacing:facade.toPx(40)
+        spacing:facade.toPx(20)
         anchors {
             top: parent.top
             bottom: downRow.top
-            topMargin: facade.toPx(20)
+            topMargin: facade.toPx(40)
         }
 
         model: ListModel {
