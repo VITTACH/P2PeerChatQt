@@ -14,7 +14,6 @@
         <file>ui/bars/icons/configDBlue.png</file>
         <file>ui/bars/icons/configWhite.png</file>
         <file>ui/icons/phoneIconWhite.png</file>
-        <file>regin.qml</file>
         <file>ui/icons/personIconwhite.png</file>
         <file>ui/mask/round.png</file>
         <file>ui/profiles/default/Human.png</file>
@@ -66,5 +65,6 @@
         <file>ui/icons/outIconBlue.png</file>
         <file>ui/icons/presBackBlue.png</file>
         <file>ui/icons/presBackLigh.png</file>
+        <file>registration.qml</file>
     </qresource>
 </RCC>

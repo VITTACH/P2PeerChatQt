@@ -39,27 +39,22 @@ Item {
             topMargin: displayMarginBeginning;
         }
 
+        spacing:facade.toPx(50)
+        displayMarginBeginning: {
+            var rs=parent.height-partnerHeader.height-contentHeight
+            partnerHeader.height + spacing + (rs/2 > 0 ? rs/2 : 0);
+        }
+
         model:ListModel {
-            id: listModel
-            ListElement {image:"ui/icons/personIconwhite.png"; plaseholder: "Логин";}
-            ListElement {image:"ui/icons/personIconwhite.png"; plaseholder:"Фамилия"}
-            ListElement {image:"ui/icons/PassWIconWhite.png"; plaseholder: "Ваш личный пароль"}
-            ListElement {image:"ui/icons/phoneIconWhite.png"; plaseholder: "Электронная почта"}
-            ListElement {image:"ui/icons/phoneIconWhite.png"; plaseholder: "Телефон"}
+            ListElement {image: "ui/icons/personIconwhite.png";plaseholder: "Логин";}
+            ListElement {image: "ui/icons/personIconwhite.png";plaseholder:"Фамилия"}
+            ListElement {image: "ui/icons/PassWIconWhite.png"; plaseholder: "Пароль"}
+            ListElement {image: "ui/icons/phoneIconWhite.png"; plaseholder: "Почта";}
+            ListElement {image: "ui/icons/phoneIconWhite.png"; plaseholder:"Телефон"}
             ListElement {image: "-"; plaseholder: ""}
             ListElement {image: "_"; plaseholder: "Присоединиться"}
             ListElement {image: "_"; plaseholder: "Демо вход"}
         }
-
-        spacing:facade.toPx(50)
-        displayMarginBeginning: {
-            var disp=(parent.height-(facade.toPx(90)+spacing)*(listModel.count-2))/2;
-            if (disp > partnerHeader.height+facade.toPx(40)) {disp}
-            else {
-                partnerHeader.height+facade.toPx(40)
-            }
-        }
-
         delegate: Column {
             width: parent.width
             height: index == 7? facade.toPx(150): (image == "-"? 0: facade.toPx(90));

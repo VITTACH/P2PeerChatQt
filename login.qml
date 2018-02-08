@@ -1,12 +1,11 @@
 import QtQuick 2.7
+import "js/URLQuery.js"as URLQuery
 import QtQuick.Controls 2.0
-import QtGraphicalEffects 1.0
-import "P2PStyle" as P2PStyle
-import "js/URLQuery.js" as URLQuery
+import QtGraphicalEffects 1.0;
+import "P2PStyle" as P2PStyle;
 
 Item {
-    property variant oldsWidth;
-    property variant pageWidth;
+    property variant pageWidth
 
     Component.onCompleted: partnerHeader.text="Вход"
 
@@ -36,7 +35,6 @@ Item {
         width: parent.width
         spacing: facade.toPx(50);
         model:ListModel {
-            id: listModel
             ListElement {image: ""; placeholder: "develop VITTACH"}
             ListElement {
                 image: "ui/icons/phoneIconWhite.png"; plaseHolder: "Номер телефона"
@@ -49,30 +47,30 @@ Item {
             ListElement {image: ""; plaseHolder: "Нету аккаунта?";}
         }
 
+        displayMarginBeginning: {
+            var rs=parent.height-partnerHeader.height-contentHeight
+            partnerHeader.height + spacing + (rs/2 > 0 ? rs/2 : 0);
+        }
+
         anchors {
             top: parent.top
             bottom: parent.bottom
-            topMargin: displayMarginBeginning
-        }
-        displayMarginBeginning: {
-            var res=parent.height-partnerHeader.height-pageWidth-(listModel.count-1)*facade.toPx(90)-listModel.count*listView.spacing;
-            partnerHeader.height+facade.toPx(50)+(res/2>0? res/2:0)
+            topMargin: displayMarginBeginning;
         }
 
         delegate: Column {
-            width: listView.width
-            height: index==3? facade.toPx(110): (index<1?pageWidth:facade.toPx(89))
+            width: parent.width
+            height: index==3?facade.toPx(110): (index==0?pageWidth:facade.toPx(90))
 
             ListView {
-                visible:index<1
+                visible: index==0
                 height: pageWidth
-                width: links.count*(pageWidth + spacing);
+                width: model.count*(pageWidth + spacing);
                 orientation:Qt.Horizontal
                 spacing: facade.toPx(10);
                 anchors.horizontalCenter: {parent.horizontalCenter}
 
                 model:ListModel {
-                    id: links
                     ListElement {image: "ui/buttons/social/fb.png"}
                     ListElement {image: "ui/buttons/social/tw.png"}
                     ListElement {image: "ui/buttons/social/vk.png"}
@@ -81,8 +79,8 @@ Item {
                     source: image
                     height: width
                     width: {
-                        var res = sourceSize.width * 1.5 * (listView.width > facade.toPx(1080) ? 1 : listView.width/facade.toPx(1080))
-                        pageWidth = (facade.toPx(res) > 0 ? oldsWidth = facade.toPx(res) : oldsWidth);
+                        var limitWidth = facade.toPx(1100);
+                        pageWidth = facade.toPx(sourceSize.width * 1.5 * (listView.width > limitWidth? 1 : listView.width/limitWidth))
                     }
                     MouseArea {
                         onClicked: {
@@ -136,29 +134,25 @@ Item {
                         if (typeof plaseHolder == "undefined") {""}
                         else plaseHolder
                     }
-
                     font.pixelSize: facade.doPx(29)
                     font.family:trebu4etMsNorm.name
-
                     onClicked: {
                         switch(index) {
                         case 3:
                             if (loader.fields[0].length <= 10) {
                                 var text1 = "Телефон не правильный"
-                                informDialog.show(text1, 0);
-                            }
-                            else if(loader.fields[1].length<5) {
+                                informDialog.show(text1, (0))
+                            } else if (loader.fields[1].length<5) {
                                 var text2 = "Пароль < 5ти символов"
-                                informDialog.show(text2, 0);
-                            }
-                            else {
+                                informDialog.show(text2, (0))
+                            } else {
                                 var telephone = loader.fields[(0)];
                                 var passwords = loader.fields[(1)];
                                 loader.logon(telephone, passwords);
                             }
                             break;
                         case 4:
-                            loader.goTo("qrc:/qrscaner.qml")
+                            loader.goTo("qrc:/qrscaner.qml");
                             break;
                         }
                     }
@@ -182,8 +176,8 @@ Item {
                                 (index == 3? "#0f133d": "#FFFFFF");
                             }
                         }
-                        horizontalAlignment: {(Text.AlignHCenter);}
-                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment:Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter;
                         text: parent.text
                         font: parent.font
                     }
@@ -191,18 +185,16 @@ Item {
             }
 
             Item {
+                height:facade.toPx(88)
+                visible: (index === 1) || (index === 2);
+                width: Math.min(0.82*parent.width,facade.toPx(900))
+                anchors.horizontalCenter: (parent.horizontalCenter)
                 Image {
                     id: icon;
                     source: image
-                    width: {facade.toPx(sourceSize.width *15 / 10)}
-                    height:{facade.toPx(sourceSize.height*15 / 10)}
+                    width: {facade.toPx(sourceSize.width * 15 /10)}
+                    height:{facade.toPx(sourceSize.height* 15 /10)}
                 }
-
-                height:facade.toPx(88)
-                visible:{(index === 1) || (index === 2)}
-                width: Math.min(0.82*parent.width,facade.toPx(900))
-                anchors.horizontalCenter: (parent.horizontalCenter)
-
                 TextField {
                     color:"white"
                     height: facade.toPx(88)
@@ -229,10 +221,7 @@ Item {
                     font: parent.font;
                 }
 
-                anchors.left: {parent.left}
-                anchors.leftMargin: 0.09 * parent.width;
-                anchors.right: parent.right
-                anchors.rightMargin:0.09 * parent.width;
+                anchors.horizontalCenter: {parent.horizontalCenter}
 
                 text:typeof plaseHolder=="undefined"?"":plaseHolder
                 font.pixelSize: {facade.doPx(26)}

@@ -4,7 +4,7 @@ import QtGraphicalEffects 1.0
 
 Drawer {
     id: drawed
-    property var vtate: false
+    property var vtate:false
 
     dragMargin: {this.vtate?facade.toPx(40):0}
 
@@ -17,7 +17,7 @@ Drawer {
         var variable1= facade.toPx(430)
         Math.min(variable1, 0.6*parent.width);
     }
-    height:(parent.height)
+    height: (parent.height);
 
     Connections {
         target: drawed
@@ -38,23 +38,30 @@ Drawer {
         ListView {
             clip: true
             id: listMenu
+            spacing: (anchors.topMargin);
+
             anchors {
                 fill: parent
-                topMargin: facade.toPx(20)
+                topMargin:facade.toPx(20)
             }
 
-            spacing: anchors.topMargin;
-
-            model: ListModel {
+            model:ListModel {
                 ListElement {
-                    target: "[\"Мой профиль\",\"Уведомления\",\"Безопасность\"]"
+                    mypos: 0;
+                    target: "[\"Мой профиль\",\"Безопасность\"]"
                 }
                 ListElement {
-                    target: "[\"Внешний вид\",\"Разработчик\",\"Конфигурация\"]"
+                    mypos: 1;
+                    target: "[\"Внешний вид\",\"Конфигурация\"]"
+                }
+                ListElement {
+                    mypos: 2;
+                    target: "[\"Уведомления\", \"Разработчик\"]"
                 }
             }
 
             delegate: Column {
+                id: col
                 width: parent.width
                 Row {
                     id: row
@@ -68,17 +75,20 @@ Drawer {
                             id: body
                             clip: true
                             height: width
-                            width: (parent.width - row.spacing) / rep.count - row.spacing
 
                             MouseArea {
-                                anchors.fill: {parent}
-                                onEntered: {
-                                    coloresRect.x = (mouseX)
-                                    coloresRect.y = (mouseY)
-                                    circleAnimation.start();
+                                onExited: {
+                                    circleAnimation.stop();
+                                    listMenu.currentIndex = 0 - 1;
                                 }
-                                onExited: {circleAnimation.stop()}
+                                anchors.fill: {parent}
                                 onClicked: circleAnimation.stop();
+                                onEntered: {
+                                    coloresRect.x = mouseX;
+                                    coloresRect.y = mouseY;
+                                    circleAnimation.start()
+                                    listMenu.currentIndex = mypos;
+                                }
                             }
 
                             PropertyAnimation {
@@ -95,11 +105,12 @@ Drawer {
                                 }
                             }
 
+                            width: (parent.width - row.spacing) / rep.count - row.spacing
+
                             color: {
-                                if (!circleAnimation.running) {
+                                if (col.ListView.isCurrentItem&&!circleAnimation.running)
                                     (index == 0)?loader.sets1Color : (loader.sets2Color);
-                                }
-                                else if (index<1)loader.sets4Color
+                                else if(index<1) loader.sets4Color
                                 else loader.sets3Color
                             }
 
@@ -107,11 +118,11 @@ Drawer {
                                 width: 0
                                 height: 0
                                 id: coloresRect;
-                                color: {index == 0? loader.sets1Color: loader.sets2Color}
+                                color: index==0? loader.sets1Color : (loader.sets2Color);
 
                                 transform: Translate {
-                                    x: -coloresRect.width /2
-                                    y: -coloresRect.height/2
+                                    x:-coloresRect.width /2
+                                    y:-coloresRect.height/2
                                 }
                             }
                         }

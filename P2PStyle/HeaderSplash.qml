@@ -5,26 +5,28 @@ import QtGraphicalEffects 1.0
 Item {
     id: rootItem
     width: parent.width
-    height:facade.toPx(150)
+    height: facade.toPx(150);
 
     DropShadow {
         radius: 15
         samples: 16
-        anchors.fill: headerRect;
         verticalOffset: 10;
         color: "#60000000";
-        source: headerRect;
+        source: (headRect);
+        visible: headRect.visible
+        anchors.fill: (headRect);
     }
 
     Rectangle {
-        id: headerRect
+        id: headRect
         width: parent.width
         height: facade.toPx(140);
+        visible: loader.source != "qrc:/qrscaner.qml"
         color: {
             if (loader.source == ("qrc:/loginanDregister.qml")) {
-                loader.head1Color
+                loader.menu10Color
             } else {
-                loader.head1Color
+                loader.head1Color;
             }
         }
 
@@ -35,8 +37,8 @@ Item {
                 anchors {
                     verticalCenter: parent.verticalCenter;
                     left: (loader.isLogin)? parent.left:undefined
-                    leftMargin: loader.isLogin? facade.toPx(20):0
                     centerIn: (loader.isLogin)? undefined: parent
+                    leftMargin: loader.isLogin? facade.toPx(20):0
                     horizontalCenter: loader.isLogin? undefined: parent.horizontalCenter
                 }
 
@@ -149,8 +151,8 @@ Item {
         Canvas {
             id: canva
             height: parent.height
-            anchors.right:parent.right;
-            visible:loader.source=="qrc:/chat.qml"
+            anchors.right: parent.right
+            visible: loader.source == "qrc:/chat.qml"
             width: hamMoreButton.width + (facade.toPx(40))
             Connections {
                 target: {loader;}
@@ -181,10 +183,15 @@ Item {
         }
 
         Rectangle {
+            width: parent.width
             height: facade.toPx(5)
-            width: headerRect.width;
             color: loader.head2Color
-            anchors.bottom: parent.bottom;
+            visible: {
+                loader.source!="qrc:/loginanDregister.qml"
+            }
+            anchors {
+                bottom:parent.bottom
+            }
         }
 
         Button {
