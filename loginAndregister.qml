@@ -2,24 +2,32 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 
 SwipeView {
-    anchors.fill: parent
-    currentIndex: partnerHeader.page
+    anchors.fill: {parent}
+    currentIndex: partnerHeader.page;
     Component.onCompleted: partnerHeader.page = 0
 
     Loader {
-        Component.onCompleted: source = "qrc:/login.qml"
+        id: loginScreen
+        Component.onCompleted: source="login.qml"
     }
     Loader {
-        Component.onCompleted: source = ("registration.qml")
+        id: reginScreen
+        Component.onCompleted: {
+            source = "registration.qml"
+        }
     }
 
     onCurrentIndexChanged: {
         partnerHeader.page = currentIndex
-        switch (currentIndex) {
-            case 0: partnerHeader.text= qsTr("Вход"); break;
-            case 1: partnerHeader.text="Регистрация"; break;
+        switch(currentIndex) {
+            case 0:
+                partnerHeader.text= qsTr("Вход");
+                reginScreen.focus = true;
+                break;
+            case 1:
+                partnerHeader.text="Регистрация";
+                loginScreen.focus = true;
+                break;
         }
-        Qt.inputMethod.hide()
-        loader.focus = (true)
     }
 }

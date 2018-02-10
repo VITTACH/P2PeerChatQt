@@ -41,7 +41,7 @@ Drawer {
             spacing: (anchors.topMargin);
 
             anchors {
-                fill: parent
+                fill: parent;
                 topMargin:facade.toPx(20)
             }
 
@@ -75,6 +75,7 @@ Drawer {
                             id: body
                             clip: true
                             height: width
+                            width: (parent.width - row.spacing) / rep.count - row.spacing
 
                             MouseArea {
                                 onExited: {
@@ -84,17 +85,35 @@ Drawer {
                                 anchors.fill: {parent}
                                 onClicked: circleAnimation.stop();
                                 onEntered: {
+                                    listMenu.currentIndex = mypos;
                                     coloresRect.x = mouseX;
                                     coloresRect.y = mouseY;
                                     circleAnimation.start()
-                                    listMenu.currentIndex = mypos;
+                                }
+                            }
+
+                            color: {
+                                if (col.ListView.isCurrentItem&&!circleAnimation.running)
+                                    loader.sets1Color;
+                                else loader.sets4Color
+                            }
+
+                            Rectangle {
+                                width: 0
+                                height: 0
+                                id: coloresRect
+                                color: loader.sets1Color
+
+                                transform: Translate {
+                                    x:-coloresRect.width /2
+                                    y:-coloresRect.height/2
                                 }
                             }
 
                             PropertyAnimation {
                                 duration: (500)
                                 id: circleAnimation
-                                target: {coloresRect;}
+                                target: coloresRect
                                 properties: "width,height,radius";
                                 from: 0
                                 to:body.width*3
@@ -102,27 +121,6 @@ Drawer {
                                 onStopped: {
                                     coloresRect.width  = 0;
                                     coloresRect.height = 0;
-                                }
-                            }
-
-                            width: (parent.width - row.spacing) / rep.count - row.spacing
-
-                            color: {
-                                if (col.ListView.isCurrentItem&&!circleAnimation.running)
-                                    (index == 0)?loader.sets1Color : (loader.sets2Color);
-                                else if(index<1) loader.sets4Color
-                                else loader.sets3Color
-                            }
-
-                            Rectangle {
-                                width: 0
-                                height: 0
-                                id: coloresRect;
-                                color: index==0? loader.sets1Color : (loader.sets2Color);
-
-                                transform: Translate {
-                                    x:-coloresRect.width /2
-                                    y:-coloresRect.height/2
                                 }
                             }
                         }

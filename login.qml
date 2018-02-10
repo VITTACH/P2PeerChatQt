@@ -37,7 +37,7 @@ Item {
         model:ListModel {
             ListElement {image: ""; placeholder: "develop VITTACH"}
             ListElement {
-                image: "ui/icons/phoneIconWhite.png"; plaseHolder: "Номер телефона"
+                image: "ui/icons/phoneIconWhite.png"; plaseHolder: "Ваш номер ID"
             }
             ListElement {
                 image: "ui/icons/PassWIconWhite.png"; plaseHolder: "Введите пароль"
@@ -208,8 +208,7 @@ Item {
                     background: Rectangle {opacity: (0)}
                     font.family: {(trebu4etMsNorm.name)}
                     font.pixelSize: {(facade.doPx(38));}
-                    anchors.leftMargin: facade.toPx(20);
-                    anchors.left:icon.right
+                    x: facade.toPx(80)
                 }
             }
 

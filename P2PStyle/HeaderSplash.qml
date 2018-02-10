@@ -16,7 +16,6 @@ Item {
         visible: headRect.visible
         anchors.fill: (headRect);
     }
-
     Rectangle {
         id: headRect
         width: parent.width
@@ -183,21 +182,27 @@ Item {
         }
 
         Rectangle {
-            width: parent.width
-            height: facade.toPx(5)
+            id: headerLine
+            height:facade.toPx(5)
             color: loader.head2Color
+            anchors.bottom: parent.bottom;
             visible: {
                 loader.source!="qrc:/loginanDregister.qml"
             }
-            anchors {
-                bottom:parent.bottom
+            PropertyAnimation {
+                id: barAnimation
+                duration: 3000
+                from: 0
+                to: rootItem.width
+                target: headerLine
+                property: "width";
             }
         }
 
         Button {
             id: hamMoreButton
-            height: parent.height
-            width: facade.toPx(100);
+            height: parent.height;
+            width:facade.toPx(100)
             visible:loader.source == "qrc:/chat.qml";
             x:parent.width - width - facade.toPx(10);
             anchors.verticalCenter:(parent.verticalCenter)
@@ -209,13 +214,17 @@ Item {
             }
 
             background: Image {
-                anchors.centerIn: (parent)
-                fillMode: Image.PreserveAspectFit;
+                anchors.centerIn: {parent}
                 source: ("qrc:/ui/buttons/moreButton.png")
                 height:facade.toPx(sourceSize.height* 1.2)
                 width: facade.toPx(sourceSize.width * 1.2)
+                fillMode: Image.PreserveAspectFit;
             }
         }
+    }
+
+    function load(value) {
+        headerLine.width = value * rootItem.width;
     }
 
     property string stat

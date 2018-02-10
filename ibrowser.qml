@@ -20,15 +20,13 @@ WebView {
     }
 
     onLoadingChanged: {
+        partnerHeader.load(loadProgress/100)
         var result=URLQuery.parseParams(loadRequest.url.toString())
-
-        if(authRegExpVK.test(loadRequest.url.toString())) {
-            loader.userId = result.user_id
+        if (authRegExpVK.test(loadRequest.url.toString())) {
+            loader.userId = (result.user_id)
             loader.aToken = result.access_token
             successAuth("VK")
-        }
-        else
-        if(authRegExpFB.test(loadRequest.url.toString())) {
+        } else if (authRegExpFB.test(loadRequest.url.toString())) {
             loader.aToken = result.access_token
             successAuth("FB")
         }

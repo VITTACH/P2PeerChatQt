@@ -380,15 +380,16 @@ Rectangle {
 
             XmlListModel {
                 id: xmlmodel
-                query: {"/rss/channel/item"}
-                XmlRole {name: "link"; query : "link/string()";}
-                XmlRole {name: "title";query: "title/string()";}
-                XmlRole {name: "pDate";query:"pubDate/string()"}
-                XmlRole {name: "pDesc";query: "description/string()"}
-                XmlRole {name: "image";query : "media:content/@url/string()";}
+                query: {"/rss/channel/item";}
+                XmlRole {name: "link"; query: "link/string()"}
+                XmlRole {name: "title"; query: "title/string()"}
+                XmlRole {name: "pDate"; query: "pubDate/string()"}
+                XmlRole {name: "pDesc"; query: "description/string()"}
+                XmlRole {name: "image"; query: "media:content/@url/string()";}
                 source:"http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
                 namespaceDeclarations: "declare namespace media=\"http://search.yahoo.com/mrss/\";"
                 onStatusChanged: {
+                    partnerHeader.load(progress)
                     if ((status == XmlListModel.Ready) && (rssRect.visible)) {
                         if (!loader.isNews) {
                             restorePref.start();

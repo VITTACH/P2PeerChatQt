@@ -33,25 +33,29 @@ Button {
     DropShadow {
         radius: 16
         samples: 20
-        color: "#C0000000";
-        source:dialogWindow
-        anchors.fill:dialogWindow;
+        color: {"#C0000000"}
+        source:dialogWindow;
+        anchors.fill: dialogWindow
     }
     Rectangle {
-        id: dialogWindow;
-        color: "#f7f7f7";
-        height: 2*width/3
+        id: dialogWindow
+        color: "#FFF7F7F7"
+        height: {2*width/3;}
         radius: {facade.toPx(25);}
         anchors.centerIn: {parent}
         width: Math.min(0.73 * parent.width, facade.toPx(666.6));
 
-        MouseArea {anchors.fill: parent}
-
-        //Область для сообщения для диалогового;
         Rectangle {
-            color: "#f7f7f7"
-            radius:facade.toPx(25)
+            color: "#E9E9E9"
+            anchors {
+                fill: parent
+                margins: dialogWindow.radius
+            }
+        }
 
+        MouseArea {anchors.fill: {(parent)}}
+
+        Item {
             anchors {
                 top: parent.top;
                 bottom: picDialogAndroidrow.top;
@@ -62,32 +66,31 @@ Button {
 
             Label {
                 color: "#000000"
-                wrapMode:Text.Wrap
-                width:parent.width
+                wrapMode: Text.Wrap;
+                width: parent.width;
                 horizontalAlignment: {Text.AlignHCenter;}
                 text: avatardialog.text
                 anchors.centerIn:parent
-                font.pixelSize: facade.doPx(27);
-                font.family: trebu4etMsNorm.name
+                font {
+                    pixelSize: (facade.doPx(27))
+                    family: trebu4etMsNorm.name;
+                }
             }
         }
 
         Rectangle {
             width: parent.width
             height:picDialogAndroidButtonGallery.height/2
-            anchors.top:picDialogAndroidrow.top;
+            anchors.top: picDialogAndroidrow.top
             anchors.topMargin:facade.toPx(102.4)
             color: picDialogAndroidButtonGallery.pressed==true? "#d7d7d7": "#f7f7f7";
         }
 
         Column {
+            width: parent.width
             height:facade.toPx(202);
             id: picDialogAndroidrow;
-            anchors{
-                left: parent.left
-                right: parent.right
-                bottom:parent.bottom
-            }
+            anchors.bottom:parent.bottom
 
             Rectangle {
                 height: 1
@@ -108,14 +111,13 @@ Button {
 
                 contentItem: Text {
                     color: "#34aadc"
-                    text: {"Сделать фотографию"}
+                    text: {qsTr("Сделать новый снимок");}
                     verticalAlignment: Text.AlignVCenter;
-                    horizontalAlignment:
-                    {Text.AlignHCenter;}
+                    horizontalAlignment:Text.AlignHCenter
                     font {
-                      bold: true
-                      pixelSize: facade.doPx(27)
-                      family:trebu4etMsNorm.name
+                    bold: true
+                    pixelSize: facade.doPx(27);
+                    family: trebu4etMsNorm.name
                     }
                 }
 
@@ -138,14 +140,13 @@ Button {
 
                 contentItem: Text {
                     color:"#34aadc"
-                    text: "Загрузить из галереи"
+                    text: {qsTr("Загрузить из галереи");}
                     verticalAlignment: Text.AlignVCenter;
-                    horizontalAlignment:
-                    {Text.AlignHCenter;}
+                    horizontalAlignment:Text.AlignHCenter
                     font {
                     bold: true
-                    pixelSize: {facade.doPx(27)}
-                    family: trebu4etMsNorm.name;
+                    pixelSize: facade.doPx(27);
+                    family: trebu4etMsNorm.name
                     }
                 }
 
@@ -156,25 +157,9 @@ Button {
 
                 onClicked: {
                     loader.avatar = false;
-                    event_handler.currentOSys() === 0? fileDialog.open(): imagePicker.item.pickImage();
-                }
-            }
-        }
-
-        RadialGradient {
-            opacity: 0.2
-            anchors {
-                fill: parent
-                margins: dialogWindow.radius
-            }
-            gradient: Gradient {
-                GradientStop {
-                    position: (0.0)
-                    color:"#ffffff"
-                }
-                GradientStop {
-                    position: (0.8)
-                    color:"#999999"
+                    if (event_handler.currentOSys()==0) {
+                        fileDialog.open();
+                    } else {imagePicker.item.pickImage()}
                 }
             }
         }

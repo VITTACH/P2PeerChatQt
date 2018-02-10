@@ -1,75 +1,68 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.0
+import QtQuick.Controls  2.0
 import QtGraphicalEffects 1.0
 
 Button {
-    property bool choose:true;
-    property string inputMode: "";
-    property string choseMode: "";
-
+    id: rootItem;
+    anchors.fill: parent;
+    visible:loader.dialog
     contentItem: Text {opacity: 0}
-
-    function show(text, powMode) {
-        choose=loader.dialog=true;
-        switch (powMode) {
-            case 1: inputMode = "one"; break;
-            case 2: choseMode = "one"; break;
-            default:inputMode = choseMode= ""
-        }
-        dialogAndroid.text = text;
-    }
 
     DropShadow {
         radius: 16
         samples: 20
-        color:("#C0000000")
-        source:dialogWindow
-        anchors.fill:dialogWindow;
+        color: {"#C0000000"}
+        source:dialogWindow;
+        anchors.fill: dialogWindow
     }
     Rectangle {
-        id: dialogWindow;
-        color: "#f7f7f7";
-        height: 2*width/3
-        radius: {facade.toPx(25);}
-        anchors.centerIn: {parent}
+        id: dialogWindow
+        color: "#FFF7F7F7"
+        height: {2*width/3;}
+        radius: facade.toPx(25);
+        anchors.centerIn:parent;
         width: Math.min(0.73 * parent.width, facade.toPx(666.6));
 
-        MouseArea {anchors.fill: {(parent);}}
-
         Rectangle {
-            id:dialogAndroidDividerHorizontal
-            height: 1
-            color: "#808080"
+            color: "#E9E9E9"
             anchors {
-                left: parent.left
-                right: parent.right
-                bottom: dialogAndroidrow.top;
+                fill: parent
+                margins:dialogWindow.radius
             }
         }
 
         Rectangle {
-            color: "#f7f7f7"
-            radius:facade.toPx(25)
+            height: 1
+            color: "#808080"
+            id: dividerHorizont;
+            width: parent.width;
+            anchors.bottom: {dialogRow.top;}
+        }
 
+        MouseArea {anchors.fill: {(parent)}}
+
+        Item {
             anchors {
-                top: parent.top
+                top: parent.top;
+                bottom: dividerHorizont.top;
                 horizontalCenter: parent.horizontalCenter
-                bottom:dialogAndroidDividerHorizontal.top
             }
 
             width: (parent.width - 2*dialogWindow.radius)
 
             Column {
-                spacing:facade.toPx(20)
                 Label {
-                    color: "#000000"
+                    color:"#000000"
                     wrapMode: Text.Wrap
-                    text: dialogAndroid.text
+                    text: rootItem.text
                     width: parent.parent.width
-                    font.pixelSize: facade.doPx(27)
-                    font.family:trebu4etMsNorm.name
                     horizontalAlignment:Text.AlignHCenter
+                    font {
+                        pixelSize: facade.doPx(27)
+                        family:trebu4etMsNorm.name
+                    }
                 }
+                spacing:facade.toPx(20)
 
                 anchors {
                     top: parent.top
@@ -90,40 +83,42 @@ Button {
                         leftMargin : 9/100 * parent.width
                         rightMargin: 9/100 * parent.width
                     }
-                    flickableDirection: {Flickable.VerticalFlick}
-                    TextArea.flickable:TextArea{
-                        id: screenTextFieldPost;
+
+                    flickableDirection: {
+                        Flickable.VerticalFlick
+                    }
+
+                    TextArea.flickable: TextArea {
+                        id: screenTextFieldPost
                         placeholderText:qsTr("Написать.")
 
                         onLineCountChanged: {
                             if(lineCount < 4)
                             flickable.height = screenTextFieldPost.implicitHeight
                         }
-                        onFocusChanged: dialogWindow.y = dialogAndroid.height*0.1
 
-                        background: Rectangle {
-                            border {
-                                color: "#E9E9E9"; width:1
-                            }
-                        }
+                        onFocusChanged: {dialogWindow.y = rootItem.height * 0.1;}
+
                         color: "#000000"
-                        wrapMode: TextEdit.Wrap
+                        wrapMode: {TextEdit.Wrap;}
                         font.family: trebu4etMsNorm.name;
                         font.pixelSize: (facade.doPx(26))
+                        background: Rectangle {border {color:"#E9E9E9"; width:1}}
 
                         onTextChanged: {
                             if(length > 250)
-                            text = text.substring(0,250);
+                            text = text.substring(0, 250)
                             loader.fields[0] =text
                             cursorPosition =length
                         }
                         Keys.onReleased: {
                             if (event.key==Qt.Key_Back||event.key==Qt.Key_Escape)
-                                dialogAndroid.text = "";
+                                rootItem.text = "";
                             listenBack(event)
                         }
                     }
                 }
+
                 Label {
                     visible: inputMode!=""? 1: 0;
                     text: 250- screenTextFieldPost.length
@@ -141,14 +136,14 @@ Button {
             width: (choseMode != "") == true? parent.width / 2 - 0: parent.width;
             anchors {
                 right: parent.right
-                top:dialogAndroidDividerHorizontal.bottom
+                top: dividerHorizont.bottom
             }
         }
 
         Rectangle {
             anchors {
                 left: parent.left
-                top:dialogAndroidDividerHorizontal.bottom
+                top: dividerHorizont.bottom
             }
             width: parent.width / 2;
             height: facade.toPx(25);
@@ -157,14 +152,10 @@ Button {
         }
 
         Row {
-            id: dialogAndroidrow
-            anchors {
-                left: parent.left;
-                right: parent.right;
-                bottom:parent.bottom
-            }
+            id: dialogRow
+            width: parent.width
             height: facade.toPx(100)
-
+            anchors.bottom:parent.bottom
             Button {
                 visible: choseMode !="";
                 id: dialogAndroidButtonCancel;
@@ -176,17 +167,17 @@ Button {
                 onClicked: {
                     inputMode = "";
                     loader.dialog=false;
-                    dialogAndroid.text = ("");
+                    rootItem.text = ("")
                 }
 
                 contentItem: Text {
                     color:"#34aadc"
                     text: qsTr("Отмена")
-                    verticalAlignment: {Text.AlignVCenter;}
-                    horizontalAlignment: {Text.AlignHCenter;}
+                    verticalAlignment: Text.AlignVCenter;
+                    horizontalAlignment:Text.AlignHCenter
                     font {
-                    pixelSize: facade.doPx(27)
-                    family:trebu4etMsNorm.name
+                        pixelSize: facade.doPx(27)
+                        family:trebu4etMsNorm.name
                     }
                 }
 
@@ -213,15 +204,15 @@ Button {
 
                 contentItem: Text {
                     color:"#34aadc"
+                    text:qsTr("Принять")
                     elide:Text.ElideRight;
-                    verticalAlignment: {Text.AlignVCenter;}
-                    horizontalAlignment: {Text.AlignHCenter;}
+                    verticalAlignment: Text.AlignVCenter;
+                    horizontalAlignment:Text.AlignHCenter
                     font {
                     bold: true;
                     pixelSize: facade.doPx(27)
                     family:trebu4etMsNorm.name
                     }
-                    text:qsTr("Ок")
                 }
 
                 background: Rectangle {
@@ -230,14 +221,15 @@ Button {
                 }
 
                 onClicked: {
-                    loader.focus = true
-                    loader.dialog = false;
-                    dialogAndroid.text="";
-                    switch(inputMode) {
-                        case "VK": postToVk();
-                    }
                     choose = false;
                     inputMode = "";
+                    loader.focus = true
+                    loader.dialog = false;
+                    rootItem.text="";
+                    switch(inputMode) {
+                        case "VK":
+                            postToVk(); break;
+                    }
                 }
 
                 anchors {
@@ -246,34 +238,25 @@ Button {
                 }
             }
         }
-
-        RadialGradient {
-            opacity: 0.2
-            anchors {
-                fill: parent
-                margins: (dialogWindow.radius)
-            }
-
-            gradient: Gradient {
-                GradientStop {
-                    position: (0.0)
-                    color:"#ffffff"
-                }
-                GradientStop {
-                    position: (0.8)
-                    color:"#999999"
-                }
-            }
-        }
     }
+
     background: Rectangle {color: "#AC404040"}
 
-    id: dialogAndroid
-    visible: loader.dialog;
-    anchors.fill: {parent;}
-
     onClicked: {
-        loader.focus = true
-        loader.dialog=false
+        loader.focus = !(loader.dialog =false)
+    }
+
+    property bool choose: true
+    property string inputMode: "";
+    property string choseMode: "";
+
+    function show(text, powMode) {
+        switch (powMode) {
+            case 1: inputMode = ("one"); break
+            case 2: choseMode = ("one"); break
+            default:inputMode = choseMode = ""
+        }
+        choose=loader.dialog=true;
+        rootItem.text=text
     }
 }

@@ -253,7 +253,7 @@ ApplicationWindow {
         property string menu14Color:"#839EAF";
         property string menu15Color:"#8DACBC";
 
-        property string head1Color: "#777777";
+        property string head1Color: "#515151";
         property string head2Color: "#92AF7B";
 
         property string sets1Color: "#4B4E55";
@@ -312,9 +312,9 @@ ApplicationWindow {
         id: trebu4etMsNorm
     }
 
-    P2PStyle.ImagesDialog {id: avatarDialog}
+    P2PStyle.DefaultDialog {id: informDialog;}
 
-    P2PStyle.InformDialog {id: informDialog}
+    P2PStyle.ImagesDialog {id: avatarDialog}
 
     P2PStyle.BlankeDrawer {id: blankeDrawer}
 

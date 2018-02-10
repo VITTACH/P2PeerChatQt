@@ -136,10 +136,7 @@ Item {
                     width: parent.width-facade.toPx(20)-icon.width;
                     height:parent.height
                     placeholderText: plaseholder;
-                    anchors {
-                        left: icon.right
-                        leftMargin: (facade.toPx(20));
-                    }
+                    x: {facade.toPx(80)}
                     Connections {
                         target: partnerHeader
                         onPageChanged: {
