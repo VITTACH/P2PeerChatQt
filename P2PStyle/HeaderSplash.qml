@@ -13,28 +13,26 @@ Item {
         verticalOffset: 10;
         color: "#60000000";
         source: (headRect);
-        visible: headRect.visible
-        anchors.fill: (headRect);
+        visible: headRect.visible;
+        anchors.fill: {(headRect)}
     }
     Rectangle {
         id: headRect
         width: parent.width
-        height: facade.toPx(140);
-        visible: loader.source != "qrc:/qrscaner.qml"
+        height: {facade.toPx(140)}
+        visible:{loader.source!= "qrc:/qrscaner.qml"}
         color: {
-            if (loader.source == ("qrc:/loginanDregister.qml")) {
-                loader.menu10Color
-            } else {
-                loader.head1Color;
-            }
+            if (loader.source == "qrc:/loginanDregister.qml")
+                loader.menu1Color;
+            else loader.head1Color
         }
 
         Item {
             id: inerItem
             Row {
-                spacing: facade.toPx(30)
+                spacing: facade.toPx(30);
                 anchors {
-                    verticalCenter: parent.verticalCenter;
+                    verticalCenter:parent.verticalCenter
                     left: (loader.isLogin)? parent.left:undefined
                     centerIn: (loader.isLogin)? undefined: parent
                     leftMargin: loader.isLogin? facade.toPx(20):0
@@ -43,7 +41,7 @@ Item {
 
                 Item {
                     width: bug.width
-                    height:parent.height
+                    height: parent.height
                     visible: (loader.source == "qrc:/chat.qml") && (rootItem.phot != "")
 
                     DropShadow {
@@ -52,13 +50,13 @@ Item {
                         source: big
                         opacity: 0.56;
                         color: "black"
-                        anchors.fill:big
+                        anchors.fill: big
                     }
                     OpacityMask {
                         id: big
                         source: bug
-                        maskSource: mask
-                        anchors.fill:bug
+                        maskSource: mask;
+                        anchors.fill: bug
                     }
                     Rectangle {
                         id: bug
@@ -71,8 +69,8 @@ Item {
                             verticalCenter: parent.verticalCenter
                         }
                         Image {
-                            source: phot
-                            anchors.centerIn: {parent}
+                            source: phot;
+                            anchors.centerIn: {(parent)}
                             height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                             width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                         }
@@ -82,7 +80,7 @@ Item {
                         id: mask
                         smooth: true;
                         visible:false
-                        source:"qrc:/ui/mask/round.png"
+                        source: "qrc:/ui/mask/round.png"
                         sourceSize: Qt.size(bug.width,bug.height)
                     }
                 }
@@ -98,14 +96,14 @@ Item {
                         text:  {rootItem.text.replace("\n" , "")}
 
                         font.pixelSize: loader.isLogin? facade.doPx(28): facade.doPx(34)
-                        font.family:trebu4etMsNorm.name
+                        font.family: trebu4etMsNorm.name
                     }
                     Text {
                         text: str
 
                         font.bold: true
-                        font.pixelSize: facade.doPx(20)
-                        font.family:trebu4etMsNorm.name
+                        font.pixelSize: facade.doPx(20);
+                        font.family: trebu4etMsNorm.name
 
                         visible: loader.isLogin && !loader.webview
                         color: str == "Online"? "white":"darkgrey"
@@ -139,7 +137,7 @@ Item {
 
             background: Image {
                 id: hambrgrButtonImage;
-                fillMode: Image.PreserveAspectFit;
+                fillMode: {(Image.PreserveAspectFit)}
                 source: "qrc:/ui/buttons/" + (page == 1 || loader.source == "qrc:/chat.qml" || loader.webview ? "back" : "infor") + "Button.png"
                 anchors.centerIn:parent
                 height:facade.toPx(sourceSize.height* 1.2)
@@ -150,9 +148,9 @@ Item {
         Canvas {
             id: canva
             height: parent.height
-            anchors.right: parent.right
+            anchors.right: {parent.right;}
             visible: loader.source == "qrc:/chat.qml"
-            width: hamMoreButton.width + (facade.toPx(40))
+            width: {hamMoreButton.width + facade.toPx(20)}
             Connections {
                 target: {loader;}
                 onIsOnlineChanged: {canva.requestPaint();}
@@ -161,21 +159,21 @@ Item {
             onPaint: {
                 var cntx =getContext("2d")
                 cntx.reset()
-                cntx.fillStyle = loader.head2Color
+                cntx.fillStyle = loader.head1Color
                 cntx.beginPath();
-                cntx.moveTo(0, height);
+                cntx.moveTo(0,height)
                 cntx.lineTo(width, height)
-                cntx.lineTo(width, (0))
-                cntx.lineTo(width- hamMoreButton.width, 0)
+                cntx.lineTo(width, 0)
+                cntx.lineTo(0, 0)
                 cntx.closePath();
                 cntx.fill();
 
-                cntx.fillStyle = (loader.isOnline == true? "white": loader.head1Color)
+                cntx.fillStyle = loader.isOnline? loader.head2Color: loader.head1Color
                 cntx.beginPath();
-                cntx.moveTo(0, height);
-                cntx.lineTo(4, height);
-                cntx.lineTo(width-hamMoreButton.width-0,0)
-                cntx.lineTo(width-hamMoreButton.width-4,0)
+                cntx.moveTo(0,height)
+                cntx.lineTo(6,height)
+                cntx.lineTo(6,0);
+                cntx.lineTo(0,0);
                 cntx.closePath();
                 cntx.fill();
             }
@@ -183,19 +181,23 @@ Item {
 
         Rectangle {
             id: headerLine
+            width: parent.width
             height:facade.toPx(5)
-            color: loader.head2Color
-            anchors.bottom: parent.bottom;
-            visible: {
-                loader.source!="qrc:/loginanDregister.qml"
+            color: {
+                if (loader.source != "qrc:/loginanDregister.qml")
+                    loader.head2Color;
+                else loader.head3Color
             }
-            PropertyAnimation {
-                id: barAnimation
-                duration: 3000
-                from: 0
-                to: rootItem.width
-                target: headerLine
-                property: "width";
+            anchors {
+                bottom: parent.bottom;
+            }
+            Connections {
+                target: rootItem;
+                onWidthChanged: {
+                    if (!(headerLine.width > 0&&headerLine.width < facade.toPx(90))) {
+                        headerLine.width = rootItem.width;
+                    }
+                }
             }
         }
 

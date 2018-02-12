@@ -22,10 +22,12 @@ SwipeView {
         switch(currentIndex) {
             case 0:
                 partnerHeader.text= qsTr("Вход");
+                loginScreen.focus = false
                 reginScreen.focus = true;
                 break;
             case 1:
                 partnerHeader.text="Регистрация";
+                reginScreen.focus = false
                 loginScreen.focus = true;
                 break;
         }

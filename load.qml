@@ -12,7 +12,7 @@ ApplicationWindow {
     visible:true
     title: "PeerMe"
 
-    StatusBar {color: ("#5D5A58")}
+    StatusBar {color: ("#4D5762")}
 
     Timer {
         id: back
@@ -253,8 +253,9 @@ ApplicationWindow {
         property string menu14Color:"#839EAF";
         property string menu15Color:"#8DACBC";
 
-        property string head1Color: "#515151";
-        property string head2Color: "#92AF7B";
+        property string head1Color: "#728599";
+        property string head2Color: "#FFFFFF";
+        property string head3Color: "#939DA5";
 
         property string sets1Color: "#4B4E55";
         property string sets2Color: "#C4C4C4";
