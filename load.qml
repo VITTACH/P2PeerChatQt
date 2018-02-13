@@ -304,20 +304,20 @@ ApplicationWindow {
     }
 
     P2PStyle.HeaderSplash {
-        visible: loader.source != "qrscan.qml"
+        visible: loader.source != "qrscan.qml";
         id: partnerHeader;
     }
 
     FontLoader {
-        source: "qrc:/fonts/TrebuchetMSn.ttf";
+        source: "fonts/TrebuchetMSn.ttf"
         id: trebu4etMsNorm
     }
 
-    P2PStyle.DefaultDialog {id: informDialog;}
+    P2PStyle.DefaultDialog {id: informDialog}
 
     P2PStyle.ImagesDialog {id: avatarDialog}
 
-    P2PStyle.BlankeDrawer {id: blankeDrawer}
+    P2PStyle.BlankeDrawer {id:blankeDrawer}
 
-    P2PStyle.ChatMenuList {id:chatMenuList}
+    ChatScreen {id:chatScreen}
 }

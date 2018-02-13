@@ -4,15 +4,33 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
 
-Rectangle {
-    property bool input;
-    property var select;
-    anchors.fill:parent;
+Drawer {
+    edge: Qt.RightEdge;
+    width: parent.width;
+    height: parent.height
+    property variant input
+    property variant select
 
-    color: loader.chat1Color
+    function hideKeyboard(event) {
+        pressedArea.visible= true;
+        if (event !=0) event.accepted = true
+        textField.focus=false
+        Qt.inputMethod.hide()
+        loader.focus = (true)
+        input = false;
+    }
+
+    function setInfo(text, photos, status) {
+        partnersHead.stat = status
+        partnersHead.phot = photos
+        partnersHead.text = text
+    }
+
+    P2PStyle.HeaderSplash {id: partnersHead}
+
     Connections {
-        target: blankeDrawer
-        onCindexChanged: loadChatsHistory()
+        target: blankeDrawer;
+        onCindexChanged: loadChatsHistory();
     }
 
     function relative(str) {
@@ -48,18 +66,22 @@ Rectangle {
                 break;
             }
         }
+
         if (firstLaunch) {
             var historics = event_handler.loadValue("chats")
-            if (historics != "") {
+            if (historics !== "") {
                 loader.chats = JSON.parse(historics);
             }
         }
-        if (i<loader.chats.length)
-        for (j = 0; j<loader.chats[i].message.length; j++) {
+
+        if (typeof loader.chats[i] == "undefined") {return;}
+
+        for(j = 0; j <loader.chats[i].message.length; j++) {
             buferText.text = loader.chats[i].message[j].text
             var objct = loader.chats[i].message[j];
             appendMessage(objct.text,-objct.flag,objct.time)
         }
+
         chatScrenList.positionViewAtEnd();
     }
 
@@ -467,7 +489,7 @@ Rectangle {
                         }
                     }
                 }
-                onClicked: {
+                onClicked:{
                     if (event_handler.currentOSys() >= 1)
                         hideKeyboard(0)
                     checkMessage(2)
@@ -478,13 +500,7 @@ Rectangle {
         }
     }
 
-    function hideKeyboard(event) {
-        pressedArea.visible= true;
-        if (event !=0)
-            event.accepted = true;
-        textField.focus=false
-        Qt.inputMethod.hide()
-        loader.focus = (true)
-        input = false;
+    P2PStyle.ChatMenuList {
+        id: chatMenuList;
     }
 }

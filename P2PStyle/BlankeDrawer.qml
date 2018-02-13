@@ -493,18 +493,15 @@ Drawer {
                     anchors.fill:parent
                     property var presed
                     onClicked: {
-                        var json
-                        partnerHeader.text = usersModel.get(index).login
-                        partnerHeader.text+= " "
-                        partnerHeader.text+= usersModel.get(index).famil
+                        var json, text;
                         json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
-                        partnerHeader.stat = (json.port == 0) == true? "Offline": "Online"
-                        partnerHeader.phot = usersModel.get(index).image
+                        text = usersModel.get(index).login+" "+usersModel.get(index).famil
+                        chatScreen.setInfo(text, usersModel.get(index).image, json.port == 0? qsTr("Offline"): qsTr("Online"))
                         if (index != -1) {listView.currentIndex = index}
                         var jstring=JSON.stringify(json)
                         console.log(jstring)
                         event_handler.sendMsgs(jstring);
-                        if (loader.source != "qrc:/chat.qml") loader.goTo("qrc:/chat.qml")
+                        chatScreen.open()
                         drawer.close();
                     }
                     drag.axis: {Drag.XAxis}
