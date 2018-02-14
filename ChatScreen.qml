@@ -5,9 +5,10 @@ import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
 
 Drawer {
-    edge: Qt.RightEdge;
-    width: parent.width;
+    edge: Qt.RightEdge
+    width: parent.width
     height: parent.height
+
     property variant input
     property variant select
 
@@ -24,13 +25,6 @@ Drawer {
         partnersHead.stat = status
         partnersHead.phot = photos
         partnersHead.text = text
-    }
-
-    P2PStyle.HeaderSplash {id: partnersHead}
-
-    Connections {
-        target: blankeDrawer;
-        onCindexChanged: loadChatsHistory();
     }
 
     function relative(str) {
@@ -99,6 +93,10 @@ Drawer {
         }
     }
 
+    Rectangle {
+        anchors.fill: parent; color: loader.chat1Color
+    }
+
     Connections {
         target: event_handler;
         onReciving: {
@@ -151,9 +149,9 @@ Drawer {
         }
     }
 
-    Component.onCompleted: loadChatsHistory();
+    Component.onCompleted: {loadChatsHistory(); partnersHead.page = -1;}
 
-    function parseToJSON(message, phone, ip) {
+    function parseToJSON(message, phone,ip) {
         var JSONobj
         return JSON.stringify(JSONobj = {message: message, phone:phone})
     }
@@ -163,18 +161,20 @@ Drawer {
         flag = Math.abs(cflag = flag)
         chatModel.append({
             falg:flag,
-            mySpacing: sp = (chatModel.count > 0 ? ((chatModel.get(chatModel.count - 1).textColor == "#FFFFFF" && flag == 2) || (chatModel.get(chatModel.count - 1).textColor == "#545454" && flag == 1)? facade.toPx(30): facade.toPx(0)): facade.toPx(20)),
+            mySpacing: sp = (chatModel.count > 0 ? ((chatModel.get(chatModel.count - 1).textColor == "#535353" && flag == 2) || (chatModel.get(chatModel.count - 1).textColor == "#545454" && flag == 1)? facade.toPx(30): facade.toPx(0)): facade.toPx(20)),
             someText: newmessage,
             lineColor: Math.random(),
             timeStamp: String(timestamp),
-            textColor: (flag === 2)? "#545454": "#FFFFFF",
-            backgroundColor:flag==2? "#F4F4F4": "#D1D1D1",
+            textColor: (flag === 2)? "#545454": "#535353",
+            backgroundColor:flag==2? "#E0F4F4F4": "#E0D1D1D1",
             image: ""
         });
         if (cflag ==2) {
             event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0))
         }
     }
+
+    Connections{target:blankeDrawer; onCindexChanged:loadChatsHistory()}
 
     TextArea {
         id: buferText;
@@ -333,7 +333,7 @@ Drawer {
                                             } else {
                                                 chatMenuList.menu = 0;
                                                 parent.color = loader.chat4Color
-                                                baseRect.color="white"
+                                                baseRect.color="#80FFFFFF"
                                                 select.push(index)
                                                 return
                                             }
@@ -350,7 +350,7 @@ Drawer {
                                         }
                                         chatMenuList.menu =0
                                         parent.color=loader.chat4Color
-                                        baseRect.color = "#FFFFFF"
+                                        baseRect.color = "#80FFFFFF"
                                         coloresRect.x = ((mouseX))
                                         coloresRect.y = ((mouseY))
                                         circleAnimation.start()
@@ -500,7 +500,7 @@ Drawer {
         }
     }
 
-    P2PStyle.ChatMenuList {
-        id: chatMenuList;
-    }
+    P2PStyle.HeaderSplash {id: partnersHead}
+
+    P2PStyle.ChatMenuList {id: chatMenuList}
 }

@@ -256,6 +256,7 @@ ApplicationWindow {
         property string head1Color: "#728599";
         property string head2Color: "#FFFFFF";
         property string head3Color: "#939DA5";
+        property string head4Color: "#737884";
 
         property string sets1Color: "#4B4E55";
         property string sets2Color: "#C4C4C4";
@@ -267,8 +268,8 @@ ApplicationWindow {
 
         property string chat1Color: "#EAEAEA";
         property string chat2Color: "#A7A7A7";
-        property string chat3Color: "#B3E5A0";
-        property string chat4Color: "#A5D394";
+        property string chat3Color: "#C7D5E2";
+        property string chat4Color: "#BCCDDD";
 
         property string feedColor: "#EDEDED";
     }

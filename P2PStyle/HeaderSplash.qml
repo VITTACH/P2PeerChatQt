@@ -5,16 +5,14 @@ import QtGraphicalEffects 1.0
 Item {
     id: rootItem
     property int page
-    property string stat
-    property string phot
-    property string text
+    property string stat:""
+    property string phot:""
+    property string text:""
+
+    function load(value) {headerLine.width=value*rootItem.width;}
 
     width: parent.width;
     height:facade.toPx(150)
-
-    function load(value) {
-        headerLine.width = (value * (rootItem.width))
-    }
 
     DropShadow {
         radius: 15
@@ -29,7 +27,7 @@ Item {
         id: headRect
         width: parent.width
         height: {facade.toPx(140)}
-        visible:{loader.source!= "qrc:/qrscaner.qml"}
+        visible:{loader.source != ("qrc:/qrscaner.qml")}
         color: {if (loader.source == "qrc:/loginanDregister.qml")
                 loader.menu1Color;
             else loader.head1Color
@@ -44,13 +42,13 @@ Item {
                     left: (loader.isLogin)? parent.left:undefined
                     centerIn: (loader.isLogin)? undefined: parent
                     leftMargin: loader.isLogin? facade.toPx(20):0
-                    horizontalCenter: loader.isLogin? undefined: parent.horizontalCenter
+                    horizontalCenter: loader.isLogin?undefined:parent.horizontalCenter
                 }
 
                 Item {
                     width: bug.width
                     height: parent.height
-                    visible: chatScreen.position > 0 && rootItem.phot != ""
+                    visible: {page < 0 && (rootItem.phot !== "")}
 
                     DropShadow {
                         radius: 15
@@ -99,20 +97,18 @@ Item {
                         elide: Text.ElideRight
                         width: {
                             var margin = chatScreen.position > 0 ? facade.toPx(90) : 0
-                            Math.min(inerItem.width - bug.width - margin, implicitWidth)
+                            Math.min(inerItem.width - bug.width-margin, implicitWidth)
                         }
                         text:  {rootItem.text.replace("\n" , "")}
 
-                        font.pixelSize: loader.isLogin? facade.doPx(28): facade.doPx(34)
+                        font.pixelSize: loader.isLogin?facade.doPx(28):facade.doPx(34)
                         font.family: trebu4etMsNorm.name
                     }
                     Text {
                         text: str
-
                         font.bold: true
-                        font.pixelSize: facade.doPx(20);
                         font.family: trebu4etMsNorm.name
-
+                        font.pixelSize: facade.doPx(20);
                         visible: loader.isLogin && !loader.webview
                         color: str == "Online"? "white":"darkgrey"
                         property string str: {
@@ -122,8 +118,8 @@ Item {
                 }
             }
             height: parent.height
-            anchors.left: page != 0 || loader.isLogin? hambrgrButton.right: parent.left;
-            anchors.right:page != 0 || loader.isLogin? hamMoreButton.left: parent.right;
+            anchors.left: page != 0||loader.isLogin? hambrgrButton.right: parent.left;
+            anchors.right:page != 0||loader.isLogin? hamMoreButton.left: parent.right;
         }
 
         Button {
@@ -132,8 +128,7 @@ Item {
             width: facade.toPx(140)
             onClicked: {
                 if (page == 1) {page -= 1}
-                else if (chatScreen.position > 0)
-                    chatScreen.close()
+                else if (chatScreen.position>0) chatScreen.close()
                 else if (loader.webview) {
                     loader.webview = false
                 } else blankeDrawer.open()
@@ -146,7 +141,7 @@ Item {
             background: Image {
                 id: hambrgrButtonImage;
                 fillMode: {(Image.PreserveAspectFit)}
-                source: "qrc:/ui/buttons/" + (page == 1 || chatScreen.position > 0 || loader.webview ? "back" : "infor") + "Button.png"
+                source: "qrc:/ui/buttons/" + (page == 1 || page < 0 || loader.webview ? "back" : "infor") + "Button.png"
                 anchors.centerIn:parent
                 height:facade.toPx(sourceSize.height* 1.2)
                 width: facade.toPx(sourceSize.width * 1.2)
@@ -155,10 +150,10 @@ Item {
 
         Canvas {
             id: canva
-            height:parent.height;
+            visible: page < 0
+            height: parent.height
             width: hamMoreButton.width + 6
             anchors.right: {parent.right;}
-            visible: chatScreen.position>0
             Connections {
                 target: {loader;}
                 onIsOnlineChanged: {canva.requestPaint();}
@@ -167,7 +162,7 @@ Item {
             onPaint: {
                 var cntx =getContext("2d")
                 cntx.reset()
-                cntx.fillStyle = !loader.isOnline?loader.menu4Color:loader.menu14Color
+                cntx.fillStyle = loader.isOnline? loader.head4Color: loader.head4Color
                 cntx.beginPath();
                 cntx.moveTo(0,height)
                 cntx.lineTo(width, height)
@@ -176,7 +171,7 @@ Item {
                 cntx.closePath();
                 cntx.fill();
 
-                cntx.fillStyle = loader.menu3Color
+                cntx.fillStyle = loader.isOnline? loader.menu3Color: loader.menu3Color
                 cntx.beginPath();
                 cntx.moveTo(0,height)
                 cntx.lineTo(6,height)
@@ -192,8 +187,7 @@ Item {
             width: parent.width
             height:facade.toPx(5)
             color: {
-                if (loader.source != "qrc:/loginanDregister.qml")
-                    loader.head2Color;
+                if (loader.source != "qrc:/loginanDregister.qml") {loader.head2Color;}
                 else loader.head3Color
             }
             anchors {
@@ -210,21 +204,21 @@ Item {
         }
 
         Button {
-            id: hamMoreButton
-            height: parent.height;
-            width:facade.toPx(100)
-            visible: chatScreen.position>0
-            x: parent.width-width;
+            width: height
+            visible: page < 0
+            height: parent.height
+            x: {parent.width - width}
             anchors.verticalCenter:(parent.verticalCenter)
 
+            id: hamMoreButton
             onClicked: {
-                loader.focus = loader.context = true;
+                loader.focus =loader.context=true;
                 chatMenuList.xPosition = rootItem.width-chatMenuList.w-facade.toPx(20)
                 chatMenuList.yPosition = (facade.toPx(20))
             }
 
-            background: Image {
-                anchors.centerIn: {parent}
+            background:Image{
+                anchors.centerIn: parent
                 source: ("qrc:/ui/buttons/moreButton.png")
                 height:facade.toPx(sourceSize.height* 1.2)
                 width: facade.toPx(sourceSize.width * 1.2)
