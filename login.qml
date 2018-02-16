@@ -141,10 +141,10 @@ Item {
                         case 3:
                             if (loader.fields[0].length <= 10) {
                                 var text1 = "Телефон не правильный"
-                                informDialog.show(text1, (0))
+                                defaultDialog.show(text1, (0))
                             } else if (loader.fields[1].length<5) {
                                 var text2 = "Пароль < 5ти символов"
-                                informDialog.show(text2, (0))
+                                defaultDialog.show(text2, (0))
                             } else {
                                 var telephone = loader.fields[(0)];
                                 var passwords = loader.fields[(1)];

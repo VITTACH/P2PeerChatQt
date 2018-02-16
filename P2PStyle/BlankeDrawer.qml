@@ -255,6 +255,7 @@ Drawer {
 
                 onClicked: {
                     drawer.close()
+                    chatScreen.close()
                     loader.avatar = true
                 }
 
@@ -527,7 +528,7 @@ Drawer {
                             if (usersModel.get(index).phone !== loader.tel) {
                                 drawer.close();
                                 listView.memIndex=index;
-                                informDialog.show("Хотите удалить <strong>" + login + " " + famil + "</strong> из друзей?", 2)
+                                defaultDialog.show("Хотите удалить <strong>" + login + " " + famil + "</strong> из друзей?", 2)
                             }
                         }
                         if (parent.x <= drag.minimumX) {
@@ -541,10 +542,10 @@ Drawer {
                 }
 
                 Connections {
-                    target: informDialog
+                    target: defaultDialog
                     onChooseChanged: {
                         if (listView.memIndex== index) {
-                            if (informDialog.choose == false) {
+                            if (defaultDialog.choose == false) {
                                 var phn=0;
                                 if (typeof usersModel.get(index) !== 'undefined')
                                 phn = usersModel.get(index).phone

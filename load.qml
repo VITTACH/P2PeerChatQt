@@ -187,7 +187,7 @@ ApplicationWindow {
                                 break;
                             case 0:
                                 blankeDrawer.close()
-                                informDialog.show("Вы не зарегистрированы!", 0)
+                                defaultDialog.show("Вы не зарегистрированы!", 0)
                                 if (loader.source != "qrc:/loginanDregister.qml") {loader.goTo("qrc:/loginanDregister.qml")}
                                 if (loader.aToken != ""){
                                     loader.fields[0] = (loader.login);
@@ -202,7 +202,7 @@ ApplicationWindow {
                                 break;
                             case -1:
                                 blankeDrawer.close()
-                                informDialog.show("Временно нету доступа до интернету", 0)
+                                defaultDialog.show("Временно нету доступа до интернету", 0)
                                 break;
                         }
                     } else {
@@ -268,8 +268,8 @@ ApplicationWindow {
 
         property string chat1Color: "#EAEAEA";
         property string chat2Color: "#A7A7A7";
-        property string chat3Color: "#C7D5E2";
-        property string chat4Color: "#BCCDDD";
+        property string chat3Color: "#C7DDE0";
+        property string chat4Color: "#BAD2D6";
 
         property string feedColor: "#EDEDED";
     }
@@ -314,11 +314,11 @@ ApplicationWindow {
         id: trebu4etMsNorm
     }
 
-    P2PStyle.DefaultDialog {id: informDialog}
+    ChatScreen {id: chatScreen}
+
+    P2PStyle.BlankeDrawer {id: blankeDrawer}
+
+    P2PStyle.DefaultDialog {id: defaultDialog}
 
     P2PStyle.ImagesDialog {id: avatarDialog}
-
-    P2PStyle.BlankeDrawer {id:blankeDrawer}
-
-    ChatScreen {id:chatScreen}
 }

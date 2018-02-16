@@ -19,13 +19,13 @@ Item {
                         event_handler.saveSet("passw", (password));
                         var objectFrnd=JSON.parse(loader.frienList)
                         objectFrnd.push(phone)
-                        informDialog.show("Вы зарегистрированы", 0)
+                        defaultDialog.show("Вы зарегистрированы", 0)
                         loader.frienList=JSON.stringify(objectFrnd)
                         loader.addFriends()
                         loader.isLogin = true;
                         goTo("profile.qml")
                     } else if (request.responseText == "no") {
-                        informDialog.show("Что-то пошло не так", 0)
+                        defaultDialog.show("Что-то пошло не так", 0)
                     }
                 }
             }
@@ -80,16 +80,16 @@ Item {
                     onClicked: {
                         if(index == 6) {
                             if (loader.fields[0].length < 2) {
-                                informDialog.show("Ваше имя менее чем 2 символа",0)
+                                defaultDialog.show("Ваше имя менее чем 2 символа",0)
                             }
                             else if (loader.fields[1].length < 2) {
-                                informDialog.show("Фамилия короче двух символов",0)
+                                defaultDialog.show("Фамилия короче двух символов",0)
                             }
                             else if (loader.fields[2].length < 5) {
-                                informDialog.show("Ваш пароль < 5 - ти символов",0)
+                                defaultDialog.show("Ваш пароль < 5 - ти символов",0)
                             }
                             else if (loader.fields[4].length <11) {
-                                informDialog.show("Ваш номер короче 11 символов",0)
+                                defaultDialog.show("Ваш номер короче 11 символов",0)
                             } else {
                                 registration(loader.fields[0], loader.fields[1], loader.fields[2], loader.fields[4], loader.fields[3])
                             }

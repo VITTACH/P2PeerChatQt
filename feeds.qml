@@ -282,21 +282,21 @@ Rectangle {
                                 }
                                 onClicked: {
                                     listView.friend = phone
-                                    informDialog.show("Отправить заявку в друзья для <strong>" + login + " " + famil + "</strong>?", 2)
+                                    defaultDialog.show("Отправить заявку в друзья для <strong>" + login + " " + famil + "</strong>?", 2)
                                 }
                             }
 
                             Connections {
-                                target: informDialog
+                                target: defaultDialog
                                 onChooseChanged: {
                                     if (listView.memIndex !== index) {
                                         var objct = JSON.parse((loader.frienList))
-                                        if (informDialog.choose== false && listView.friend!=null) {
+                                        if (defaultDialog.choose== false && listView.friend!=null) {
                                             if (objct === null) {objct = [];}
                                             var objs = objct.push(listView.friend)
                                             loader.frienList=JSON.stringify(objct)
                                             loader.addFriend(listView.friend)
-                                            informDialog.choose=true
+                                            defaultDialog.choose=true
                                         }
                                     }
                                 }
@@ -482,8 +482,10 @@ Rectangle {
                         MouseArea {
                             anchors.fill:parent
                             onClicked: {
+                                if(chatScreen.position>0)
+                                    return
                                 loader.urlLink = link
-                                if (event_handler.currentOSys() > (0)) {
+                                if(event_handler.currentOSys() >= (1)) {
                                     var t = title;
                                     loader.webview = true
                                     partnerHeader.text=t;

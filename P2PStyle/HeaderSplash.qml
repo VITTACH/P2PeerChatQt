@@ -128,7 +128,7 @@ Item {
             width: facade.toPx(140)
             onClicked: {
                 if (page == 1) {page -= 1}
-                else if (chatScreen.position>0) chatScreen.close()
+                else if (chatScreen.position>0)blankeDrawer.open()
                 else if (loader.webview) {
                     loader.webview = false
                 } else blankeDrawer.open()

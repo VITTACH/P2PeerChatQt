@@ -9,46 +9,6 @@ Drawer {
     width: parent.width
     height: parent.height
 
-    property variant input
-    property variant select
-
-    function hideKeyboard(event) {
-        pressedArea.visible= true;
-        if (event !=0) event.accepted = true
-        textField.focus=false
-        Qt.inputMethod.hide()
-        loader.focus = (true)
-        input = false;
-    }
-
-    function setInfo(text, photos, status) {
-        partnersHead.stat = status
-        partnersHead.phot = photos
-        partnersHead.text = text
-    }
-
-    function relative(str) {
-        var s = (+ new Date() - Date.parse(str))/1e3,
-        m = s / 60,
-        h = m / 60,
-        d = h / 24,
-        w = d / 7,
-        y = d / 365.242199,
-        M = y * 12;
-
-      function approx(num) {
-          return num < 5? ('a few'): Math.round(num);
-      };
-
-      return s <= 1? 'just now' : m < 0 ? approx(s)+' s ago'
-           : m <= 1? 'minute ago': h < 1? approx(m)+' m ago'
-           : h <= 1? 'hour ago' : d < 1 ? approx(h)+' h ago'
-           : d <= 1? 'yesterday' : w < 1? approx(d)+' d ago'
-           : w <= 1? 'last week' : M < 1? approx(w)+' w ago'
-           : M <= 1? 'last month': y < 1? approx(M)+' m ago'
-           : y <= 1? 'a year ago': approx(y) + ' years ago'
-    }
-
     function loadChatsHistory() {
         select = [];
         chatModel.clear()
@@ -76,7 +36,7 @@ Drawer {
             appendMessage(objct.text,-objct.flag,objct.time)
         }
 
-        chatScrenList.positionViewAtEnd();
+        chatScrenList.positionViewAtEnd()
     }
 
     function checkMessage(flag) {
@@ -93,8 +53,25 @@ Drawer {
         }
     }
 
+    function relative(str) {
+        var s = (+ new Date()-Date.parse(str))/1e3, m= s/60,
+        h = m/60, d = h/24, w = d/7, y = d/365.242, M= y*12;
+
+       function approx(num) {
+           return num<5? 'few':Math.round(num)
+       }
+
+       return s <= 1? 'just now' : m < 1 ?approx(s)+' s ago'
+            : m <= 1? 'minute ago': h < 1?approx(m)+' m ago'
+            : h <= 1? 'hour ago' : d < 1 ?approx(h)+' h ago'
+            : d <= 1? 'yesterday' : w < 1?approx(d)+' d ago'
+            : w <= 1? 'last week' : M < 1?approx(w)+' w ago'
+            : M <= 1? 'last month': y < 1?approx(M)+' m ago'
+            : y <= 1? 'a year ago': approx(y) + ' years ago'
+    }
+
     Rectangle {
-        anchors.fill: parent; color: loader.chat1Color
+        anchors.fill: {parent} color:loader.chat1Color
     }
 
     Connections {
@@ -149,11 +126,11 @@ Drawer {
         }
     }
 
-    Component.onCompleted: {loadChatsHistory(); partnersHead.page = -1;}
+    Component.onCompleted: {loadChatsHistory(); partnersHead.page = (-1)}
 
     function parseToJSON(message, phone,ip) {
         var JSONobj
-        return JSON.stringify(JSONobj = {message: message, phone:phone})
+        return JSON.stringify(JSONobj = {message: message, phone: phone})
     }
 
     function appendMessage(newmessage, flag , timestamp) {
@@ -165,16 +142,16 @@ Drawer {
             someText: newmessage,
             lineColor: Math.random(),
             timeStamp: String(timestamp),
-            textColor: (flag === 2)? "#545454": "#535353",
+            textColor: (flag === 2)? ("#545454"): ("#535353"),
             backgroundColor:flag==2? "#E0F4F4F4": "#E0D1D1D1",
             image: ""
         });
-        if (cflag ==2) {
-            event_handler.sendMsgs(parseToJSON(newmessage,loader.tel,0))
+        if (cflag === 2) {
+            event_handler.sendMsgs(parseToJSON(newmessage,loader.tel, 0))
         }
     }
 
-    Connections{target:blankeDrawer; onCindexChanged:loadChatsHistory()}
+    Connections {target:blankeDrawer; onCindexChanged:loadChatsHistory()}
 
     TextArea {
         id: buferText;
@@ -182,7 +159,7 @@ Drawer {
         width: {75/100*parent.width}
         visible: false
         font {
-            pixelSize: {facade.doPx(23);}
+            pixelSize: {facade.doPx(28);}
             family: {trebu4etMsNorm.name}
         }
     }
@@ -190,9 +167,11 @@ Drawer {
     ListView {
         anchors {
             top: parent.top
-            bottom:textArea.top
-            bottomMargin: facade.toPx(40)
-            topMargin:partnerHeader.height+facade.toPx(10)
+            bottom: parent.bottom
+            topMargin: partnerHeader.height + facade.toPx(10);
+            bottomMargin: {
+                facade.toPx(40)+Math.max(facade.toPx(99),textArea.height)
+            }
         }
         width: parent.width
         displayMarginEnd: (height/2)
@@ -201,7 +180,7 @@ Drawer {
 
         id:chatScrenList
         MouseArea {
-            anchors.fill: parent
+            anchors.fill:parent
             propagateComposedEvents: true
             visible: event_handler.currentOSys()
             onClicked: {
@@ -211,7 +190,7 @@ Drawer {
         }
 
         delegate: Rectangle {
-            color: "transparent"
+            color:"transparent"
             width: parent.width
             height: {basedColumn.implicitHeight}
 
@@ -245,6 +224,7 @@ Drawer {
 
                 Item {
                     id: baseItem
+                    x:facade.toPx(40)
                     width: parent.width;
                     height: {parentText.height;}
                     Image {
@@ -269,18 +249,27 @@ Drawer {
                         width: {facade.toPx(4);}
                         height: {parent.height;}
                     }
-                    x:facade.toPx(40)
+
                     Item {
                         id:parentText
-                        height: textarea.height;
+                        height:textarea.height
                         property var spacing:facade.toPx(40)
+                        /*
+                        DropShadow {
+                            radius: 10
+                            samples: 15
+                            color: "#30000000"
+                            source: {textarea}
+                            anchors.fill: {textarea}
+                        }
+                        */
                         TextArea {
-                            id:textarea
+                            id: textarea
                             padding: facade.toPx(14)
                             wrapMode: TextEdit.Wrap;
                             width: baseItem.width-2*baseItem.x-staMessage.width-parent.spacing
                             font.family: trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(23);
+                            font.pixelSize: facade.doPx(28);
                             text: someText;
 
                             color:textColor
@@ -332,8 +321,8 @@ Drawer {
                                                 select.splice(p,1)
                                             } else {
                                                 chatMenuList.menu = 0;
-                                                parent.color = loader.chat4Color
-                                                baseRect.color="#80FFFFFF"
+                                                parent.color=loader.chat4Color
+                                                baseRect.color = ("#60FFFFFF")
                                                 select.push(index)
                                                 return
                                             }
@@ -350,7 +339,7 @@ Drawer {
                                         }
                                         chatMenuList.menu =0
                                         parent.color=loader.chat4Color
-                                        baseRect.color = "#80FFFFFF"
+                                        baseRect.color = ("#60FFFFFF")
                                         coloresRect.x = ((mouseX))
                                         coloresRect.y = ((mouseY))
                                         circleAnimation.start()
@@ -379,7 +368,7 @@ Drawer {
                                 width: {
                                     if (index < chatModel.count - 1) {
                                         parent.width - facade.toPx(9);
-                                    } else {(parent.width)}
+                                    } else {staMessage.width}
                                 }
                                 height: width
                                 radius: width/2
@@ -387,8 +376,8 @@ Drawer {
                                 Rectangle {
                                     height: width
                                     radius: width/2
-                                    width: parent.width/2.2
-                                    anchors.centerIn: {parent;}
+                                    width: parent.width / 2.2
+                                    anchors.centerIn: parent;
                                     border.color: {loader.chat2Color;}
                                     border.width: 3
                                     visible:index == chatModel.count-1
@@ -419,7 +408,7 @@ Drawer {
         }
         Item {
             width: {parent.width}
-            height: textField.memHeight
+            height:textField.memHeight
             Flickable {
                 TextArea.flickable: TextArea {
                     id: textField
@@ -435,9 +424,9 @@ Drawer {
                     background: Rectangle {color:"#CFFEFEFE"}
                     Keys.onReturnPressed: {pressCtrl = !(false); event.accepted = (false)}
                     Keys.onPressed: if (event.key === Qt.Key_Control) {pressEntr = !false}
-                    rightPadding: sendButton.width + facade.toPx(40);
+                    rightPadding:sendButton.width+leftPadding
                     font.family:trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(24)
+                    font.pixelSize: facade.doPx(28)
                     Keys.onReleased: {
                         if (event.key === Qt.Key_Control || event.key === Qt.Key_Return) {
                             if (pressCtrl == true && pressEntr == true) {checkMessage(2);}
@@ -464,10 +453,9 @@ Drawer {
                 height: {
                     if (textField.lineCount == 1) {
                         textField.memHeight = facade.toPx(99)
-                    }
-                    else if (textField.lineCount<6)
-                        textField.memHeight =textField.implicitHeight
-                    else {
+                    } else if (textField.lineCount < 6) {
+                        textField.memHeight = textField.implicitHeight
+                    } else {
                         textField.memHeight
                     }
                 }
@@ -500,7 +488,25 @@ Drawer {
         }
     }
 
+    property variant select
+    property variant input;
+
     P2PStyle.HeaderSplash {id: partnersHead}
 
     P2PStyle.ChatMenuList {id: chatMenuList}
+
+    function setInfo(messag,photos,status) {
+        partnersHead.stat = status
+        partnersHead.phot = photos
+        partnersHead.text = messag
+    }
+
+    function hideKeyboard(event) {
+        pressedArea.visible= true;
+        if (event !== 0) event.accepted=true
+        textField.focus = false
+        Qt.inputMethod.hide()
+        loader.focus =true
+        input = false
+    }
 }
