@@ -126,32 +126,31 @@ Drawer {
         }
     }
 
-    Component.onCompleted: {loadChatsHistory(); partnersHead.page = (-1)}
+    Component.onCompleted: {loadChatsHistory(); partnersHead.page = (-1.0);}
 
     function parseToJSON(message, phone,ip) {
-        var JSONobj
-        return JSON.stringify(JSONobj = {message: message, phone: phone})
+        return JSON.stringify({message: message, phone:phone})
     }
 
-    function appendMessage(newmessage, flag , timestamp) {
+    function appendMessage(newTextMessage, flag, times) {
         var sp, cflag;
         flag = Math.abs(cflag = flag)
         chatModel.append({
             falg:flag,
             mySpacing: sp = (chatModel.count > 0 ? ((chatModel.get(chatModel.count - 1).textColor == "#535353" && flag == 2) || (chatModel.get(chatModel.count - 1).textColor == "#545454" && flag == 1)? facade.toPx(30): facade.toPx(0)): facade.toPx(20)),
-            someText: newmessage,
+            someText: newTextMessage,
             lineColor: Math.random(),
-            timeStamp: String(timestamp),
+            timeStamp: String(times),
             textColor: (flag === 2)? ("#545454"): ("#535353"),
             backgroundColor:flag==2? "#E0F4F4F4": "#E0D1D1D1",
             image: ""
         });
         if (cflag === 2) {
-            event_handler.sendMsgs(parseToJSON(newmessage,loader.tel, 0))
+            event_handler.sendMsgs(parseToJSON(newTextMessage,loader.tel,0))
         }
     }
 
-    Connections {target:blankeDrawer; onCindexChanged:loadChatsHistory()}
+    Connections {target: blankeDrawer; onCindexChanged: loadChatsHistory();}
 
     TextArea {
         id: buferText;
@@ -167,10 +166,14 @@ Drawer {
     ListView {
         anchors {
             top: parent.top
-            bottom: parent.bottom
+            bottom: textArea.top
             topMargin: partnerHeader.height + facade.toPx(10);
             bottomMargin: {
-                facade.toPx(40)+Math.max(facade.toPx(99),textArea.height)
+                var tex=Math.max(facade.toPx(99),input?parent.height*0.43:0)
+                if (textArea.height >0) {
+                    tex=0
+                }
+                facade.toPx(40) + (tex)
             }
         }
         width: parent.width
@@ -254,28 +257,20 @@ Drawer {
                         id:parentText
                         height:textarea.height
                         property var spacing:facade.toPx(40)
-                        /*
-                        DropShadow {
-                            radius: 10
-                            samples: 15
-                            color: "#30000000"
-                            source: {textarea}
-                            anchors.fill: {textarea}
-                        }
-                        */
+
                         TextArea {
                             id: textarea
+                            text: someText;
                             padding: facade.toPx(14)
                             wrapMode: TextEdit.Wrap;
-                            width: baseItem.width-2*baseItem.x-staMessage.width-parent.spacing
                             font.family: trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(28);
-                            text: someText;
+                            width: baseItem.width-2*baseItem.x-staMessage.width-parent.spacing
 
                             color:textColor
                             readOnly: true;
                             background: Rectangle {
-                                color: {backgroundColor}
+                                color: backgroundColor
                                 radius: {parent.padding}
                                 Item {
                                     clip: true;
@@ -396,7 +391,7 @@ Drawer {
         samples: 15
         color:"#90000000"
         source: textArea;
-        anchors.fill: textArea;
+        anchors.fill: {textArea;}
     }
     Column {
         clip: true
@@ -404,59 +399,62 @@ Drawer {
         width: parent.width
         anchors {
             bottom: parent.bottom
-            bottomMargin:input?parent.height*0.43:0
+            bottomMargin: input? parent.height*0.43: 0;
         }
         Item {
             width: {parent.width}
             height:textField.memHeight
-            Flickable {
-                TextArea.flickable: TextArea {
-                    id: textField
-                    property variant memHeight
-                    property bool pressCtrl: false;
-                    property bool pressEntr: false;
-                    placeholderText: {
-                        if (event_handler.currentOSys() <= 0) "Ctrl+Enter Для Отправки..."
-                        else qsTr("Ваше Сообщение")
-                    }
-                    wrapMode: {TextEdit.Wrap;}
-                    verticalAlignment: {(Text.AlignVCenter);}
-                    background: Rectangle {color:"#CFFEFEFE"}
-                    Keys.onReturnPressed: {pressCtrl = !(false); event.accepted = (false)}
-                    Keys.onPressed: if (event.key === Qt.Key_Control) {pressEntr = !false}
-                    rightPadding:sendButton.width+leftPadding
-                    font.family:trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(28)
-                    Keys.onReleased: {
-                        if (event.key === Qt.Key_Control || event.key === Qt.Key_Return) {
-                            if (pressCtrl == true && pressEntr == true) {checkMessage(2);}
-                        } else if (event.key ==Qt.Key_Back) {
-                            hideKeyboard(event)
+            Item {
+                anchors.fill: {parent}
+                Flickable {
+                    TextArea.flickable : TextArea {
+                        id: textField
+                        property variant memHeight;
+                        property bool pressCtrl: false;
+                        property bool pressEntr: false;
+                        placeholderText: {
+                            if (event_handler.currentOSys() <= 0) "Ctrl+Enter Для Отправки..."
+                            else qsTr("Ваше Сообщение")
                         }
-                        pressCtrl = pressEntr=false
-                    }
-                    leftPadding:facade.toPx(40)
-                    MouseArea {
-                        id: pressedArea
-                        width: parent.width-sendButton.width;
-                        height: parent.height
-                        visible:event_handler.currentOSys()>0
-                        onClicked: {
-                            visible = !(input=true)
-                            chatScrenList.positionViewAtEnd()
-                            textField.focus = true;
+                        wrapMode: TextEdit.Wrap
+                        verticalAlignment: {(Text.AlignVCenter);}
+                        background: Rectangle {color:"#CFFEFEFE"}
+                        Keys.onReturnPressed: {pressCtrl = !(false); event.accepted = (false)}
+                        Keys.onPressed: if (event.key === Qt.Key_Control) {pressEntr = !false}
+                        rightPadding:sendButton.width+leftPadding
+                        font.family:trebu4etMsNorm.name
+                        font.pixelSize: facade.doPx(28)
+                        Keys.onReleased: {
+                            if (event.key === Qt.Key_Control || event.key === Qt.Key_Return) {
+                                if (pressCtrl == true && pressEntr == true) {checkMessage(2);}
+                            } else if (event.key ==Qt.Key_Back) {
+                                hideKeyboard(event)
+                            }
+                            pressCtrl = pressEntr=false
+                        }
+                        leftPadding:facade.toPx(40)
+                        MouseArea {
+                            id: pressedArea
+                            width: parent.width-sendButton.width;
+                            height: parent.height
+                            visible:event_handler.currentOSys()>0
+                            onClicked: {
+                                visible = !(input=true)
+                                chatScrenList.positionViewAtEnd()
+                                textField.focus = true;
+                            }
                         }
                     }
-                }
-                flickableDirection: {Flickable.VerticalFlick}
-                width: parent.width
-                height: {
-                    if (textField.lineCount == 1) {
-                        textField.memHeight = facade.toPx(99)
-                    } else if (textField.lineCount < 6) {
-                        textField.memHeight = textField.implicitHeight
-                    } else {
-                        textField.memHeight
+                    flickableDirection: {Flickable.VerticalFlick}
+                    width: parent.width
+                    height: {
+                        if (textField.lineCount == 1) {
+                            textField.memHeight = facade.toPx(99)
+                        } else if (textField.lineCount < 6) {
+                            textField.memHeight = textField.implicitHeight
+                        } else {
+                            textField.memHeight
+                        }
                     }
                 }
             }
