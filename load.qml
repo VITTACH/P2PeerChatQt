@@ -10,7 +10,7 @@ ApplicationWindow {
     x: 0
     y: 0
     visible:true
-    title: "PeerMe"
+    title: "FriendUp"
 
     StatusBar {color: ("#4D5762")}
 
@@ -255,8 +255,7 @@ ApplicationWindow {
 
         property string head1Color: "#728599";
         property string head2Color: "#FFFFFF";
-        property string head3Color: "#939DA5";
-        property string head4Color: "#737884";
+        property string head3Color: "#737884";
 
         property string sets1Color: "#4B4E55";
         property string sets2Color: "#C4C4C4";
@@ -268,8 +267,6 @@ ApplicationWindow {
 
         property string chat1Color: "#EAEAEA";
         property string chat2Color: "#A7A7A7";
-        property string chat3Color: "#C7DDE0";
-        property string chat4Color: "#BAD2D6";
 
         property string feedColor: "#EDEDED";
     }
@@ -316,9 +313,9 @@ ApplicationWindow {
 
     ChatScreen {id: chatScreen}
 
-    P2PStyle.BlankeDrawer {id: blankeDrawer}
+    P2PStyle.DefaultDialog {id: defaultDialog;}
 
-    P2PStyle.DefaultDialog {id: defaultDialog}
+    P2PStyle.BlankeDrawer {id: blankeDrawer}
 
     P2PStyle.ImagesDialog {id: avatarDialog}
 }

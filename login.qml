@@ -43,7 +43,7 @@ Item {
                 image: "ui/icons/PassWIconWhite.png"; plaseHolder: "Введите пароль"
             }
             ListElement {image: ""; plaseHolder: "Начать Общение";}
-            ListElement {image: ""; plaseHolder: "Вход по QR-коду"}
+            ListElement {image: ""; plaseHolder: "Вход по QR-Коду"}
             ListElement {image: ""; plaseHolder: "Нету аккаунта?";}
         }
 
@@ -62,12 +62,21 @@ Item {
             width: parent.width
             height: index==3?facade.toPx(110): (index==0?pageWidth:facade.toPx(90))
 
-            ListView {
+            DropShadow {
+                radius: 12
+                samples: 15
                 visible: index==0
+                color:"#90000000"
+                source: {socials}
+                anchors.fill: {socials;}
+            }
+            ListView {
+                id: socials
+                visible: !index
                 height: pageWidth
-                width: model.count*(pageWidth + spacing);
+                width: model.count * (pageWidth + spacing)-spacing;
                 orientation:Qt.Horizontal
-                spacing: facade.toPx(10);
+                spacing: facade.toPx(30);
                 anchors.horizontalCenter: {parent.horizontalCenter}
 
                 model:ListModel {
@@ -79,14 +88,15 @@ Item {
                     source: image
                     height: width
                     width: {
-                        var limitWidth = facade.toPx(1100);
+                        var limitWidth = facade.toPx(1140);
                         pageWidth = facade.toPx(sourceSize.width * 1.5 * (listView.width > limitWidth? 1 : listView.width/limitWidth))
                     }
                     MouseArea {
+                        anchors.fill: parent
                         onClicked: {
                             var params
                             switch (index) {
-                            case 0: params = {
+                                case 0: params = {
                                     display: 'popup',
                                     response_type: 'token',
                                     client_id:'396748683992616',
@@ -95,8 +105,8 @@ Item {
                                 loader.urlLink = "https://graph.facebook.com/oauth/authorize?%1".arg(URLQuery.serializeParams(params))
                                 partnerHeader.text = "Facebook";
                                 break;
-                            case 1:
-                            case 2: params = {
+                                case 1:
+                                case 2: params = {
                                     display: 'popup',
                                     client_id: '5813771',
                                     scope: 'wall, offline',
@@ -109,7 +119,6 @@ Item {
                             }
                             loader.goTo("qrc:/webview.qml")
                         }
-                        anchors.fill: {parent}
                     }
                 }
             }
@@ -176,8 +185,8 @@ Item {
                                 (index == 3? "#0f133d": "#FFFFFF");
                             }
                         }
-                        horizontalAlignment:Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter;
+                        horizontalAlignment: {(Text.AlignHCenter);}
+                        verticalAlignment: {(Text.AlignVCenter);}
                         text: parent.text
                         font: parent.font
                     }
@@ -212,28 +221,37 @@ Item {
                 }
             }
 
-            Button {
-                contentItem: Text {
-                    verticalAlignment: Text.AlignVCenter
-                    color:parent.down == true? "#D3D3D3": "#FFFFFF"
-                    text: parent.text;
-                    font: parent.font;
+            Item {
+                visible: index == 5
+                Button {
+                    contentItem: Text {
+                        verticalAlignment:Text.AlignVCenter
+                        color:parent.down==true? "#D3D3D3": "white"
+                        text: {parent.text;}
+                        font: {parent.font;}
+                    }
+
+                    text: {
+                        var msg =plaseHolder
+                        return typeof msg == "undefined"? (""): msg
+                    }
+                    background: Rectangle{opacity:0}
+                    onClicked: partnerHeader.page=1;
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(26);
+                    anchors.bottom: {parent.bottom;}
+                    anchors.right: {parent.right;}
                 }
 
+                width: Math.min(0.82*parent.width,facade.toPx(900))
                 anchors.horizontalCenter: {parent.horizontalCenter}
-
-                text:typeof plaseHolder=="undefined"?"":plaseHolder
-                font.pixelSize: {facade.doPx(26)}
-                font.family: trebu4etMsNorm.name;
-                background: Rectangle {opacity:0}
-                onClicked: partnerHeader.page =1;
-                visible: (index == 5);
+                height: {facade.toPx(100)}
             }
 
             Rectangle {
                 anchors.horizontalCenter: {parent.horizontalCenter}
                 width: Math.min(0.82*parent.width,facade.toPx(900))
-                visible:index == 1 || index == 2;
+                visible: {index == 1 || index == 2;}
                 height: facade.toPx(3)
             }
         }

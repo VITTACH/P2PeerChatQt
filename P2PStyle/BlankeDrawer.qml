@@ -208,9 +208,7 @@ Drawer {
     Column {
         id: profile
         spacing:facade.toPx(10)
-        anchors {
-            horizontalCenter:parent.horizontalCenter
-        }
+        anchors.horizontalCenter: parent.horizontalCenter
         Item{
             id: firstItem
             width: parent.width
@@ -258,7 +256,6 @@ Drawer {
                     chatScreen.close()
                     loader.avatar = true
                 }
-
                 Rectangle {
                     id: bag
                     clip: true
@@ -382,20 +379,19 @@ Drawer {
         clip:true
         id: listView
         spacing:-1
-        property int memIndex:0
+        property int memIndex:0;
         anchors {
             topMargin: -1
             left: parent.left
-            right: parent.right
-            top: profile.bottom
-            bottom:listMenu.top
+            right: parent.right;
+            top: profile.bottom;
+            bottom:listMenu.top;
             leftMargin:leftSlider.opacity?leftSlider.width:0
         }
         boundsBehavior: {(Flickable.StopAtBounds)}
 
         model:ListModel{id: usersModel;}
-        snapMode: {ListView.SnapToItem;}
-        Component.onCompleted:{
+        Component.onCompleted: {
             if (loader.chats.length<1) {
                 var mchat = event_handler.loadValue("chats")
                 if (mchat!= "")
@@ -494,14 +490,11 @@ Drawer {
                     anchors.fill:parent
                     property var presed
                     onClicked: {
-                        var json, text;
-                        json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
-                        text = usersModel.get(index).login+" "+usersModel.get(index).famil
+                        if (index !=-1) listView.currentIndex = index
+                        var json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
+                        var text = usersModel.get(index).login+" "+usersModel.get(index).famil
                         chatScreen.setInfo(text, usersModel.get(index).image, json.port == 0? qsTr("Offline"): qsTr("Online"))
-                        if (index != -1) {listView.currentIndex = index}
-                        var jstring=JSON.stringify(json)
-                        console.log(jstring)
-                        event_handler.sendMsgs(jstring);
+                        event_handler.sendMsgs(JSON.stringify(json));
                         chatScreen.open()
                         drawer.close();
                     }
@@ -610,11 +603,12 @@ Drawer {
                         maximumLineCount: 3
                         wrapMode: Text.WordWrap;
                         function previewText() {
-                            var indx = 0, m = ""
+                            var indx = 0, m = "", fl
                             if (typeof loader.chats[index] !== ('undefined'))
                                 {indx = (loader.chats[index].message.length)}
                             if (indx >= 1) {
-                                if (loader.chats[index].message[indx-1].flag)
+                                fl = loader.chats[index].message[indx-1].flag
+                                if (Math.abs(fl-2) != 0)
                                     m= qsTr("Вам: ")
                                 else m= qsTr("Вы: ")
                                 m += loader.chats[index].message[indx-1].text
@@ -743,23 +737,26 @@ Drawer {
                 onEntered: if(index>0)listMenu.currentIndex=index
                 onClicked: {
                     switch(index) {
-                    case 2:
-                        if (helperDrawer.position <=1)
+                        case 2:
+                        if (helperDrawer.position < 2) {
                             helperDrawer.open()
+                        }
                         break;
-                    case 3:
+                        case 3:
                         loader.goTo("qrc:/loginanDregister.qml");
+                        loader.restores();
+                        chatScreen.close()
+                        drawer.close()
                         event_handler.saveSet("user","")
-                        loader.restores();drawer.close()
                         helperDrawer.visible(false)
                     }
                     if (index == 1) {
                         myswitcher.checked = !myswitcher.checked;
                     } else if (index > 1 && index <=2) {
-                        listMenu.currentIndex = index;
+                        listMenu.currentIndex=index
                     }
                 }
-                onExited: {listMenu.currentIndex = -1}
+                onExited: listMenu.currentIndex=-1;
             }
 
             Rectangle {

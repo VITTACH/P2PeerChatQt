@@ -101,7 +101,7 @@ Item {
         width: parent.width
         anchors {
             top: parent.top
-            bottom: centerSquare.top
+            bottom: center.top
         }
     }
 
@@ -112,7 +112,7 @@ Item {
         width: parent.width
         anchors {
             bottom: parent.bottom;
-            top: centerSquare.bottom
+            top: center.bottom
         }
     }
 
@@ -124,7 +124,7 @@ Item {
             left: parent.left
             top: uperSquare.bottom
             bottom: downSquare.top
-            right: centerSquare.left
+            right: center.left
         }
     }
 
@@ -133,60 +133,58 @@ Item {
         id: rightSquare
         color: "#000000"
         anchors {
+            left:center.right
             right: parent.right
             top: uperSquare.bottom
             bottom: downSquare.top
-            left: centerSquare.right
         }
     }
 
     Rectangle {
-        id: centerSquare
+        id: center
         color: "transparent"
         border {
-            width: 2
-            color: "#000000"
+            width: 2; color: "black"
         }
 
         width: facade.toPx(500)
         height: facade.toPx(800)
-        anchors.centerIn: parent
+        anchors.centerIn: parent;
 
         Rectangle {
             id: scanline
             width: 2
             anchors.centerIn: parent;
 
-            SequentialAnimation{
+            SequentialAnimation {
+                loops: Animation.Infinite
                 ColorAnimation {
                     target: scanline;
                     property: "color"
-                    from: {"red"}
+                    from: {"#FF0000"}
                     to: "transparent"
                     duration: 350
                 }
                 ColorAnimation {
+                    from: {"transparent"}
                     target: scanline;
                     property: "color"
-                    from: {"transparent"}
                     to: "red";
                     duration: 350
                 }
-                loops: Animation.Infinite
                 running: true
             }
+
             SequentialAnimation {
-                NumberAnimation {
-                    to: 0
-                    duration:3000
-                    target: scanline;
-                    property:"height"
-                    from: {
-                    centerSquare.height-4
-                    }
-                }
                 running: true
                 loops: Animation.Infinite
+                NumberAnimation {
+                    from: center.height-4
+                    to: 0
+                    duration: 3000
+                    target: {scanline}
+                    property: "height"
+                }
             }
         }
     }

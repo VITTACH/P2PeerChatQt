@@ -18,13 +18,11 @@ Button {
     property int yPosition;
 
     DropShadow {
-        radius: 12
+        radius: 16
         samples: 20
         anchors {
             fill: listText;
-            bottomMargin: 7
         }
-        verticalOffset: 10;
         color: "#80000000";
         source: {listText;}
     }
@@ -51,8 +49,7 @@ Button {
                     id: line
                     radius:listText.radius
                     width: listText.width;
-                    height:inerText.implicitHeight+
-                           facade.toPx(60)
+                    height:inerText.implicitHeight + facade.toPx(60)
                     Text {
                         anchors {
                             left: parent.left
@@ -80,7 +77,6 @@ Button {
                             var i, base = 1;
                             for (i = 0; i < menu; i++)
                             base+=buttons[menu].length
-                            loader.context= false
                             action = base + index
                         }
                     }

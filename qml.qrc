@@ -66,5 +66,6 @@
         <file>ui/icons/presBackLigh.png</file>
         <file>registration.qml</file>
         <file>P2PStyle/DefaultDialog.qml</file>
+        <file>ui/buttons/addButton.png</file>
     </qresource>
 </RCC>

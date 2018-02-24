@@ -20,25 +20,22 @@ Item {
         verticalOffset: 10;
         color: "#60000000";
         source: (headRect);
-        visible: headRect.visible;
-        anchors.fill: {(headRect)}
+        visible:headRect.visible
+        anchors.fill: {headRect}
     }
     Rectangle {
         id: headRect
         width: parent.width
-        height: {facade.toPx(140)}
-        visible:{loader.source != ("qrc:/qrscaner.qml")}
-        color: {if (loader.source == "qrc:/loginanDregister.qml")
-                loader.menu1Color;
-            else loader.head1Color
-        }
+        height: facade.toPx(140)
+        visible: loader.source != "qrc:/qrscaner.qml"
+        color: loader.head1Color
 
         Item {
             id: inerItem
             Row {
                 spacing: facade.toPx(30);
                 anchors {
-                    verticalCenter:parent.verticalCenter
+                    verticalCenter: parent.verticalCenter;
                     left: (loader.isLogin)? parent.left:undefined
                     centerIn: (loader.isLogin)? undefined: parent
                     leftMargin: loader.isLogin? facade.toPx(20):0
@@ -51,10 +48,10 @@ Item {
                     visible: {page < 0 && (rootItem.phot !== "")}
 
                     DropShadow {
-                        radius: 15
-                        samples: 15
+                        radius: 18
+                        samples: 20
                         source: big
-                        opacity: 0.56;
+                        opacity: 0.66;
                         color: "black"
                         anchors.fill: big
                     }
@@ -162,7 +159,7 @@ Item {
             onPaint: {
                 var cntx =getContext("2d")
                 cntx.reset()
-                cntx.fillStyle = loader.isOnline? loader.head4Color: loader.head4Color
+                cntx.fillStyle = loader.isOnline? loader.head3Color: loader.head3Color
                 cntx.beginPath();
                 cntx.moveTo(0,height)
                 cntx.lineTo(width, height)
@@ -186,10 +183,8 @@ Item {
             id: headerLine
             width: parent.width
             height:facade.toPx(5)
-            color: {
-                if (loader.source != "qrc:/loginanDregister.qml") {loader.head2Color;}
-                else loader.head3Color
-            }
+            opacity: 0.5
+            color: {loader.head2Color}
             anchors {
                 bottom: parent.bottom;
             }
@@ -204,10 +199,10 @@ Item {
         }
 
         Button {
-            width: height
             visible: page < 0
-            height: parent.height
-            x: {parent.width - width}
+            height: {parent.height}
+            width: facade.toPx(100)
+            x: parent.width -width;
             anchors.verticalCenter:(parent.verticalCenter)
 
             id: hamMoreButton
