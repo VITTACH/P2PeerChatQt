@@ -196,7 +196,7 @@ Drawer {
         width: 0.75*parent.width
         visible: false
         font {
-            pixelSize: {facade.doPx(34);}
+            pixelSize: {facade.doPx(30);}
             family: {trebu4etMsNorm.name}
         }
     }
@@ -320,15 +320,16 @@ Drawer {
                                 padding: facade.toPx(14)
                                 wrapMode: TextEdit.Wrap;
                                 font.family: trebu4etMsNorm.name
-                                font.pixelSize: facade.doPx(34);
+                                font.pixelSize: facade.doPx(30);
                                 width: baseItem.width-2*baseItem.x-staMessage.width-parent.spacing
 
                                 color:textColor
                                 readOnly: true;
                                 background: Rectangle {
                                     border.width: 4.0
-                                    border.color: "#C6D1D7"
+                                    border.color:"#C6D1D7"
                                     color: backgroundColor
+                                    width: textarea.implicitWidth
                                     radius: {parent.padding}
                                     property var lightColor;
                                     property var darksColor;
@@ -432,9 +433,10 @@ Drawer {
                                 width: facade.toPx(36);
                                 height:facade.toPx(36);
                                 visible: {
-                                    var vis = false
-                                    vis =chatModel.get(index).mySpacing==0
+                                    var vis = index == chatModel.count - 1
+                                    if (!vis)
                                     vis|=!chatModel.get(index+1).mySpacing
+                                    vis|=chatModel.get(index).mySpacing==0
                                     return vis
                                 }
                                 x: {
