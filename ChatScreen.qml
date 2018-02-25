@@ -275,7 +275,7 @@ Drawer {
                                 bottom:parent.bottom
                                 bottomMargin: facade.toPx((2));
                             }
-                            x:parentText.x+textarea.width-width+baseItem.x
+                            x: textarea.width-width+baseItem.x;
                             color: backgroundColor
                         }
                     }
@@ -321,11 +321,12 @@ Drawer {
                                 wrapMode: TextEdit.Wrap;
                                 font.family: trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(30);
-                                width: baseItem.width-2*baseItem.x-staMessage.width-parent.spacing
+                                width: baseItem.width-2*baseItem.x-staMessage.width-x-parent.spacing
 
                                 color:textColor
                                 readOnly: true;
                                 background: Rectangle {
+                                    id:msgCloud
                                     border.width: 4.0
                                     border.color:"#C6D1D7"
                                     color: backgroundColor
@@ -340,9 +341,9 @@ Drawer {
 
                                     Item {
                                         clip: true;
-                                        height:parent.height-2*parent.border.width
-                                        width:parent.width-2*parent.radius
                                         anchors.centerIn: parent
+                                        width:parent.width-2*parent.radius
+                                        height: parent.height-2*parent.border.width;
                                         Rectangle {
                                             width: 0
                                             height: 0
@@ -372,7 +373,7 @@ Drawer {
 
                                     MouseArea {
                                         anchors.fill: parent
-                                        acceptedButtons: Qt.LeftButton|Qt.RightButton;
+                                        acceptedButtons:Qt.LeftButton|Qt.RightButton
                                         onPressAndHold: {
                                             coloresRect.x = mouseX;
                                             coloresRect.y = mouseY;
@@ -389,9 +390,9 @@ Drawer {
                                             parent.color = backgroundColor
                                             if (select.length> 0) {
                                                 yPosition = 0
-                                                var posit = select.indexOf((index));
-                                                if (posit >= 0) {
-                                                    select.splice(posit,1)
+                                                var position = select.indexOf(index)
+                                                if (position >= 0) {
+                                                    select.splice(position, 1)
                                                 } else {
                                                     chatMenuList.menu = 0;
                                                     parent.color = parent.darksColor
@@ -418,7 +419,7 @@ Drawer {
                                     }
                                 }
                             }
-                            x: Math.abs(falg-2)*spacing
+                            x: Math.abs(falg - 2)*(textarea.width - msgCloud.width);
 
                             DropShadow {
                                 radius: 10
