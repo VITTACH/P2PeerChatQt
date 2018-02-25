@@ -47,14 +47,6 @@ Item {
                     height: parent.height
                     visible: {page < 0 && (rootItem.phot !== "")}
 
-                    DropShadow {
-                        radius: 18
-                        samples: 20
-                        source: big
-                        opacity: 0.66;
-                        color: "black"
-                        anchors.fill: big
-                    }
                     OpacityMask {
                         id: big
                         source: bug
@@ -76,6 +68,13 @@ Item {
                             anchors.centerIn: {(parent)}
                             height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                             width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                            RadialGradient {
+                                anchors.fill: parent
+                                gradient: Gradient {
+                                    GradientStop { position: 0.4; color: "#20000000"}
+                                    GradientStop { position: 0.7; color: "#90000000"}
+                                }
+                            }
                         }
                     }
 
