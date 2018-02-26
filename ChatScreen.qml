@@ -50,6 +50,10 @@ Drawer {
         }
     }
 
+    property variant select
+    property variant input;
+    property var yPosition;
+
     Connections {
         target: loader
         onContextChanged: {
@@ -146,6 +150,12 @@ Drawer {
         chatScrenList.positionViewAtEnd()
     }
 
+    function setInfo(messag, photos, status) {
+        partnersHead.stat = status
+        partnersHead.phot = photos
+        partnersHead.text = messag
+    }
+
     function checkMessage(flag) {
         if (textField.text.length >= 1) {
             var text= buferText.text = textField.text;
@@ -161,24 +171,20 @@ Drawer {
     }
 
     function relative(str) {
-        var s = (+ new Date()-Date.parse(str))/1e3, m= s/60,
-        h = m/60, d = h/24, w = d/7, y = d/365.242, M= y*12;
-
-       function approx(num) {
-           return num<5? 'Несколько': Math.round(num);
-       }
-
-       return s <= 1? qsTr('Только что')  : m<1? approx(s)+qsTr(' секунд назад')
-            : m <= 1? qsTr('минуту назад'): h<1? approx(m)+qsTr(' минут назад')
-            : h <= 1? qsTr('час назад')   : d<1? approx(h)+qsTr(' часов назад')
-            : d <= 1? qsTr('вчера')       : w<1? approx(d)+qsTr(' дней назад')
+       var s = (+ new Date() - Date.parse(str))/1e3, m= s/60, h = m/60, d = h/24,
+       w = d/7, y = d/365.242, M= y*12;
+       function approx(num) {return num < 5? qsTr('Несколько'): Math.round(num);}
+       return s <= 1? qsTr('Только что')  : m<1? approx(s) + qsTr(' сек. назад')
+            : m <= 1? qsTr('минуту назад'): h<1? approx(m) + qsTr(' минут назад')
+            : h <= 1? qsTr('час назад')   : d<1? approx(h) + qsTr(' часов назад')
+            : d <= 1? qsTr('вчера')       : w<1? approx(d) + qsTr(' суток назад')
             : w <= 1? qsTr('неделю назад'): M<1? approx(w)+qsTr(' неделей назад')
             : M <= 1? qsTr('месяц назад') : y<1? approx(M)+qsTr(' месяцев назад')
             : y <= 1? qsTr('года назад')  : approx(y) + qsTr(' год(а) назад')
     }
 
     Image {
-        anchors.fill: parent;
+        anchors.fill:parent
         source: ("http://picsum.photos/" + width + "/" + height + "?random&blur")
     }
 
@@ -202,28 +208,15 @@ Drawer {
     }
 
     ListView {
-        anchors {
-            top: parent.top
-            bottom: textArea.top
-            topMargin: partnerHeader.height+facade.toPx(10);
-            bottomMargin: {
-                var curHeight = input? parent.height*0.43:0;
-                var tex=Math.max(facade.toPx(110),curHeight)
-                if (textArea.height >0) {
-                    tex = 0
-                } facade.toPx(40) + (tex)
-            }
-        }
-        width: parent.width
-        displayMarginEnd: (height/2)
-        displayMarginBeginning: height/2;
+        id: chatScrenList
+        width: {(parent.width);}
+        displayMarginEnd: (height/2);
+        displayMarginBeginning:height/2
         model: ListModel {id: chatModel;}
-
-        id:chatScrenList
         MouseArea {
             anchors.fill:parent
             propagateComposedEvents: true
-            visible: event_handler.currentOSys()
+            visible: {(event_handler.currentOSys())}
             onClicked: {
                 hideKeyboard(mouse);
                 mouse.accepted = !(true);
@@ -231,52 +224,43 @@ Drawer {
         }
 
         delegate: Item {
-            width: parent.width
-            height: {basedColumn.implicitHeight}
-
-            DropShadow {
-                radius: 10
-                samples: 15
-                opacity: 0.5
-                source: {baseRect;}
-                color: "#80000000";
-                verticalOffset: {radius}
-                anchors.fill: {baseRect}
-                visible: {
-                    baseRect.color!="#00000000"
-                }
-            }
             Rectangle {
-                color: "#00000000";
-                anchors.fill:parent
-
                 id: baseRect
+                color: "#00000000"
+                anchors.fill: parent
+                visible: !shadow.visible
                 Column {
-                    id: basedColumn
-                    width: parent.width;
+                    id: basedColumn;
+                    width: {(parent.width)}
                     Item {
-                        width: (parent.width)
-                        height: {1*timeText.height + mySpacing}
+                        width: (parent.width);
+                        height: timeText.height + mySpacing + (mySpacing == 0? facade.toPx(10): 0)
                         Rectangle {
-                            height: {parent.height;}
+                            height: parent.height
                             width: {routeLine.width}
                             x:routeLine.x+baseItem.x
                             visible: (index >= 1) == true && (chatModel.get(index).mySpacing == 0)
                             color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.40,0.94)
                         }
+
+                        DropShadow {
+                            radius: 5
+                            samples: 10
+                            color: "#80000000"
+                            source: {timeText}
+                            anchors.fill: {timeText}
+                        }
                         Text {
-                            id: timeText
-                            style: Text.Raised
-                            styleColor:"black"
+                            id: timeText;
                             text:relative(timeStamp)
-                            font.pixelSize: {facade.doPx((16))}
-                            font.family: {trebu4etMsNorm.name;}
+                            font.family: trebu4etMsNorm.name
+                            font.pixelSize: facade.doPx(18);
+                            x: textarea.width - implicitWidth + baseItem.x
                             anchors {
                                 bottom:parent.bottom
-                                bottomMargin: facade.toPx((2));
+                                bottomMargin: facade.toPx(2)
                             }
-                            x: textarea.width-width+baseItem.x;
-                            color: backgroundColor
+                            color: {backgroundColor}
                         }
                     }
 
@@ -301,8 +285,8 @@ Drawer {
                         }
 
                         Rectangle {
-                            id: routeLine
-                            color: Qt.hsva(lineColor, 0.40,0.94)
+                            id: routeLine;
+                            color: Qt.hsva(lineColor, 0.40, 0.94)
                             x: (Math.abs(falg-2)==0? staMessage.x:0) -width/2 + staMessage.width/2
                             visible: index<chatModel.count-1&&chatModel.get(index+1).mySpacing==0;
                             width: {facade.toPx(4);}
@@ -310,23 +294,26 @@ Drawer {
                         }
 
                         Item {
-                            id:parentText
-                            height:textarea.height
-                            property var spacing:facade.toPx(40)
+                            id: parentText
+                            height: textarea.height;
+                            property var spacing: facade.toPx(40)
+                            x: Math.abs(falg-2)===1? textarea.width-msCloud.width: 0
 
                             TextArea {
                                 id: textarea
-                                text: {(someText)}
-                                padding: facade.toPx(14)
-                                wrapMode: TextEdit.Wrap;
-                                font.family: trebu4etMsNorm.name
-                                font.pixelSize: facade.doPx(30);
-                                width: baseItem.width-2*baseItem.x-staMessage.width-x-parent.spacing
+                                text: someText;
+                                padding:facade.toPx(14)
+                                wrapMode: TextEdit.Wrap
+                                font.family: trebu4etMsNorm.name;
+                                font.pixelSize: {facade.doPx(30)}
+                                width: {
+                                    baseItem.width-2*baseItem.x-staMessage.width-x-parent.spacing;
+                                }
 
-                                color:textColor
-                                readOnly: true;
+                                color: textColor;
+                                readOnly: !false;
                                 background: Rectangle {
-                                    id:msgCloud
+                                    id: msCloud
                                     border.width: 4.0
                                     border.color:"#C6D1D7"
                                     color: backgroundColor
@@ -339,105 +326,54 @@ Drawer {
                                         darksColor = Qt.rgba(color.r-0.08,color.g-0.05,color.b, 1)
                                     }
 
+                                    PropertyAnimation {
+                                        duration: 500
+                                        id: circleAnimation;
+                                        target: coloresRect;
+                                        properties:("width,height,radius");
+                                        from: 0
+
+                                        onStopped: {coloresRect.width  = 0; coloresRect.height =0}
+                                        to: (parent.width*3)
+                                    }
+
                                     Item {
                                         clip: true;
                                         anchors.centerIn: parent
-                                        width:parent.width-2*parent.radius
+                                        width: parent.width-2*parent.radius
                                         height: parent.height-2*parent.border.width;
                                         Rectangle {
                                             width: 0
                                             height: 0
                                             id: coloresRect;
-                                            color:parent.parent.lightColor
+                                            color: parent.parent.lightColor
 
                                             transform: Translate {
-                                                x: -coloresRect.width /(2)
-                                                y: -coloresRect.height/(2)
-                                            }
-                                        }
-                                    }
-
-                                    PropertyAnimation {
-                                        duration: 500
-                                        id: circleAnimation;
-                                        target: coloresRect;
-                                        properties:("width,height,radius")
-                                        from: 0
-                                        to: (parent.width*3)
-
-                                        onStopped: {
-                                            coloresRect.width  = 0;
-                                            coloresRect.height = 0;
-                                        }
-                                    }
-
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        acceptedButtons:Qt.LeftButton|Qt.RightButton
-                                        onPressAndHold: {
-                                            coloresRect.x = mouseX;
-                                            coloresRect.y = mouseY;
-                                            parent.color=parent.darksColor
-                                            baseRect.color=loader.chat3Color
-                                            if (select.indexOf(index) < 0)
-                                                select.push(index);
-                                            chatMenuList.menu = (0)
-                                            circleAnimation.start()
-                                            yPosition = 0
-                                        }
-                                        onClicked: {
-                                            baseRect.color = "transparent"
-                                            parent.color = backgroundColor
-                                            if (select.length> 0) {
-                                                yPosition = 0
-                                                var position = select.indexOf(index)
-                                                if (position >= 0) {
-                                                    select.splice(position, 1)
-                                                } else {
-                                                    chatMenuList.menu = 0;
-                                                    parent.color = parent.darksColor
-                                                    baseRect.color=loader.chat3Color
-                                                    select.push(index)
-                                                    return
-                                                }
-                                            }
-                                            else if (mouse.button==Qt.RightButton) {
-                                                chatMenuList.xPosition = (mouse.x)
-                                                chatMenuList.yPosition = yPosition
-                                                coloresRect.x = mouseX
-                                                coloresRect.y = mouseY
-                                                circleAnimation.restart();
-                                                chatMenuList.menu = 0;
-                                                loader.context = true;
-                                                select.push(index)
-                                                return
-                                            }
-                                            if (select.length === 0) {
-                                                chatMenuList.menu = 1;
+                                                x: -coloresRect.width /(2);
+                                                y: -coloresRect.height/(2);
                                             }
                                         }
                                     }
                                 }
                             }
-                            x: Math.abs(falg - 2)*(textarea.width - msgCloud.width);
 
                             DropShadow {
                                 radius: 10
                                 samples: 15
                                 color: "#DD000000"
                                 source: staMessage
-                                anchors.fill:staMessage
-                                visible: (staMessage.visible)
+                                anchors.fill: staMessage
+                                visible: staMessage.visible
                             }
                             Item {
                                 id: staMessage
                                 width: facade.toPx(36);
-                                height:facade.toPx(36);
+                                height: facade.toPx(36);
                                 visible: {
-                                    var vis = index == chatModel.count - 1
+                                    var vis = index == chatModel.count - 1;
                                     if (!vis)
-                                    vis|=!chatModel.get(index+1).mySpacing
-                                    vis|=chatModel.get(index).mySpacing==0
+                                    vis|=!chatModel.get(index+1).mySpacing;
+                                    vis|=chatModel.get(index).mySpacing==0;
                                     return vis
                                 }
                                 x: {
@@ -446,31 +382,101 @@ Drawer {
                                     else -parent.x
                                 }
                                 Rectangle {
-                                    anchors.horizontalCenter: {
-                                        parent.horizontalCenter
-                                    }
-                                    width: {
-                                        if (index < chatModel.count - 1) {
-                                            parent.width - facade.toPx(9);
-                                        } else {staMessage.width}
-                                    }
                                     height: width
                                     radius: width/2
-                                    color: Qt.hsva(lineColor, 0.45, 0.86);
+                                    width: {
+                                        if (index < chatModel.count - 1) {
+                                            (parent.width - facade.toPx(9))
+                                        } else {staMessage.width}
+                                    }
+                                    color: {Qt.hsva(lineColor, 0.45, 0.86)}
+                                    anchors.horizontalCenter:parent.horizontalCenter
                                     Rectangle {
                                         height: width
                                         radius: width/2
                                         width: parent.width / 2.2
                                         anchors.centerIn: parent;
-                                        border.color: {loader.chat2Color;}
+                                        border.color: {(loader.chat2Color)}
                                         border.width: 3
-                                        visible:index == chatModel.count-1
+                                        visible:index == chatModel.count-1;
                                     }
                                 }
                             }
                         }
                     }
                 }
+            }
+
+            DropShadow {
+                id: shadow
+                anchors.fill:parent
+                visible: baseRect.color != "#00000000"? 1: 0
+                radius: 15
+                samples: 20
+                source: {baseRect;}
+                color: "#80000000";
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onPressAndHold: {
+                    coloresRect.x = mouseX;
+                    coloresRect.y = mouseY;
+                    msCloud.color= msCloud.darksColor
+                    baseRect.color= loader.chat3Color
+                    if (select.indexOf(index) <=-1) {
+                        select.push(index);
+                    }
+                    chatMenuList.menu = (0)
+                    circleAnimation.start()
+                    yPosition = 0
+                }
+                acceptedButtons:Qt.LeftButton|Qt.RightButton
+                onClicked: {
+                    baseRect.color = "#00000000"
+                    msCloud.color = backgroundColor;
+                    if (select.length> 0) {
+                        yPosition = 0
+                        var position = select.indexOf(index)
+                        if (position >= 0) {
+                            select.splice(position,1)
+                        } else {
+                            chatMenuList.menu = 0;
+                            msCloud.color=msCloud.darksColor
+                            baseRect.color=loader.chat3Color
+                            select.push(index)
+                            return
+                        }
+                    }else if(mouse.button==Qt.RightButton) {
+                        var posx = mouse.x
+                        if (width- mouse.x<chatMenuList.w)
+                            posx = width - chatMenuList.w;
+                        chatMenuList.xPosition = posx
+                        chatMenuList.yPosition = yPosition
+                        coloresRect.x = mouseX
+                        coloresRect.y = mouseY
+                        circleAnimation.restart();
+                        chatMenuList.menu = 0;
+                        loader.context = true
+                        select.push(index)
+                        return
+                    }
+                    if(select.length==0) chatMenuList.menu=1
+                }
+            }
+            height: basedColumn.height
+            width: parent.width;
+        }
+        anchors {
+            top: parent.top
+            bottom: textArea.top
+            topMargin: partnerHeader.height+facade.toPx(10);
+            bottomMargin: {
+                var curHeight = input? parent.height*0.43:0;
+                var tex=Math.max(facade.toPx(110),curHeight)
+                if (textArea.height >0) {
+                    tex = 0
+                } facade.toPx(40) + (tex)
             }
         }
         boundsBehavior: {(Flickable.StopAtBounds);}
@@ -527,7 +533,7 @@ Drawer {
                 delegate: Rectangle {
                     width: height
                     color: index == 0? "#404040": "#D3D3D3"
-                    height: {(parent.height) - facade.toPx(20);}
+                    height: (parent.height) - facade.toPx(20);
                     anchors.verticalCenter:parent.verticalCenter
                     Camera {
                         id: camera
@@ -631,9 +637,9 @@ Drawer {
             Button {
                 id: attachButton
                 background: Image {
-                    source: {"ui/buttons/addButton.png";}
-                    width: facade.toPx(sourceSize.width/1.1)
-                    height: facade.toPx(sourceSize.height/1.1)
+                    source: "ui/buttons/addButton.png"
+                    width: facade.toPx(sourceSize.width / 11*10);
+                    height: facade.toPx(sourceSize.height/11*10);
                     anchors {
                         right: parent.right
                         bottom: parent.bottom
@@ -676,26 +682,17 @@ Drawer {
         }
     }
 
-    property real yPosition
-    property variant select
-    property variant input;
-
     P2PStyle.HeaderSplash {id: partnersHead}
 
     P2PStyle.ChatMenuList {id: chatMenuList}
 
-    function setInfo(messag,photos,status) {
-        partnersHead.stat = status
-        partnersHead.phot = photos
-        partnersHead.text = messag
-    }
-
     function hideKeyboard(event) {
         pressedArea.visible= true;
-        if (event !== 0) event.accepted=true
+        if (event !== 0)
+            event.accepted = true;
         textField.focus = false
         Qt.inputMethod.hide()
-        loader.focus =true
+        loader.focus = true
         input = false
     }
 }
