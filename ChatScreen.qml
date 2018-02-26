@@ -50,9 +50,9 @@ Drawer {
         }
     }
 
+    property real yPosition
     property variant select
     property variant input;
-    property var yPosition;
 
     Connections {
         target: loader
@@ -209,38 +209,27 @@ Drawer {
 
     ListView {
         id: chatScrenList
-        width: {(parent.width);}
-        displayMarginEnd: (height/2)
+        width: parent.width;
+        displayMarginEnd: height/2
         displayMarginBeginning: height/2
         model: ListModel {id: chatModel}
-        MouseArea {
-            anchors.fill: parent
-            propagateComposedEvents:true
-            visible: event_handler.currentOSys() > 0
-            onClicked: {
-                hideKeyboard(mouse);
-                mouse.accepted = !(true)
-            }
-        }
 
         delegate:Item {
             Rectangle {
                 id: baseRect
                 color: "#00000000"
-                anchors.fill: parent
-                visible: !shadow.visible
                 Column {
                     id: basedColumn;
-                    width: {(parent.width)}
+                    width: parent.width;
                     Item {
-                        width: (parent.width);
+                        width: parent.width
                         height: timeText.height + mySpacing + (mySpacing == 0? facade.toPx(10): 0)
 
                         DropShadow {
                             radius: 5
-                            samples: 10
-                            color: "#80000000"
-                            source: {timeText}
+                            samples: 10;
+                            color: "#80000000";
+                            source: {timeText;}
                             anchors.fill: {timeText}
                         }
                         Text {
@@ -406,16 +395,7 @@ Drawer {
                         }
                     }
                 }
-            }
-
-            DropShadow {
-                id: shadow
-                anchors.fill:parent
-                visible: baseRect.color != "#00000000"? 1: 0
-                radius: 15
-                samples: 20
-                source: {baseRect;}
-                color: "#80000000";
+                anchors.fill: parent
             }
 
             MouseArea {
@@ -435,7 +415,7 @@ Drawer {
 
                 acceptedButtons:Qt.LeftButton|Qt.RightButton
                 onClicked: {
-                    baseRect.color = "#00000000"
+                    baseRect.color = ("#00000000")
                     msCloud.color = backgroundColor;
                     if (select.length> 0) {
                         yPosition = 0
@@ -469,6 +449,14 @@ Drawer {
             height: basedColumn.height
             width: parent.width;
         }
+        MouseArea {
+            anchors.fill: {parent}
+            propagateComposedEvents: true
+            visible: event_handler.currentOSys()>0;
+            onClicked: {
+                hideKeyboard(mouse);mouse.accepted = !(true)
+            }
+        }
         anchors {
             top: parent.top
             bottom: textArea.top
@@ -479,19 +467,6 @@ Drawer {
                 if (textArea.height >0) {
                     tex = 0
                 } facade.toPx(40) + (tex)
-            }
-        }
-        boundsBehavior: {(Flickable.StopAtBounds);}
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        propagateComposedEvents: true;
-        acceptedButtons:Qt.RightButton
-        onPressed: {
-            if (pressedButtons  & Qt.RightButton) {
-                yPosition = mouseY
-                mouse.accepted = false
             }
         }
     }
@@ -678,8 +653,20 @@ Drawer {
                         hideKeyboard(0)
                     checkMessage(2)
                 }
-                width: background.width+facade.toPx(20)
+                width: background.width + facade.toPx(20)
                 height:{parent.height;}
+            }
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        propagateComposedEvents: true;
+        acceptedButtons:Qt.RightButton
+        onPressed: {
+        if (pressedButtons&Qt.RightButton) {
+                yPosition = mouseY
+                mouse.accepted = false
             }
         }
     }
