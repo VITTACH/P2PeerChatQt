@@ -202,28 +202,28 @@ Drawer {
         width: 0.75*parent.width
         visible: false
         font {
-            pixelSize: {facade.doPx(30);}
-            family: {trebu4etMsNorm.name}
+            pixelSize: {facade.doPx(30)}
+            family: trebu4etMsNorm.name;
         }
     }
 
     ListView {
         id: chatScrenList
         width: {(parent.width);}
-        displayMarginEnd: (height/2);
-        displayMarginBeginning:height/2
-        model: ListModel {id: chatModel;}
+        displayMarginEnd: (height/2)
+        displayMarginBeginning: height/2
+        model: ListModel {id: chatModel}
         MouseArea {
-            anchors.fill:parent
-            propagateComposedEvents: true
-            visible: {(event_handler.currentOSys())}
+            anchors.fill: parent
+            propagateComposedEvents:true
+            visible: event_handler.currentOSys() > 0
             onClicked: {
                 hideKeyboard(mouse);
-                mouse.accepted = !(true);
+                mouse.accepted = !(true)
             }
         }
 
-        delegate: Item {
+        delegate:Item {
             Rectangle {
                 id: baseRect
                 color: "#00000000"
@@ -235,13 +235,6 @@ Drawer {
                     Item {
                         width: (parent.width);
                         height: timeText.height + mySpacing + (mySpacing == 0? facade.toPx(10): 0)
-                        Rectangle {
-                            height: parent.height
-                            width: {routeLine.width}
-                            x:routeLine.x+baseItem.x
-                            visible: (index >= 1) == true && (chatModel.get(index).mySpacing == 0)
-                            color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.40,0.94)
-                        }
 
                         DropShadow {
                             radius: 5
@@ -261,6 +254,14 @@ Drawer {
                                 bottomMargin: facade.toPx(2)
                             }
                             color: {backgroundColor}
+                        }
+
+                        Rectangle {
+                            height: parent.height
+                            width: {routeLine.width}
+                            x:routeLine.x+baseItem.x
+                            visible: (index >= 1) == true && (chatModel.get(index).mySpacing == 0)
+                            color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.40,0.94)
                         }
                     }
 
@@ -431,6 +432,7 @@ Drawer {
                     circleAnimation.start()
                     yPosition = 0
                 }
+
                 acceptedButtons:Qt.LeftButton|Qt.RightButton
                 onClicked: {
                     baseRect.color = "#00000000"
