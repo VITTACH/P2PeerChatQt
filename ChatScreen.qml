@@ -11,21 +11,9 @@ Drawer {
     width: parent.width;
     height: parent.height;
 
-    FileDialog {
-        id:fileDialog
-        folder: shortcuts.home
-        title: "Выберите изображение"
-        nameFilters:["Изображения (*.jpg *.png)","Все файлы (*)"]
-        onAccepted: {
-            loader.avatarPath=fileUrl
-            event_handler.sendAvatar(decodeURIComponent(fileUrl))
-        }
-    }
-
-    Connections {
-        target:chatScreen;
-        onPositionChanged: if (loader.isLogin==false) position=0;
-    }
+    property real yPosition
+    property variant select
+    property variant input;
 
     Connections {
         target: event_handler;
@@ -49,10 +37,6 @@ Drawer {
             }
         }
     }
-
-    property real yPosition
-    property variant select
-    property variant input;
 
     Connections {
         target: loader
@@ -98,6 +82,14 @@ Drawer {
 
     Component.onCompleted: {loadChatsHistory(); partnersHead.page = (-1.0);}
 
+    Connections {
+        target:chatScreen;
+        onPositionChanged: {
+            if(loader.isLogin==false)
+                position = 0
+        }
+    }
+
     function appendMessage(newTextMessage, flag, times) {
         var sp, cflag;
         flag = Math.abs(cflag = flag)
@@ -114,6 +106,16 @@ Drawer {
         if (cflag === 2) {
             event_handler.sendMsgs(parseToJSON(newTextMessage,loader.tel,0))
         }
+    }
+
+    function hideKeyboard(event) {
+        pressedArea.visible= true;
+        if (event !== 0)
+            event.accepted = true;
+        textField.focus = false
+        Qt.inputMethod.hide()
+        loader.focus = true
+        input = false
     }
 
     function parseToJSON(message, phone, ip) {
@@ -471,11 +473,22 @@ Drawer {
         }
     }
 
+    FileDialog {
+        id:fileDialog
+        folder: shortcuts.home
+        title: "Выберите изображение"
+        nameFilters:["Изображения (*.jpg *.png)","Все файлы (*)"]
+        onAccepted: {
+            loader.avatarPath=fileUrl
+            event_handler.sendAvatar(decodeURIComponent(fileUrl))
+        }
+    }
+
     DropShadow {
         radius: 10
         samples: 15
-        color:"#90000000"
-        source: textArea;
+        color: "#90000000";
+        source: {textArea;}
         anchors.fill: {textArea;}
     }
     Column {
@@ -659,29 +672,19 @@ Drawer {
         }
     }
 
+    P2PStyle.HeaderSplash {id: partnersHead;}
+
+    P2PStyle.ChatMenuList {id: chatMenuList;}
+
     MouseArea {
         anchors.fill: parent
         propagateComposedEvents: true;
         acceptedButtons:Qt.RightButton
         onPressed: {
-        if (pressedButtons&Qt.RightButton) {
+            if(pressedButtons&Qt.RightButton)
                 yPosition = mouseY
+            if(pressedButtons&Qt.RightButton)
                 mouse.accepted = false
-            }
         }
-    }
-
-    P2PStyle.HeaderSplash {id: partnersHead}
-
-    P2PStyle.ChatMenuList {id: chatMenuList}
-
-    function hideKeyboard(event) {
-        pressedArea.visible= true;
-        if (event !== 0)
-            event.accepted = true;
-        textField.focus = false
-        Qt.inputMethod.hide()
-        loader.focus = true
-        input = false
     }
 }
