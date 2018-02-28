@@ -388,7 +388,6 @@ Drawer {
             bottom:listMenu.top;
             leftMargin:leftSlider.opacity?leftSlider.width:0
         }
-        boundsBehavior: {(Flickable.StopAtBounds)}
 
         model:ListModel{id: usersModel;}
         Component.onCompleted: {
@@ -406,39 +405,40 @@ Drawer {
             width: parent.width
             height: {
                 if (activity == 1)
-                    facade.toPx(20) + Math.max(bug.height,fo.height)
+                    facade.toPx(20) + Math.max(bug.height, fo.height)
                 else 0
             }
             Row {
                 Repeater {
-                    anchors.verticalCenter:parent.verticalCenter
-                    model: [("trashButton.png"), "dialerButton.png"]
                     Rectangle {
                         y: 1
-                        width:baseItem.width/2
                         color: loader.menu5Color
-                        height: baseItem.height- y*2;
+                        width: baseItem.width*0.5;
+                        height: baseItem.height-(2*y)
+                        property var fac: facade.toPx(40);
                         Rectangle {
+                            width: splashImage.width+2*fac
+                            height: {(parent.height)}
                             color: loader.menu6Color;
                             x: index*(parent.width -width)
-                            width:parent.width/3
-                            height:parent.height
                         }
                         Image {
+                            id: splashImage
                             x: {
-                                var fac = -facade.toPx(30)
-                                if (index!=0)fac+=parent.width-width
-                                return Math.abs(fac);
-                            }
-                            anchors.verticalCenter: {
-                                parent.verticalCenter
+                                if (index!=0) parent.width-width-fac
+                                else Math.abs(fac);
                             }
                             source: "qrc:/ui/buttons/" + (modelData)
                             width: {(facade.toPx(sourceSize.width))}
                             height: {facade.toPx(sourceSize.height)}
-                            fillMode:Image.PreserveAspectFit
+                            fillMode: Image.PreserveAspectFit
+                            anchors.verticalCenter: {
+                                parent.verticalCenter
+                            }
                         }
                     }
+                    anchors.verticalCenter: {parent.verticalCenter;}
+                    model: [("trashButton.png"), "dialerButton.png"]
                 }
             }
 
@@ -640,10 +640,6 @@ Drawer {
         }
     }
 
-    HelperDrawer {
-        id: helperDrawer;
-    }
-
     Rectangle {
         id: leftSlider
         opacity: 0
@@ -686,18 +682,31 @@ Drawer {
         }
     }
 
+    LinearGradient {
+        anchors.top: {profile.bottom}
+        height: 10
+        width: parent.width
+        start: Qt.point(0, 0)
+        end: Qt.point(0, height)
+        gradient: Gradient {
+            GradientStop {position:0; color:"#90000000"}
+            GradientStop {position:1; color:"#00000000"}
+        }
+    }
+
     DropShadow {
-        radius: 20
-        samples:radius
-        source: listMenu;
-        color: "#40000000";
-        verticalOffset: -10
-        anchors.fill: listMenu
+        radius: 15
+        samples: 20
+        source: (listMenu);
+        color: "#90000000";
+        anchors {
+            fill: listMenu;
+        }
     }
     ListView {
         id: listMenu
         width: parent.width
-        property bool isShowed
+        property bool isShowed: false
         snapMode:ListView.SnapOneItem
         anchors.bottom: parent.bottom
         boundsBehavior: Flickable.StopAtBounds;
@@ -896,13 +905,17 @@ Drawer {
                     text: {
                         if (index == 1) {
                             if (myswitcher.checked)
-                                qsTr("В сети")
+                                qsTr("Вы онлайн")
                             else "Невидимый";
                         } else target
                     }
                 }
             }
         }
+    }
+
+    HelperDrawer {
+        id: helperDrawer
     }
 
     Rectangle {

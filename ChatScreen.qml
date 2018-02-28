@@ -314,8 +314,8 @@ Drawer {
                                     property var lightColor;
                                     property var darksColor;
                                     Component.onCompleted: {
-                                        lightColor = Qt.rgba(color.r-0.05,color.g-0.03,color.b, 1)
-                                        darksColor = Qt.rgba(color.r-0.08,color.g-0.05,color.b, 1)
+                                        lightColor = Qt.rgba(color.r-0.06,color.g-0.04,color.b, 1)
+                                        darksColor = Qt.rgba(color.r-0.13,color.g-0.10,color.b, 1)
                                     }
 
                                     PropertyAnimation {
@@ -370,7 +370,7 @@ Drawer {
                                 }
                                 x: {
                                     if (Math.abs(falg- 2) == 0)
-                                        textarea.width + parent.spacing
+                                        (textarea.width + (parent.spacing))
                                     else -parent.x
                                 }
                                 Rectangle {
@@ -454,7 +454,7 @@ Drawer {
         MouseArea {
             anchors.fill: {parent}
             propagateComposedEvents: true
-            visible: event_handler.currentOSys()>0;
+            // visible: event_handler.currentOSys() > 0;
             onClicked: {
                 hideKeyboard(mouse);mouse.accepted = !(true)
             }
@@ -587,7 +587,8 @@ Drawer {
                         verticalAlignment: {(Text.AlignVCenter);}
                         background: Rectangle {color:"#CFFEFEFE"}
                         Keys.onReturnPressed: {
-                            pressCtrl = !(false); event.accepted = (false)
+                            pressCtrl = !false;
+                            event.accepted = false
                         }
                         Keys.onPressed: {
                             if (event.key === (Qt.Key_Control)) {
@@ -599,23 +600,23 @@ Drawer {
                         font.pixelSize: facade.doPx(34)
                         Keys.onReleased: {
                             if (event.key === Qt.Key_Control || event.key === Qt.Key_Return) {
-                                if (pressCtrl == true && pressEntr ==true)
+                                if (pressCtrl==true && pressEntr)
                                     checkMessage(2)
                             } else if (event.key ==Qt.Key_Back) {
                                 hideKeyboard(event)
                             }
                             pressCtrl = pressEntr=false
                         }
-                        leftPadding: attachButton.width + facade.toPx(40);
+                        leftPadding: attachButton.width
                         MouseArea {
                             id: pressedArea
                             width: parent.width-sendButton.width;
                             height: parent.height
-                            visible:event_handler.currentOSys()>0
+                            // visible:event_handler.currentOSys()>0
                             onClicked: {
                                 visible = !(input=true)
                                 chatScrenList.positionViewAtEnd()
-                                textField.focus = true;
+                                textField.forceActiveFocus()
                             }
                         }
                     }
@@ -631,7 +632,7 @@ Drawer {
                     width: facade.toPx(sourceSize.width / 11*10);
                     height: facade.toPx(sourceSize.height/11*10);
                     anchors {
-                        right: parent.right
+                        horizontalCenter: parent.horizontalCenter
                         bottom: parent.bottom
                         bottomMargin: {
                             if (textField.lineCount <= 1)
@@ -641,7 +642,7 @@ Drawer {
                     }
                 }
                 onClicked: attachment.visible=!attachment.visible
-                width: background.width + facade.toPx(30)
+                width: background.width + facade.toPx(60)
                 height: parent.height;
             }
 

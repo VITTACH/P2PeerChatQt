@@ -23,7 +23,7 @@ Button {
         anchors {
             fill: listText;
         }
-        color: "#80000000";
+        color: "#C0000000";
         source: {listText;}
     }
 
@@ -32,6 +32,7 @@ Button {
         x: xPosition;
         y: yPosition;
         radius: 8
+        color: loader.feedColor
         width: Math.max(funcs.width, facade.toPx(400))
         height: funcs.implicitHeight + facade.toPx(20)
 
@@ -49,7 +50,8 @@ Button {
                     id: line
                     radius:listText.radius
                     width: listText.width;
-                    height:inerText.implicitHeight + facade.toPx(60)
+                    color: {loader.feedColor}
+                    height:inerText.implicitHeight+facade.toPx(60)
                     Text {
                         anchors {
                             left: parent.left
@@ -69,7 +71,7 @@ Button {
 
                     MouseArea {
                         anchors.fill: parent
-                        onExited: line.color = "white"
+                        onExited: {line.color = loader.feedColor}
                         onEntered: {
                             line.color = ("#20000000")
                         }
