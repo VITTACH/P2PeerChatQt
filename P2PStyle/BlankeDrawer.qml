@@ -369,76 +369,123 @@ Drawer {
             }
         }
 
-        Item{
+        Rectangle {
+            width: firstRow.width;
+            height:facade.toPx(50)
+            radius:facade.toPx(25)
+            Row {
+                spacing: {facade.toPx(10);}
+                anchors.left: {parent.left}
+                anchors.leftMargin: facade.toPx(20);
+                anchors.verticalCenter: parent.verticalCenter
+                Button {
+                    id: inerImage
+                    width: facade.toPx(40);
+                    height:facade.toPx(innerImage.sourceSize.height)
+                    anchors.verticalCenter: {parent.verticalCenter;}
+                    background:Image {
+                        id: innerImage
+                        width: {facade.toPx(sourceSize.width /1.3);}
+                        height:{facade.toPx(sourceSize.height/1.3);}
+                        anchors.verticalCenter:parent.verticalCenter
+                        source: "qrc:/ui/icons/"+(find? "searchIconWhite": "DeleteIconWhite")+".png"
+                    }
+                    onClicked: if(find == false) find = true;
+                }
+                Connections {
+                    target: drawer;
+                    onFindChanged:{
+                        if (find) {
+                            inerText.focus = (false)
+                            inerText.clear();
+                            filterList("")
+                        }
+                    }
+                }
+                TextField {
+                    id: inerText
+                    color: loader.menu15Color
+                    height: parent.parent.height
+                    rightPadding: parent.parent.radius
+                    onAccepted:filterList(text.toLowerCase())
+                    width: parent.parent.width - inerImage.width - parent.spacing - facade.toPx(20);
+                    placeholderText: "Найти друзей";
+                    font.bold: true
+                    font.pixelSize: facade.doPx(18);
+                    font.family: trebu4etMsNorm.name
+                    onActiveFocusChanged:find=false;
+                    background: Rectangle{opacity:0}
+                    verticalAlignment: {Text.AlignVCenter}
+                    onTextChanged:{
+                        if (event_handler.currentOSys() !== 1 && event_handler.currentOSys() !== 2){
+                            filterList(text.toLowerCase())
+                        }
+                    }
+                }
+            }
+        }
+
+        Item {
             width: {(parent.width)}
-            height: facade.toPx(30)
+            height: facade.toPx(10)
         }
     }
 
     ListView {
-        clip:true
         id: listView
-        spacing:-1
-        property int memIndex:0;
         anchors {
             topMargin: -1
             left: parent.left
             right: parent.right;
             top: profile.bottom;
             bottom:listMenu.top;
-            leftMargin:leftSlider.opacity?leftSlider.width:0
+            leftMargin: leftSlider.opacity == 1? leftSlider.width: 0
         }
-
-        model:ListModel{id: usersModel;}
+        clip: true
+        spacing:-1
+        property int memIndex:0;
+        model:ListModel {id: usersModel}
         Component.onCompleted: {
             if (loader.chats.length<1) {
-                var mchat = event_handler.loadValue("chats")
-                if (mchat!= "")
-                    loader.chats=JSON.parse(mchat)
-            }
-            usersModel.clear();
+                var history =event_handler.loadValue("chats")
+                if (history != "") loader.chats =JSON.parse(history)
+            } usersModel.clear()
         }
 
         delegate: Item {
             id: baseItem
             visible: activity
             width: parent.width
-            height: {
-                if (activity == 1)
-                    facade.toPx(20) + Math.max(bug.height, fo.height)
-                else 0
-            }
+            height: activity? facade.toPx(20)+Math.max(bug.height,fo.height):0
             Row {
                 Repeater {
+                    anchors.verticalCenter: parent.verticalCenter
+                    model: [("trashButton.png"), "dialerButton.png"]
                     Rectangle {
                         y: 1
-                        color: loader.menu5Color
-                        width: baseItem.width*0.5;
-                        height: baseItem.height-(2*y)
-                        property var fac: facade.toPx(40);
+                        color: {loader.menu5Color}
+                        width: baseItem.width * 5/10;
+                        height: baseItem.height - (2*y)
+                        property var fac: facade.toPx(40)
                         Rectangle {
-                            width: splashImage.width+2*fac
+                            width: splashImage.width + 2*fac;
                             height: {(parent.height)}
                             color: loader.menu6Color;
-                            x: index*(parent.width -width)
+                            x: index * (parent.width - width)
                         }
                         Image {
-                            id: splashImage
                             x: {
                                 if (index!=0) parent.width-width-fac
                                 else Math.abs(fac);
                             }
+                            anchors.verticalCenter: parent.verticalCenter
                             source: "qrc:/ui/buttons/" + (modelData)
                             width: {(facade.toPx(sourceSize.width))}
                             height: {facade.toPx(sourceSize.height)}
                             fillMode: Image.PreserveAspectFit
-                            anchors.verticalCenter: {
-                                parent.verticalCenter
-                            }
+                            id:splashImage
                         }
                     }
-                    anchors.verticalCenter: {parent.verticalCenter;}
-                    model: [("trashButton.png"), "dialerButton.png"]
                 }
             }
 
@@ -684,12 +731,13 @@ Drawer {
 
     LinearGradient {
         anchors.top: {profile.bottom}
+        anchors.topMargin: -1
         height: 10
         width: parent.width
         start: Qt.point(0, 0)
         end: Qt.point(0, height)
         gradient: Gradient {
-            GradientStop {position:0; color:"#90000000"}
+            GradientStop {position:0; color:"#70000000"}
             GradientStop {position:1; color:"#00000000"}
         }
     }
@@ -715,7 +763,6 @@ Drawer {
         clip: true
         model:ListModel {
             id: navigateDownModel
-            ListElement {image: ""; target: ""}
             ListElement {image: ""; target: ""}
             ListElement {
                 image : "qrc:/ui/icons/devIconBlue.png";
@@ -743,15 +790,15 @@ Drawer {
             MouseArea {
                 id: menMouseArea;
                 anchors.fill: parent;
-                onEntered: if(index>0)listMenu.currentIndex=index
+                onEntered: listMenu.currentIndex = index
                 onClicked: {
                     switch(index) {
-                        case 2:
+                        case 1:
                         if (helperDrawer.position < 2) {
                             helperDrawer.open()
                         }
                         break;
-                        case 3:
+                        case 2:
                         loader.goTo("qrc:/loginanDregister.qml");
                         loader.restores();
                         chatScreen.close()
@@ -759,74 +806,13 @@ Drawer {
                         event_handler.saveSet("user","")
                         helperDrawer.visible(false)
                     }
-                    if (index == 1) {
+                    if (index == 0) {
                         myswitcher.checked = !myswitcher.checked;
-                    } else if (index > 1 && index <=2) {
+                    } else if (index > 0 && index <=1) {
                         listMenu.currentIndex=index
                     }
                 }
                 onExited: listMenu.currentIndex=-1;
-            }
-
-            Rectangle {
-                visible: index == 0
-                width: firstRow.width;
-                height: facade.toPx(50)
-                radius: facade.toPx(25)
-                color: loader.menu7Color;
-                anchors.verticalCenter: {(parent.verticalCenter)}
-                anchors.horizontalCenter: parent.horizontalCenter
-
-                Row {
-                    spacing: {facade.toPx(10);}
-                    anchors.left: {parent.left}
-                    anchors.leftMargin: facade.toPx(20);
-                    anchors.verticalCenter: parent.verticalCenter
-                    Button {
-                        id: inerImage
-                        width: facade.toPx(40);
-                        height:facade.toPx(innerImage.sourceSize.height)
-                        anchors.verticalCenter: {parent.verticalCenter;}
-                        background:Image {
-                            id: innerImage
-                            width: {facade.toPx(sourceSize.width /1.3);}
-                            height:{facade.toPx(sourceSize.height/1.3);}
-                            anchors.verticalCenter:parent.verticalCenter
-                            source: "qrc:/ui/icons/"+(find? "searchIconWhite": "DeleteIconWhite")+".png"
-                        }
-                        onClicked: if(find == false) find = true;
-                    }
-                    Connections {
-                        target: drawer;
-                        onFindChanged:{
-                            if (find) {
-                                inerText.focus = (false)
-                                inerText.clear();
-                                filterList("")
-                            }
-                        }
-                    }
-                    TextField {
-                        id: inerText
-                        color: loader.menu15Color
-                        height: parent.parent.height
-                        rightPadding: parent.parent.radius
-                        onAccepted:filterList(text.toLowerCase())
-                        width: parent.parent.width - inerImage.width - parent.spacing - facade.toPx(20);
-                        placeholderText: "Найти друзей";
-                        font.bold: true
-                        font.pixelSize: facade.doPx(18);
-                        font.family: trebu4etMsNorm.name
-                        onActiveFocusChanged:find=false;
-                        background: Rectangle{opacity:0}
-                        verticalAlignment: {Text.AlignVCenter}
-                        onTextChanged: {
-                            if (event_handler.currentOSys() !== 1 && event_handler.currentOSys() !== 2){
-                                filterList(text.toLowerCase())
-                            }
-                        }
-                    }
-                }
             }
 
             Item {
@@ -837,10 +823,8 @@ Drawer {
 
                 Image {
                     source: image
-                    visible: index >= 2
-                    anchors.verticalCenter: {
-                        parent.verticalCenter
-                    }
+                    visible: index >= 1
+                    anchors.verticalCenter: parent.verticalCenter
                     width: facade.toPx(sourceSize.width)
                     height: facade.toPx(sourceSize.height)
                     horizontalAlignment:Image.AlignHCenter
@@ -854,7 +838,7 @@ Drawer {
                 }
                 Switch {
                     id:myswitcher
-                    visible: index==1;
+                    visible: index==0;
                     indicator: Rectangle {
                         radius: facade.toPx(25)
                         y: parent.height/2-height/2
@@ -903,7 +887,7 @@ Drawer {
                     font.family:trebu4etMsNorm.name
                     color: loader.menu10Color;
                     text: {
-                        if (index == 1) {
+                        if (index == 0) {
                             if (myswitcher.checked)
                                 qsTr("Вы онлайн")
                             else "Невидимый";
