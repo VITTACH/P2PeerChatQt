@@ -4,6 +4,8 @@ import QtGraphicalEffects 1.0
 
 Drawer {
     id: drawed
+    property var curX
+    property var curY
     property var vtate:false
 
     dragMargin: {this.vtate?facade.toPx(40):0}
@@ -61,7 +63,6 @@ Drawer {
             }
 
             delegate: Column {
-                id: col
                 width: parent.width
                 Row {
                     id: row
@@ -70,33 +71,12 @@ Drawer {
                     x: spacing
                     Repeater {
                         id:rep
-                        model: JSON.parse(target)
+                        model: JSON.parse(target);
                         Rectangle {
                             id: body
                             clip: true
                             height: width
-                            width: (parent.width - row.spacing) / rep.count - row.spacing
-
-                            MouseArea {
-                                onExited: {
-                                    circleAnimation.stop();
-                                    listMenu.currentIndex = 0 - 1;
-                                }
-                                anchors.fill: {parent}
-                                onClicked: circleAnimation.stop();
-                                onEntered: {
-                                    listMenu.currentIndex = mypos;
-                                    coloresRect.x = mouseX;
-                                    coloresRect.y = mouseY;
-                                    circleAnimation.start()
-                                }
-                            }
-
-                            color: {
-                                if (col.ListView.isCurrentItem&&!circleAnimation.running)
-                                    loader.sets1Color;
-                                else loader.sets4Color
-                            }
+                            width: (parent.width-row.spacing)/rep.count-row.spacing
 
                             Rectangle {
                                 width: 0
@@ -114,13 +94,35 @@ Drawer {
                                 duration: (500)
                                 id: circleAnimation
                                 target: coloresRect
-                                properties: "width,height,radius";
+                                properties: "width, height, radius";
                                 from: 0
                                 to:body.width*3
 
                                 onStopped: {
                                     coloresRect.width  = 0;
                                     coloresRect.height = 0;
+                                }
+                            }
+
+                            color: {
+                                loader.sets4Color;
+                                if (index == curX) {
+                                    if (mypos == curY) {
+                                        if(!circleAnimation.running)
+                                            loader.sets1Color
+                                    }
+                                }
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent;
+                                onClicked:{curX=-1;curY=-1; circleAnimation.stop()}
+                                onExited: {curX=-1;curY=-1; circleAnimation.stop()}
+                                onEntered: {
+                                    curX=index; curY=mypos;
+                                    coloresRect.x = mouseX;
+                                    coloresRect.y = mouseY;
+                                    circleAnimation.start()
                                 }
                             }
                         }

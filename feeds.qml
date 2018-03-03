@@ -48,19 +48,18 @@ Rectangle {
             }
 
             function filterList(param) {
-                getMePeers()
-                var succesFind = (false);
+                var succesFind = (false)
                 for (var i = 0; i < humanModel.count; i ++) {
                     var name = " " + humanModel.get(i).login + humanModel.get(i).famil
                     if (name.toLowerCase().search(param)>0) {
                         humanModel.setProperty(i, ("activity"), 1)
                         if (!succesFind) {listView.currentIndex=i}
-                        succesFind = true
+                        succesFind =true
                     } else {
                         humanModel.setProperty(i, ("activity"), 0)
                     }
                 }
-                if (succesFind == true) {
+                if (succesFind ==true) {
                     feedsModel.setProperty(0, "activiti", 1);
                 } else {
                     feedsModel.setProperty(0, "activiti", 0);
@@ -68,7 +67,7 @@ Rectangle {
                 listView.positionViewAtBeginning()
             }
 
-            function getMePeers() {
+            function getMePeers(param) {
                 var request = new XMLHttpRequest(), obj,index
                 request.open('POST',"http://www.hoppernet.hol.es")
                 request.onreadystatechange =function() {
@@ -93,6 +92,7 @@ Rectangle {
                                     humanModel.setProperty(index, "ip", obj[i].ip)
                                 }
                             }
+                            filterList(param)
                         }
                     }
                 }
@@ -151,7 +151,7 @@ Rectangle {
                         anchors.verticalCenter: {parent.verticalCenter;}
                         onClicked: {
                             if(find == false) find=true;
-                            if(find) {inerText.clear(); filterList("");}
+                            if(find) {inerText.clear(); getMePeers("");}
                         }
                         background:Image {
                             id: innerImage
@@ -171,9 +171,9 @@ Rectangle {
                         width: parent.parent.width - inerImage.width - (parent.spacing) - (facade.toPx(30));
 
                         rightPadding: parent.parent.radius;
-                        onAccepted: filterList(text.toLowerCase())
-                        onTextChanged: if (event_handler.currentOSys() != 1 && event_handler.currentOSys() != 2) filterList(text.toLowerCase())
-                        placeholderText: "Найти друзей";
+                        onAccepted: getMePeers(text.toLowerCase())
+                        onTextChanged: if (event_handler.currentOSys() != 1 && event_handler.currentOSys() != 2) getMePeers(text.toLowerCase())
+                        placeholderText:qsTr("Найти новых друзей")
                         font.bold: true;
                         font.pixelSize: facade.doPx(20);
                         font.family: trebu4etMsNorm.name
@@ -195,9 +195,7 @@ Rectangle {
                             cunter++;
                         }
                     }
-                    if (cunter > 4) {
-                        cunter = 4;
-                    }
+                    if (cunter>4) cunter=4;
                     counter=cunter;
                     cunter*facade.toPx(124)
                 }
@@ -282,7 +280,7 @@ Rectangle {
                                 }
                                 onClicked: {
                                     listView.friend = phone
-                                    defaultDialog.show("Отправить заявку в друзья для <strong>" + login + " " + famil + "</strong>?", 2)
+                                    defaultDialog.show(qsTr("Отправить заявку в друзья для <strong>") + login + " " + famil + "</strong>?", 2);
                                 }
                             }
 
@@ -366,13 +364,13 @@ Rectangle {
                 }
                 LinearGradient {
                     width: parent.width
-                    height: facade.toPx(20)
+                    height: facade.toPx(5)
                     end:  Qt.point(0, height)
                     visible: parent.counter > 2
                     anchors.bottom: parent.bottom
                     start:Qt.point(0, 0)
                     gradient: Gradient {
-                        GradientStop {position: (0.40); color: ("#00000000");}
+                        GradientStop {position: (0.00); color: ("#00000000");}
                         GradientStop {position: (1.00); color: ("#40000000");}
                     }
                 }
@@ -419,10 +417,13 @@ Rectangle {
                     height:parent.height
                     spacing: facade.toPx(20)
                     boundsBehavior: {
-                        (contentY <= 0) ? Flickable.StopAtBounds : Flickable.DragAndOvershootBounds
+                        if (contentY <= 0) {
+                            Flickable.StopAtBounds;
+                        } else Flickable.DragAndOvershootBounds;
                     }
                     onContentYChanged: {
-                        curInd=Math.floor((contentY-1)/(newsCardHgt+spacing));
+                        var p = newsCardHgt+spacing
+                        curInd=Math.floor((contentY-1)/p)
                         if (contentY>oldContentY && curInd>=0) {
                             rssmodel.get(curInd).enable = false;
                         } else if (curInd >= -1) {
@@ -437,7 +438,6 @@ Rectangle {
                         visible: enable
                         radius: height/2;
                         width: parent.width;
-                        height: newsCardHgt = rssView.height/4-rssView.spacing
                         Rectangle {
                             color: parent.color
                             radius: parent.height/3
@@ -477,6 +477,10 @@ Rectangle {
                                     coloresRect2.height=0
                                 }
                             }
+                        }
+
+                        height: {
+                            newsCardHgt=rssView.height/4-rssView.spacing
                         }
 
                         MouseArea {
@@ -574,10 +578,12 @@ Rectangle {
             ListView {
                 clip: true
                 width: parent.width
-                height: facade.toPx(160);
-                spacing: facade.toPx(27);
-                orientation:Qt.Horizontal
-                boundsBehavior: Flickable.StopAtBounds;
+                height: facade.toPx(160)
+                spacing: {facade.toPx(27);}
+                orientation: Qt.Horizontal;
+                boundsBehavior: {
+                    Flickable.StopAtBounds;
+                }
                 visible: index==2
                 model:ListModel {
                     ListElement {image:"mus.png"; text: "music"}
@@ -587,10 +593,6 @@ Rectangle {
                 }
                 delegate: Image {
                     clip: true
-                    width: facade.toPx(sourceSize.width / 3.5)
-                    height: facade.toPx(sourceSize.height / 3.5)
-                    source: {"qrc:/ui/buttons/feeds/" + (image)}
-
                     Rectangle {
                         width: 0
                         height: 0
@@ -598,7 +600,7 @@ Rectangle {
                         id: colorSquare
                         color: loader.menu9Color
 
-                        transform: Translate {
+                        transform:Translate{
                             x:-colorSquare.width /2
                             y:-colorSquare.height/2
                         }
@@ -606,15 +608,17 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
-                        onExited: {
-                            squareAnimation.stop()
-                        }
+                        onExited: squareAnimation.stop()
                         onPressed: {
                             colorSquare.x = mouseX;
                             colorSquare.y = mouseY;
                             squareAnimation.start()
                         }
                     }
+
+                    width: facade.toPx(sourceSize.width / 3.5)
+                    height: facade.toPx(sourceSize.height / 3.5)
+                    source: {"qrc:/ui/buttons/feeds/" + (image)}
 
                     PropertyAnimation {
                         duration: 1000
@@ -635,7 +639,7 @@ Rectangle {
     }
 
     Button {
-        text: "Наверх"
+        text:qsTr("Наверх")
         anchors {
             top: parent.top
             bottom: downRow.top;

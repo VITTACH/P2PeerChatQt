@@ -370,14 +370,11 @@ Drawer {
         }
 
         Rectangle {
-            width: firstRow.width;
-            height:facade.toPx(50)
-            radius:facade.toPx(25)
+            width: firstRow.width
+            height: facade.toPx(50);
+            radius: facade.toPx(25);
+            color: loader.menu7Color
             Row {
-                spacing: {facade.toPx(10);}
-                anchors.left: {parent.left}
-                anchors.leftMargin: facade.toPx(20);
-                anchors.verticalCenter: parent.verticalCenter
                 Button {
                     id: inerImage
                     width: facade.toPx(40);
@@ -390,7 +387,7 @@ Drawer {
                         anchors.verticalCenter:parent.verticalCenter
                         source: "qrc:/ui/icons/"+(find? "searchIconWhite": "DeleteIconWhite")+".png"
                     }
-                    onClicked: if(find == false) find = true;
+                    onClicked: if(find == false) {find = true;}
                 }
                 Connections {
                     target: drawer;
@@ -409,7 +406,7 @@ Drawer {
                     rightPadding: parent.parent.radius
                     onAccepted:filterList(text.toLowerCase())
                     width: parent.parent.width - inerImage.width - parent.spacing - facade.toPx(20);
-                    placeholderText: "Найти друзей";
+                    placeholderText: qsTr("Найти ваших друзей")
                     font.bold: true
                     font.pixelSize: facade.doPx(18);
                     font.family: trebu4etMsNorm.name
@@ -422,6 +419,10 @@ Drawer {
                         }
                     }
                 }
+                anchors.verticalCenter: {parent.verticalCenter}
+                anchors.leftMargin: facade.toPx(20);
+                spacing: {facade.toPx(10);}
+                anchors.left: {parent.left}
             }
         }
 
@@ -729,6 +730,31 @@ Drawer {
         }
     }
 
+    DropShadow {
+        radius: 14
+        samples: 20
+        source: (listMenu);
+        color: "#90000000";
+        anchors.fill: listMenu;
+    }
+
+    Rectangle {
+        width: 6;
+        anchors {
+            top:leftRect.top
+            left: parent.right;
+            bottom: parent.bottom
+            leftMargin: -width*1.0;
+            topMargin: (canva.width);
+        }
+        color: {
+            if (loader.isOnline==true) loader.menu4Color
+            else {loader.menu2Color;}
+        }
+    }
+
+    HelperDrawer {id : helperDrawer;}
+
     LinearGradient {
         anchors.top: {profile.bottom}
         anchors.topMargin: -1
@@ -737,23 +763,14 @@ Drawer {
         start: Qt.point(0, 0)
         end: Qt.point(0, height)
         gradient: Gradient {
-            GradientStop {position:0; color:"#70000000"}
+            GradientStop {position:0; color:"#65000000"}
             GradientStop {position:1; color:"#00000000"}
         }
     }
 
-    DropShadow {
-        radius: 15
-        samples: 20
-        source: (listMenu);
-        color: "#90000000";
-        anchors {
-            fill: listMenu;
-        }
-    }
     ListView {
         id: listMenu
-        width: parent.width
+        width: parent.width - 6
         property bool isShowed: false
         snapMode:ListView.SnapOneItem
         anchors.bottom: parent.bottom
@@ -786,28 +803,28 @@ Drawer {
         delegate:Rectangle {
             width: (parent.width)
             height: {facade.toPx(80)}
-            color: ListView.isCurrentItem? ("#D3D3D3"): "#E5E5E5"
+            color: ListView.isCurrentItem? "#D3D3D3": "#E5E5E5"
             MouseArea {
                 id: menMouseArea;
                 anchors.fill: parent;
                 onEntered: listMenu.currentIndex = index
                 onClicked: {
                     switch(index) {
-                        case 1:
-                        if (helperDrawer.position < 2) {
-                            helperDrawer.open()
-                        }
-                        break;
                         case 2:
-                        loader.goTo("qrc:/loginanDregister.qml");
-                        loader.restores();
-                        chatScreen.close()
-                        drawer.close()
-                        event_handler.saveSet("user","")
-                        helperDrawer.visible(false)
+                            loader.restores();
+                            chatScreen.close()
+                            drawer.close()
+                            loader.goTo("loginanDregister.qml")
+                            event_handler.saveSet("user" , "");
+                            helperDrawer.visible(false)
+                        break;
+                        case 1:
+                            if (helperDrawer.position <= (1)) {
+                                helperDrawer.open()
+                            }
                     }
                     if (index == 0) {
-                        myswitcher.checked = !myswitcher.checked;
+                        myswitcher.checked=!myswitcher.checked;
                     } else if (index > 0 && index <=1) {
                         listMenu.currentIndex=index
                     }
@@ -823,17 +840,19 @@ Drawer {
 
                 Image {
                     source: image
-                    visible: index >= 1
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: facade.toPx(sourceSize.width)
-                    height: facade.toPx(sourceSize.height)
-                    horizontalAlignment:Image.AlignHCenter
+                    visible: index >= 1;
+                    width: facade.toPx(sourceSize.width);
+                    height:facade.toPx(sourceSize.height)
+                    horizontalAlignment: {(Image.AlignHCenter)}
+                    anchors {
+                        verticalCenter: (parent.verticalCenter)
+                    }
                 }
 
                 Connections {
                     target:loader
                     onIsOnlineChanged: {
-                        myswitcher.checked=loader.isOnline
+                        myswitcher.checked = (loader.isOnline);
                     }
                 }
                 Switch {
@@ -847,32 +866,39 @@ Drawer {
                         color: {
                             if (parent.checked  == true) {
                                 loader.menu12Color
-                            } else loader.menu13Color
+                            } else loader.menu13Color;
                         }
                         DropShadow {
                             radius: 15
                             samples: 15
                             source: {switcher}
                             color: "#90000000"
-                            anchors.fill: {switcher;}
+                            anchors.fill: switcher;
                         }
                         Rectangle {
                             id: switcher
+                            color: loader.feedColor
                             width: myswitcher.height/2.3;
                             height:myswitcher.height/2.3;
                             radius:width/2
                             x: {
                                 if (myswitcher.checked) {
-                                    parent.width - width - (parent.height - height)/2
-                                } else (parent.height - height)/2
+                                    var p=parent.height-height;
+                                    parent.width - width - p/2;
+                                } else {
+                                    (parent.height - height)/2;
+                                }
                             }
-                            color: {loader.feedColor}
-                            anchors.verticalCenter: {
-                                parent.verticalCenter
+                            anchors {
+                                verticalCenter: {
+                                    parent.verticalCenter
+                                }
                             }
                         }
                     }
-                    onCheckedChanged: loader.isOnline=checked
+                    onCheckedChanged: {
+                        loader.isOnline = (checked)
+                    }
                     width: facade.toPx(64)
                     height:facade.toPx(80)
                 }
@@ -881,42 +907,20 @@ Drawer {
                     anchors {
                         left: myswitcher.right
                         leftMargin: facade.toPx(30)
-                        verticalCenter: parent.verticalCenter
+                        verticalCenter: {parent.verticalCenter}
                     }
-                    font.pixelSize: facade.doPx(20)
-                    font.family:trebu4etMsNorm.name
                     color: loader.menu10Color;
+                    font.pixelSize: facade.doPx(22)
+                    font.family:trebu4etMsNorm.name
                     text: {
                         if (index == 0) {
                             if (myswitcher.checked)
-                                qsTr("Вы онлайн")
-                            else "Невидимый";
-                        } else target
+                                qsTr(("Вы онлайн"))
+                            else qsTr(("Невидимы"))
+                        } else {target}
                     }
                 }
             }
-        }
-    }
-
-    HelperDrawer {
-        id: helperDrawer
-    }
-
-    Rectangle {
-        width: 6;
-        color: {
-            if (loader.isOnline) {
-                loader.menu4Color;
-            } else {
-                loader.menu2Color;
-            }
-        }
-        anchors {
-            left: parent.right;
-            leftMargin: -width;
-            topMargin: canva.width
-            bottom: parent.bottom;
-            top: leftRect.top
         }
     }
 }
