@@ -26,12 +26,8 @@
         <file>ui/apkIcon/iconSmaler.png</file>
         <file>ui/buttons/inforButton.png</file>
         <file>ui/icons/searchIconWhite.png</file>
-        <file>ui/icons/HelpIconBlue.png</file>
         <file>ui/buttons/moreButton.png</file>
         <file>loginanDregister.qml</file>
-        <file>ui/icons/manswerBlue.png</file>
-        <file>ui/icons/myalgortBlue.png</file>
-        <file>ui/icons/myalgortLigh.png</file>
         <file>ui/buttons/social/fb.png</file>
         <file>ui/buttons/social/gp.png</file>
         <file>ui/buttons/social/tw.png</file>
@@ -55,17 +51,16 @@
         <file>P2PStyle/ImagesDialog.qml</file>
         <file>ui/icons/DeleteIconWhite.png</file>
         <file>ui/icons/PassWIconWhite.png</file>
-        <file>ui/icons/ManswerLigh.png</file>
-        <file>ui/icons/mynotifyblue.png</file>
-        <file>ui/icons/MynotifyLigh.png</file>
-        <file>ui/icons/userBackBlue.png</file>
-        <file>ui/icons/userBackLigh.png</file>
         <file>ui/icons/devIconBlue.png</file>
         <file>ui/icons/outIconBlue.png</file>
-        <file>ui/icons/presBackBlue.png</file>
-        <file>ui/icons/presBackLigh.png</file>
         <file>registration.qml</file>
         <file>P2PStyle/DefaultDialog.qml</file>
         <file>ui/buttons/addButton.png</file>
+        <file>ui/icons/alerts.png</file>
+        <file>ui/icons/configuration.png</file>
+        <file>ui/icons/design.png</file>
+        <file>ui/icons/developer.png</file>
+        <file>ui/icons/profile.png</file>
+        <file>ui/icons/security.png</file>
     </qresource>
 </RCC>

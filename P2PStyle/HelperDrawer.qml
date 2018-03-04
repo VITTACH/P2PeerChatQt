@@ -16,7 +16,7 @@ Drawer {
 
     closePolicy: {Popup.CloseOnEscape;}
     width: {
-        var variable1= facade.toPx(430)
+        var variable1= facade.toPx(215)
         Math.min(variable1, 0.6*parent.width);
     }
     height: (parent.height);
@@ -40,25 +40,31 @@ Drawer {
         ListView {
             clip: true
             id: listMenu
-            spacing: (anchors.topMargin);
 
+            spacing: anchors.topMargin
             anchors {
-                fill: parent;
+                fill: {parent}
                 topMargin:facade.toPx(20)
             }
 
-            model:ListModel {
+            model: ListModel {
                 ListElement {
-                    mypos: 0;
-                    target: "[\"Мой профиль\",\"Безопасность\"]"
+                    mypos: 0; images: "[\"design.png\"]";
                 }
                 ListElement {
-                    mypos: 1;
-                    target: "[\"Внешний вид\",\"Конфигурация\"]"
+                    mypos: 1; images: "[\"profile.png\"]"
                 }
                 ListElement {
-                    mypos: 2;
-                    target: "[\"Уведомления\", \"Разработчик\"]"
+                    mypos: 2; images: "[\"configuration.png\"]"
+                }
+                ListElement {
+                    mypos: 3; images: "[\"alerts.png\"]";
+                }
+                ListElement {
+                    mypos: 4; images:"[\"security.png\"]"
+                }
+                ListElement {
+                    mypos:5; images:"[\"developer.png\"]"
                 }
             }
 
@@ -71,7 +77,7 @@ Drawer {
                     x: spacing
                     Repeater {
                         id:rep
-                        model: JSON.parse(target);
+                        model: JSON.parse(images);
                         Rectangle {
                             id: body
                             clip: true
@@ -90,11 +96,18 @@ Drawer {
                                 }
                             }
 
+                            Image {
+                                source: "qrc:/ui/icons/" + modelData;
+                                width: facade.toPx(sourceSize.width);
+                                height:facade.toPx(sourceSize.height)
+                                anchors.centerIn: parent
+                            }
+
                             PropertyAnimation {
                                 duration: (500)
                                 id: circleAnimation
                                 target: coloresRect
-                                properties: "width, height, radius";
+                                properties: {"width, height, radius"}
                                 from: 0
                                 to:body.width*3
 
@@ -108,7 +121,7 @@ Drawer {
                                 loader.sets4Color;
                                 if (index == curX) {
                                     if (mypos == curY) {
-                                        if(!circleAnimation.running)
+                                        if (!circleAnimation.running)
                                             loader.sets1Color
                                     }
                                 }

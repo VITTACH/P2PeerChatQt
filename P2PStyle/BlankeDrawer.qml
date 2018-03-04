@@ -4,6 +4,12 @@ import QtGraphicalEffects 1.0
 
 Drawer {
     id: drawer
+    property bool find: true
+    property alias cindex: listView.currentIndex;
+    background: Rectangle {color: "transparent";}
+    width: {Math.min(facade.toPx(640), 0.9 * parent.width)}
+    height: {parent.height;}
+    dragMargin:facade.toPx(40)
 
     Connections {
         target: drawer;
@@ -40,39 +46,13 @@ Drawer {
         onIsOnlineChanged: if(loader.isOnline) getFriends()
     }
 
-    dragMargin:facade.toPx(40)
-    property bool find: (true)
-    property alias cindex: listView.currentIndex;
-    background: Rectangle {color: "transparent";}
-    width: {Math.min(facade.toPx(640), 0.9 * parent.width)}
-    height: parent.height;
     function getHelperHeight() {return (leftSlider.height)}
+
     function getProfHeight() {
         return (profile.height) + (profile.y - 1)
     }
-    function getCurPeerInd() {return listView.currentIndex}
-    function getPeersModel(index, field) {
-        var results =""
-        if(field == "famil")
-            results = usersModel.get(index).famil
-        if(field == "login")
-            results = usersModel.get(index).login
-        if(field == "image")
-            results = usersModel.get(index).image
-        if(field == "phone")
-            results = usersModel.get(index).phone
-        if(field == "port")
-            results = usersModel.get(index).port;
-        return results
-    }
 
-    function findPeer(phone) {
-        for(var i = 0; i<usersModel.count; i++) {
-            if (usersModel.get(i).phone == phone)
-                return i;
-        }
-        return -1;
-    }
+    function getCurPeerInd() {return listView.currentIndex}
 
     function filterList(param) {
         for (var i = 0; i < usersModel.count; i = i+1) {
@@ -82,20 +62,6 @@ Drawer {
             else
                 usersModel.setProperty(i, "activity", 0)
         }
-    }
-
-    function getFriends() {
-        var request = new XMLHttpRequest()
-        request.open('POST', "http://www.hoppernet.hol.es")
-        request.onreadystatechange =function() {
-            if (request.readyState ==XMLHttpRequest.DONE) {
-                if (request.status&&request.status ==200) {
-                    getMePeers(loader.frienList=request.responseText)
-                }
-            }
-        }
-        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        request.send("READ=3&name="+loader.tel);
     }
 
     function getMePeers(name) {
@@ -134,16 +100,55 @@ Drawer {
                             usersModel.setProperty(index, "ip", obj[i].ip)
                         }
                     }
-                    var friends = []
+                    var frnds = []
                     for (i = 0; i <usersModel.count; i++) {
-                        friends.push({famil: usersModel.get(i).famil, login: usersModel.get(i).login, phone: usersModel.get(i).phone, port: usersModel.get(i).port, ip: usersModel.get(i).ip})
+                        frnds.push({famil: usersModel.get(i).famil, login: usersModel.get(i).login, phone: usersModel.get(i).phone, port: usersModel.get(i).port, ip: usersModel.get(i).ip})
                     }
-                    event_handler.saveSet("frd" , JSON.stringify(friends))
+                    event_handler.saveSet("frd",JSON.stringify(frnds))
                 }
             }
         }
-        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        var urlEncode = 'application/x-www-form-urlencoded'
+        request.setRequestHeader('Content-Type', urlEncode)
         request.send("READ=2&name=" +name)
+    }
+
+    function getFriends() {
+        var request = new XMLHttpRequest()
+        request.open('POST', "http://www.hoppernet.hol.es")
+        request.onreadystatechange =function() {
+            if (request.readyState ==XMLHttpRequest.DONE) {
+                if (request.status&&request.status ==200) {
+                    getMePeers(loader.frienList =request.responseText)
+                }
+            }
+        }
+        var urlEncode = 'application/x-www-form-urlencoded'
+        request.setRequestHeader('Content-Type', urlEncode)
+        request.send("READ=3&name="+loader.tel);
+    }
+
+    function getPeersModel(index, field) {
+        var results =""
+        if(field == "famil")
+            results = usersModel.get(index).famil
+        if(field == "login")
+            results = usersModel.get(index).login
+        if(field == "image")
+            results = usersModel.get(index).image
+        if(field == "phone")
+            results = usersModel.get(index).phone
+        if(field == "port")
+            results = usersModel.get(index).port;
+        return results
+    }
+
+    function findPeer(phone) {
+        for(var i = 0; i<usersModel.count; i++) {
+            if (usersModel.get(i).phone == phone)
+                return i;
+        }
+        return -1;
     }
 
     Rectangle {
