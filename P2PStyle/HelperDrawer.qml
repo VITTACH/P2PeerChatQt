@@ -16,7 +16,7 @@ Drawer {
 
     closePolicy: {Popup.CloseOnEscape;}
     width: {
-        var variable1= facade.toPx(215)
+        var variable1= facade.toPx(170)
         Math.min(variable1, 0.6*parent.width);
     }
     height: (parent.height);
@@ -38,34 +38,11 @@ Drawer {
         height: blankeDrawer.getHelperHeight()
 
         ListView {
-            clip: true
             id: listMenu
-
-            spacing: anchors.topMargin
+            spacing: anchors.topMargin;
             anchors {
                 fill: {parent}
-                topMargin:facade.toPx(20)
-            }
-
-            model: ListModel {
-                ListElement {
-                    mypos: 0; images: "[\"design.png\"]";
-                }
-                ListElement {
-                    mypos: 1; images: "[\"profile.png\"]"
-                }
-                ListElement {
-                    mypos: 2; images: "[\"configuration.png\"]"
-                }
-                ListElement {
-                    mypos: 3; images: "[\"alerts.png\"]";
-                }
-                ListElement {
-                    mypos: 4; images:"[\"security.png\"]"
-                }
-                ListElement {
-                    mypos:5; images:"[\"developer.png\"]"
-                }
+                topMargin: facade.toPx(20)
             }
 
             delegate: Column {
@@ -88,7 +65,7 @@ Drawer {
                                 width: 0
                                 height: 0
                                 id: coloresRect
-                                color: loader.sets1Color
+                                color: loader.sets1Color;
 
                                 transform: Translate {
                                     x:-coloresRect.width /2
@@ -97,10 +74,11 @@ Drawer {
                             }
 
                             Image {
+                                scale: 0.7
                                 source: "qrc:/ui/icons/" + modelData;
                                 width: facade.toPx(sourceSize.width);
                                 height:facade.toPx(sourceSize.height)
-                                anchors.centerIn: parent
+                                anchors.centerIn: parent;
                             }
 
                             PropertyAnimation {
@@ -129,8 +107,14 @@ Drawer {
 
                             MouseArea {
                                 anchors.fill: parent;
-                                onClicked:{curX=-1;curY=-1; circleAnimation.stop()}
-                                onExited: {curX=-1;curY=-1; circleAnimation.stop()}
+                                onClicked:{
+                                    curX=-1; curY=-1;
+                                    circleAnimation.stop();
+                                }
+                                onExited: {
+                                    curX=-1; curY=-1;
+                                    circleAnimation.stop();
+                                }
                                 onEntered: {
                                     curX=index; curY=mypos;
                                     coloresRect.x = mouseX;
@@ -140,6 +124,26 @@ Drawer {
                             }
                         }
                     }
+                }
+            }
+            model: ListModel {
+                ListElement {
+                    mypos: 0; images: "[\"profile.png\"]"
+                }
+                ListElement {
+                    mypos: 1; images: "[\"design.png\"]";
+                }
+                ListElement {
+                    mypos: 2; images: "[\"alerts.png\"]";
+                }
+                ListElement {
+                    mypos: 3; images: "[\"configuration.png\"]"
+                }
+                ListElement {
+                    mypos: 4; images:"[\"security.png\"]"
+                }
+                ListElement {
+                    mypos:5; images:"[\"developer.png\"]"
                 }
             }
         }
