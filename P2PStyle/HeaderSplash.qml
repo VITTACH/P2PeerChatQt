@@ -5,33 +5,34 @@ import QtGraphicalEffects 1.0
 Item {
     id: rootItem
     property int page
-    property string stat:""
-    property string phot:""
-    property string text:""
+    property string stat: "";
+    property string phot: "";
+    property string text: "";
 
     function load(value) {headerLine.width=value*rootItem.width;}
 
     width: parent.width;
-    height:facade.toPx(150)
+    height: facade.toPx(150);
 
     DropShadow {
         radius: 15
         samples: 16
+        source: headRect
         verticalOffset: 10;
-        color: "#60000000";
-        source: (headRect);
-        visible:headRect.visible
-        anchors.fill: {headRect}
+        color: ("#60000000");
+        visible: headRect.visible
+        anchors.fill: {headRect;}
     }
     Rectangle {
         id: headRect
         width: parent.width
-        height: facade.toPx(140)
-        visible: loader.source != "qrc:/qrscaner.qml"
-        color: loader.head1Color
+        color: loader.head1Color;
+        height: facade.toPx(140);
+        visible: {loader.source != ("qrc:/qrscaner.qml");}
 
         Item {
             id: inerItem
+            height: parent.height
             Row {
                 spacing: facade.toPx(30);
                 anchors {
@@ -58,8 +59,8 @@ Item {
                         clip: true
                         smooth: true
                         visible: false
-                        width: facade.toPx(80)
-                        height:facade.toPx(80)
+                        width: facade.toPx(90)
+                        height:facade.toPx(90)
                         anchors {
                             verticalCenter: parent.verticalCenter
                         }
@@ -80,14 +81,15 @@ Item {
 
                     Image {
                         id: mask
-                        smooth: true;
-                        visible:false
+                        smooth:true
+                        visible: false
                         source: "qrc:/ui/mask/round.png"
                         sourceSize: Qt.size(bug.width,bug.height)
                     }
                 }
 
                 Column {
+                    spacing: {facade.toPx(10)}
                     Text {
                         color: "white"
                         elide: Text.ElideRight
@@ -95,10 +97,10 @@ Item {
                             var margin = chatScreen.position > 0 ? facade.toPx(90) : 0
                             Math.min(inerItem.width - bug.width-margin, implicitWidth)
                         }
-                        text:  {rootItem.text.replace("\n" , "")}
+                        text: {rootItem.text.replace("\n", (""));}
 
-                        font.pixelSize: loader.isLogin?facade.doPx(28):facade.doPx(34)
                         font.family: trebu4etMsNorm.name
+                        font.pixelSize: loader.isLogin?facade.doPx(28):facade.doPx(34)
                     }
                     Text {
                         text: str
@@ -107,15 +109,20 @@ Item {
                         font.pixelSize: facade.doPx(20);
                         visible: loader.isLogin && !loader.webview
                         color: str == "Online"? "white":"darkgrey"
-                        property string str: {
-                            return rootItem.stat.replace("\n", "")
-                        }
+                        property string str: {return rootItem.stat.replace("\n", "");}
                     }
                 }
             }
-            height: parent.height
-            anchors.left: page != 0||loader.isLogin? hambrgrButton.right: parent.left;
-            anchors.right:page != 0||loader.isLogin? hamMoreButton.left: parent.right;
+            anchors.left: {
+                if (page!=0 || loader.isLogin)
+                    hambrgrButton.right
+                else parent.left;
+            }
+            anchors.right: {
+                if (page!=0 || loader.isLogin)
+                    hamMoreButton.left
+                else parent.right
+            }
         }
 
         Button {
@@ -123,8 +130,9 @@ Item {
             height:parent.height
             width: facade.toPx(140)
             onClicked: {
-                if (page == 1) {page -= 1}
-                else if (chatScreen.position>0)blankeDrawer.open()
+                if (page == 1) page -= 1
+                else if(chatScreen.position>0)
+                    blankeDrawer.open()
                 else if (loader.webview) {
                     loader.webview = false
                 } else blankeDrawer.open()

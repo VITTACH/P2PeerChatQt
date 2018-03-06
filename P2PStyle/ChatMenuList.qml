@@ -4,81 +4,78 @@ import QtGraphicalEffects 1.0
 
 Button {
     id: contextDialogs
-    anchors.fill: parent
+    anchors.fill: parent;
     visible: loader.context
+    contentItem: Text {opacity: 0;}
 
-    background: Rectangle {
-        color:"transparent"
-    }
+    onClicked: loader.context=false
 
+    property int w: listText.width;
     property int action
     property int menu: 1;
-    property var buttons: [["Удалить", "Переслать", "Копировать"], ["Информация", "Отключить звук", "Отключить push", "Очистить историю"]]
+    property var buttons: [
+        ["Удалить", "Переслать", "Копировать"],
+        ["Найти", "Профиль", "Отключить push", "Очистить историю"]
+    ]
     property int xPosition;
     property int yPosition;
 
+    background: Rectangle {color: "#40000000";}
+
     DropShadow {
-        radius: 12
         samples: 16
-        anchors {
-            fill: listText;
-        }
+        radius: samples
         color: "#C0000000";
         source: {listText;}
+        anchors.fill: listText;
     }
-
     Rectangle {
-        id: listText;
-        x: xPosition;
-        y: yPosition;
+        id:listText
+        x: (xPosition)
+        y: (yPosition)
         radius: 8
-        color: loader.feedColor
-        width: Math.max(funcs.width, facade.toPx(400))
-        height: funcs.implicitHeight + facade.toPx(20)
 
+        height:funcs.implicitHeight + facade.toPx(20)
+        width: {Math.max(funcs.width, facade.toPx(400))}
+        color: loader.feedColor
         Column {
             id: funcs
-            anchors {
-                top: parent.top
-                topMargin: facade.toPx(10)
-                verticalCenter: parent.verticalCenter;
-            }
-
             Repeater {
-                model:buttons[menu]
+                anchors {
+                    top: parent.top;
+                    topMargin: facade.toPx(10)
+                    verticalCenter:parent.verticalCenter
+                }
+                model: buttons[menu]
                 Rectangle {
                     id: line
-                    radius:listText.radius
-                    width: listText.width;
-                    color: {loader.feedColor}
+                    width: listText.width
                     height:inerText.implicitHeight+facade.toPx(60)
+                    color: {loader.feedColor}
+                    radius: {listText.radius}
+
                     Text {
+                        id: inerText
+                        text: {modelData}
                         anchors {
                             left: parent.left
-                            leftMargin:facade.toPx(20)
-                            verticalCenter: {
-                                parent.verticalCenter;
-                            }
+                            leftMargin: facade.toPx(20);
+                            verticalCenter: parent.verticalCenter;
                         }
-
-                        id: inerText
-                        text: modelData
                         font {
-                            pixelSize: facade.doPx(26)
-                            family:trebu4etMsNorm.name
+                            pixelSize: {facade.doPx(26)}
+                            family: trebu4etMsNorm.name;
                         }
                     }
 
                     MouseArea {
-                        anchors.fill: parent
-                        onExited: {line.color = loader.feedColor}
-                        onEntered: {
-                            line.color = ("#20000000")
-                        }
+                        anchors.fill: parent;
+                        onExited: line.color=loader.feedColor
+                        onEntered: line.color = ("#20000000")
                         onClicked: {
-                            var i, base = 1;
-                            for (i = 0; i < menu; i++)
-                            base+=buttons[menu].length
+                            var i, base = (1)
+                            for (i = 0; i < menu; i+= 1)
+                                base += buttons[menu].length;
                             action = base + index
                         }
                     }
@@ -86,9 +83,4 @@ Button {
             }
         }
     }
-    property int w: listText.width;
-
-    contentItem: Text {opacity: 0;}
-
-    onClicked: loader.context=false
 }

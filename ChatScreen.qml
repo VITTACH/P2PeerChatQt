@@ -11,10 +11,6 @@ Drawer {
     width: parent.width;
     height: parent.height;
 
-    property real yPosition
-    property variant select
-    property variant input;
-
     Connections {
         target: event_handler;
         onReciving: {
@@ -44,6 +40,10 @@ Drawer {
             if(!loader.context&&yPosition>0) {chatMenuList.menu=1;select=[]}
         }
     }
+
+    property real yPosition
+    property variant select
+    property variant input;
 
     Connections {
         target: chatMenuList;

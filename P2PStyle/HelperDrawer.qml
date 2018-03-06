@@ -61,6 +61,22 @@ Drawer {
                             height: width
                             width: (parent.width-row.spacing)/rep.count-row.spacing
 
+                            MouseArea {
+                                anchors.fill: parent;
+                                function reset() {
+                                    curX = -1; curY = -1
+                                    circleAnimation.stop();
+                                }
+                                onExited: reset()
+                                onClicked: reset()
+                                onEntered: {
+                                    curX=index; curY=mypos;
+                                    coloresRect.x = mouseX;
+                                    coloresRect.y = mouseY;
+                                    circleAnimation.start()
+                                }
+                            }
+
                             Rectangle {
                                 width: 0
                                 height: 0
@@ -102,24 +118,6 @@ Drawer {
                                         if (!circleAnimation.running)
                                             loader.sets1Color
                                     }
-                                }
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent;
-                                onClicked:{
-                                    curX=-1; curY=-1;
-                                    circleAnimation.stop();
-                                }
-                                onExited: {
-                                    curX=-1; curY=-1;
-                                    circleAnimation.stop();
-                                }
-                                onEntered: {
-                                    curX=index; curY=mypos;
-                                    coloresRect.x = mouseX;
-                                    coloresRect.y = mouseY;
-                                    circleAnimation.start()
                                 }
                             }
                         }

@@ -798,16 +798,16 @@ Drawer {
         height: {
             var length= parent.height
             length-= facade.toPx(540) + getProfHeight();
-            var count= Math.ceil(length/facade.toPx(80))
+            var count= Math.ceil(length/facade.toPx(85))
             if (count >navigateDownModel.count)
                count = navigateDownModel.count;
             if (count < 1) count = 1;
-            (count) * facade.toPx(80)
+            (count) * facade.toPx(85)
         }
 
         delegate:Rectangle {
             width: (parent.width)
-            height: {facade.toPx(80)}
+            height: {facade.toPx(85)}
             color: ListView.isCurrentItem? "#D3D3D3": "#E5E5E5"
             MouseArea {
                 id: menMouseArea;
@@ -905,7 +905,7 @@ Drawer {
                         loader.isOnline = (checked)
                     }
                     width: facade.toPx(64)
-                    height:facade.toPx(80)
+                    height:facade.toPx(85)
                 }
 
                 Text {
