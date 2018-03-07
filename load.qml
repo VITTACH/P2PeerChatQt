@@ -95,30 +95,6 @@ ApplicationWindow {
         property var tmpLogin;
         property var tmpPhone;
 
-        Keys.onReleased: {listenBack(event)}
-
-        Component.onCompleted: strartPage();
-
-        QtObject {
-            id: privated
-            property var visitedPageList: []
-        }
-
-        property var fields:["","","","",""]
-
-        function restores() {
-            privated.visitedPageList=[];
-            loader.fields = ["","","","",""]
-            loader.tel = ""
-            loader.login = ""
-            loader.famil = ""
-            loader.userId= ""
-            loader.aToken= ""
-            connect.stop()
-            loader.isLogin = false
-            loader.isOnline= false
-        }
-
         function goTo(page) {
             privated.visitedPageList.push(source=page)
         }
@@ -162,7 +138,6 @@ ApplicationWindow {
         function logon(phone, password) {
             var request = new XMLHttpRequest();var response;
             request.open('POST',"http://hoppernet.hol.es/default.php")
-            blankeDrawer.open()
             request.onreadystatechange = function() {
                 if (request.readyState == XMLHttpRequest.DONE) {
                     if (request.status && request.status==200) {
@@ -172,50 +147,54 @@ ApplicationWindow {
                             var obj = JSON.parse(request.responseText)
                             loader.famil = obj.family
                             loader.login = obj.login;
-                            loader.tel=obj.name;
-                        } else {
-                            response = 0;
-                        }
+                            loader.tel = obj.name;
+                        } else response = 0;
                         switch(response){
                             case 1:
+                                blankeDrawer.open()
                                 loader.isOnline = !false;
-                                if (loader.source!="qrc:/profile.qml") goTo("profile.qml")
-                                event_handler.sendMsgs(phone)
-                                var u
-                                u = {tel:phone,pass:password,login:loader.login,family:loader.famil,image:loader.avatarPath}
-                                event_handler.saveSet("user", JSON.stringify(u));
+                                if (loader.source != "profile.qml") {
+                                    loader.goTo("profile.qml")
+                                }
+                                event_handler.sendMsgs(phone);
+                                var uo = {tel: phone, pass: password, login: loader.login,
+                                    family:loader.famil, image:loader.avatarPath}
+                                event_handler.saveSet("user", JSON.stringify(uo))
                                 break;
                             case 0:
                                 blankeDrawer.close()
-                                defaultDialog.show("Вы не зарегистрированы!", 0)
-                                if (loader.source != "qrc:/loginanDregister.qml") {loader.goTo("qrc:/loginanDregister.qml")}
+                                defaultDialog.show(qsTr("Вы не были зарегистрированы"), 0)
+                                if (loader.source != "qrc:/loginanDregister.qml")
+                                    goTo("qrc:/loginanDregister.qml");
                                 if (loader.aToken != ""){
                                     loader.fields[0] = (loader.login);
                                     loader.fields[1] = (loader.famil);
                                 } else {
                                     loader.fields[0] = ""
                                     loader.fields[1] = ""
-                                    loader.fields[2]=password
+                                    loader.fields[2] =password
                                 }
                                 loader.fields[4] = phone;
                                 partnerHeader.page = 1;
                                 break;
                             case -1:
                                 blankeDrawer.close()
-                                defaultDialog.show("Временно нету доступа до интернету", 0)
+                                defaultDialog.show("Временно нету доступа до интернету",0)
                                 break;
                         }
                     } else {
                         var findResult = false;
-                        for (var i = 0; i < privated.visitedPageList.length; i++)
+                        for (var i = 0; i<privated.visitedPageList.length; i++) {
                             if (privated.visitedPageList[i].search("profile.qml") != -1) {
-                                findResult=true
+                                findResult = true
                                 break;
                             }
+                        }
                         if (!findResult) {
-                            loader.goTo(("qrc:/profile.qml"));
+                            if (loader.source !="profile.qml")
+                                loader.goTo("profile.qml")
                             tmpLogin = password
-                            tmpPhone = phone
+                            tmpPhone=phone
                         }
                         loader.isOnline = false
                         connect.restart();
@@ -232,8 +211,7 @@ ApplicationWindow {
             var request = new XMLHttpRequest()
             request.open('POST',"http://www.hoppernet.hol.es")
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            console.log("name=" + loader.tel + "&friend=" + friend + "&remove=" + flag)
-            request.send("name="+ loader.tel + "&friend=" + friend + "&remove=" + flag)
+            request.send("name="+ loader.tel + "&friend=" + (friend) + "&remove=" + flag);
         }
 
         // colors variables
@@ -287,7 +265,7 @@ ApplicationWindow {
     }
 
     function listenBack(event) {
-        loader.focus = true
+        loader.forceActiveFocus()
         if (event.key === Qt.Key_Back || event.key === Qt.Key_Escape || event === true) {
             event.accepted= true
             if (loader.dialog ==true) {
@@ -302,19 +280,43 @@ ApplicationWindow {
         }
     }
 
+    Keys.onReleased: {listenBack(event)}
+
+    Component.onCompleted: strartPage();
+
+    QtObject {
+        id: privated
+        property var visitedPageList: []
+    }
+
+    property var fields:["","","","",""]
+
+    function restores() {
+        privated.visitedPageList=[];
+        loader.fields = ["","","","",""]
+        loader.tel = ""
+        loader.login = ""
+        loader.famil = ""
+        loader.userId= ""
+        loader.aToken= ""
+        connect.stop()
+        loader.isLogin = false
+        loader.isOnline= false
+    }
+
     P2PStyle.HeaderSplash {
-        visible: loader.source != "qrscan.qml";
+        visible: loader.source!="qrscan.qml"
         id: partnerHeader;
     }
 
     FontLoader {
-        source: "fonts/TrebuchetMSn.ttf"
+        source:"qrc:/fonts/TrebuchetMSn.ttf"
         id: trebu4etMsNorm
     }
 
     ChatScreen {id: chatScreen}
 
-    P2PStyle.DefaultDialog {id: defaultDialog;}
+    P2PStyle.DefaultDialog{id:defaultDialog}
 
     P2PStyle.BlankeDrawer {id: blankeDrawer}
 

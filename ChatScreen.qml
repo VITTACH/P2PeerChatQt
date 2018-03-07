@@ -114,7 +114,7 @@ Drawer {
             event.accepted = true;
         textField.focus = false
         Qt.inputMethod.hide()
-        loader.focus = true
+        loader.forceActiveFocus();
         input = false
     }
 

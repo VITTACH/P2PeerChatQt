@@ -223,7 +223,7 @@ Button {
                 onClicked: {
                     choose = false;
                     inputMode = "";
-                    loader.focus = true
+                    loader.forceActiveFocus();
                     loader.dialog = false;
                     rootItem.text="";
                     switch(inputMode) {

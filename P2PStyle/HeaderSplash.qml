@@ -136,7 +136,7 @@ Item {
                 else if (loader.webview) {
                     loader.webview = false
                 } else blankeDrawer.open()
-                loader.focus=true
+                loader.focus = true
             }
 
             visible: page!=0 || loader.isLogin? true:false

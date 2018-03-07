@@ -35,7 +35,7 @@ Drawer {
                 getMePeers(loader.frienList)
             } else if (position == 0) {
                 helperDrawer.visible(false);
-                loader.focus = !false
+                loader.forceActiveFocus()
                 find = true;
             }
         }
@@ -753,7 +753,7 @@ Drawer {
             topMargin: (canva.width);
         }
         color: {
-            if (loader.isOnline==true) loader.menu4Color
+            if(loader.isOnline==true) loader.menu4Color;
             else {loader.menu2Color;}
         }
     }
@@ -788,13 +788,14 @@ Drawer {
             ListElement {image: ""; target: ""}
             ListElement {
                 image : "qrc:/ui/icons/devIconBlue.png";
-                target: "Настройки"
+                target: qsTr("Настройки")
             }
             ListElement {
                 image : "qrc:/ui/icons/outIconBlue.png";
                 target: qsTr("Выйти")
             }
         }
+
         height: {
             var length= parent.height
             length-= facade.toPx(540) + getProfHeight();
