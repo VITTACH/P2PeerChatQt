@@ -1,20 +1,20 @@
-#include "httpnetwork.h"
+#include "HttpNetwork.h"
 #include <QNetworkInterface>
 
-void httpnetwork::waiting() {
+void HttpNetwork::waiting() {
     QEventLoop loop;
     QObject::connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
     loop.exec();
 }
 
-void httpnetwork::setUrl(QUrl *qUrl) {
+void HttpNetwork::setUrl(QUrl *qUrl) {
     request=new QNetworkRequest(*qUrl);
 }
 
-httpnetwork::httpnetwork(QObject *parent): QObject(parent)
+HttpNetwork::HttpNetwork(QObject *parent): QObject(parent)
 {}
 
-void httpnetwork::httpsettsessionID() {
+void HttpNetwork::httpsettsessionID() {
     QList<QByteArray> headerList = reply->rawHeaderList();
     foreach(QByteArray head, headerList) {
         if (head == "Set-Cookie") {
@@ -32,7 +32,7 @@ void httpnetwork::httpsettsessionID() {
     }
 }
 
-QString httpnetwork::getMacAddress() {
+QString HttpNetwork::getMacAddress() {
     foreach(QNetworkInterface netInterface, QNetworkInterface::allInterfaces())
     {
         if (!(netInterface.flags() & QNetworkInterface::IsLoopBack))
@@ -41,7 +41,7 @@ QString httpnetwork::getMacAddress() {
     return QString();
 }
 
-QString httpnetwork::sendGet() {
+QString HttpNetwork::sendGet() {
     request->setRawHeader("Content-Type", "application/x-www-form-urlencoded");
     if (sessID.length() != 0)
         request->setRawHeader("Cookie", ("laravel_session=" + sessID).c_str());
@@ -52,7 +52,7 @@ QString httpnetwork::sendGet() {
     return reply -> readAll();
 }
 
-QString httpnetwork::sendPost(QByteArray *requestString) {
+QString HttpNetwork::sendPost(QByteArray *requestString) {
     request->setRawHeader("Content-Type", "application/x-www-form-urlencoded");
     if (sessID.length() != 0)
         request->setRawHeader("Cookie", ("laravel_session=" + sessID).c_str());
@@ -63,7 +63,7 @@ QString httpnetwork::sendPost(QByteArray *requestString) {
     return reply -> readAll();
 }
 
-QString httpnetwork::sendAvatar(QFile *file) {
+QString HttpNetwork::sendAvatar(QFile *file) {
     QHttpPart imagePart;
     QHttpMultiPart *multiPart=new QHttpMultiPart(QHttpMultiPart::FormDataType);
     imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));

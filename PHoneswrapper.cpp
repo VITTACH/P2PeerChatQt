@@ -1,4 +1,4 @@
-#include "phoneswrapper.h"
+#include "PHoneswrapper.h"
 
 void Wrapper::directCall(QString number)
 {

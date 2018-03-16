@@ -21,25 +21,21 @@ ios {
 include(vendor/vendor.pri)
 
 HEADERS += \
-    server.h \
     client.h \
-    mainwindow.h\
-    httpnetwork.h\
     eventhandler.h \
-    phoneswrapper.h \
     imageprocessor.h \
-    statusbar.h
+    statusbar.h \
+    HttpNetwork.h \
+    PHoneswrapper.h
 
 SOURCES += \
     main.cpp\
-    server.cpp \
     client.cpp \
-    mainwindow.cpp\
-    httpnetwork.cpp\
     eventhandler.cpp \
-    phoneswrapper.cpp \
     imageprocessor.cpp \
-    statusbar.cpp
+    statusbar.cpp \
+    HttpNetwork.cpp \
+    PHoneswrapper.cpp
 
 RESOURCES += \
     qml.qrc

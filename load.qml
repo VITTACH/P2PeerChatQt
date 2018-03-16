@@ -65,6 +65,28 @@ ApplicationWindow {
         objectName: "loader"
         anchors.fill: parent
 
+        function restores() {
+            privated.visitedPageList =[];
+            loader.fields = ["", "", "", "", ""];
+            loader.tel = ""
+            loader.login = ""
+            loader.famil = ""
+            loader.userId= ""
+            loader.aToken= ""
+            loader.isLogin = false;
+            loader.isOnline= false;
+            connect.stop();
+        }
+
+        Keys.onReleased: {listenBack(event)}
+
+        Component.onCompleted: strartPage();
+
+        QtObject {
+            id: privated
+            property var visitedPageList: []
+        }
+
         property real dpi: 0
 
         // login by social
@@ -95,9 +117,7 @@ ApplicationWindow {
         property var tmpLogin;
         property var tmpPhone;
 
-        function goTo(page) {
-            privated.visitedPageList.push(source=page)
-        }
+        function goTo(page) {privated.visitedPageList.push(source=page);}
 
         function back() {
             if (privated.visitedPageList.length > 1) {
@@ -105,7 +125,7 @@ ApplicationWindow {
                     if (partnerHeader.page == 1) {
                         partnerHeader.page = partnerHeader.page-1
                     }
-                } else if (loader.source != "qrc:/profile.qml") {
+                } else if (loader.source != "profile.qml") {
                     privated.visitedPageList.pop()
                     source = privated.visitedPageList[privated.visitedPageList.length - 1]
                 }
@@ -214,7 +234,6 @@ ApplicationWindow {
             request.send("name="+ loader.tel + "&friend=" + (friend) + "&remove=" + flag);
         }
 
-        // colors variables
         property string menu1Color: "#939393";
         property string menu2Color: "#E0E0E0";
         property string menu3Color: "#6C839B";
@@ -238,7 +257,8 @@ ApplicationWindow {
         property string sets1Color: "#4B4E55";
         property string sets2Color: "#C4C4C4";
         property string sets3Color: "#D6D6D6";
-        property string sets4Color: "#565960";
+        property string sets4Color: "#51616C";
+        property string sets5Color: "#5C636B";
 
         property string feed1Color: "#7F7875";
         property string feed2Color: "#8E8784";
@@ -248,6 +268,8 @@ ApplicationWindow {
         property string chat3Color: "#CC8B99A4"
 
         property string feedColor: "#EDEDED";
+
+        property var fields: ["","","","",""]
     }
 
     function strartPage() {
@@ -280,30 +302,6 @@ ApplicationWindow {
         }
     }
 
-    Keys.onReleased: {listenBack(event)}
-
-    Component.onCompleted: strartPage();
-
-    QtObject {
-        id: privated
-        property var visitedPageList: []
-    }
-
-    property var fields:["","","","",""]
-
-    function restores() {
-        privated.visitedPageList=[];
-        loader.fields = ["","","","",""]
-        loader.tel = ""
-        loader.login = ""
-        loader.famil = ""
-        loader.userId= ""
-        loader.aToken= ""
-        connect.stop()
-        loader.isLogin = false
-        loader.isOnline= false
-    }
-
     P2PStyle.HeaderSplash {
         visible: loader.source!="qrscan.qml"
         id: partnerHeader;
@@ -314,11 +312,11 @@ ApplicationWindow {
         id: trebu4etMsNorm
     }
 
-    ChatScreen {id: chatScreen}
-
     P2PStyle.DefaultDialog{id:defaultDialog}
 
     P2PStyle.BlankeDrawer {id: blankeDrawer}
 
     P2PStyle.ImagesDialog {id: avatarDialog}
+
+    ChatScreen {id: chatScreen}
 }

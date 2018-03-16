@@ -5,11 +5,9 @@ import ImageProcessor 1.0
 Item {
     Timer {
         id: timeout
-        running: true
+        running: true;
         interval:39000
-        onTriggered: {
-            loader.back()
-        }
+        onTriggered: {loader.back()}
     }
 
     Camera {
@@ -19,7 +17,7 @@ Item {
 
         exposure {
             exposureCompensation: -1
-            exposureMode: Camera.ExposurePortrait
+            exposureMode: {Camera.ExposurePortrait;}
         }
 
         imageProcessing.whiteBalanceMode: {

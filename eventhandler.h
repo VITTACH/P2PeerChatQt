@@ -2,7 +2,7 @@
 #define EVENTHANDLER_H
 
 #include <QSettings>
-#include "httpnetwork.h"
+#include "HttpNetwork.h"
 
 using namespace std;
 

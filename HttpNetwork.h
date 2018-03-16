@@ -8,7 +8,7 @@
 
 using namespace std;
 
-class httpnetwork: public QObject {
+class HttpNetwork: public QObject {
     //Q_OBJECT
 
 public:
@@ -16,7 +16,7 @@ public:
     QNetworkReply * reply;
     QNetworkRequest * request;
     QNetworkAccessManager manager;
-    explicit httpnetwork(QObject *parent = 0);
+    explicit HttpNetwork(QObject *parent = 0);
 
     void waiting();
     void setUrl(QUrl*);

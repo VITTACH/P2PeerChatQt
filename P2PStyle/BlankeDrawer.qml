@@ -33,7 +33,7 @@ Drawer {
                     loader.frienList=JSON.stringify(triend)
                 }
                 getMePeers(loader.frienList)
-            } else if (position == 0) {
+            } else if (position == (0)) {
                 helperDrawer.visible(false);
                 loader.forceActiveFocus()
                 find = true;
@@ -748,7 +748,7 @@ Drawer {
         anchors {
             top:leftRect.top
             left: parent.right;
-            bottom: parent.bottom
+            bottom:parent.bottom;
             leftMargin: -width*1.0;
             topMargin: (canva.width);
         }

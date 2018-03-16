@@ -33,7 +33,7 @@ Drawer {
     Rectangle {
         clip: true
         width: parent.width
-        color: "#FF909090";
+        color: "#FF414C57";
         y: blankeDrawer.getProfHeight()
         height: blankeDrawer.getHelperHeight()
 
@@ -112,7 +112,7 @@ Drawer {
                             }
 
                             color: {
-                                loader.sets4Color;
+                                mypos%2 == 0 ? loader.sets4Color: loader.sets5Color
                                 if (index == curX) {
                                     if (mypos == curY) {
                                         if (!circleAnimation.running)

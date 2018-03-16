@@ -3,7 +3,7 @@
 
 #include <QDebug>
 #include <QObject>
-#include "httpnetwork.h"
+#include "HttpNetwork.h"
 
 class ImageProcessor : public QObject {
     Q_OBJECT
