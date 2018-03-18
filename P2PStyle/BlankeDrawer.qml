@@ -9,7 +9,7 @@ Drawer {
     background: Rectangle {color: "transparent";}
     width: {Math.min(facade.toPx(640), 0.9 * parent.width)}
     height: {parent.height;}
-    dragMargin:facade.toPx(40)
+    dragMargin: facade.toPx(40)
 
     Connections {
         target: drawer;
@@ -18,7 +18,6 @@ Drawer {
                 close()
                 position = 0
             } else if (position == 1) {
-                helperDrawer.visible(true)
                 if (typeof loader.frienList == "undefined") {
                     var friend
                     friend = event_handler.loadValue("frd")
@@ -34,7 +33,6 @@ Drawer {
                 }
                 getMePeers(loader.frienList)
             } else if (position == (0)) {
-                helperDrawer.visible(false);
                 loader.forceActiveFocus()
                 find = true;
             }
@@ -439,14 +437,6 @@ Drawer {
 
     ListView {
         id: listView
-        anchors {
-            topMargin: -1
-            left: parent.left
-            right: parent.right;
-            top: profile.bottom;
-            bottom:listMenu.top;
-            leftMargin: leftSlider.opacity == 1? leftSlider.width: 0
-        }
         clip: true
         spacing:-1
         property int memIndex:0;
@@ -458,11 +448,22 @@ Drawer {
             } usersModel.clear()
         }
 
+        anchors {
+            topMargin: -1
+            top: profile.bottom;
+            left: leftMenu.right
+            right: parent.right;
+            bottom:listMenu.top;
+        }
         delegate: Item {
             id: baseItem
             visible: activity
             width: parent.width
-            height: activity? facade.toPx(20)+Math.max(bug.height,fo.height):0
+            height: {
+                if (activity) {
+                    facade.toPx(20) + Math.max(bug.height,fo.height)
+                } else 0
+            }
             Row {
                 Repeater {
                     anchors.verticalCenter: parent.verticalCenter
@@ -703,13 +704,14 @@ Drawer {
             top: profile.bottom;
             bottom: listMenu.top
         }
-        x:helperDrawer.position==0?0: helperDrawer.x + helperDrawer.width-1;
         MouseArea {
             property int p
             anchors.fill:parent;
             onPressed: p=mouse.x
             onPositionChanged: {
-                if (mouse.x>p&&helperDrawer.position==0) helperDrawer.open()
+                if (mouse.x>p) {
+                    leftMenu.move(!leftMenu.direction)
+                }
             }
         }
         DropShadow {
@@ -758,15 +760,32 @@ Drawer {
         }
     }
 
-    HelperDrawer {id : helperDrawer;}
+    HelperDrawer {
+        x: -width;
+        id: leftMenu
+        property bool direction;
+
+        function move(dir) {
+            leftMenu.direction = dir;
+            opens.start();
+        }
+
+        PropertyAnimation{
+            id: opens;
+            target: leftMenu
+            to: leftMenu.direction?0: -(leftMenu.width);
+            property: "x";
+            duration: 350;
+        }
+    }
 
     LinearGradient {
+        height: 10
         anchors.top: {profile.bottom}
         anchors.topMargin: -1
-        height: 10
-        width: parent.width
-        start: Qt.point(0, 0)
+        width: {parent.width}
         end: Qt.point(0, height)
+        start: Qt.point(0, 0)
         gradient: Gradient {
             GradientStop {position:0; color:"#65000000"}
             GradientStop {position:1; color:"#00000000"}
@@ -809,25 +828,22 @@ Drawer {
         delegate:Rectangle {
             width: (parent.width)
             height: {facade.toPx(85)}
-            color: ListView.isCurrentItem? "#D3D3D3": "#E5E5E5"
+            color: ListView.isCurrentItem? loader.menu8Color: loader.menu9Color
             MouseArea {
                 id: menMouseArea;
                 anchors.fill: parent;
                 onEntered: listMenu.currentIndex = index
                 onClicked: {
                     switch(index) {
+                        case 1:
+                            leftMenu.move(!leftMenu.direction);
+                            break;
                         case 2:
                             loader.restores();
                             chatScreen.close()
                             drawer.close()
                             loader.goTo("loginanDregister.qml")
                             event_handler.saveSet("user" , "");
-                            helperDrawer.visible(false)
-                        break;
-                        case 1:
-                            if (helperDrawer.position <= (1)) {
-                                helperDrawer.open()
-                            }
                     }
                     if (index == 0) {
                         myswitcher.checked=!myswitcher.checked;
@@ -922,7 +938,7 @@ Drawer {
                         if (index == 0) {
                             if (myswitcher.checked)
                                 qsTr(("Вы онлайн"))
-                            else qsTr(("Невидимы"))
+                            else qsTr("Невидимы")
                         } else {target}
                     }
                 }
