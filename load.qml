@@ -255,8 +255,8 @@ ApplicationWindow {
         property string head2Color: "#FFFFFF";
         property string head3Color: "#677889";
 
-        property string sets1Color: "#4B4E55";
-        property string sets2Color: "#BCCBD3";
+        property string sets1Color: "#64717F";
+        property string sets2Color: "#F7F7F7";
         property string sets3Color: "#6C839A";
         property string sets4Color: "#708EA0";
 
