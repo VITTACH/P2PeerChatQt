@@ -646,10 +646,9 @@ Drawer {
                 Column {
                     id: fo
                     Text {
-                        font.bold: true
-                        font.pixelSize: facade.doPx(29);
+                        font.pixelSize: facade.doPx(30);
                         font.family: trebu4etMsNorm.name
-                        color:index==0?"white":"#819EC0"
+                        color:index==0?"white":loader.menu10Color
                         width:fo.width-facade.toPx(100)-bug.width
                         text: login + " "+ famil
                         elide: {Text.ElideRight}
@@ -691,14 +690,6 @@ Drawer {
                     anchors.leftMargin: facade.toPx(40);
                     anchors.left: bug.right
                     width: parent.width
-                }
-                DropShadow {
-                    anchors.fill:fo;
-                    color: "#000000"
-                    opacity: {(index == 0)? 0.44: 0.18;}
-                    radius: 10;
-                    samples:10;
-                    source: fo;
                 }
             }
         }
@@ -758,7 +749,7 @@ Drawer {
     Rectangle {
         width: 6;
         anchors {
-            top:leftRect.top
+            top: leftRect.top
             left: parent.right;
             bottom:parent.bottom;
             leftMargin: -width*1.0;
