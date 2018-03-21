@@ -244,7 +244,7 @@ ApplicationWindow {
         property string menu8Color: "#D3D3D3";
         property string menu9Color: "#E5E5E5";
 
-        property string menu10Color:"#545454";
+        property string menu10Color:"#636363";
         property string menu11Color:"#597FB2";
         property string menu12Color:"#4F7E9E";
         property string menu13Color:"#B1B1B1";
@@ -256,7 +256,7 @@ ApplicationWindow {
         property string head3Color: "#677889";
 
         property string sets1Color: "#64717F";
-        property string sets2Color: "#F7F7F7";
+        property string sets2Color: "#B1C0C7";
         property string sets3Color: "#6C839A";
         property string sets4Color: "#708EA0";
 

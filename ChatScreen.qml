@@ -108,70 +108,6 @@ Drawer {
         }
     }
 
-    function hideKeyboard(event) {
-        pressedArea.visible= true;
-        if (event !== 0)
-            event.accepted = true;
-        textField.focus = false
-        Qt.inputMethod.hide()
-        loader.forceActiveFocus();
-        input = false
-    }
-
-    function parseToJSON(message, phone, ip) {
-        return JSON.stringify({message:message,phone:phone})
-    }
-
-    function loadChatsHistory() {
-        select = [];
-        chatModel.clear()
-        var firstLaunch = true;
-        var i = blankeDrawer.cindex
-        for (var j = 0; j<loader.chats.length; j++) {
-            if (loader.chats[j].message.length > 0) {
-                firstLaunch = false
-                break;
-            }
-        }
-
-        if (firstLaunch) {
-            var historics = event_handler.loadValue("chats")
-            if (historics !== "") {
-                loader.chats = JSON.parse(historics);
-            }
-        }
-
-        if (typeof loader.chats[i] == "undefined") {return;}
-
-        for(j = 0; j <loader.chats[i].message.length; j++) {
-            buferText.text = loader.chats[i].message[j].text
-            var objct = loader.chats[i].message[j];
-            appendMessage(objct.text,-objct.flag,objct.time)
-        }
-
-        chatScrenList.positionViewAtEnd()
-    }
-
-    function setInfo(messag, photos, status) {
-        partnersHead.stat = status
-        partnersHead.phot = photos
-        partnersHead.text = messag
-    }
-
-    function checkMessage(flag) {
-        if (textField.text.length >= 1) {
-            var text= buferText.text = textField.text;
-            var obj = {text:text, flag:flag,time:new Date()}
-            var nd = blankeDrawer.cindex;
-            loader.chats[nd].message.push(obj)
-            var c=JSON.stringify(loader.chats)
-            event_handler.saveSet("chats", c);
-            appendMessage(text,flag,obj.time);
-            chatScrenList.positionViewAtEnd();
-            textField.text=""
-        }
-    }
-
     function relative(str) {
        var s = (+ new Date() - Date.parse(str))/1e3, m= s/60, h = m/60, d = h/24,
        w = d/7, y = d/365.242, M= y*12;
@@ -650,42 +586,108 @@ Drawer {
                 id: sendButton
                 anchors.right: {parent.right}
                 background: Image {
+                    source:"ui/buttons/sendButton.png"
                     width: facade.toPx(sourceSize.width);
-                    height:facade.toPx(sourceSize.height)
-                    source: {"ui/buttons/sendButton.png"}
+                    height: facade.toPx(sourceSize.height);
                     anchors {
                         bottom: parent.bottom
                         bottomMargin: {
-                            if (textField.lineCount <= 1)
+                            if (textField.lineCount <= 1) {
                                 (parent.height-height)/2;
-                            else facade.toPx(22)
+                            } else facade.toPx(22);
                         }
                     }
                 }
                 onClicked:{
-                    if (event_handler.currentOSys() >= 1)
+                    if (event_handler.currentOSys() >= 1) {
                         hideKeyboard(0)
+                    }
                     checkMessage(2)
                 }
-                width: background.width + facade.toPx(20)
+                width: {background.width + facade.toPx(20)}
                 height:{parent.height;}
             }
         }
     }
 
-    P2PStyle.HeaderSplash {id: partnersHead;}
+    function loadChatsHistory() {
+        select = [];
+        chatModel.clear()
+        var firstLaunch = true;
+        var i = blankeDrawer.cindex
+        for (var j = 0; j<loader.chats.length; j++) {
+            if (loader.chats[j].message.length > 0) {
+                firstLaunch = false
+                break;
+            }
+        }
 
-    P2PStyle.ChatMenuList {id: chatMenuList;}
+        if (firstLaunch) {
+            var historics = event_handler.loadValue("chats")
+            if (historics !== "") {
+                loader.chats = JSON.parse(historics);
+            }
+        }
+
+        if (typeof loader.chats[i] == "undefined") {return;}
+
+        for(j = 0; j <loader.chats[i].message.length; j++) {
+            buferText.text = loader.chats[i].message[j].text
+            var objct = loader.chats[i].message[j];
+            appendMessage(objct.text,-objct.flag,objct.time)
+        }
+
+        chatScrenList.positionViewAtEnd()
+    }
+
+    function parseToJSON(message, phone, ip) {
+        return JSON.stringify({message:message,phone:phone})
+    }
+
+    function checkMessage(flag) {
+        if (textField.text.length >= 1) {
+            var text= buferText.text = textField.text;
+            var obj = {text:text, flag:flag,time:new Date()}
+            var nd = blankeDrawer.cindex;
+            textField.text=""
+            loader.chats[nd].message.push(obj)
+            var c=JSON.stringify(loader.chats)
+            event_handler.saveSet("chats", c);
+            appendMessage(text,flag,obj.time);
+            chatScrenList.positionViewAtEnd();
+        }
+    }
+
+    P2PStyle.HeaderSplash {id : partnersHead;}
+
+    P2PStyle.ChatMenuList {id : chatMenuList;}
 
     MouseArea {
         anchors.fill: parent
         propagateComposedEvents: true;
         acceptedButtons:Qt.RightButton
         onPressed: {
-            if(pressedButtons&Qt.RightButton)
+            if (pressedButtons&Qt.RightButton)
                 yPosition = mouseY
-            if(pressedButtons&Qt.RightButton)
+            if (pressedButtons&Qt.RightButton)
                 mouse.accepted = false
         }
+    }
+
+    function setInfo(messag, photos, status) {
+        partnersHead.stat = status
+        partnersHead.phot = photos
+        partnersHead.text = messag
+    }
+
+    function hideKeyboard(event) {
+        pressedArea.visible = true
+        if (event !== 0) event.accepted = true
+        if (true) {
+            textField.focus=false;
+            Qt.inputMethod.hide();
+        }
+        loader.forceActiveFocus();
+        input=false
     }
 }

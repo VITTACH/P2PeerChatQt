@@ -9,7 +9,7 @@ Item {
     height: (parent.height)
     width: {
         var variable1= facade.toPx(170)
-        Math.min(variable1, 0.6*parent.width)
+        Math.min(variable1, 0.6 *parent.width);
     }
 
     Rectangle {
@@ -17,42 +17,26 @@ Item {
         width: parent.width
         color: loader.sets2Color;
         y: blankeDrawer.getProfHeight()
-        height:blankeDrawer.getHelperHeight()
+        height: blankeDrawer.getHelperHeight();
 
         ListView {
-            id: list
+            id: listview
             anchors {
                 fill: parent
                 topMargin: facade.toPx(20)
-                bottomMargin: facade.toPx(20)
+                bottomMargin:facade.toPx(20)
             }
             delegate: Rectangle {
-                clip: true
                 height: width
-                x: list.spacing
-                width:parent.width-2*x
-
-                MouseArea {
-                    function reset() {
-                        curX = -1
-                        curY = -1
-                        circleAnimation.stop();
-                    }
-                    onExited: reset()
-                    onClicked: reset();
-                    anchors.fill: parent
-                    onEntered: {
-                        curX=index; curY=mypos;
-                        coloresRect.x = mouseX;
-                        coloresRect.y = mouseY;
-                        circleAnimation.start()
-                    }
-                }
+                x: listview.spacing
+                border.color:"#FFFFFF"
+                width: parent.width-2*x
+                border.width: facade.toPx(6)
 
                 color: {
                     if (mypos%2 == 0)
                         loader.sets3Color
-                    else loader.sets4Color;
+                    else {loader.sets4Color}
                     if (index == curX) {
                         if (mypos == curY) {
                             if (!circleAnimation.running)
@@ -61,24 +45,46 @@ Item {
                     }
                 }
 
-                Rectangle {
-                    width: 0
-                    height: 0
-                    id: coloresRect
-                    color: loader.sets1Color;
+                Item {
+                    clip: true
+                    anchors.fill: parent
+                    anchors.margins: parent.border.width;
+                    Rectangle {
+                        width: 0
+                        height: 0
+                        id: coloresRect
+                        color: loader.sets1Color;
 
-                    transform: Translate {
-                        x:-coloresRect.width /2
-                        y:-coloresRect.height/2
+                        transform: Translate {
+                            x: -(coloresRect.width /2.0);
+                            y: -(coloresRect.height/2.0);
+                        }
+                    }
+                }
+
+                MouseArea {
+                    function resets() {
+                        curX = -1; curY = -1;
+                        circleAnimation.stop();
+                    }
+                    onExited: resets()
+                    onClicked: resets()
+                    anchors.fill: parent
+                    onEntered: {
+                        curX = index;
+                        curY = mypos;
+                        coloresRect.x = mouseX;
+                        coloresRect.y = mouseY;
+                        circleAnimation.start()
                     }
                 }
 
                 Image {
                     scale: 0.7
-                    source: "qrc:/ui/icons/" + images;
+                    source: {"qrc:/ui/icons/" + (images)}
                     width: facade.toPx(sourceSize.width);
                     height:facade.toPx(sourceSize.height)
-                    anchors.centerIn: parent;
+                    anchors.centerIn: (parent);
                 }
 
                 PropertyAnimation {
@@ -88,10 +94,9 @@ Item {
                     properties: {"width, height, radius"}
                     from: 0
                     to: parent.width*3;
-
                     onStopped: {
-                        coloresRect.width  =0
-                        coloresRect.height =0
+                        coloresRect.width  = 0;
+                        coloresRect.height = 0;
                     }
                 }
             }

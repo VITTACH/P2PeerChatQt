@@ -76,10 +76,11 @@ Drawer {
                     }
                     for (var i = 0; i < obj.length; i+=1) {
                         index = findPeer(obj[i].name)
+                        var imgUrl = "http://picsum.photos/200/20"+i+"?random"
                         if (usersModel.count<1|| index<0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
                             usersModel.append({
-                                image: "http://lorempixel.com/200/20" + i,
+                                image: imgUrl,
                                 famil: obj[i].family,
                                 login: obj[i].login,
                                 phone: obj[i].name,
@@ -90,7 +91,7 @@ Drawer {
                             if(obj[i].name==loader.tel)listView.currentIndex=i
                         } else {
                             if (usersModel.get(index).image == "") {
-                                usersModel.setProperty(index, "image", "http://lorempixel.com/200/20" + i + "/sports")
+                                usersModel.setProperty(index, "image", imgUrl)
                             }
                             usersModel.setProperty(index,"famil",obj[i].famil)
                             usersModel.setProperty(index,"login",obj[i].login)
@@ -593,8 +594,8 @@ Drawer {
                     onChooseChanged: {
                         if (listView.memIndex== index) {
                             if (defaultDialog.choose == false) {
-                                var phn=0;
-                                if (typeof usersModel.get(index) !== 'undefined')
+                                var phn=0
+                                if(typeof usersModel.get(index)!=='undefined')
                                 phn = usersModel.get(index).phone
                                 var obj =JSON.parse(loader.frienList)
                                 for (var i = 0; i < obj.length;i++) {
@@ -622,40 +623,38 @@ Drawer {
                 }
                 Rectangle {
                     id: bug
-                    clip: true
-                    smooth: true
-                    x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/facade.toPx(5);
+                    x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/5;
                     width: facade.toPx(120)
                     height:facade.toPx(120)
-                    anchors {
-                        top: parent.top
-                        topMargin: facade.toPx(10);
-                    }
-                    Image {
-                        source: image
-                        anchors.centerIn: {parent;}
-                        height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
-                        width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                    anchors.top: parent.top
+                    anchors.topMargin: {facade.toPx(10)}
+                    border.color: "#FFFFFF"
+                    border.width: 5
+                    Item {
+                        clip: true
+                        anchors.fill:parent
+                        anchors.margins:bug.border.width
+                        Image {
+                            source: {image}
+                            anchors.centerIn: {(parent)}
+                            height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
+                            width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                        }
                     }
                 }
 
                 Column {
                     id: fo
                     Text {
-                        font.pixelSize: facade.doPx(30);
+                        font.bold: true
+                        font.pixelSize: facade.doPx(29);
                         font.family: trebu4etMsNorm.name
+                        color:index==0?"white":"#819EC0"
                         width:fo.width-facade.toPx(100)-bug.width
-                        color: {
-                            if (index == 0) "white"
-                            else loader.menu10Color
-                        }
-                        text: (login + " " + famil)
-                        elide: Text.ElideRight
+                        text: login + " "+ famil
+                        elide: {Text.ElideRight}
                     }
                     Text {
-                        id: preview
-                        maximumLineCount: 3
-                        wrapMode: Text.WordWrap;
                         function previewText() {
                             var indx = 0, m = "", fl
                             if (typeof loader.chats[index] !== ('undefined'))
@@ -680,6 +679,9 @@ Drawer {
                                 }
                             }
                         }
+                        id: preview
+                        maximumLineCount: 3
+                        wrapMode: Text.WordWrap;
                         text: previewText()
                         color:index==0?"white":loader.menu11Color
                         width:fo.width-facade.toPx(100)-bug.width
@@ -687,8 +689,16 @@ Drawer {
                         font.pixelSize: facade.doPx(18);
                     }
                     anchors.leftMargin: facade.toPx(40);
-                    anchors.left: (bug.right);
+                    anchors.left: bug.right
                     width: parent.width
+                }
+                DropShadow {
+                    anchors.fill:fo;
+                    color: "#000000"
+                    opacity: {(index == 0)? 0.44: 0.18;}
+                    radius: 10;
+                    samples:10;
+                    source: fo;
                 }
             }
         }
@@ -710,7 +720,7 @@ Drawer {
             onPressed: p=mouse.x
             onPositionChanged: {
                 if (mouse.x>p) {
-                    leftMenu.move(!leftMenu.direction)
+                    leftMenu.move(!(leftMenu.direction))
                 }
             }
         }
@@ -775,7 +785,7 @@ Drawer {
             target: leftMenu
             to: leftMenu.direction?0: -(leftMenu.width);
             property: "x";
-            duration: 350;
+            duration: 250;
         }
     }
 
