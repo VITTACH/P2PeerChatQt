@@ -624,13 +624,13 @@ Drawer {
                 }
                 Rectangle {
                     id: bug
+                    border.color: "#FFFFFF"
+                    border.width: facade.toPx(3)
                     x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/5;
                     width: facade.toPx(120)
                     height:facade.toPx(120)
                     anchors.top: parent.top
                     anchors.topMargin: {facade.toPx(10)}
-                    border.color: index == 0 ? "#FFFFFF" : loader.menu3Color;
-                    border.width: facade.toPx(3)
                     Item {
                         clip: true
                         anchors.fill:parent
@@ -646,13 +646,26 @@ Drawer {
 
                 Column {
                     id: fo
-                    Text {
-                        font.pixelSize: facade.doPx(30);
-                        font.family: trebu4etMsNorm.name
-                        color:index==0?"white":loader.menu10Color
-                        width:fo.width-facade.toPx(100)-bug.width
-                        text: login + " "+ famil
-                        elide: {Text.ElideRight}
+                    Item {
+                        DropShadow {
+                            radius: 8
+                            samples: 17;
+                            source: nick
+                            verticalOffset: 2
+                            color: "#70000000";
+                            anchors.fill: nick;
+                        }
+                        Text {
+                            id: nick
+                            font.pixelSize: facade.doPx(30);
+                            font.family: trebu4etMsNorm.name
+                            color: index == 0 ? "white" : loader.menu10Color;
+                            width: {fo.width - facade.toPx(100) - bug.width;}
+                            text: login + " "+ famil
+                            elide: {Text.ElideRight}
+                        }
+                        width: parent.width
+                        height: nick.height
                     }
                     Text {
                         function previewText() {
@@ -686,7 +699,7 @@ Drawer {
                         color:index==0?"white":loader.menu11Color
                         width:fo.width-facade.toPx(100)-bug.width
                         font.family:trebu4etMsNorm.name;
-                        font.pixelSize: facade.doPx(18);
+                        font.pixelSize: facade.doPx(24);
                     }
                     anchors.leftMargin: facade.toPx(40);
                     anchors.left: bug.right

@@ -22,15 +22,15 @@ Item {
         ListView {
             id: listview
             anchors {
-                fill: parent
+                fill: parent;
                 topMargin: {facade.toPx(20)}
                 bottomMargin: {facade.toPx(20)}
             }
             delegate: Rectangle {
                 height: width
-                x: listview.spacing
-                border.color:"#FFFFFF"
-                width: parent.width-2*x
+                x: listview.spacing*2
+                border.color: "#FFFFFF";
+                width: parent.width -3 * x
                 border.width: facade.toPx(6)
 
                 color: {
@@ -100,7 +100,7 @@ Item {
                     onExited: resets()
                 }
             }
-            spacing: anchors.topMargin
+            spacing: anchors.topMargin/2
             model:ListModel {
                 ListElement {
                     mypos: 0; images: "profile.png"
