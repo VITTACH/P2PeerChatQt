@@ -152,8 +152,9 @@ Drawer {
 
     Rectangle {
         anchors.fill: (parent)
-        color: (loader.menu9Color)
+        color: loader.menu16Color;
         anchors.topMargin: profile.height;
+        opacity: 1.0;
     }
 
     Rectangle {
@@ -628,8 +629,8 @@ Drawer {
                     height:facade.toPx(120)
                     anchors.top: parent.top
                     anchors.topMargin: {facade.toPx(10)}
-                    border.color: "#FFFFFF"
-                    border.width: 5
+                    border.color: index == 0 ? "#FFFFFF" : loader.menu3Color;
+                    border.width: facade.toPx(3)
                     Item {
                         clip: true
                         anchors.fill:parent
@@ -738,14 +739,6 @@ Drawer {
         }
     }
 
-    DropShadow {
-        radius: 14
-        samples: 20
-        source: (listMenu);
-        color: "#90000000";
-        anchors.fill: listMenu;
-    }
-
     Rectangle {
         width: 6;
         anchors {
@@ -778,6 +771,14 @@ Drawer {
             property: "x";
             duration: 250;
         }
+    }
+
+    DropShadow {
+        radius: 14
+        samples: 20
+        source: (listMenu)
+        color: "#90000000"
+        anchors.fill: {listMenu}
     }
 
     LinearGradient {

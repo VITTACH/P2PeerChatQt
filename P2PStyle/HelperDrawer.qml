@@ -23,8 +23,8 @@ Item {
             id: listview
             anchors {
                 fill: parent
-                topMargin: facade.toPx(20)
-                bottomMargin:facade.toPx(20)
+                topMargin: {facade.toPx(20)}
+                bottomMargin: {facade.toPx(20)}
             }
             delegate: Rectangle {
                 height: width
@@ -62,23 +62,6 @@ Item {
                     }
                 }
 
-                MouseArea {
-                    function resets() {
-                        curX = -1; curY = -1;
-                        circleAnimation.stop();
-                    }
-                    onExited: resets()
-                    onClicked: resets()
-                    anchors.fill: parent
-                    onEntered: {
-                        curX = index;
-                        curY = mypos;
-                        coloresRect.x = mouseX;
-                        coloresRect.y = mouseY;
-                        circleAnimation.start()
-                    }
-                }
-
                 Image {
                     scale: 0.7
                     source: {"qrc:/ui/icons/" + (images)}
@@ -98,6 +81,23 @@ Item {
                         coloresRect.width  = 0;
                         coloresRect.height = 0;
                     }
+                }
+
+                MouseArea {
+                    function resets() {
+                        curX = -1; curY = -1;
+                        circleAnimation.stop();
+                    }
+                    onEntered: {
+                        curX = index;
+                        curY = mypos;
+                        coloresRect.x = mouseX;
+                        coloresRect.y = mouseY;
+                        circleAnimation.start()
+                    }
+                    anchors.fill: parent
+                    onClicked: resets()
+                    onExited: resets()
                 }
             }
             spacing: anchors.topMargin
