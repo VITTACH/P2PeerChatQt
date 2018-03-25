@@ -14,9 +14,8 @@ Drawer {
     Connections {
         target: event_handler;
         onReciving: {
-            var i
-            if(response!="") {
-                var obj = JSON.parse(response)
+            if (response != "") {
+                var i, obj = JSON.parse(response);
                 for (i=0; i<loader.chats.length;i++) {
                     if (obj.phone == loader.chats[i - 0].phone) {
                         break;
@@ -40,16 +39,15 @@ Drawer {
             if(!loader.context&&yPosition>0) {chatMenuList.menu=1;select=[]}
         }
     }
-
-    property real yPosition
-    property variant select
-    property variant input;
+    property real yPosition;
+    property variant select;
+    property variant input
 
     Connections {
-        target: chatMenuList;
+        target: chatMenuList
         onActionChanged: {
             if (chatMenuList.action == (8)) {
-                select=[];
+                select = [];
                 chatModel.clear()
                 chatMenuList.action=0;
                 var currentInd = blankeDrawer.cindex
@@ -57,7 +55,7 @@ Drawer {
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
             }
             if (chatMenuList.action == (3)) {
-                var text = chatModel.get(select[select.length-  1]).someText
+                var text = chatModel.get(select[select.length - 1]).someText
                 event_handler.copyText(text);
             } else if (chatMenuList.action == (1)) {
                 console.log(chatMenuList.action)
@@ -72,7 +70,7 @@ Drawer {
                 chatModel.setProperty(i,"mySpacing",(chatModel.get(i-1).textColor=="#000000"&&chatModel.get(i).textColor=="#960f133d")||(chatModel.get(i).textColor=="#000000"&&chatModel.get(i-1).textColor=="#960f133d")? facade.toPx(30): facade.toPx(0));
                 chatMenuList.menu = 1;
                 chatMenuList.action=0;
-                select=[];
+                select = [];
             }
             loader.context = false
         }
@@ -132,6 +130,34 @@ Drawer {
         Component.onCompleted: {
             setColors([[48,99,137],[219,208,169],[84,116,153],[171,189,147]],200)
         }
+    }
+
+    function loadChatsHistory() {
+        select = [];
+        chatModel.clear()
+        var firstLaunch = true;
+        var i = blankeDrawer.cindex
+        for (var j = 0; j <loader.chats.length; j++) {
+            if (loader.chats[j].message.length >= 1) {
+                firstLaunch = false
+                break;
+            }
+        }
+
+        if (firstLaunch == true) {
+            var hist =event_handler.loadValue("chats")
+            if (hist !== "") loader.chats = JSON.parse(hist)
+        }
+
+        if (typeof loader.chats[i] == "undefined") {return;}
+
+        for (j = 0; j<loader.chats[i].message.length; j++) {
+            buferText.text = loader.chats[i].message[j].text
+            var obj=loader.chats[i].message[j]
+            appendMessage(obj.text,-obj.flag,obj.time)
+        }
+
+        chatScrenList.positionViewAtEnd()
     }
 
     TextArea {
@@ -290,35 +316,40 @@ Drawer {
                                 samples: 15
                                 color: "#DD000000"
                                 source: staMessage
-                                anchors.fill: staMessage
-                                visible: staMessage.visible
+                                anchors.fill:staMessage
+                                visible: {
+                                    staMessage.visible;
+                                }
                             }
                             Item {
                                 id: staMessage
                                 width: facade.toPx(36);
-                                height: facade.toPx(36);
+                                height: facade.toPx(36)
                                 visible: {
                                     var vis = index == chatModel.count - 1;
                                     if (!vis)
                                     vis|=!chatModel.get(index+1).mySpacing;
+                                    if (chatModel.count > (0))
                                     vis|=chatModel.get(index).mySpacing==0;
                                     return vis
                                 }
                                 x: {
-                                    if (Math.abs(falg- 2) == 0)
-                                        (textarea.width + (parent.spacing))
-                                    else -parent.x
+                                    if (Math.abs(falg-2) == 0)
+                                        textarea.width + parent.spacing
+                                    else -parent.x;
                                 }
                                 Rectangle {
                                     height: width
                                     radius: width/2
+                                    anchors.horizontalCenter: {
+                                        parent.horizontalCenter
+                                    }
                                     width: {
-                                        if (index < chatModel.count - 1) {
+                                        if (index <= chatModel.count - 2) {
                                             (parent.width - facade.toPx(9))
                                         } else {staMessage.width}
                                     }
                                     color: {Qt.hsva(lineColor, 0.45, 0.86)}
-                                    anchors.horizontalCenter:parent.horizontalCenter
                                     Rectangle {
                                         height: width
                                         radius: width/2
@@ -369,10 +400,10 @@ Drawer {
                         }
                     }else if(mouse.button==Qt.RightButton) {
                         var posx = mouse.x
-                        if (width- mouse.x<chatMenuList.w)
-                            posx = width - chatMenuList.w;
+                        if (width- mouse.x < chatMenuList.w)
+                            posx = (width) - chatMenuList.w;
                         chatMenuList.xPosition = posx
-                        chatMenuList.yPosition = yPosition
+                        chatMenuList.yPosition = (yPosition)
                         coloresRect.x = mouseX
                         coloresRect.y = mouseY
                         circleAnimation.restart();
@@ -381,16 +412,16 @@ Drawer {
                         select.push(index)
                         return
                     }
-                    if(select.length==0) chatMenuList.menu=1
+                    if (select.length==0)chatMenuList.menu=1
                 }
             }
-            height: basedColumn.height
-            width: parent.width;
+            height:{ basedColumn.height;}
+            width: {parent.width;}
         }
         MouseArea {
             anchors.fill: {parent}
             propagateComposedEvents: true
-            // visible: event_handler.currentOSys() > 0;
+            visible: event_handler.currentOSys() > 0;
             onClicked: {
                 hideKeyboard(mouse);mouse.accepted = !(true)
             }
@@ -484,10 +515,10 @@ Drawer {
                             attachment.visible = false
                             if (index == 0){
                                 imagePicker.item.takePhoto()
+                            } else if (event_handler.currentOSys() == 0) {
+                                fileDialog.open();
                             } else {
-                                if (event_handler.currentOSys()==0) {
-                                    fileDialog.open();
-                                } else {imagePicker.item.pickImage()}
+                                imagePicker.item.pickImage()
                             }
                         }
                     }
@@ -548,7 +579,7 @@ Drawer {
                             id: pressedArea
                             width: parent.width-sendButton.width;
                             height: parent.height
-                            // visible:event_handler.currentOSys()>0
+                            visible:event_handler.currentOSys()>0
                             onClicked: {
                                 visible = !(input=true)
                                 chatScrenList.positionViewAtEnd()
@@ -610,40 +641,6 @@ Drawer {
         }
     }
 
-    function loadChatsHistory() {
-        select = [];
-        chatModel.clear()
-        var firstLaunch = true;
-        var i = blankeDrawer.cindex
-        for (var j = 0; j<loader.chats.length; j++) {
-            if (loader.chats[j].message.length > 0) {
-                firstLaunch = false
-                break;
-            }
-        }
-
-        if (firstLaunch) {
-            var historics = event_handler.loadValue("chats")
-            if (historics !== "") {
-                loader.chats = JSON.parse(historics);
-            }
-        }
-
-        if (typeof loader.chats[i] == "undefined") {return;}
-
-        for(j = 0; j <loader.chats[i].message.length; j++) {
-            buferText.text = loader.chats[i].message[j].text
-            var objct = loader.chats[i].message[j];
-            appendMessage(objct.text,-objct.flag,objct.time)
-        }
-
-        chatScrenList.positionViewAtEnd()
-    }
-
-    function parseToJSON(message, phone, ip) {
-        return JSON.stringify({message:message,phone:phone})
-    }
-
     function checkMessage(flag) {
         if (textField.text.length >= 1) {
             var text= buferText.text = textField.text;
@@ -656,6 +653,10 @@ Drawer {
             appendMessage(text,flag,obj.time);
             chatScrenList.positionViewAtEnd();
         }
+    }
+
+    function parseToJSON(message, phone, ip) {
+        return JSON.stringify({message:message,phone:phone})
     }
 
     P2PStyle.HeaderSplash {id : partnersHead;}
@@ -683,11 +684,9 @@ Drawer {
     function hideKeyboard(event) {
         pressedArea.visible = true
         if (event !== 0) event.accepted = true
-        if (true) {
-            textField.focus=false;
-            Qt.inputMethod.hide();
-        }
         loader.forceActiveFocus();
-        input=false
+        textField.focus = false;
+        Qt.inputMethod.hide();
+        input = false
     }
 }

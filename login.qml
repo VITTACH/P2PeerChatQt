@@ -7,25 +7,25 @@ import "P2PStyle" as P2PStyle;
 Item {
     property variant pageWidth
 
-    Component.onCompleted: partnerHeader.text="Вход"
+    Component.onCompleted: partnerHeader.text = qsTr("FriendFind")
 
     Item {
-        P2PStyle.ColorAnimate {
+        width: 2*parent.width;
+        height: parent.height;
+        P2PStyle.ColorAnimate{
             anchors.fill: (parent)
-            Component.onCompleted: setColors([[180, 180, 180], [107,107,107]], 500)
+            Component.onCompleted: setColors([[108,131,155], [121,153,173]], 500)
         }
 
-        width: 2*parent.width
-        height: {parent.height}
         Image {
+            opacity: 0.55
             anchors.bottom: parent.bottom
             source: {("qrc:/ui/backind/back1.png");}
             height: {facade.doPx(sourceSize.height)}
             x: (parent.width-width)/2;
             width: {
-                var wh=facade.toPx(sourceSize.width)
-                if (parent.width > wh) parent.width;
-                else wh
+                if (parent.width > facade.toPx(sourceSize.width)) {parent.width;}
+                else facade.toPx(sourceSize.width)
             }
         }
     }
@@ -34,23 +34,6 @@ Item {
         id: listView
         width: parent.width
         spacing: facade.toPx(50);
-        model:ListModel {
-            ListElement {image: ""; placeholder: "develop VITTACH"}
-            ListElement {
-                image: "ui/icons/phoneIconWhite.png"; plaseHolder: "Ваш номер ID"
-            }
-            ListElement {
-                image: "ui/icons/PassWIconWhite.png"; plaseHolder: "Введите пароль"
-            }
-            ListElement {image: ""; plaseHolder: "Начать Общение";}
-            ListElement {image: ""; plaseHolder: "Вход по QR-Коду"}
-            ListElement {image: ""; plaseHolder: "Нету аккаунта?";}
-        }
-
-        displayMarginBeginning: {
-            var rs=parent.height-partnerHeader.height-contentHeight
-            partnerHeader.height + spacing + (rs/2 > 0 ? rs/2 : 0);
-        }
 
         anchors {
             top: parent.top
@@ -58,9 +41,32 @@ Item {
             topMargin: displayMarginBeginning;
         }
 
+        displayMarginBeginning: {
+            var rs=parent.height-partnerHeader.height-contentHeight
+            partnerHeader.height + spacing + (rs/2 > 0 ? rs/2 : 0);
+        }
+
+        model:ListModel {
+            ListElement {image: ""; placeholder: ""}
+            ListElement {
+                image: "ui/icons/phoneIconWhite.png"; plaseHolder: qsTr("Телефон")
+            }
+            ListElement {
+                image: "ui/icons/PassWIconWhite.png"; plaseHolder: qsTr("Введите пароль");
+            }
+            ListElement {
+                image: qsTr(""); plaseHolder:qsTr("Начать Общение")
+            }
+            ListElement {
+                image: qsTr("");plaseHolder:qsTr("Вход по QR-Коду")
+            }
+            ListElement {
+                image: qsTr(""); plaseHolder:qsTr("Нету аккаунта?")
+            }
+        }
         delegate: Column {
             width: parent.width
-            height: index==3?facade.toPx(110): (index==0?pageWidth:facade.toPx(90))
+            height: if (index == 0) pageWidth; else facade.toPx(90)
 
             DropShadow {
                 radius: 12
@@ -76,7 +82,7 @@ Item {
                 height: pageWidth
                 width: model.count * (pageWidth + spacing)-spacing;
                 orientation:Qt.Horizontal
-                spacing: facade.toPx(30);
+                spacing: facade.toPx(20);
                 anchors.horizontalCenter: {parent.horizontalCenter}
 
                 model:ListModel {
@@ -125,7 +131,7 @@ Item {
 
             Item {
                 height: facade.toPx(100)
-                visible: (index == 3 || index == 4)
+                visible: (index == 3 || index == 4);
                 width: Math.min(0.82*parent.width,facade.toPx(900))
                 anchors.horizontalCenter: {parent.horizontalCenter}
 
@@ -143,8 +149,8 @@ Item {
                         if (typeof plaseHolder == "undefined") {""}
                         else plaseHolder
                     }
-                    font.pixelSize: facade.doPx(29)
-                    font.family:trebu4etMsNorm.name
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(29);
                     onClicked: {
                         switch(index) {
                         case 3:
@@ -186,16 +192,16 @@ Item {
                             }
                         }
                         horizontalAlignment: {(Text.AlignHCenter);}
-                        verticalAlignment: {(Text.AlignVCenter);}
-                        text: parent.text
-                        font: parent.font
+                        verticalAlignment: Text.AlignVCenter;
+                        text: parent.text;
+                        font: parent.font;
                     }
                 }
             }
 
             Item {
                 height:facade.toPx(88)
-                visible: (index === 1) || (index === 2);
+                visible: index === 1 || index === 2;
                 width: Math.min(0.82*parent.width,facade.toPx(900))
                 anchors.horizontalCenter: (parent.horizontalCenter)
                 Image {
@@ -214,9 +220,9 @@ Item {
                     onFocusChanged: if (text.length === 0 && index === (1)){text = "8"}
                     echoMode: if (index == 2) TextInput.Password; else TextInput.Normal
                     inputMethodHints: index == 1? Qt.ImhFormattedNumbersOnly:Qt.ImhNone
-                    background: Rectangle {opacity: (0)}
-                    font.family: {(trebu4etMsNorm.name)}
-                    font.pixelSize: {(facade.doPx(38));}
+                    background: Rectangle{opacity:0}
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(38);
                     x: facade.toPx(80)
                 }
             }
@@ -227,25 +233,21 @@ Item {
                     contentItem: Text {
                         verticalAlignment:Text.AlignVCenter
                         color:parent.down==true? "#D3D3D3": "white"
-                        text: {parent.text;}
-                        font: {parent.font;}
+                        text: {(parent.text);}
+                        font: {(parent.font);}
                     }
-
-                    text: {
-                        var msg =plaseHolder
-                        return typeof msg == "undefined"? (""): msg
-                    }
+                    text: typeof plaseHolder == "undefined"? (""): plaseHolder
                     background: Rectangle{opacity:0}
                     onClicked: partnerHeader.page=1;
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(26);
                     anchors.bottom: {parent.bottom;}
-                    anchors.right: {parent.right;}
+                    anchors.right:parent.right
                 }
 
                 width: Math.min(0.82*parent.width,facade.toPx(900))
                 anchors.horizontalCenter: {parent.horizontalCenter}
-                height: {facade.toPx(100)}
+                height: facade.toPx(100);
             }
 
             Rectangle {

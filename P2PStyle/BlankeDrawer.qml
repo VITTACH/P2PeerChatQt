@@ -20,7 +20,7 @@ Drawer {
             } else if (position == 1) {
                 if (typeof loader.frienList == "undefined") {
                     var friend
-                    friend = event_handler.loadValue("frd")
+                    friend =event_handler.loadValue("frnd")
                     if (friend != "") {
                         var myfriend = (JSON.parse(friend))
                         var triend = []
@@ -103,7 +103,7 @@ Drawer {
                     for (i = 0; i <usersModel.count; i++) {
                         frnds.push({famil: usersModel.get(i).famil, login: usersModel.get(i).login, phone: usersModel.get(i).phone, port: usersModel.get(i).port, ip: usersModel.get(i).ip})
                     }
-                    event_handler.saveSet("frd",JSON.stringify(frnds))
+                    event_handler.saveSet("frnd",JSON.stringify(frnds))
                 }
             }
         }
@@ -505,8 +505,8 @@ Drawer {
                 height: parent.height
                 color: {
                     if (index === 0) {
-                        loader.menu14Color
-                    } else "#FFEDEDED"
+                        loader.menu14Color;
+                    } else loader.feedColor
                 }
 
                 Rectangle {
@@ -603,7 +603,7 @@ Drawer {
                                     var friend=obj[i].replace('"','')
                                     if (friend == phn) {
                                         obj.splice(i, 1)
-                                        event_handler.saveSet("frd", loader.frienList = JSON.stringify(obj))
+                                        event_handler.saveSet("frnd",loader.frienList = JSON.stringify(obj))
                                         loader.addFriend(friend, false)
                                         listView.memIndex = -1;
                                         break;
@@ -616,10 +616,10 @@ Drawer {
                 }
 
                 DropShadow {
-                    radius: 10
+                    radius: 8
                     samples: 10
                     source: bug
-                    color:"#90000000"
+                    color:"#80000000"
                     anchors.fill:bug;
                 }
                 Rectangle {
@@ -646,29 +646,26 @@ Drawer {
 
                 Column {
                     id: fo
-                    spacing: facade.toPx(10)
-                    Item {
-                        Text {
-                            id: nick
-                            font.family: "tahoma"
-                            font.pixelSize: facade.doPx(30);
-                            color: index==0?"white":"black";
-                            width: {fo.width - facade.toPx(100) - bug.width;}
-                            text: login + " "+ famil
-                            elide: {Text.ElideRight}
-                        }
-                        width: parent.width
-                        height: nick.height
+                    spacing:facade.toPx(10)
+                    anchors.verticalCenter: parent.verticalCenter
+                    Text {
+                        font.weight: Font.DemiBold
+                        font.family: "tahoma"
+                        font.pixelSize: facade.doPx(26);
+                        color: index==0?"white":"black";
+                        width:fo.width-facade.toPx(100)-bug.width
+                        text: login + " "+ famil
+                        elide: {Text.ElideRight}
                     }
                     Text {
                         id: preview
                         maximumLineCount: 3
                         wrapMode: Text.WordWrap;
                         text: previewText()
-                        color: index==0?"white":"black";
+                        color:index==0?"white":loader.menu11Color
                         width:fo.width-facade.toPx(100)-bug.width
                         font.family: "tahoma";
-                        font.pixelSize: facade.doPx(24);
+                        font.pixelSize: facade.doPx(26);
                         Connections {
                             target: drawer;
                             onPositionChanged: {
@@ -851,6 +848,7 @@ Drawer {
                             drawer.close()
                             loader.goTo("loginanDregister.qml")
                             event_handler.saveSet("user" , "");
+                            event_handler.saveSet("frnd" , "");
                     }
                     if (index == 0) {
                         myswitcher.checked=!myswitcher.checked;

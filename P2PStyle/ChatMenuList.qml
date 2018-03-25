@@ -10,6 +10,8 @@ Button {
 
     onClicked: loader.context=false
 
+    background: Rectangle {color: "#40000000";}
+
     property int w: listText.width;
     property int action
     property int menu: 1;
@@ -19,8 +21,6 @@ Button {
     ]
     property int xPosition;
     property int yPosition;
-
-    background: Rectangle {color: "#40000000";}
 
     DropShadow {
         samples: 16
@@ -34,10 +34,9 @@ Button {
         x: (xPosition)
         y: (yPosition)
         radius: 8
-
-        height:funcs.implicitHeight + facade.toPx(20)
-        width: {Math.max(funcs.width, facade.toPx(400))}
+        height:funcs.implicitHeight;
         color: loader.feedColor
+        width: Math.max(funcs.width, facade.toPx((400)))
         Column {
             id: funcs
             Repeater {
