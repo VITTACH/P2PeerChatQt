@@ -76,7 +76,7 @@ Drawer {
                     }
                     for (var i = 0; i < obj.length; i+=1) {
                         index = findPeer(obj[i].name)
-                        var imgUrl = "http://picsum.photos/200/20"+i+"?random"
+                        var imgUrl ="http://lorempixel.com/400/20"+i+"/sports"
                         if (usersModel.count<1|| index<0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
                             usersModel.append({
@@ -439,9 +439,7 @@ Drawer {
 
     ListView {
         id: listView
-        clip: true
-        spacing:-1
-        property int memIndex:0;
+        property int memIndex: 0
         model:ListModel {id: usersModel}
         Component.onCompleted: {
             if (loader.chats.length<1) {
@@ -449,6 +447,8 @@ Drawer {
                 if (history != "") loader.chats =JSON.parse(history)
             } usersModel.clear()
         }
+        clip: true
+        spacing: 5
 
         anchors {
             topMargin: -1
@@ -646,20 +646,13 @@ Drawer {
 
                 Column {
                     id: fo
+                    spacing: facade.toPx(10)
                     Item {
-                        DropShadow {
-                            radius: 8
-                            samples: 17;
-                            source: nick
-                            verticalOffset: 2
-                            color: "#70000000";
-                            anchors.fill: nick;
-                        }
                         Text {
                             id: nick
+                            font.family: "tahoma"
                             font.pixelSize: facade.doPx(30);
-                            font.family: trebu4etMsNorm.name
-                            color: index == 0 ? "white" : loader.menu10Color;
+                            color: index==0?"white":"black";
                             width: {fo.width - facade.toPx(100) - bug.width;}
                             text: login + " "+ famil
                             elide: {Text.ElideRight}
@@ -668,6 +661,23 @@ Drawer {
                         height: nick.height
                     }
                     Text {
+                        id: preview
+                        maximumLineCount: 3
+                        wrapMode: Text.WordWrap;
+                        text: previewText()
+                        color: index==0?"white":"black";
+                        width:fo.width-facade.toPx(100)-bug.width
+                        font.family: "tahoma";
+                        font.pixelSize: facade.doPx(24);
+                        Connections {
+                            target: drawer;
+                            onPositionChanged: {
+                                if (position == 1) {
+                                    var a = preview.previewText()
+                                    preview.text = a
+                                }
+                            }
+                        }
                         function previewText() {
                             var indx = 0, m = "", fl
                             if (typeof loader.chats[index] !== ('undefined'))
@@ -683,23 +693,6 @@ Drawer {
                             }
                             return m;
                         }
-                        Connections {
-                            target: drawer;
-                            onPositionChanged: {
-                                if (position == 1) {
-                                    var a = preview.previewText()
-                                    preview.text = a
-                                }
-                            }
-                        }
-                        id: preview
-                        maximumLineCount: 3
-                        wrapMode: Text.WordWrap;
-                        text: previewText()
-                        color:index==0?"white":loader.menu11Color
-                        width:fo.width-facade.toPx(100)-bug.width
-                        font.family:trebu4etMsNorm.name;
-                        font.pixelSize: facade.doPx(24);
                     }
                     anchors.leftMargin: facade.toPx(40);
                     anchors.left: bug.right
@@ -712,7 +705,7 @@ Drawer {
     Rectangle {
         id: leftSlider
         opacity: 0
-        width: facade.toPx(40)
+        width: facade.toPx(60)
         color: loader.menu4Color
         anchors {
             topMargin: -1;
@@ -757,9 +750,9 @@ Drawer {
         anchors {
             top: leftRect.top
             left: parent.right;
-            bottom:parent.bottom;
+            bottom: parent.bottom
+            topMargin: canva.width;
             leftMargin: -width*1.0;
-            topMargin: (canva.width);
         }
         color: {
             if(loader.isOnline==true) loader.menu4Color;
@@ -786,14 +779,6 @@ Drawer {
         }
     }
 
-    DropShadow {
-        radius: 14
-        samples: 20
-        source: (listMenu)
-        color: "#90000000"
-        anchors.fill: {listMenu}
-    }
-
     LinearGradient {
         height: 10
         anchors.top: {profile.bottom}
@@ -807,6 +792,13 @@ Drawer {
         }
     }
 
+    DropShadow {
+        radius: 14
+        samples: 20
+        source: (listMenu)
+        color: "#90000000"
+        anchors.fill: {listMenu}
+    }
     ListView {
         id: listMenu
         width: parent.width - 6
