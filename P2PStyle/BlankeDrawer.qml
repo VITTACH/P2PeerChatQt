@@ -651,7 +651,7 @@ Drawer {
                     Text {
                         font.weight: Font.DemiBold
                         font.family: "tahoma"
-                        font.pixelSize: facade.doPx(26);
+                        font.pixelSize: facade.doPx(25);
                         color: index==0?"white":"black";
                         width:fo.width-facade.toPx(100)-bug.width
                         text: login + " "+ famil
@@ -665,7 +665,7 @@ Drawer {
                         color:index==0?"white":loader.menu11Color
                         width:fo.width-facade.toPx(100)-bug.width
                         font.family: "tahoma";
-                        font.pixelSize: facade.doPx(26);
+                        font.pixelSize: facade.doPx(25);
                         Connections {
                             target: drawer;
                             onPositionChanged: {
@@ -696,6 +696,53 @@ Drawer {
                     width: parent.width
                 }
             }
+        }
+    }
+
+    Rectangle {
+        anchors {
+            top: leftRect.top
+            left: parent.right;
+            bottom: parent.bottom
+            topMargin: canva.width;
+            leftMargin: -width * 1.0;
+        }
+        width: 6
+        color: {
+            if(loader.isOnline==true) loader.menu4Color;
+            else {loader.menu2Color;}
+        }
+    }
+
+    HelperDrawer {
+        x: -width;
+        id: leftMenu
+        property bool direction;
+
+        function move(dir) {
+            leftMenu.direction = dir;
+            opens.start();
+        }
+
+        PropertyAnimation{
+            id: opens;
+            target: leftMenu
+            to: leftMenu.direction?0: -(leftMenu.width);
+            property: "x";
+            duration: 250;
+        }
+    }
+
+    LinearGradient {
+        height: 10
+        anchors.top: {profile.bottom}
+        anchors.topMargin: -1
+        width: {parent.width}
+        end: Qt.point(0, height)
+        start: Qt.point(0, 0)
+        gradient: Gradient {
+            GradientStop {position:0; color:"#65000000"}
+            GradientStop {position:1; color:"#00000000"}
         }
     }
 
@@ -742,53 +789,6 @@ Drawer {
         }
     }
 
-    Rectangle {
-        width: 6;
-        anchors {
-            top: leftRect.top
-            left: parent.right;
-            bottom: parent.bottom
-            topMargin: canva.width;
-            leftMargin: -width*1.0;
-        }
-        color: {
-            if(loader.isOnline==true) loader.menu4Color;
-            else {loader.menu2Color;}
-        }
-    }
-
-    HelperDrawer {
-        x: -width;
-        id: leftMenu
-        property bool direction;
-
-        function move(dir) {
-            leftMenu.direction = dir;
-            opens.start();
-        }
-
-        PropertyAnimation{
-            id: opens;
-            target: leftMenu
-            to: leftMenu.direction?0: -(leftMenu.width);
-            property: "x";
-            duration: 250;
-        }
-    }
-
-    LinearGradient {
-        height: 10
-        anchors.top: {profile.bottom}
-        anchors.topMargin: -1
-        width: {parent.width}
-        end: Qt.point(0, height)
-        start: Qt.point(0, 0)
-        gradient: Gradient {
-            GradientStop {position:0; color:"#65000000"}
-            GradientStop {position:1; color:"#00000000"}
-        }
-    }
-
     DropShadow {
         radius: 14
         samples: 20
@@ -798,7 +798,6 @@ Drawer {
     }
     ListView {
         id: listMenu
-        width: parent.width - 6
         property bool isShowed: false
         snapMode:ListView.SnapOneItem
         anchors.bottom: parent.bottom
@@ -819,11 +818,12 @@ Drawer {
             }
         }
 
+        width: parent.width - 6;
         height: {
             var length= parent.height
             length-= facade.toPx(540) + getProfHeight();
             var count= Math.ceil(length/facade.toPx(85))
-            if (count >navigateDownModel.count)
+            if (count> navigateDownModel.count)
                count = navigateDownModel.count;
             if (count < 1) count = 1;
             (count) * facade.toPx(85)

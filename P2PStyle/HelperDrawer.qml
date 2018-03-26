@@ -23,8 +23,8 @@ Item {
             id: listview
             anchors {
                 fill: parent;
-                topMargin: facade.toPx(9)
-                bottomMargin: {facade.toPx(20)}
+                topMargin: facade.toPx(15)
+                bottomMargin:facade.toPx(20)
             }
             delegate: Rectangle {
                 height: width
