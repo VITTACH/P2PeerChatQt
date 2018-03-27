@@ -9,15 +9,15 @@ Item {
     height: (parent.height)
     width: {
         var variable1= facade.toPx(170)
-        Math.min(variable1, 0.6 *parent.width);
+        Math.min(variable1, 0.6 * parent.width);
     }
 
     Rectangle {
         clip: true
         width: parent.width
         color: loader.sets2Color;
-        y: blankeDrawer.getProfHeight()
-        height: blankeDrawer.getHelperHeight();
+        y: blankeDrawer.getProfHeight();
+        height: {blankeDrawer.getHelperHeight()}
 
         ListView {
             id: listview

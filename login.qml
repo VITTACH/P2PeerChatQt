@@ -7,7 +7,7 @@ import "P2PStyle" as P2PStyle;
 Item {
     property variant pageWidth
 
-    Component.onCompleted: partnerHeader.text = qsTr("FriendFind")
+    Component.onCompleted: partnerHeader.text = qsTr("FriendUp")
 
     Item {
         width: 2*parent.width;

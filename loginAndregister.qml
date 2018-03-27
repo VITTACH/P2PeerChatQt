@@ -10,10 +10,11 @@ SwipeView {
         id: loginScreen
         Component.onCompleted: source="login.qml"
     }
+
     Loader {
         id: reginScreen
         Component.onCompleted: {
-            source = "registration.qml"
+            source="registration.qml"
         }
     }
 
@@ -21,7 +22,7 @@ SwipeView {
         partnerHeader.page = currentIndex
         switch(currentIndex) {
             case 0:
-                partnerHeader.text= qsTr("Вход");
+                partnerHeader.text= ("FriendUp");
                 loginScreen.focus = false
                 reginScreen.focus = true;
                 break;
