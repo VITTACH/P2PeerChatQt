@@ -300,18 +300,10 @@ Rectangle {
                                 }
                             }
 
-                            DropShadow {
-                                radius: 15
-                                samples: 15
-                                source: bug
-                                color:"#90000000"
-                                anchors.fill:bug;
-                            }
                             Rectangle {
                                 id: bug
                                 clip: true
                                 smooth: true
-                                visible: false
                                 x:facade.toPx(30)
                                 width: facade.toPx(100)
                                 height:facade.toPx(100)
@@ -399,10 +391,10 @@ Rectangle {
 
             Rectangle {
                 id: rssRect;
-                visible: index == 1
-                color: ("transparent")
+                visible: index==1
+                color: "transparent"
                 width: {parent.width;}
-                height: if (visible) {4*facade.toPx(200)}
+                height: if (visible == true) 4*facade.toPx(200);
                 DropShadow {
                     radius: 12
                     samples:18
@@ -411,107 +403,65 @@ Rectangle {
                     anchors.fill: {rssView;}
                 }
                 ListView {
-                    clip:true
                     id: rssView
-                    width: parent.width;
-                    height:parent.height
+                    clip: true
+                    width: parent.width
+                    height: parent.height;
                     spacing: facade.toPx(20)
-                    boundsBehavior: {
-                        if (contentY <= 0) {
-                            Flickable.StopAtBounds;
-                        } else Flickable.DragAndOvershootBounds;
+                    PropertyAnimation {
+                        id: circleAnimation2
+                        target: coloresRect2
+                        properties: "width,height,radius";
+                        from: 0
+                        duration: 500
+                        to: parent.width * 2
+                        onStopped: {
+                            coloresRect2.width =(0);
+                            coloresRect2.height=(0);
+                        }
                     }
+
+                    model: ListModel {id: rssmodel;}
+                    snapMode: {ListView.SnapToItem;}
                     onContentYChanged: {
-                        var p = newsCardHgt+spacing
-                        curInd=Math.floor((contentY-1)/p)
+                        var p = newsCardHgt+spacing;
+                        curInd = Math.floor((contentY - 1) / p);
                         if (contentY>oldContentY && curInd>=0) {
                             rssmodel.get(curInd).enable = false;
                         } else if (curInd >= -1) {
                             rssmodel.get(curInd+1).enable = true
                         }
-                        oldContentY=contentY
+                        oldContentY = contentY;
                     }
-                    model: ListModel {id: rssmodel}
-                    snapMode: {ListView.SnapToItem}
-                    delegate: Rectangle {
-                        clip: true;
-                        visible: enable
-                        radius: height/2;
+                    boundsBehavior: {
+                        if (contentY < 1) Flickable.StopAtBounds
+                        else Flickable.DragAndOvershootBounds;
+                    }
+
+                    delegate:Rectangle {
+                        visible: enable;
                         width: parent.width;
-                        Rectangle {
-                            color: parent.color
-                            radius: parent.height/3
-                            anchors {
-                                fill: parent
-                                leftMargin: parent.radius
-                            }
+                        radius: facade.toPx(10)
+                        Item {
+                            clip: true
+                            anchors.fill: parent
+                            anchors.margins: parent.radius;
                             Rectangle {
-                                clip:true
-                                color:"transparent"
-                                anchors {
-                                    fill: {parent;}
-                                    rightMargin: parent.radius
+                                id:coloresRect2
+                                color:loader.feedColor
+                                transform: Translate {
+                                    x: -coloresRect2.width /2.0;
+                                    y: -coloresRect2.height/2.0;
                                 }
-                                Rectangle {
-                                    width: 0
-                                    height: 0
-                                    id:coloresRect2
-                                    color:"#EDEDED"
-
-                                    transform:Translate {
-                                        x:-coloresRect2.width /2
-                                        y:-coloresRect2.height/2
-                                    }
-                                }
-                            }
-                            PropertyAnimation {
-                                duration: 500
-                                target:coloresRect2
-                                id:circleAnimation2
-                                properties:"width,height,radius"
-                                from: 0
-                                to: parent.width/2;
-
-                                onStopped: {
-                                    coloresRect2.width =0
-                                    coloresRect2.height=0
-                                }
-                            }
-                        }
-
-                        height: {
-                            newsCardHgt=rssView.height/4-rssView.spacing
-                        }
-
-                        MouseArea {
-                            anchors.fill:parent
-                            onClicked: {
-                                if(chatScreen.position>0)
-                                    return
-                                loader.urlLink = link
-                                if(event_handler.currentOSys() >= (1)) {
-                                    var t = title;
-                                    loader.webview = true
-                                    partnerHeader.text=t;
-                                } else {
-                                    Qt.openUrlExternally(loader.urlLink)
-                                }
-                            }
-                            onEntered: {
-                                coloresRect2.x = (mouseX)
-                                coloresRect2.y = (mouseY)
-                                circleAnimation2.start();
                             }
                         }
 
                         Rectangle {
-                            id: bag
+                            id: bag;
                             clip: true
                             smooth: true
-                            visible:false
-                            width: facade.toPx(160)
-                            height:facade.toPx(160)
-                            x: (parent.height - height)/2
+                            width: {facade.toPx(160);}
+                            height:{facade.toPx(160);}
                             anchors.verticalCenter:parent.verticalCenter
                             Image {
                                 source: {image.replace("https", "http")}
@@ -519,26 +469,39 @@ Rectangle {
                                 height:sourceSize.width > sourceSize.height? parent.height: sourceSize.height*(parent.width / sourceSize.width)
                                 width: sourceSize.width > sourceSize.height? sourceSize.width*(parent.height / sourceSize.height): parent.width
                             }
-                        }
-                        DropShadow {
-                            radius: 15
-                            samples: 15
-                            source: big
-                            color:"#90000000"
-                            anchors.fill:big;
-                        }
-                        OpacityMask {
-                            id: big
-                            source: bag
-                            maskSource: misk;
-                            anchors.fill: bag
+                            x:(parent.height-height)/2
                         }
                         Image {
                             id: misk
                             smooth: true;
                             visible:false
-                            source: {"ui/mask/round.png";}
+                            source: {"ui/mask/round.png"}
                             sourceSize: {Qt.size(bag.width, bag.height)}
+                        }
+
+                        MouseArea {
+                            onClicked: {
+                                if (chatScreen.position>0)return
+                                loader.urlLink = link;
+                                if (event_handler.currentOSys() > (0)) {
+                                    loader.webview = true
+                                    partnerHeader.text = (title)
+                                } else {
+                                    Qt.openUrlExternally(loader.urlLink)
+                                }
+                            }
+                            anchors.fill: {parent;}
+                            onPressed: {
+                                if (true) {
+                                    coloresRect2.x = this.mouseX
+                                    coloresRect2.y = this.mouseY
+                                    circleAnimation2.start()
+                                }
+                            }
+                        }
+
+                        height: {
+                            newsCardHgt=rssView.height/4-rssView.spacing
                         }
 
                         Column {
@@ -593,29 +556,6 @@ Rectangle {
                 }
                 delegate: Image {
                     clip: true
-                    Rectangle {
-                        width: 0
-                        height: 0
-                        opacity: 0.37
-                        id: colorSquare
-                        color: loader.menu9Color
-
-                        transform:Translate{
-                            x:-colorSquare.width /2
-                            y:-colorSquare.height/2
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onExited: squareAnimation.stop()
-                        onPressed: {
-                            colorSquare.x = mouseX;
-                            colorSquare.y = mouseY;
-                            squareAnimation.start()
-                        }
-                    }
-
                     width: facade.toPx(sourceSize.width / 3.5)
                     height: facade.toPx(sourceSize.height / 3.5)
                     source: {"qrc:/ui/buttons/feeds/" + (image)}
@@ -631,6 +571,31 @@ Rectangle {
                         onStopped: {
                             colorSquare.width  = 0;
                             colorSquare.height = 0;
+                        }
+                    }
+
+                    Rectangle {
+                        width: 0
+                        height:0
+                        opacity: (0.37)
+                        id: colorSquare
+                        color: {loader.menu9Color;}
+
+                        transform:Translate{
+                            x:-colorSquare.width /2
+                            y:-colorSquare.height/2
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onExited: {
+                            squareAnimation.stop();
+                        }
+                        onPressed:{
+                            colorSquare.x = mouseX;
+                            colorSquare.y = mouseY;
+                            squareAnimation.start()
                         }
                     }
                 }

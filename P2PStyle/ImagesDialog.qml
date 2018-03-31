@@ -140,7 +140,7 @@ Button {
 
                 contentItem: Text {
                     color:"#34aadc"
-                    text: {qsTr("Загрузить из галереи");}
+                    text: {qsTr("Подгрузить из галереи")}
                     verticalAlignment: Text.AlignVCenter;
                     horizontalAlignment:Text.AlignHCenter
                     font {

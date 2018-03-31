@@ -31,6 +31,7 @@ QString EventHandler::myError() {
 #ifdef Q_OS_ANDROID
      return QAndroidJniObject::callStaticObjectMethod("quickandroid/QuickAndroidActivity", "getStacTrace", "()Ljava/lang/String;").toString();
 #endif
+     return QString();
 }
 
 int EventHandler::currentOSys() {

@@ -245,22 +245,8 @@ Drawer {
             }
             Button {
                 id: avatarButton
-                width: facade.toPx(225);
-                height: facade.toPx(225)
-                background: Rectangle {
-                    radius: width * 0.5;
-                    color: "transparent"
-                    border {
-                      width: 1.4
-                      color: "#50FFFFFF"
-                    }
-                }
-
-                onClicked: {
-                    drawer.close()
-                    chatScreen.close()
-                    loader.avatar = true
-                }
+                width: facade.toPx(230)
+                height: facade.toPx(230)
                 Rectangle {
                     id: bag
                     clip: true
@@ -269,7 +255,7 @@ Drawer {
                     width: parent.width - facade.toPx(45.0);
                     height: parent.height - facade.toPx(45);
                     anchors {
-                        horizontalCenter: parent.horizontalCenter;
+                        horizontalCenter: {parent.horizontalCenter;}
                         verticalCenter:parent.verticalCenter
                     }
                     Image {
@@ -291,22 +277,36 @@ Drawer {
                     radius: 15
                     samples: 15
                     source: big
-                    color:"#90000000"
-                    anchors.fill:big;
+                    color: "#90000000";
+                    anchors.fill: {big}
                 }
                 OpacityMask {
                     id: big
                     source: bag
-                    maskSource: misk;
-                    anchors.fill: bag
+                    maskSource: (misk);
+                    anchors.fill: {bag}
                 }
-
                 Image {
                     id: misk
-                    smooth: true;
-                    visible:false
+                    smooth: (true)
+                    visible: false
                     source: "qrc:/ui/mask/round.png"
                     sourceSize:Qt.size(bag.width,bag.height)
+                }
+
+                onClicked: {
+                    drawer.close()
+                    chatScreen.close();
+                    loader.avatar=true;
+                }
+
+                background: Rectangle {
+                    radius: width * 0.5
+                    color:"transparent"
+                    border {
+                      width: 1.4
+                      color:"#50FFFFFF"
+                    }
                 }
             }
             Column {
