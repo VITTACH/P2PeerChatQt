@@ -23,15 +23,15 @@ Item {
             id: listview
             anchors {
                 fill: parent;
-                topMargin: facade.toPx(15)
+                topMargin:facade.toPx(15)
                 bottomMargin:facade.toPx(20)
             }
             delegate: Rectangle {
                 height: width
                 x: listview.spacing*3
-                border.color: "#FFFFFF";
-                width: parent.width -3 * x
+                width: parent.width -3*x;
                 border.width: facade.toPx(6)
+                border.color: loader.head3Color
 
                 color: {
                     if (mypos%2 == 0)

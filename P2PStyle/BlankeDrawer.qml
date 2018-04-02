@@ -625,10 +625,10 @@ Drawer {
                 Rectangle {
                     id: bug
                     border.color: "#FFFFFF"
-                    border.width: facade.toPx(3)
+                    border.width: facade.toPx(4)
                     x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/5;
-                    width: facade.toPx(120)
-                    height:facade.toPx(120)
+                    width: facade.toPx(130)
+                    height:facade.toPx(130)
                     anchors.top: parent.top
                     anchors.topMargin: {facade.toPx(10)}
                     Item {
@@ -891,7 +891,7 @@ Drawer {
                         implicitWidth: facade.toPx(60)
                         implicitHeight:facade.toPx(30)
                         color: {
-                            if (parent.checked  == true) {
+                            if (parent.checked == true) {
                                 loader.menu12Color
                             } else loader.menu13Color;
                         }

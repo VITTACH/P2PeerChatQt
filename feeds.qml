@@ -480,6 +480,7 @@ Rectangle {
                         }
 
                         MouseArea {
+                            anchors.fill: {parent;}
                             onClicked: {
                                 if (chatScreen.position>0)return
                                 loader.urlLink = link;
@@ -490,13 +491,10 @@ Rectangle {
                                     Qt.openUrlExternally(loader.urlLink)
                                 }
                             }
-                            anchors.fill: {parent;}
                             onPressed: {
-                                if (true) {
-                                    coloresRect2.x = this.mouseX
-                                    coloresRect2.y = this.mouseY
-                                    circleAnimation2.start()
-                                }
+                                coloresRect2.x = (mouseX);
+                                coloresRect2.y = (mouseY);
+                                circleAnimation2.start()
                             }
                         }
 
