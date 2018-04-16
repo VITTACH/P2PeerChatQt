@@ -122,13 +122,14 @@ Drawer {
     Image {
         anchors.fill:parent
         source: ("http://picsum.photos/" + width + "/" + height + "?random&blur")
+        opacity: 0.62
     }
 
     P2PStyle.ColorAnimate {
         opacity: 0.62
         anchors.fill: {parent}
         Component.onCompleted: {
-            setColors([[48,99,137],[219,208,169],[84,116,153],[171,189,147]],200)
+            setColors([[48,99,137], [10,10,10], [84,116,153], [216,208,182]],200)
         }
     }
 
@@ -412,7 +413,7 @@ Drawer {
                         select.push(index)
                         return
                     }
-                    if (select.length==0)chatMenuList.menu=1
+                    if (select.length == 0) chatMenuList.menu = 1
                 }
             }
             height:{ basedColumn.height;}
@@ -423,19 +424,19 @@ Drawer {
             propagateComposedEvents: true
             visible: event_handler.currentOSys() > 0;
             onClicked: {
-                hideKeyboard(mouse);mouse.accepted = !(true)
+                hideKeyboard(mouse);
+                mouse.accepted = !(true);
             }
         }
         anchors {
             top: parent.top
-            bottom: textArea.top
-            topMargin: partnerHeader.height+facade.toPx(10);
+            bottom:area.top
+            topMargin: {partnerHeader.height + 1*facade.toPx(10)}
             bottomMargin: {
-                var curHeight = input? parent.height*0.43:0;
+                var curHeight = input==true? parent.height*0.43:0
                 var tex=Math.max(facade.toPx(110),curHeight)
-                if (textArea.height >0) {
-                    tex = 0
-                } facade.toPx(40) + (tex)
+                if (area.height > 0)tex=0
+                facade.toPx(40) + tex
             }
         }
     }
@@ -451,82 +452,127 @@ Drawer {
         }
     }
 
-    DropShadow {
-        radius: 10
-        samples: 15
-        color: "#90000000";
-        source: {textArea;}
-        anchors.fill: {textArea;}
-    }
     Column {
-        clip: true
-        id: textArea
+        id: area
+        clip: {true}
         width: parent.width
         anchors {
-            bottom: parent.bottom
-            bottomMargin:input?parent.height*0.43:0
+            bottom: parent.bottom;
+            bottomMargin: input? parent.height*0.43:0
         }
-
         Rectangle {
-            id: attachment
-            height: facade.toPx(150);
-            width: attachModel.count*(height + attachList.spacing)
-            visible: false
+            id: attach
+            color: "#90FFFFFF";
+            width: {parent.width;}
+            property bool move: false
             Connections {
-                target:textArea
-                onHeightChanged: chatScrenList.positionViewAtEnd()
+                target: attach;
+                onMoveChanged: {attachMove.restart()}
             }
 
-            ListView {
-                id: attachList;
-                anchors.fill:parent
-                anchors.leftMargin: facade.toPx(20)
+            Row {
+                id: imgRow;
+                x: facade.toPx(20)
                 spacing: facade.toPx(10)
-                orientation: {Qt.Horizontal}
-                model:ListModel {
-                    id: attachModel
-                    ListElement {image: "";}
-                }
-                delegate: Rectangle {
-                    width: height
-                    color: index == 0? "#404040": "#D3D3D3"
-                    height: (parent.height) - facade.toPx(20);
-                    anchors.verticalCenter:parent.verticalCenter
+                height: parent.height-x;
+                anchors.verticalCenter: {(parent.verticalCenter)}
+
+                Image {
+                    id: cam
+                    width: height;
+                    height: parent.height*0.7
+                    source: "qrc:/ui/profiles/default/Human.png";
                     Camera {
                         id: camera
-                        flash.mode:Camera.FlashAuto
-
+                        flash.mode: Camera.FlashAuto
                         exposure {
-                            exposureCompensation:-1
-                            exposureMode:Camera.ExposurePortrait
+                            exposureCompensation: -1
+                            exposureMode: Camera.ExposurePortrait
                         }
                     }
                     VideoOutput {
-                        fillMode: VideoOutput.PreserveAspectCrop
+                        fillMode: VideoOutput.PreserveAspectCrop;
                         focus: visible
-                        source: camera
+                        source: {camera}
                         orientation: -90
                         anchors.fill: parent
-                        visible: index == 0;
                     }
+
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            attachment.visible = false
-                            if (index == 0){
+                            attach.vis=false
+                            if (event_handler.currentOSys()!=0) {
                                 imagePicker.item.takePhoto()
-                            } else if (event_handler.currentOSys() == 0) {
-                                fileDialog.open();
-                            } else {
-                                imagePicker.item.pickImage()
+                            }
+                        }
+                    }
+                }
+
+                ListView {
+                    clip: true
+                    id: imagesList;
+                    height:parent.height
+                    width: area.width-cam.width-parent.x-spacing;
+                    spacing: parent.spacing;
+                    orientation: {Qt.Horizontal}
+                    model: ListModel {id:tachModel}
+                    Component.onCompleted: {
+                        var photos = (Math.random()*10) + 10
+                        for (var i = 0; i < photos; i +=1) {
+                            tachModel.append({image0:"http://picsum.photos/10"+i+"/99?random",image1:"http://picsum.photos/100/10"+i+"?random"})
+                        }
+                    }
+
+                    onContentXChanged: {
+                        var newX = scrollBar.start + (width - scrollBar.width)*contentX/((tachModel.count - width/height*2)*height/2 - spacing);
+                        if (newX>scrollBar.start) scrollBar.x=newX;
+                        else {scrollBar.x = scrollBar.start}
+                    }
+
+                    delegate: Column {
+                        spacing: imagesList.spacing
+                        Repeater {
+                            model: 2
+                            Rectangle {
+                                width: height
+                                height: imagesList.height/2-spacing
+
+                                color: "#D3D3D3"
+                                Image {
+                                    anchors.centerIn: parent
+                                    height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
+                                    width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                                    source: index==0? image0:image1
+                                }
+
+                                clip: true;
+                                MouseArea {
+                                    anchors.fill: parent;
+                                    onClicked: {
+                                        attach.move=false
+                                        if (event_handler.currentOSys()==0) fileDialog.open();
+                                        else imagePicker.item.pickImage();
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
+
+            Rectangle {
+                id: scrollBar
+                property var start: cam.height + imgRow.spacing +imgRow.x;
+                width: imagesList.width * imagesList.width/(tachModel.count * (imagesList.height/2 + imagesList.spacing) - imagesList.spacing);
+                x: start
+                anchors.bottom: {imgRow.bottom}
+                height: facade.toPx(5)
+            }
         }
+
         Item {
-            width: {parent.width}
+            width: parent.width
             height:textField.memHeight
             Item {
                 anchors.fill: {parent}
@@ -552,7 +598,7 @@ Drawer {
                         }
                         wrapMode: TextEdit.Wrap
                         verticalAlignment: {(Text.AlignVCenter);}
-                        background: Rectangle {color:"#CFFEFEFE"}
+                        background: Rectangle {color:"#FFFEFEFE"}
                         Keys.onReturnPressed: {
                             pressCtrl = !false;
                             event.accepted = false
@@ -600,7 +646,7 @@ Drawer {
                     height: facade.toPx(sourceSize.height/11*10);
                     anchors {
                         horizontalCenter: parent.horizontalCenter
-                        bottom: parent.bottom
+                        bottom: {parent.bottom;}
                         bottomMargin: {
                             if (textField.lineCount <= 1)
                                 (parent.height-height)/2;
@@ -608,8 +654,8 @@ Drawer {
                         }
                     }
                 }
-                onClicked: attachment.visible=!attachment.visible
                 width: background.width + facade.toPx(60)
+                onClicked: attach.move = !attach.move;
                 height: parent.height;
             }
 
@@ -639,6 +685,23 @@ Drawer {
                 height:{parent.height;}
             }
         }
+    }
+
+    DropShadow {
+        radius: 10
+        samples: 15
+        source: area
+        color: "#90000000";
+        anchors.fill: area;
+    }
+
+    PropertyAnimation {
+        id: attachMove;
+        target: attach;
+        from: attach.move? 0: facade.toPx(280)
+        to: attach.move? facade.toPx(280): (0)
+        property: "height";
+        duration: 400
     }
 
     function checkMessage(flag) {

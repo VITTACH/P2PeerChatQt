@@ -809,12 +809,10 @@ Drawer {
             id: navigateDownModel
             ListElement {image: ""; target: ""}
             ListElement {
-                image : "qrc:/ui/icons/devIconBlue.png";
-                target: qsTr("Настройки")
+                image:"qrc:/ui/icons/devIconBlue.png";target:qsTr("Настройки");
             }
             ListElement {
-                image : "qrc:/ui/icons/outIconBlue.png";
-                target: qsTr("Выйти")
+                image : "qrc:/ui/icons/outIconBlue.png"; target: qsTr("Выйти");
             }
         }
 
@@ -822,16 +820,15 @@ Drawer {
         height: {
             var length= parent.height
             length-= facade.toPx(540) + getProfHeight();
-            var count= Math.ceil(length/facade.toPx(85))
-            if (count> navigateDownModel.count)
-               count = navigateDownModel.count;
+            var count= Math.ceil(length/facade.toPx(90))
+            if (count> navigateDownModel.count) count = navigateDownModel.count
             if (count < 1) count = 1;
-            (count) * facade.toPx(85)
+            (count) * facade.toPx(90)
         }
 
         delegate:Rectangle {
             width: (parent.width)
-            height: {facade.toPx(85)}
+            height: {facade.toPx(90)}
             color: ListView.isCurrentItem? loader.menu8Color: loader.menu9Color
             MouseArea {
                 id: menMouseArea;
@@ -927,7 +924,7 @@ Drawer {
                         loader.isOnline = (checked)
                     }
                     width: facade.toPx(64)
-                    height:facade.toPx(85)
+                    height:parent.height
                 }
 
                 Text {
@@ -937,7 +934,7 @@ Drawer {
                         verticalCenter: {parent.verticalCenter}
                     }
                     color: loader.menu10Color;
-                    font.pixelSize: facade.doPx(22)
+                    font.pixelSize: facade.doPx(26)
                     font.family:trebu4etMsNorm.name
                     text: {
                         if (index == 0) {
