@@ -408,25 +408,12 @@ Rectangle {
                     width: parent.width
                     height: parent.height;
                     spacing: facade.toPx(20)
-                    PropertyAnimation {
-                        id: circleAnimation2
-                        target: coloresRect2
-                        properties: "width,height,radius";
-                        from: 0
-                        duration: 500
-                        to: parent.width * 2
-                        onStopped: {
-                            coloresRect2.width =(0);
-                            coloresRect2.height=(0);
-                        }
-                    }
-
                     model: ListModel {id: rssmodel;}
                     snapMode: {ListView.SnapToItem;}
                     onContentYChanged: {
                         var p = newsCardHgt+spacing;
                         curInd = Math.floor((contentY - 1) / p);
-                        if (contentY>oldContentY && curInd>=0) {
+                        if (contentY > oldContentY&&curInd>=0) {
                             rssmodel.get(curInd).enable = false;
                         } else if (curInd >= -1) {
                             rssmodel.get(curInd+1).enable = true
@@ -435,17 +422,17 @@ Rectangle {
                     }
                     boundsBehavior: {
                         if (contentY < 1) Flickable.StopAtBounds
-                        else Flickable.DragAndOvershootBounds;
+                        else Flickable.DragAndOvershootBounds
                     }
 
-                    delegate:Rectangle {
-                        visible: enable;
+                    delegate: Rectangle {
+                        visible: (enable);
                         width: parent.width;
                         radius: facade.toPx(10)
                         Item {
                             clip: true
-                            anchors.fill: parent
-                            anchors.margins: parent.radius;
+                            anchors.fill:parent
+                            anchors.margins: parent.radius
                             Rectangle {
                                 id:coloresRect2
                                 color:loader.feedColor
@@ -530,6 +517,19 @@ Rectangle {
                                 wrapMode:Text.Wrap;
                                 font.family: trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(20);
+                            }
+                        }
+
+                        PropertyAnimation {
+                            id: circleAnimation2
+                            target: coloresRect2
+                            properties: {"width,height,radius";}
+                            from: 0
+                            duration: 500
+                            to: parent.width * 2
+                            onStopped: {
+                                coloresRect2.width =0;
+                                coloresRect2.height=0;
                             }
                         }
                     }

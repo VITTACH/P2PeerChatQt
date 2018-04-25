@@ -30,7 +30,7 @@ Item {
                 height: width
                 x: listview.spacing*3
                 width: parent.width -3*x;
-                border.width: facade.toPx(6)
+                border.width: facade.toPx(4)
                 border.color: loader.head3Color
 
                 color: {

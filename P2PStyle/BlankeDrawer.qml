@@ -819,8 +819,8 @@ Drawer {
         width: parent.width - 6;
         height: {
             var length= parent.height
-            length-= facade.toPx(540) + getProfHeight();
-            var count= Math.ceil(length/facade.toPx(90))
+            length -= facade.toPx(540) + getProfHeight();
+            var count = Math.ceil(length/facade.toPx(90))
             if (count> navigateDownModel.count) count = navigateDownModel.count
             if (count < 1) count = 1;
             (count) * facade.toPx(90)
@@ -833,7 +833,7 @@ Drawer {
             MouseArea {
                 id: menMouseArea;
                 anchors.fill: parent;
-                onEntered: listMenu.currentIndex = index
+                onEntered: listMenu.currentIndex = index;
                 onClicked: {
                     switch(index) {
                         case 1:
@@ -849,7 +849,7 @@ Drawer {
                     }
                     if (index == 0) {
                         myswitcher.checked=!myswitcher.checked;
-                    } else if (index > 0 && index <=1) {
+                    } else if (index > 0 && index <= 1) {
                         listMenu.currentIndex=index
                     }
                 }
@@ -885,7 +885,7 @@ Drawer {
                     indicator: Rectangle {
                         radius: facade.toPx(25)
                         y: parent.height/2-height/2
-                        implicitWidth: facade.toPx(60)
+                        implicitWidth: facade.toPx(56)
                         implicitHeight:facade.toPx(30)
                         color: {
                             if (parent.checked == true) {

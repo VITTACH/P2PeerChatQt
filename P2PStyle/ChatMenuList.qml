@@ -7,21 +7,17 @@ Button {
     anchors.fill: parent;
     visible: loader.context
     contentItem: Text {opacity: 0;}
-
     onClicked: loader.context=false
-
-    background: Rectangle {color: "#40000000";}
-
+    background: Rectangle {color: "#226F98BC";}
     property int w: listText.width;
     property int action
     property int menu: 1;
     property var buttons: [
         ["Удалить", "Переслать", "Копировать"],
-        ["Найти", "Профиль", "Отключить push", "Очистить историю"]
+        ["Поиск", "Блокировать", "Отключить push", "Очистить историю"]
     ]
     property int xPosition;
     property int yPosition;
-
     DropShadow {
         samples: 16
         radius: samples
@@ -36,7 +32,7 @@ Button {
         radius: 8
         height:funcs.implicitHeight;
         color: loader.feedColor
-        width: Math.max(funcs.width, facade.toPx((400)))
+        width: {Math.max(funcs.width, facade.toPx(400))}
         Column {
             id: funcs
             Repeater {
@@ -47,33 +43,26 @@ Button {
                 }
                 model: buttons[menu]
                 Rectangle {
-                    id: line
                     width: listText.width
-                    height:inerText.implicitHeight+facade.toPx(60)
-                    color: {loader.feedColor}
-                    radius: {listText.radius}
-
+                    height: inerText.implicitHeight + facade.toPx(60)
+                    color: {loader.feedColor;}
+                    radius: {listText.radius;}
                     Text {
                         id: inerText
                         text: {modelData}
-                        anchors {
-                            left: parent.left
-                            leftMargin: facade.toPx(20);
-                            verticalCenter: parent.verticalCenter;
-                        }
+                        x:facade.toPx(20)
+                        anchors.verticalCenter: parent.verticalCenter
                         font {
                             pixelSize: {facade.doPx(26)}
                             family: trebu4etMsNorm.name;
                         }
                     }
-
                     MouseArea {
-                        anchors.fill: parent;
-                        onExited: line.color=loader.feedColor
-                        onEntered: line.color = ("#20000000")
+                        anchors.fill: {parent}
+                        onExited: parent.color = loader.feedColor;
+                        onEntered: parent.color = "#20000000"
                         onClicked: {
-                            var i, base = (1)
-                            for (i = 0; i < menu; i+= 1)
+                            for (var i = 0, base = 1; i < menu; i+=1)
                                 base += buttons[menu].length;
                             action = base + index
                         }

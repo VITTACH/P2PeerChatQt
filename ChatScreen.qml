@@ -11,6 +11,77 @@ Drawer {
     width: parent.width;
     height: parent.height;
 
+    function hideKeyboard(event) {
+        pressedArea.visible = true
+        if (event !== 0) event.accepted = true
+        loader.forceActiveFocus();
+        textField.focus = false;
+        Qt.inputMethod.hide();
+        input = false
+    }
+
+    function checkMessage(flag) {
+        if (textField.text.length >= 1) {
+            var text= buferText.text = textField.text;
+            var obj = {text:text, flag:flag,time:new Date()}
+            var nd = blankeDrawer.cindex;
+            textField.text=""
+            loader.chats[nd].message.push(obj)
+            var c=JSON.stringify(loader.chats)
+            event_handler.saveSet("chats", c);
+            appendMessage(text,flag,obj.time);
+            chatScrenList.positionViewAtEnd();
+        }
+    }
+
+    function loadChatsHistory() {
+        select = [];
+        chatModel.clear()
+        var firstLaunch = true;
+        var i = blankeDrawer.cindex
+        for (var j = 0; j <loader.chats.length; j++) {
+            if (loader.chats[j].message.length >= 1) {
+                firstLaunch = false
+                break;
+            }
+        }
+
+        if (firstLaunch == true) {
+            var hist =event_handler.loadValue("chats")
+            if (hist !== "") loader.chats = JSON.parse(hist)
+        }
+
+        if (typeof loader.chats[i] == "undefined") {return;}
+
+        for (j = 0; j<loader.chats[i].message.length; j++) {
+            buferText.text = loader.chats[i].message[j].text
+            var obj=loader.chats[i].message[j]
+            appendMessage(obj.text,-obj.flag,obj.time)
+        }
+
+        chatScrenList.positionViewAtEnd()
+    }
+
+    function parseToJSON(message, phone, ip) {
+        return JSON.stringify({message:message,phone:phone})
+    }
+
+    function setInfo(messag, photos, status) {
+        partnersHead.stat = status
+        partnersHead.phot = photos
+        partnersHead.text = messag
+    }
+
+    Connections {
+        target: loader
+        onContextChanged: {
+            if(!loader.context&&yPosition>0) {chatMenuList.menu=1;select=[]}
+        }
+    }
+    property real yPosition;
+    property variant select;
+    property variant input
+
     Connections {
         target: event_handler;
         onReciving: {
@@ -32,16 +103,6 @@ Drawer {
             }
         }
     }
-
-    Connections {
-        target: loader
-        onContextChanged: {
-            if(!loader.context&&yPosition>0) {chatMenuList.menu=1;select=[]}
-        }
-    }
-    property real yPosition;
-    property variant select;
-    property variant input
 
     Connections {
         target: chatMenuList
@@ -76,17 +137,14 @@ Drawer {
         }
     }
 
+    Connections {
+        target:chatScreen;
+        onPositionChanged: if (!loader.isLogin) position = 0
+    }
+
     Connections {target: blankeDrawer; onCindexChanged: loadChatsHistory();}
 
     Component.onCompleted: {loadChatsHistory(); partnersHead.page = (-1.0);}
-
-    Connections {
-        target:chatScreen;
-        onPositionChanged: {
-            if(loader.isLogin==false)
-                position = 0
-        }
-    }
 
     function appendMessage(newTextMessage, flag, times) {
         var sp, cflag;
@@ -131,34 +189,6 @@ Drawer {
         Component.onCompleted: {
             setColors([[48,99,137], [10,10,10], [84,116,153], [216,208,182]],200)
         }
-    }
-
-    function loadChatsHistory() {
-        select = [];
-        chatModel.clear()
-        var firstLaunch = true;
-        var i = blankeDrawer.cindex
-        for (var j = 0; j <loader.chats.length; j++) {
-            if (loader.chats[j].message.length >= 1) {
-                firstLaunch = false
-                break;
-            }
-        }
-
-        if (firstLaunch == true) {
-            var hist =event_handler.loadValue("chats")
-            if (hist !== "") loader.chats = JSON.parse(hist)
-        }
-
-        if (typeof loader.chats[i] == "undefined") {return;}
-
-        for (j = 0; j<loader.chats[i].message.length; j++) {
-            buferText.text = loader.chats[i].message[j].text
-            var obj=loader.chats[i].message[j]
-            appendMessage(obj.text,-obj.flag,obj.time)
-        }
-
-        chatScrenList.positionViewAtEnd()
     }
 
     TextArea {
@@ -252,7 +282,7 @@ Drawer {
                             id: parentText
                             height: textarea.height;
                             property var spacing: facade.toPx(40)
-                            x: Math.abs(falg-2)===1? textarea.width-msCloud.width: 0
+                            x: Math.abs(falg-2)==1? textarea.width-msCloud.width+staMessage.width+spacing:0
 
                             TextArea {
                                 id: textarea
@@ -261,9 +291,7 @@ Drawer {
                                 wrapMode: TextEdit.Wrap
                                 font.family: trebu4etMsNorm.name;
                                 font.pixelSize: {facade.doPx(30)}
-                                width: {
-                                    baseItem.width-2*baseItem.x-staMessage.width-x-parent.spacing;
-                                }
+                                width: baseItem.width-2*baseItem.x-staMessage.width-parent.spacing
 
                                 color: textColor;
                                 readOnly: !false;
@@ -284,19 +312,23 @@ Drawer {
                                     PropertyAnimation {
                                         duration: 500
                                         id: circleAnimation;
-                                        target: coloresRect;
                                         properties:("width,height,radius");
                                         from: 0
-
-                                        onStopped: {coloresRect.width  = 0; coloresRect.height =0}
                                         to: (parent.width*3)
-                                    }
+                                        target: coloresRect;
 
+                                        onStopped: {
+                                            coloresRect.width = 0;
+                                            coloresRect.height= 0;
+                                        }
+                                    }
                                     Item {
                                         clip: true;
-                                        anchors.centerIn: parent
+                                        anchors.centerIn: {parent}
                                         width: parent.width-2*parent.radius
-                                        height: parent.height-2*parent.border.width;
+                                        height: {
+                                        parent.height-2*parent.border.width
+                                        }
                                         Rectangle {
                                             width: 0
                                             height: 0
@@ -416,9 +448,11 @@ Drawer {
                     if (select.length == 0) chatMenuList.menu = 1
                 }
             }
+
             height:{ basedColumn.height;}
             width: {parent.width;}
         }
+
         MouseArea {
             anchors.fill: {parent}
             propagateComposedEvents: true
@@ -428,6 +462,7 @@ Drawer {
                 mouse.accepted = !(true);
             }
         }
+
         anchors {
             top: parent.top
             bottom:area.top
@@ -452,9 +487,25 @@ Drawer {
         }
     }
 
+    DropShadow {
+        radius: 10
+        samples: 15
+        source: area
+        color: "#90000000";
+        anchors.fill: area;
+    }
+
+    PropertyAnimation {
+        id: attachMove;
+        target: attach;
+        from: attach.move==true ? 0: facade.toPx(280)
+        to: attach.move==true ? facade.toPx(280): (0)
+        property: "height";
+        duration: 300
+    }
     Column {
         id: area
-        clip: {true}
+        clip: true;
         width: parent.width
         anchors {
             bottom: parent.bottom;
@@ -481,7 +532,6 @@ Drawer {
                     id: cam
                     width: height;
                     height: parent.height*0.7
-                    source: "qrc:/ui/profiles/default/Human.png";
                     Camera {
                         id: camera
                         flash.mode: Camera.FlashAuto
@@ -501,7 +551,7 @@ Drawer {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            attach.vis=false
+                            attach.move = false
                             if (event_handler.currentOSys()!=0) {
                                 imagePicker.item.takePhoto()
                             }
@@ -614,7 +664,7 @@ Drawer {
                         Keys.onReleased: {
                             if (event.key === Qt.Key_Control || event.key === Qt.Key_Return) {
                                 if (pressCtrl==true && pressEntr)
-                                    checkMessage(2)
+                                    checkMessage(1)
                             } else if (event.key ==Qt.Key_Back) {
                                 hideKeyboard(event)
                             }
@@ -640,34 +690,39 @@ Drawer {
 
             Button {
                 id: attachButton
+                height: parent.height;
+                width: {background.width + facade.toPx(60)}
+                onClicked: {
+                    if(input == true) Qt.inputMethod.show()
+                    attach.move =!attach.move;
+                }
                 background: Image {
                     source: "ui/buttons/addButton.png"
                     width: facade.toPx(sourceSize.width / 11*10);
                     height: facade.toPx(sourceSize.height/11*10);
                     anchors {
                         horizontalCenter: parent.horizontalCenter
-                        bottom: {parent.bottom;}
+                        bottom: parent.bottom;
                         bottomMargin: {
-                            if (textField.lineCount <= 1)
-                                (parent.height-height)/2;
-                            else facade.toPx(22)
+                            if (textField.lineCount <= 1) {
+                                (parent.height - height)/2;
+                            } else facade.toPx(22)
                         }
                     }
                 }
-                width: background.width + facade.toPx(60)
-                onClicked: attach.move = !attach.move;
-                height: parent.height;
             }
 
             Button {
                 id: sendButton
-                anchors.right: {parent.right}
+                height: parent.height;
+                anchors.right: {parent.right;}
+                width: {background.width + facade.toPx(20)}
                 background: Image {
                     source:"ui/buttons/sendButton.png"
                     width: facade.toPx(sourceSize.width);
                     height: facade.toPx(sourceSize.height);
                     anchors {
-                        bottom: parent.bottom
+                        bottom: parent.bottom;
                         bottomMargin: {
                             if (textField.lineCount <= 1) {
                                 (parent.height-height)/2;
@@ -675,51 +730,14 @@ Drawer {
                         }
                     }
                 }
-                onClicked:{
+                onClicked: {
                     if (event_handler.currentOSys() >= 1) {
                         hideKeyboard(0)
                     }
                     checkMessage(2)
                 }
-                width: {background.width + facade.toPx(20)}
-                height:{parent.height;}
             }
         }
-    }
-
-    DropShadow {
-        radius: 10
-        samples: 15
-        source: area
-        color: "#90000000";
-        anchors.fill: area;
-    }
-
-    PropertyAnimation {
-        id: attachMove;
-        target: attach;
-        from: attach.move? 0: facade.toPx(280)
-        to: attach.move? facade.toPx(280): (0)
-        property: "height";
-        duration: 400
-    }
-
-    function checkMessage(flag) {
-        if (textField.text.length >= 1) {
-            var text= buferText.text = textField.text;
-            var obj = {text:text, flag:flag,time:new Date()}
-            var nd = blankeDrawer.cindex;
-            textField.text=""
-            loader.chats[nd].message.push(obj)
-            var c=JSON.stringify(loader.chats)
-            event_handler.saveSet("chats", c);
-            appendMessage(text,flag,obj.time);
-            chatScrenList.positionViewAtEnd();
-        }
-    }
-
-    function parseToJSON(message, phone, ip) {
-        return JSON.stringify({message:message,phone:phone})
     }
 
     P2PStyle.HeaderSplash {id : partnersHead;}
@@ -736,20 +754,5 @@ Drawer {
             if (pressedButtons&Qt.RightButton)
                 mouse.accepted = false
         }
-    }
-
-    function setInfo(messag, photos, status) {
-        partnersHead.stat = status
-        partnersHead.phot = photos
-        partnersHead.text = messag
-    }
-
-    function hideKeyboard(event) {
-        pressedArea.visible = true
-        if (event !== 0) event.accepted = true
-        loader.forceActiveFocus();
-        textField.focus = false;
-        Qt.inputMethod.hide();
-        input = false
     }
 }
