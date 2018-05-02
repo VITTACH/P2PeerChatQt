@@ -62,5 +62,6 @@
         <file>ui/icons/developer.png</file>
         <file>ui/icons/profile.png</file>
         <file>ui/icons/security.png</file>
+        <file>tests/tst_login.qml</file>
     </qresource>
 </RCC>

@@ -7,10 +7,7 @@ Item {
     property double curY:-1
 
     height: (parent.height)
-    width: {
-        var variable1= facade.toPx(170)
-        Math.min(variable1, 0.6 * parent.width);
-    }
+    width: Math.min(facade.toPx(130), 0.6 * parent.width)
 
     Rectangle {
         clip: true
@@ -28,9 +25,9 @@ Item {
             }
             delegate: Rectangle {
                 height: width
-                x: listview.spacing*3
-                width: parent.width -3*x;
-                border.width: facade.toPx(4)
+                x: listview.spacing * 2;
+                width: parent.width - 2 * x;
+                border.width: facade.toPx(3)
                 border.color: loader.head3Color
 
                 color: {

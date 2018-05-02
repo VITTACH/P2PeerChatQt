@@ -372,8 +372,8 @@ Rectangle {
                 id: xmlmodel
                 query: {"/rss/channel/item";}
                 XmlRole {name: "link"; query: "link/string()"}
-                XmlRole {name: "title"; query: "title/string()"}
-                XmlRole {name: "pDate"; query: "pubDate/string()"}
+                XmlRole {name: "title"; query: "title/string()";}
+                XmlRole {name: "pDate"; query:"pubDate/string()"}
                 XmlRole {name: "pDesc"; query: "description/string()"}
                 XmlRole {name: "image"; query: "media:content/@url/string()";}
                 source:"http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
@@ -426,7 +426,7 @@ Rectangle {
                     }
 
                     delegate: Rectangle {
-                        visible: (enable);
+                        visible: enable
                         width: parent.width;
                         radius: facade.toPx(10)
                         Item {
@@ -447,22 +447,22 @@ Rectangle {
                             id: bag;
                             clip: true
                             smooth: true
-                            width: {facade.toPx(160);}
-                            height:{facade.toPx(160);}
+                            width: facade.toPx(160)
+                            height:facade.toPx(160)
                             anchors.verticalCenter:parent.verticalCenter
                             Image {
                                 source: {image.replace("https", "http")}
-                                anchors.centerIn: parent;
+                                anchors.centerIn: {parent}
                                 height:sourceSize.width > sourceSize.height? parent.height: sourceSize.height*(parent.width / sourceSize.width)
                                 width: sourceSize.width > sourceSize.height? sourceSize.width*(parent.height / sourceSize.height): parent.width
                             }
-                            x:(parent.height-height)/2
+                            x: (parent.height - height)/2;
                         }
                         Image {
                             id: misk
                             smooth: true;
                             visible:false
-                            source: {"ui/mask/round.png"}
+                            source: {"ui/mask/round.png";}
                             sourceSize: {Qt.size(bag.width, bag.height)}
                         }
 
@@ -472,7 +472,7 @@ Rectangle {
                                 if (chatScreen.position>0)return
                                 loader.urlLink = link;
                                 if (event_handler.currentOSys() > (0)) {
-                                    loader.webview = true
+                                    loader.webview = true;
                                     partnerHeader.text = (title)
                                 } else {
                                     Qt.openUrlExternally(loader.urlLink)
@@ -507,6 +507,7 @@ Rectangle {
                             Text {
                                 text: pDate
                                 lineHeight: 1.4
+                                width: {parent.width - facade.toPx(30);}
                                 font.family: trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(15);
                             }
@@ -528,8 +529,8 @@ Rectangle {
                             duration: 500
                             to: parent.width * 2
                             onStopped: {
-                                coloresRect2.width =0;
-                                coloresRect2.height=0;
+                                coloresRect2.width = 0;
+                                coloresRect2.height= 0;
                             }
                         }
                     }

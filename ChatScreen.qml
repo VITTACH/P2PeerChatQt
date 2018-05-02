@@ -11,27 +11,40 @@ Drawer {
     width: parent.width;
     height: parent.height;
 
-    function hideKeyboard(event) {
-        pressedArea.visible = true
-        if (event !== 0) event.accepted = true
-        loader.forceActiveFocus();
-        textField.focus = false;
-        Qt.inputMethod.hide();
-        input = false
+    property var input
+    property real yPosition;
+    property var select;
+    property var selectedImage:[];
+
+    function setInfo(messag, photos, status) {
+        partnersHead.stat =status
+        partnersHead.phot =photos
+        partnersHead.text =messag
     }
 
-    function checkMessage(flag) {
+    function checkMessage(flag, selectImage) {
         if (textField.text.length >= 1) {
             var text= buferText.text = textField.text;
-            var obj = {text:text, flag:flag,time:new Date()}
+            var obj = {text:text,flag:flag,time:new Date(),imgs:selectImage}
             var nd = blankeDrawer.cindex;
             textField.text=""
             loader.chats[nd].message.push(obj)
             var c=JSON.stringify(loader.chats)
             event_handler.saveSet("chats", c);
-            appendMessage(text,flag,obj.time);
+            appendMessage(text, flag, obj.time, selectImage)
             chatScrenList.positionViewAtEnd();
+            selectedImage=[];
         }
+    }
+
+    function hideKeyboard(event){
+        pressedArea.visible= true
+        if (event !== 0)
+            event.accepted = true
+        loader.forceActiveFocus()
+        textField.focus=false
+        Qt.inputMethod.hide()
+        input=false
     }
 
     function loadChatsHistory() {
@@ -56,7 +69,9 @@ Drawer {
         for (j = 0; j<loader.chats[i].message.length; j++) {
             buferText.text = loader.chats[i].message[j].text
             var obj=loader.chats[i].message[j]
-            appendMessage(obj.text,-obj.flag,obj.time)
+            var image = obj.imgs;
+            console.log(image)
+            appendMessage(obj.text,-obj.flag,obj.time,image)
         }
 
         chatScrenList.positionViewAtEnd()
@@ -66,21 +81,12 @@ Drawer {
         return JSON.stringify({message:message,phone:phone})
     }
 
-    function setInfo(messag, photos, status) {
-        partnersHead.stat = status
-        partnersHead.phot = photos
-        partnersHead.text = messag
-    }
-
     Connections {
         target: loader
         onContextChanged: {
             if(!loader.context&&yPosition>0) {chatMenuList.menu=1;select=[]}
         }
     }
-    property real yPosition;
-    property variant select;
-    property variant input
 
     Connections {
         target: event_handler;
@@ -88,7 +94,7 @@ Drawer {
             if (response != "") {
                 var i, obj = JSON.parse(response);
                 for (i=0; i<loader.chats.length;i++) {
-                    if (obj.phone == loader.chats[i - 0].phone) {
+                    if (obj.phone === loader.chats[i - 0].phone) {
                         break;
                     }
                 }
@@ -97,7 +103,7 @@ Drawer {
                 loader.chats[i].message.push((object))
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 if(i == blankeDrawer.getCurPeerInd()){
-                    appendMessage(buferText.text, 1, object.time)
+                    appendMessage(buferText.text,1,object.time,"")
                     chatScrenList.positionViewAtEnd();
                 }
             }
@@ -119,7 +125,6 @@ Drawer {
                 var text = chatModel.get(select[select.length - 1]).someText
                 event_handler.copyText(text);
             } else if (chatMenuList.action == (1)) {
-                console.log(chatMenuList.action)
                 select.sort();
                 for(var i=0; i<select.length; i++) {
                     chatModel.remove(select[i] - i);
@@ -146,22 +151,20 @@ Drawer {
 
     Component.onCompleted: {loadChatsHistory(); partnersHead.page = (-1.0);}
 
-    function appendMessage(newTextMessage, flag, times) {
+    function appendMessage(message, flag, times, selected) {
         var sp, cflag;
         flag = Math.abs(cflag = flag)
         chatModel.append({
             falg:flag,
             mySpacing: sp = (chatModel.count > 0 ? ((chatModel.get(chatModel.count - 1).textColor == "#535353" && flag == 2) || (chatModel.get(chatModel.count - 1).textColor == "#545454" && flag == 1)? facade.toPx(30): facade.toPx(0)): facade.toPx(20)),
-            someText: newTextMessage,
+            someText: message,
             lineColor: Math.random(),
             timeStamp: String(times),
             textColor: (flag === 2)?("#545454"):("#535353"),
             backgroundColor:flag==2?"#CAFFFFFF":"#CAEFFFDE",
-            image: ""
+            images: selected
         });
-        if (cflag === 2) {
-            event_handler.sendMsgs(parseToJSON(newTextMessage,loader.tel,0))
-        }
+        if (cflag == 2) event_handler.sendMsgs(parseToJSON(message,loader.tel,0))
     }
 
     function relative(str) {
@@ -203,16 +206,19 @@ Drawer {
     }
 
     ListView {
-        id: chatScrenList
+        id:chatScrenList
         width: parent.width;
         displayMarginEnd: height/2
         displayMarginBeginning: height/2
         model: ListModel {id: chatModel}
 
         delegate:Item {
+            width: {parent.width;}
+            height: basedColumn.implicitHeight
             Rectangle {
                 id: baseRect
                 color: "#00000000"
+                anchors.fill: parent
                 Column {
                     id: basedColumn;
                     width: parent.width;
@@ -232,7 +238,7 @@ Drawer {
                             text:relative(timeStamp)
                             font.family: trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(18);
-                            x: textarea.width - implicitWidth + baseItem.x
+                            x: textarea.width - implicitWidth + baseItem.x;
                             anchors {
                                 bottom:parent.bottom
                                 bottomMargin: facade.toPx(2)
@@ -254,25 +260,10 @@ Drawer {
                         x: parent.width/18
                         width: parent.width;
                         height: {parentText.height;}
-                        Image {
-                            source: {image;}
-                            smooth: {false;}
-                            width: {facade.toPx(sourceSize.width * (1.0))}
-                            height:{facade.toPx(sourceSize.width * (1.0))}
-                            y: parentText.y + parentText.height - (height)
-                            x: {
-                                var xpos = -width/2;
-                                if (Math.abs(falg - 2) != (0)) {
-                                    xpos+= (textarea.width + parentText.x)
-                                }
-                                return xpos;
-                            }
-                        }
-
                         Rectangle {
                             id: routeLine;
                             color: Qt.hsva(lineColor, 0.40, 0.94)
-                            x: (Math.abs(falg-2)==0? staMessage.x:0) -width/2 + staMessage.width/2
+                            x: (Math.abs(falg - 2) == 0? message.x: 0) - width/2 + message.width/2
                             visible: index<chatModel.count-1&&chatModel.get(index+1).mySpacing==0;
                             width: {facade.toPx(4);}
                             height: {parent.height;}
@@ -282,63 +273,148 @@ Drawer {
                             id: parentText
                             height: textarea.height;
                             property var spacing: facade.toPx(40)
-                            x: Math.abs(falg-2)==1? textarea.width-msCloud.width+staMessage.width+spacing:0
+                            x:Math.abs(falg-2)?textarea.width-msCloud.width+message.width+spacing:0
 
-                            TextArea {
+                            Rectangle {
+                                id: msCloud
+                                border.width: 4.0
+                                border.color: "#C6D1D7"
+                                property var lightColor
+                                property var darksColor
+
+                                color: backgroundColor;
+                                width: textarea.contentWidth
+                                height: textarea.height
+                                radius: facade.toPx(8);
+                                Component.onCompleted:{
+                                    lightColor = Qt.rgba(color.r - 0.06, color.g - 0.04,color.b, 1)
+                                    darksColor = Qt.rgba(color.r - 0.13, color.g - 0.10,color.b, 1)
+                                }
+
+                                PropertyAnimation {
+                                    duration: 500
+                                    id: circleAnimation
+                                    properties: ("width,height,radius")
+                                    from: 0
+                                    to: parent.width*3;
+                                    target: coloresRect
+
+                                    onStopped: {
+                                        coloresRect.width = 0;
+                                        coloresRect.height= 0;
+                                    }
+                                }
+                                Item {
+                                    clip: true;
+                                    anchors.centerIn: {parent}
+                                    width: parent.width-2*parent.radius
+                                    height: parent.height-2*parent.border.width
+                                    Rectangle {
+                                        width: 0
+                                        height: 0
+                                        id: coloresRect
+                                        color: parent.parent.lightColor
+
+                                        transform: Translate {
+                                            x: -coloresRect.width /(2);
+                                            y: -coloresRect.height/(2);
+                                        }
+                                    }
+                                }
+                            }
+
+                            Column {
                                 id: textarea
-                                text: someText;
-                                padding:facade.toPx(14)
-                                wrapMode: TextEdit.Wrap
-                                font.family: trebu4etMsNorm.name;
-                                font.pixelSize: {facade.doPx(30)}
-                                width: baseItem.width-2*baseItem.x-staMessage.width-parent.spacing
+                                width: baseItem.width -2*baseItem.x -message.width -parent.spacing;
 
-                                color: textColor;
-                                readOnly: !false;
-                                background: Rectangle {
-                                    id: msCloud
-                                    border.width: 4.0
-                                    border.color:"#C6D1D7"
-                                    color: backgroundColor
-                                    width: textarea.implicitWidth
-                                    radius: {parent.padding}
-                                    property var lightColor;
-                                    property var darksColor;
-                                    Component.onCompleted: {
-                                        lightColor = Qt.rgba(color.r-0.06,color.g-0.04,color.b, 1)
-                                        darksColor = Qt.rgba(color.r-0.13,color.g-0.10,color.b, 1)
-                                    }
+                                property var contentWidth: {
+                                    var content = attachList.contentWidth + 2 * attachList.x;
+                                    content < width?Math.max(msgarea.implicitWidth, content):width;
+                                }
 
-                                    PropertyAnimation {
-                                        duration: 500
-                                        id: circleAnimation;
-                                        properties:("width,height,radius");
-                                        from: 0
-                                        to: (parent.width*3)
-                                        target: coloresRect;
+                                ListView {
+                                    clip: true
+                                    id: attachList
+                                    x: msgarea.padding
+                                    width: parent.width-2*x
+                                    height: if (attached.length > 0) facade.toPx(250);
+                                    spacing: {facade.toPx(5);}
+                                    orientation:Qt.Horizontal;
+                                    property var attached: JSON.parse(chatModel.get(index).images);
+                                    model: attached;
 
-                                        onStopped: {
-                                            coloresRect.width = 0;
-                                            coloresRect.height= 0;
+                                    delegate: Item {
+                                        clip: true
+                                        width: height
+                                        y: attachList.x
+                                        height: parent.height-attachList.x;
+                                        Image {
+                                            source: modelData;
+                                            height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
+                                            width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                                            anchors.centerIn: parent
                                         }
                                     }
-                                    Item {
-                                        clip: true;
-                                        anchors.centerIn: {parent}
-                                        width: parent.width-2*parent.radius
-                                        height: {
-                                        parent.height-2*parent.border.width
-                                        }
-                                        Rectangle {
-                                            width: 0
-                                            height: 0
-                                            id: coloresRect;
-                                            color: parent.parent.lightColor
+                                }
 
-                                            transform: Translate {
-                                                x: -coloresRect.width /(2);
-                                                y: -coloresRect.height/(2);
+                                TextArea {
+                                    id: msgarea
+                                    text: someText;
+                                    width: parent.width
+                                    padding: facade.toPx(14)
+                                    wrapMode: {TextEdit.Wrap;}
+                                    font.pixelSize: facade.doPx(30)
+                                    font.family: {trebu4etMsNorm.name;}
+
+                                    color: textColor;
+                                    readOnly: !false;
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onPressAndHold: {
+                                            coloresRect.x = mouseX;
+                                            coloresRect.y = mouseY;
+                                            msCloud.color= msCloud.darksColor
+                                            baseRect.color= loader.chat3Color
+                                            if (select.indexOf(index) <=-1) {
+                                                select.push(index);
                                             }
+                                            chatMenuList.menu = (0)
+                                            circleAnimation.start()
+                                            yPosition = 0
+                                        }
+                                        acceptedButtons: Qt.LeftButton|Qt.RightButton;
+                                        onClicked: {
+                                            baseRect.color = "#00000000"
+                                            msCloud.color = (backgroundColor)
+                                            if (select.length > 0) {
+                                                yPosition = 0
+                                                var position = select.indexOf(index)
+                                                if (position >= 0) {
+                                                    select.splice(position,1)
+                                                } else {
+                                                    chatMenuList.menu=0;
+                                                    msCloud.color = msCloud.darksColor
+                                                    baseRect.color = loader.chat3Color
+                                                    select.push(index)
+                                                    return
+                                                }
+                                            }else if(mouse.button == Qt.RightButton) {
+                                                var posx = mouse.x
+                                                if (width- mouse.x < chatMenuList.w) {
+                                                    posx = (width) - chatMenuList.w;
+                                                }
+                                                chatMenuList.xPosition = posx
+                                                chatMenuList.yPosition = (yPosition)
+                                                coloresRect.x =mouseX;
+                                                coloresRect.y =mouseY;
+                                                circleAnimation.restart()
+                                                chatMenuList.menu = 0;
+                                                loader.context = true;
+                                                select.push(index);
+                                                return
+                                            }
+                                            if (select.length == 0)chatMenuList.menu=1
                                         }
                                     }
                                 }
@@ -348,29 +424,21 @@ Drawer {
                                 radius: 10
                                 samples: 15
                                 color: "#DD000000"
-                                source: staMessage
-                                anchors.fill:staMessage
-                                visible: {
-                                    staMessage.visible;
-                                }
+                                source: message
+                                anchors.fill: {message}
+                                visible:message.visible
                             }
                             Item {
-                                id: staMessage
+                                id: message
                                 width: facade.toPx(36);
                                 height: facade.toPx(36)
                                 visible: {
                                     var vis = index == chatModel.count - 1;
                                     if (!vis)
                                     vis|=!chatModel.get(index+1).mySpacing;
-                                    if (chatModel.count > (0))
-                                    vis|=chatModel.get(index).mySpacing==0;
                                     return vis
                                 }
-                                x: {
-                                    if (Math.abs(falg-2) == 0)
-                                        textarea.width + parent.spacing
-                                    else -parent.x;
-                                }
+                                x: Math.abs(falg-2) == 0? msgarea.width + parent.spacing: -parent.x
                                 Rectangle {
                                     height: width
                                     radius: width/2
@@ -380,7 +448,7 @@ Drawer {
                                     width: {
                                         if (index <= chatModel.count - 2) {
                                             (parent.width - facade.toPx(9))
-                                        } else {staMessage.width}
+                                        } else {message.width;}
                                     }
                                     color: {Qt.hsva(lineColor, 0.45, 0.86)}
                                     Rectangle {
@@ -397,60 +465,7 @@ Drawer {
                         }
                     }
                 }
-                anchors.fill: parent
             }
-
-            MouseArea {
-                anchors.fill: parent
-                onPressAndHold: {
-                    coloresRect.x = mouseX;
-                    coloresRect.y = mouseY;
-                    msCloud.color= msCloud.darksColor
-                    baseRect.color= loader.chat3Color
-                    if (select.indexOf(index) <=-1) {
-                        select.push(index);
-                    }
-                    chatMenuList.menu = (0)
-                    circleAnimation.start()
-                    yPosition = 0
-                }
-
-                acceptedButtons:Qt.LeftButton|Qt.RightButton
-                onClicked: {
-                    baseRect.color = ("#00000000")
-                    msCloud.color = backgroundColor;
-                    if (select.length> 0) {
-                        yPosition = 0
-                        var position = select.indexOf(index)
-                        if (position >= 0) {
-                            select.splice(position,1)
-                        } else {
-                            chatMenuList.menu = 0;
-                            msCloud.color=msCloud.darksColor
-                            baseRect.color=loader.chat3Color
-                            select.push(index)
-                            return
-                        }
-                    }else if(mouse.button==Qt.RightButton) {
-                        var posx = mouse.x
-                        if (width- mouse.x < chatMenuList.w)
-                            posx = (width) - chatMenuList.w;
-                        chatMenuList.xPosition = posx
-                        chatMenuList.yPosition = (yPosition)
-                        coloresRect.x = mouseX
-                        coloresRect.y = mouseY
-                        circleAnimation.restart();
-                        chatMenuList.menu = 0;
-                        loader.context = true
-                        select.push(index)
-                        return
-                    }
-                    if (select.length == 0) chatMenuList.menu = 1
-                }
-            }
-
-            height:{ basedColumn.height;}
-            width: {parent.width;}
         }
 
         MouseArea {
@@ -526,10 +541,11 @@ Drawer {
                 x: facade.toPx(20)
                 spacing: facade.toPx(10)
                 height: parent.height-x;
-                anchors.verticalCenter: {(parent.verticalCenter)}
+                anchors.verticalCenter: parent.verticalCenter
 
-                Image {
+                Rectangle {
                     id: cam
+                    color: "black"
                     width: height;
                     height: parent.height*0.7
                     Camera {
@@ -537,14 +553,14 @@ Drawer {
                         flash.mode: Camera.FlashAuto
                         exposure {
                             exposureCompensation: -1
-                            exposureMode: Camera.ExposurePortrait
+                            exposureMode: {Camera.ExposurePortrait}
                         }
                     }
                     VideoOutput {
-                        fillMode: VideoOutput.PreserveAspectCrop;
+                        fillMode: {VideoOutput.PreserveAspectCrop;}
                         focus: visible
                         source: {camera}
-                        orientation: -90
+                        orientation:-90;
                         anchors.fill: parent
                     }
 
@@ -552,7 +568,7 @@ Drawer {
                         anchors.fill: parent
                         onClicked: {
                             attach.move = false
-                            if (event_handler.currentOSys()!=0) {
+                            if (event_handler.currentOSys() != 0) {
                                 imagePicker.item.takePhoto()
                             }
                         }
@@ -563,9 +579,9 @@ Drawer {
                     clip: true
                     id: imagesList;
                     height:parent.height
-                    width: area.width-cam.width-parent.x-spacing;
+                    width: {area.width-cam.width-parent.x-spacing;}
                     spacing: parent.spacing;
-                    orientation: {Qt.Horizontal}
+                    orientation: Qt.Horizontal;
                     model: ListModel {id:tachModel}
                     Component.onCompleted: {
                         var photos = (Math.random()*10) + 10
@@ -585,25 +601,21 @@ Drawer {
                         Repeater {
                             model: 2
                             Rectangle {
+                                clip: true;
                                 width: height
+                                color: "#D3D3D3"
                                 height: imagesList.height/2-spacing
 
-                                color: "#D3D3D3"
                                 Image {
-                                    anchors.centerIn: parent
+                                    source: index==0? image0:image1
                                     height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                                     width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
-                                    source: index==0? image0:image1
+                                    anchors.centerIn: parent
                                 }
 
-                                clip: true;
                                 MouseArea {
-                                    anchors.fill: parent;
-                                    onClicked: {
-                                        attach.move=false
-                                        if (event_handler.currentOSys()==0) fileDialog.open();
-                                        else imagePicker.item.pickImage();
-                                    }
+                                    onClicked: selectedImage.push(index == 0? image0: image1);
+                                    anchors.fill: parent
                                 }
                             }
                         }
@@ -664,7 +676,7 @@ Drawer {
                         Keys.onReleased: {
                             if (event.key === Qt.Key_Control || event.key === Qt.Key_Return) {
                                 if (pressCtrl==true && pressEntr)
-                                    checkMessage(1)
+                                    checkMessage(2, JSON.stringify(selectedImage))
                             } else if (event.key ==Qt.Key_Back) {
                                 hideKeyboard(event)
                             }
@@ -689,6 +701,32 @@ Drawer {
             }
 
             Button {
+                id: sendButton
+                height: parent.height;
+                anchors.right: {parent.right;}
+                width: {background.width + facade.toPx(20)}
+                onClicked: {
+                    checkMessage(2,JSON.stringify(selectedImage))
+                    if (event_handler.currentOSys() >= 1) {
+                        hideKeyboard(0)
+                    }
+                }
+                background: Image {
+                    source:"ui/buttons/sendButton.png"
+                    width: facade.toPx(sourceSize.width);
+                    height: facade.toPx(sourceSize.height);
+                    anchors {
+                        bottom: parent.bottom;
+                        bottomMargin: {
+                            if (textField.lineCount <= 1) {
+                                (parent.height-height)/2;
+                            } else facade.toPx(22);
+                        }
+                    }
+                }
+            }
+
+            Button {
                 id: attachButton
                 height: parent.height;
                 width: {background.width + facade.toPx(60)}
@@ -706,35 +744,9 @@ Drawer {
                         bottomMargin: {
                             if (textField.lineCount <= 1) {
                                 (parent.height - height)/2;
-                            } else facade.toPx(22)
-                        }
-                    }
-                }
-            }
-
-            Button {
-                id: sendButton
-                height: parent.height;
-                anchors.right: {parent.right;}
-                width: {background.width + facade.toPx(20)}
-                background: Image {
-                    source:"ui/buttons/sendButton.png"
-                    width: facade.toPx(sourceSize.width);
-                    height: facade.toPx(sourceSize.height);
-                    anchors {
-                        bottom: parent.bottom;
-                        bottomMargin: {
-                            if (textField.lineCount <= 1) {
-                                (parent.height-height)/2;
                             } else facade.toPx(22);
                         }
                     }
-                }
-                onClicked: {
-                    if (event_handler.currentOSys() >= 1) {
-                        hideKeyboard(0)
-                    }
-                    checkMessage(2)
                 }
             }
         }

@@ -8,7 +8,7 @@ Button {
     visible: loader.context
     contentItem: Text {opacity: 0;}
     onClicked: loader.context=false
-    background: Rectangle {color: "#226F98BC";}
+    background: Rectangle {color: "#12000000";}
     property int w: listText.width;
     property int action
     property int menu: 1;

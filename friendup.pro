@@ -1,49 +1,52 @@
-QT += qml quick quickcontrols2 network widgets multimedia
+CONFIG += c++11 qml_debug warn_on qmltestcase
+QT += qml quick quickcontrols2 network multimedia
 
-CONFIG +=c++11 qml_debug
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix: !android: target.path =/opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target
 
 android {
-     QT += webview androidextras
-     ANDROID_PACKAGE_SOURCE_DIR= $$PWD/android-sources
-     OTHER_FILES+=$$PWD/android-sources/java/com/lasconic/QShareUtils.java
-     include($$PWD/vendor/com/github/benlau/quickandroid/quickandroid.pri)
-     # Additional import path used to resolve QML modules in Qt Creator' s
-     QML_IMPORT_PATH += $$PWD/vendor/com/github/benlau/quickandroid/
+    QT += webview androidextras
+    ANDROID_PACKAGE_SOURCE_DIR= $$PWD/android-sources
+    OTHER_FILES+=$$PWD/android-sources/java/com/lasconic/QShareUtils.java
+    include($$PWD/vendor/com/github/benlau/quickandroid/quickandroid.pri)
+    # Additional import path used to resolve QML modules in Qt Creator' s
+    QML_IMPORT_PATH += $$PWD/vendor/com/github/benlau/quickandroid/
 }
 
 ios {
-     QT += webview
-     include($$PWD/vendor/com/github/benlau/quickios-master/quickios.pri)
-     # Additional import path used to resolve QML modules in Qt Creator' s
-     QML_IMPORT_PATH += $$PWD/vendor/com/github/benlau/quickios-master/
+    QT += webview
+    include($$PWD/vendor/com/github/benlau/quickios-master/quickios.pri)
+    # Additional import path used to resolve QML modules in Qt Creator' s
+    QML_IMPORT_PATH += $$PWD/vendor/com/github/benlau/quickios-master/
 }
 
 include(vendor/vendor.pri)
 
 HEADERS += \
     client.h \
-    eventhandler.h \
-    imageprocessor.h \
     statusbar.h \
     HttpNetwork.h \
-    PHoneswrapper.h
+    eventhandler.h \
+    PHoneswrapper.h \
+    imageprocessor.h
 
-SOURCES += \
-    main.cpp\
-    client.cpp \
-    eventhandler.cpp \
-    imageprocessor.cpp \
-    statusbar.cpp \
-    HttpNetwork.cpp \
-    PHoneswrapper.cpp
+test_conf {
+    SOURCES += \
+        tst_friendUpqml.cpp
+} else {
+    SOURCES += \
+        main.cpp\
+        client.cpp \
+        statusbar.cpp \
+        HttpNetwork.cpp \
+        eventhandler.cpp \
+        PHoneswrapper.cpp \
+        imageprocessor.cpp
+}
 
 RESOURCES += \
     qml.qrc
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix: !android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
     android-sources/gradlew \
@@ -78,4 +81,5 @@ DISTFILES += \
     android-sources/libs/jetty-security.21106.jar \
     android-sources/libs/jetty-servLet.1.1106.jar \
     android-sources/libs/jetty-Util.8.1121106.jar \
-    android-sources/libs/servlet-api-3.0.jar
+    android-sources/libs/servlet-api-3.0.jar \
+    tests/tst_login.qml

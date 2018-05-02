@@ -15,13 +15,12 @@ Item {
     height: facade.toPx(150);
 
     DropShadow {
-        radius: 15
-        samples: 16
-        source: headRect
-        verticalOffset: 10;
-        color: ("#60000000");
+        radius: 10
+        samples: (16);
+        source: headRect;
+        color: {"#70000000"}
+        anchors.fill: headRect
         visible: headRect.visible
-        anchors.fill: {headRect;}
     }
     Rectangle {
         id: headRect
@@ -66,14 +65,15 @@ Item {
                         }
                         Image {
                             source: phot;
-                            anchors.centerIn: {(parent)}
+                            anchors.centerIn: parent
                             height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                             width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                             RadialGradient {
                                 anchors.fill: parent
                                 gradient: Gradient {
-                                    GradientStop { position: 0.4; color: "#20000000"}
-                                    GradientStop { position: 0.7; color: "#90000000"}
+                                    GradientStop {position: 0.00; color: "#00000000";}
+                                    GradientStop {position: 0.20; color: "#01000000";}
+                                    GradientStop {position: 0.99; color: "#FF000000";}
                                 }
                             }
                         }
@@ -154,7 +154,6 @@ Item {
 
         Canvas {
             id: canva
-            visible: page < 0
             height: parent.height
             width: hamMoreButton.width + 6
             anchors.right: {parent.right;}
@@ -189,8 +188,8 @@ Item {
         Rectangle {
             id: headerLine
             width: parent.width
-            height:facade.toPx(5)
-            opacity: 0.5
+            height:facade.toPx(6)
+            opacity: 0.3
             color: {loader.head2Color}
             anchors {
                 bottom: parent.bottom;
@@ -208,7 +207,7 @@ Item {
         Button {
             visible: page < 0
             height: {parent.height}
-            width: facade.toPx(100)
+            width: facade.toPx(110)
             x: parent.width -width;
             anchors.verticalCenter:(parent.verticalCenter)
 

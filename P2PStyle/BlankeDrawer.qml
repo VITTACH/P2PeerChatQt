@@ -170,7 +170,7 @@ Drawer {
         anchors {
             top: (profile.top)
             bottom: profile.bottom
-            topMargin:partnerHeader.height-facade.toPx(11)-iner.height
+            topMargin:partnerHeader.height-facade.toPx(18)-iner.height
         }
     }
 
@@ -213,11 +213,10 @@ Drawer {
     Column {
         id: profile
         spacing:facade.toPx(10)
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenter: {parent.horizontalCenter;}
         Item{
-            id: firstItem
             width: parent.width
-            height: facade.toPx(10);
+            height: facade.toPx(3)
         }
         Row {
             id: firstRow;
@@ -616,10 +615,10 @@ Drawer {
                 }
 
                 DropShadow {
-                    radius: 8
-                    samples: 10
+                    radius: 5
+                    samples: 14
                     source: bug
-                    color:"#80000000"
+                    color:"#70000000"
                     anchors.fill:bug;
                 }
                 Rectangle {
@@ -691,7 +690,7 @@ Drawer {
                             return m;
                         }
                     }
-                    anchors.leftMargin: facade.toPx(40);
+                    anchors.leftMargin: facade.toPx(25);
                     anchors.left: bug.right
                     width: parent.width
                 }
@@ -741,7 +740,7 @@ Drawer {
         end: Qt.point(0, height)
         start: Qt.point(0, 0)
         gradient: Gradient {
-            GradientStop {position:0; color:"#65000000"}
+            GradientStop {position:0; color:"#30000000"}
             GradientStop {position:1; color:"#00000000"}
         }
     }
@@ -790,11 +789,11 @@ Drawer {
     }
 
     DropShadow {
-        radius: 14
-        samples: 20
+        radius: 10
+        samples: 16
         source: (listMenu)
-        color: "#90000000"
-        anchors.fill: {listMenu}
+        color: "#70000000"
+        anchors.fill: listMenu;
     }
     ListView {
         id: listMenu
@@ -865,8 +864,8 @@ Drawer {
                 Image {
                     source: image
                     visible: index >= 1;
-                    width: facade.toPx(sourceSize.width);
-                    height:facade.toPx(sourceSize.height)
+                    width: facade.toPx(sourceSize.width*1.1);
+                    height:facade.toPx(sourceSize.height*1.1)
                     horizontalAlignment: {(Image.AlignHCenter)}
                     anchors {
                         verticalCenter: (parent.verticalCenter)

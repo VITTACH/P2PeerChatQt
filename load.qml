@@ -14,6 +14,8 @@ ApplicationWindow {
 
     StatusBar {color: ("#4D5762")}
 
+    // flags: Qt.FramelessWindowHint; // turned off system window
+
     Timer {
         id: back
         interval: 100
