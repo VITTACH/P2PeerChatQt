@@ -239,7 +239,7 @@ ApplicationWindow {
         property string menu1Color: "#939393";
         property string menu2Color: "#E0E0E0";
         property string menu3Color: "#6C839B";
-        property string menu4Color: "#6E737F";
+        property string menu4Color: "#7D98A5";
         property string menu5Color: "#B24A3E";
         property string menu6Color: "#96281B";
         property string menu7Color: "#F1F1F1";
@@ -254,7 +254,7 @@ ApplicationWindow {
         property string menu15Color:"#8DACBC";
         property string menu16Color:"#BBC6CC";
 
-        property string head1Color: "#728599";
+        property string head1Color: "#60707F";
         property string head2Color: "#FFFFFF";
         property string head3Color: "#677889";
 

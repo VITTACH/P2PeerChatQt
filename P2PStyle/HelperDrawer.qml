@@ -25,10 +25,9 @@ Item {
             }
             delegate: Rectangle {
                 height: width
-                x: listview.spacing * 2;
-                width: parent.width - 2 * x;
-                border.width: facade.toPx(3)
-                border.color: loader.head3Color
+                radius: {width / 8}
+                x: listview.spacing * 2
+                width: parent.width - 2*x
 
                 color: {
                     if (mypos%2 == 0)

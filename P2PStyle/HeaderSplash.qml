@@ -154,6 +154,7 @@ Item {
 
         Canvas {
             id: canva
+            visible: hamMoreButton.visible
             height: parent.height
             width: hamMoreButton.width + 6
             anchors.right: {parent.right;}
@@ -174,7 +175,7 @@ Item {
                 cntx.closePath();
                 cntx.fill();
 
-                cntx.fillStyle = loader.isOnline? loader.menu3Color: loader.menu3Color
+                cntx.fillStyle = loader.isOnline? loader.head3Color: loader.head3Color
                 cntx.beginPath();
                 cntx.moveTo(0,height)
                 cntx.lineTo(6,height)
@@ -210,14 +211,12 @@ Item {
             width: facade.toPx(110)
             x: parent.width -width;
             anchors.verticalCenter:(parent.verticalCenter)
-
             id: hamMoreButton
             onClicked: {
                 loader.focus =loader.context=true;
                 chatMenuList.xPosition = rootItem.width-chatMenuList.w-facade.toPx(20)
                 chatMenuList.yPosition = (facade.toPx(20))
             }
-
             background:Image{
                 anchors.centerIn: parent
                 source: ("qrc:/ui/buttons/moreButton.png")

@@ -213,38 +213,39 @@ Drawer {
     Column {
         id: profile
         spacing:facade.toPx(10)
-        anchors.horizontalCenter: {parent.horizontalCenter;}
+        anchors.horizontalCenter: parent.horizontalCenter
+
         Item{
+            height: 1
             width: parent.width
-            height: facade.toPx(3)
         }
         Row {
             id: firstRow;
-            anchors.horizontalCenter:parent.horizontalCenter
-            spacing: {facade.toPx(30) - (facade.toPx(708) - drawer.width)/facade.toPx(10)}
             Column {
-                anchors.bottom: parent.bottom
                 Text {
                     font.bold: true;
                     style: Text.Raised
                     styleColor: "black";
                     color: {"#FFFFFFFF"}
-                    font.family: trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(30);
                     text: usersModel.count > 0 ? usersModel.count: 0
                     anchors.horizontalCenter:parent.horizontalCenter
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(30);
                 }
+                anchors.bottom: parent.bottom
                 Text {
                     text: qsTr("Друзья")
                     color: qsTr("white")
+                    anchors.horizontalCenter:parent.horizontalCenter
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(24);
-                    anchors.horizontalCenter:parent.horizontalCenter
                 }
             }
+            anchors.horizontalCenter:parent.horizontalCenter
+            spacing:facade.toPx(30)-(facade.toPx(708)-drawer.width)/facade.toPx(10)
             Button {
                 id: avatarButton
-                width: facade.toPx(230)
+                width: facade.toPx(230);
                 height: facade.toPx(230)
                 Rectangle {
                     id: bag
@@ -259,14 +260,14 @@ Drawer {
                     }
                     Image {
                         source:loader.avatarPath
-                        height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
-                        width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                        height:sourceSize.width > sourceSize.height? parent.height: sourceSize.height*(parent.width / sourceSize.width);
+                        width: sourceSize.width > sourceSize.height? sourceSize.width*(parent.height / sourceSize.height): parent.width;
                         anchors.centerIn: parent
                         RadialGradient {
                             anchors.fill: parent
                             gradient: Gradient {
-                                GradientStop { position: 0.4; color: "#20000000"}
-                                GradientStop { position: 0.8; color: "#90000000"}
+                                GradientStop { position: 0.40; color: "#20000000";}
+                                GradientStop { position: 0.80; color: "#90000000";}
                             }
                         }
                     }
@@ -290,7 +291,7 @@ Drawer {
                     smooth: (true)
                     visible: false
                     source: "qrc:/ui/mask/round.png"
-                    sourceSize:Qt.size(bag.width,bag.height)
+                    sourceSize: {Qt.size((bag.width), (bag.height))}
                 }
 
                 onClicked: {
@@ -333,12 +334,12 @@ Drawer {
 
         Row {
             id: myRow
-            width: firstRow.width
+            width: firstRow.width;
             Text {
                 color: "white"
+                font.bold: {true;}
                 elide: Text.ElideRight
-                font.bold: {true}
-                font.family: {trebu4etMsNorm.name}
+                font.family: trebu4etMsNorm.name
                 font.pixelSize: {facade.doPx(28);}
                 text:loader.login+" "+loader.famil
                 width: parent.width-scope1.implicitWidth-scope2.implicitWidth-image1.width
@@ -352,17 +353,11 @@ Drawer {
             }
             Image {
                 id: image1
+                anchors.top: parent.top
+                width: facade.toPx(sourceSize.width * 1.5)
+                height: facade.toPx(sourceSize.height * 1.5)
+                anchors.topMargin: facade.toPx(15)
                 source: "qrc:/ui/profiles/lin.png"
-                width: {
-                facade.toPx(sourceSize.width* 1.5)
-                }
-                height: {
-                facade.toPx(sourceSize.height*1.5)
-                }
-                anchors {
-                    top: parent.top
-                    topMargin: facade.toPx(15)
-                }
             }
             Text {
                 id: scope2
@@ -374,16 +369,16 @@ Drawer {
         }
 
         Rectangle {
+            radius: {height/2}
             width: firstRow.width
-            height: facade.toPx(50);
-            radius: facade.toPx(25);
-            color: loader.menu7Color
+            height: facade.toPx(50)
             Row {
                 Button {
-                    id: inerImage
+                    id: inerImage;
                     width: facade.toPx(40);
                     height:facade.toPx(innerImage.sourceSize.height)
                     anchors.verticalCenter: {parent.verticalCenter;}
+                    onClicked: if(!find) find = true
                     background:Image {
                         id: innerImage
                         width: {facade.toPx(sourceSize.width /1.3);}
@@ -391,7 +386,6 @@ Drawer {
                         anchors.verticalCenter:parent.verticalCenter
                         source: "qrc:/ui/icons/"+(find? "searchIconWhite": "DeleteIconWhite")+".png"
                     }
-                    onClicked: if(find == false) {find = true;}
                 }
                 Connections {
                     target: drawer;
@@ -408,16 +402,16 @@ Drawer {
                     color: loader.menu15Color
                     height: parent.parent.height
                     rightPadding: parent.parent.radius
-                    onAccepted:filterList(text.toLowerCase())
+                    onAccepted: filterList(text.toLowerCase());
                     width: parent.parent.width - inerImage.width - parent.spacing - facade.toPx(20);
                     placeholderText: qsTr("Найти ваших друзей")
-                    font.bold: true
+                    font.bold: true;
                     font.pixelSize: facade.doPx(18);
                     font.family: trebu4etMsNorm.name
                     onActiveFocusChanged:find=false;
                     background: Rectangle{opacity:0}
                     verticalAlignment: {Text.AlignVCenter}
-                    onTextChanged:{
+                    onTextChanged: {
                         if (event_handler.currentOSys() !== 1 && event_handler.currentOSys() !== 2){
                             filterList(text.toLowerCase())
                         }
@@ -428,11 +422,12 @@ Drawer {
                 spacing: {facade.toPx(10);}
                 anchors.left: {parent.left}
             }
+            color: loader.menu7Color
         }
 
         Item {
-            width: {(parent.width)}
-            height: facade.toPx(10)
+            width: parent.width
+            height: facade.toPx(10);
         }
     }
 
@@ -442,8 +437,9 @@ Drawer {
         model:ListModel {id: usersModel}
         Component.onCompleted: {
             if (loader.chats.length<1) {
-                var history =event_handler.loadValue("chats")
-                if (history != "") loader.chats =JSON.parse(history)
+                var history = event_handler.loadValue("chats");
+                if (history != "")
+                    loader.chats =JSON.parse(history)
             } usersModel.clear()
         }
         clip: true
@@ -460,11 +456,7 @@ Drawer {
             id: baseItem
             visible: activity
             width: parent.width
-            height: {
-                if (activity) {
-                    facade.toPx(20) + Math.max(bug.height,fo.height)
-                } else 0
-            }
+            height: activity?facade.toPx(20) + Math.max(bug.height,fo.height):0
             Row {
                 Repeater {
                     anchors.verticalCenter: parent.verticalCenter
@@ -486,7 +478,9 @@ Drawer {
                                 if (index!=0) parent.width-width-fac
                                 else Math.abs(fac);
                             }
-                            anchors.verticalCenter: parent.verticalCenter
+                            anchors {
+                                verticalCenter:parent.verticalCenter
+                            }
                             source: "qrc:/ui/buttons/" + (modelData)
                             width: {(facade.toPx(sourceSize.width))}
                             height: {facade.toPx(sourceSize.height)}
@@ -508,13 +502,38 @@ Drawer {
                     } else loader.feedColor
                 }
 
+                Connections {
+                    target: defaultDialog
+                    onChooseChanged: {
+                        if (listView.memIndex ==index) {
+                            if (defaultDialog.choose === false) {
+                                var phn=0
+                                if (typeof usersModel.get(index)!=='undefined')
+                                    phn = usersModel.get(index).phone;
+                                var obj = JSON.parse(loader.frienList)
+                                for (var i = 0; i < obj.length; i++) {
+                                    var friend =obj[i].replace('"','')
+                                    if (friend == phn) {
+                                        obj.splice(i, 1)
+                                        event_handler.saveSet("frnd",loader.frienList = JSON.stringify(obj))
+                                        loader.addFriend(friend,false)
+                                        listView.memIndex = -(1);
+                                        break;
+                                    }
+                                }
+                                usersModel.remove(index)
+                            }
+                        }
+                    }
+                }
+
                 Rectangle {
                     width: 0
                     height: 0
                     id: coloresRect
                     color: {
                         if (index === 0) {
-                            if (loader.isOnline) loader.menu15Color;
+                            if (loader.isOnline) {loader.menu15Color;}
                             else
                                loader.menu1Color
                         } else loader.menu9Color
@@ -528,8 +547,8 @@ Drawer {
 
                 PropertyAnimation {
                     duration: 500
-                    target: coloresRect
                     id: circleAnimation
+                    target: {coloresRect}
                     properties:("width, height, radius")
                     from: 0
                     to: (delegaRect.width * 3);
@@ -542,29 +561,23 @@ Drawer {
 
                 MouseArea {
                     id: myMouseArea
-                    anchors.fill:parent
-                    property var presed
+                    anchors.fill: parent;
+                    property var presed: false;
                     onClicked: {
                         if (index !=-1) listView.currentIndex = index
                         var json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
                         var text = usersModel.get(index).login+" "+usersModel.get(index).famil
-                        chatScreen.setInfo(text, usersModel.get(index).image, json.port == 0? qsTr("Offline"): qsTr("Online"))
+                        chatScreen.setInfo(text, usersModel.get(index).image, (json.port == 0) == true? qsTr("Offline"): qsTr("Online"))
                         event_handler.sendMsgs(JSON.stringify(json));
                         chatScreen.open()
-                        drawer.close();
+                        drawer.close()
                     }
-                    drag.axis: {Drag.XAxis}
-                    drag.minimumX: -width*0.40;
-                    onPressAndHold: presed=true
+                    drag.axis: Drag.XAxis
+                    drag.minimumX: -width*0.40
+                    onPressAndHold: presed = true
+                    onExited: circleAnimation.stop()
                     drag.target: presed?parent:undefined
-                    drag.maximumX: {
-                        if (usersModel.count>=index+1) {
-                            -drag.minimumX;
-                        } else 0
-                    }
-                    onExited: {
-                        circleAnimation.stop();
-                    }
+                    drag.maximumX: usersModel.count >= index+1?-drag.minimumX:0
                     onPressed: {
                         coloresRect.x = mouseX;
                         coloresRect.y = mouseY;
@@ -573,44 +586,20 @@ Drawer {
                     onReleased: {
                         presed = false
                         if (parent.x >= drag.maximumX) {
-                            if (usersModel.get(index).phone !== loader.tel) {
+                            if (usersModel.get(index).phone !== (loader.tel)) {
                                 drawer.close();
                                 listView.memIndex=index;
-                                defaultDialog.show("Хотите удалить <strong>" + login + " " + famil + "</strong> из друзей?", 2)
+                                defaultDialog.show("Вы хотите удалить <strong>" + login + " " + famil + "</strong> из списка друзей?",2)
                             }
                         }
                         if (parent.x <= drag.minimumX) {
                             if (event_handler.currentOSys() != 1)
                                Qt.openUrlExternally("tel:"+phone)
-                            else
+                            else {
                                 caller.directCall(phone)
-                        }
-                        parent.x=0
-                    }
-                }
-
-                Connections {
-                    target: defaultDialog
-                    onChooseChanged: {
-                        if (listView.memIndex== index) {
-                            if (defaultDialog.choose == false) {
-                                var phn=0
-                                if(typeof usersModel.get(index)!=='undefined')
-                                phn = usersModel.get(index).phone
-                                var obj =JSON.parse(loader.frienList)
-                                for (var i = 0; i < obj.length;i++) {
-                                    var friend=obj[i].replace('"','')
-                                    if (friend == phn) {
-                                        obj.splice(i, 1)
-                                        event_handler.saveSet("frnd",loader.frienList = JSON.stringify(obj))
-                                        loader.addFriend(friend, false)
-                                        listView.memIndex = -1;
-                                        break;
-                                    }
-                                }
-                                usersModel.remove(index)
                             }
                         }
+                        parent.x=0
                     }
                 }
 
@@ -618,16 +607,16 @@ Drawer {
                     radius: 5
                     samples: 14
                     source: bug
-                    color:"#70000000"
-                    anchors.fill:bug;
+                    color: "#70000000"
+                    anchors.fill: bug;
                 }
                 Rectangle {
                     id: bug
                     border.color: "#FFFFFF"
                     border.width: facade.toPx(4)
-                    x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/5;
-                    width: facade.toPx(130)
-                    height:facade.toPx(130)
+                    x: facade.toPx(50) - (facade.toPx(708) - drawer.width) / 5;
+                    width: facade.toPx(150)
+                    height:facade.toPx(150)
                     anchors.top: parent.top
                     anchors.topMargin: {facade.toPx(10)}
                     Item {
@@ -648,7 +637,7 @@ Drawer {
                     spacing:facade.toPx(10)
                     anchors.verticalCenter: parent.verticalCenter
                     Text {
-                        font.weight: Font.DemiBold
+                        font.weight: {Font.DemiBold;}
                         font.family: "tahoma"
                         font.pixelSize: facade.doPx(25);
                         color: index==0?"white":"black";
@@ -665,6 +654,20 @@ Drawer {
                         width:fo.width-facade.toPx(100)-bug.width
                         font.family: "tahoma";
                         font.pixelSize: facade.doPx(25);
+                        function previewText() {
+                            var indx = 0, m = "", fl
+                            if (typeof loader.chats[index] !== ('undefined')) {
+                                indx = loader.chats[index].message.length
+                            }
+                            if (indx >= 1) {
+                                fl = loader.chats[index].message[indx - 1].flag
+                                m =Math.abs(fl-2)!=0?qsTr("Вам: "):qsTr("Вы: ")
+                                m += loader.chats[index].message[indx - 1].text
+                            } else if (indx === 0) {
+                                m = qsTr("Секретный чат пуст")
+                            }
+                            return m;
+                        }
                         Connections {
                             target: drawer;
                             onPositionChanged: {
@@ -673,21 +676,6 @@ Drawer {
                                     preview.text = a
                                 }
                             }
-                        }
-                        function previewText() {
-                            var indx = 0, m = "", fl
-                            if (typeof loader.chats[index] !== ('undefined'))
-                                {indx = (loader.chats[index].message.length)}
-                            if (indx >= 1) {
-                                fl = loader.chats[index].message[indx-1].flag
-                                if (Math.abs(fl-2) != 0)
-                                    m= qsTr("Вам: ")
-                                else m= qsTr("Вы: ")
-                                m += loader.chats[index].message[indx-1].text
-                            } else if (indx === 0) {
-                                m = qsTr("Начните новый диалог");
-                            }
-                            return m;
                         }
                     }
                     anchors.leftMargin: facade.toPx(25);
@@ -708,7 +696,7 @@ Drawer {
         }
         width: 6
         color: {
-            if(loader.isOnline==true) loader.menu4Color;
+            if(loader.isOnline==true) "#647A84"
             else {loader.menu2Color;}
         }
     }
@@ -735,10 +723,10 @@ Drawer {
     LinearGradient {
         height: 10
         anchors.top: {profile.bottom}
-        anchors.topMargin: -1
-        width: {parent.width}
+        anchors.topMargin:-1
+        width: parent.width;
         end: Qt.point(0, height)
-        start: Qt.point(0, 0)
+        start: Qt.point(0,0)
         gradient: Gradient {
             GradientStop {position:0; color:"#30000000"}
             GradientStop {position:1; color:"#00000000"}
@@ -864,8 +852,8 @@ Drawer {
                 Image {
                     source: image
                     visible: index >= 1;
-                    width: facade.toPx(sourceSize.width*1.1);
-                    height:facade.toPx(sourceSize.height*1.1)
+                    width: facade.toPx(sourceSize.width * 1.1);
+                    height:facade.toPx(sourceSize.height * 1.1)
                     horizontalAlignment: {(Image.AlignHCenter)}
                     anchors {
                         verticalCenter: (parent.verticalCenter)
@@ -891,19 +879,21 @@ Drawer {
                                 loader.menu12Color
                             } else loader.menu13Color;
                         }
+
                         DropShadow {
                             radius: 15
-                            samples: 15
-                            source: {switcher}
-                            color: "#90000000"
+                            samples: (15)
+                            source:switcher
+                            color:"#90000000"
                             anchors.fill: switcher;
                         }
                         Rectangle {
                             id: switcher
+                            radius: {width/2}
                             color: loader.feedColor
                             width: myswitcher.height/2.3;
-                            height:myswitcher.height/2.3;
-                            radius:width/2
+                            height: myswitcher.height/2.3
+                            anchors.verticalCenter: parent.verticalCenter
                             x: {
                                 if (myswitcher.checked) {
                                     var p=parent.height-height;
@@ -912,18 +902,11 @@ Drawer {
                                     (parent.height - height)/2;
                                 }
                             }
-                            anchors {
-                                verticalCenter: {
-                                    parent.verticalCenter
-                                }
-                            }
                         }
                     }
-                    onCheckedChanged: {
-                        loader.isOnline = (checked)
-                    }
+                    onCheckedChanged: loader.isOnline = checked
                     width: facade.toPx(64)
-                    height:parent.height
+                    height: parent.height;
                 }
 
                 Text {
@@ -940,7 +923,7 @@ Drawer {
                             if (myswitcher.checked)
                                 qsTr(("Вы онлайн"))
                             else qsTr("Невидимы")
-                        } else {target}
+                        } else target
                     }
                 }
             }

@@ -194,17 +194,6 @@ Drawer {
         }
     }
 
-    TextArea {
-        id: buferText;
-        wrapMode: TextEdit.Wrap;
-        width: 0.75*parent.width
-        visible: false
-        font {
-            pixelSize: {facade.doPx(30)}
-            family: trebu4etMsNorm.name;
-        }
-    }
-
     ListView {
         id:chatScrenList
         width: parent.width;
@@ -214,7 +203,15 @@ Drawer {
 
         delegate:Item {
             width: {parent.width;}
-            height: basedColumn.implicitHeight
+            height: {basedColumn.implicitHeight;}
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    hideKeyboard(mouse);mouse.accepted=flase
+                }
+            }
+
             Rectangle {
                 id: baseRect
                 color: "#00000000"
@@ -228,10 +225,10 @@ Drawer {
 
                         DropShadow {
                             radius: 5
-                            samples: 10;
-                            color: "#80000000";
+                            samples: (10);
+                            color:"#80000000"
                             source: {timeText;}
-                            anchors.fill: {timeText}
+                            anchors.fill:timeText
                         }
                         Text {
                             id: timeText;
@@ -247,7 +244,7 @@ Drawer {
                         }
 
                         Rectangle {
-                            height: parent.height
+                            height:parent.height
                             width: {routeLine.width}
                             x:routeLine.x+baseItem.x
                             visible: (index >= 1) == true && (chatModel.get(index).mySpacing == 0)
@@ -258,7 +255,7 @@ Drawer {
                     Item {
                         id: baseItem
                         x: parent.width/18
-                        width: parent.width;
+                        width:parent.width
                         height: {parentText.height;}
                         Rectangle {
                             id: routeLine;
@@ -276,16 +273,17 @@ Drawer {
                             x:Math.abs(falg-2)?textarea.width-msCloud.width+message.width+spacing:0
 
                             Rectangle {
-                                id: msCloud
+                                id:msCloud
                                 border.width: 4.0
                                 border.color: "#C6D1D7"
                                 property var lightColor
                                 property var darksColor
 
                                 color: backgroundColor;
-                                width: textarea.contentWidth
+                                width: {textarea.contentWidth}
                                 height: textarea.height
                                 radius: facade.toPx(8);
+
                                 Component.onCompleted:{
                                     lightColor = Qt.rgba(color.r - 0.06, color.g - 0.04,color.b, 1)
                                     darksColor = Qt.rgba(color.r - 0.13, color.g - 0.10,color.b, 1)
@@ -294,10 +292,10 @@ Drawer {
                                 PropertyAnimation {
                                     duration: 500
                                     id: circleAnimation
+                                    target: coloresRect
                                     properties: ("width,height,radius")
                                     from: 0
                                     to: parent.width*3;
-                                    target: coloresRect
 
                                     onStopped: {
                                         coloresRect.width = 0;
@@ -308,7 +306,7 @@ Drawer {
                                     clip: true;
                                     anchors.centerIn: {parent}
                                     width: parent.width-2*parent.radius
-                                    height: parent.height-2*parent.border.width
+                                    height: {parent.height-2*parent.border.width}
                                     Rectangle {
                                         width: 0
                                         height: 0
@@ -333,26 +331,30 @@ Drawer {
                                 }
 
                                 ListView {
-                                    clip: true
+                                    clip: true;
                                     id: attachList
-                                    x: msgarea.padding
+                                    model: {attached}
+                                    x: {msgarea.padding}
                                     width: parent.width-2*x
-                                    height: if (attached.length > 0) facade.toPx(250);
+                                    height: attached.length>0? facade.toPx(250):0
                                     spacing: {facade.toPx(5);}
                                     orientation:Qt.Horizontal;
+
                                     property var attached: JSON.parse(chatModel.get(index).images);
-                                    model: attached;
 
                                     delegate: Item {
-                                        clip: true
-                                        width: height
                                         y: attachList.x
-                                        height: parent.height-attachList.x;
+                                        width: parent.height-y
+                                        height:parent.height-y
+                                        clip: true
                                         Image {
                                             source: modelData;
                                             height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                                             width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
-                                            anchors.centerIn: parent
+                                            anchors.centerIn: {parent;}
+                                            MouseArea {
+                                                anchors.fill: {parent;}
+                                            }
                                         }
                                     }
                                 }
@@ -360,30 +362,28 @@ Drawer {
                                 TextArea {
                                     id: msgarea
                                     text: someText;
-                                    width: parent.width
+                                    color: {textColor}
+                                    width: {parent.width}
                                     padding: facade.toPx(14)
                                     wrapMode: {TextEdit.Wrap;}
                                     font.pixelSize: facade.doPx(30)
-                                    font.family: {trebu4etMsNorm.name;}
-
-                                    color: textColor;
-                                    readOnly: !false;
+                                    font.family:trebu4etMsNorm.name
 
                                     MouseArea {
                                         anchors.fill: parent
+                                        acceptedButtons: Qt.LeftButton|Qt.RightButton;
                                         onPressAndHold: {
                                             coloresRect.x = mouseX;
                                             coloresRect.y = mouseY;
-                                            msCloud.color= msCloud.darksColor
-                                            baseRect.color= loader.chat3Color
-                                            if (select.indexOf(index) <=-1) {
+                                            msCloud.color = msCloud.darksColor
+                                            baseRect.color = loader.chat3Color
+                                            if (select.indexOf(index) <= -1) {
                                                 select.push(index);
                                             }
                                             chatMenuList.menu = (0)
                                             circleAnimation.start()
                                             yPosition = 0
                                         }
-                                        acceptedButtons: Qt.LeftButton|Qt.RightButton;
                                         onClicked: {
                                             baseRect.color = "#00000000"
                                             msCloud.color = (backgroundColor)
@@ -399,7 +399,9 @@ Drawer {
                                                     select.push(index)
                                                     return
                                                 }
-                                            }else if(mouse.button == Qt.RightButton) {
+                                            } else if (select.length === 0) {
+                                                chatMenuList.menu=1
+                                            } else if(mouse.button== Qt.RightButton) {
                                                 var posx = mouse.x
                                                 if (width- mouse.x < chatMenuList.w) {
                                                     posx = (width) - chatMenuList.w;
@@ -414,7 +416,6 @@ Drawer {
                                                 select.push(index);
                                                 return
                                             }
-                                            if (select.length == 0)chatMenuList.menu=1
                                         }
                                     }
                                 }
@@ -468,16 +469,6 @@ Drawer {
             }
         }
 
-        MouseArea {
-            anchors.fill: {parent}
-            propagateComposedEvents: true
-            visible: event_handler.currentOSys() > 0;
-            onClicked: {
-                hideKeyboard(mouse);
-                mouse.accepted = !(true);
-            }
-        }
-
         anchors {
             top: parent.top
             bottom:area.top
@@ -488,6 +479,17 @@ Drawer {
                 if (area.height > 0)tex=0
                 facade.toPx(40) + tex
             }
+        }
+    }
+
+    TextArea {
+        id: buferText;
+        wrapMode: TextEdit.Wrap;
+        width: 0.75*parent.width
+        visible: false
+        font {
+            pixelSize: {facade.doPx(30)}
+            family: trebu4etMsNorm.name;
         }
     }
 
