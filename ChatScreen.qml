@@ -180,17 +180,25 @@ Drawer {
             : y <= 1? qsTr('года назад')  : approx(y) + qsTr(' год(а) назад')
     }
 
+    FastBlur {
+        radius: 40
+        source: beckground;
+        transparentBorder:true
+        anchors.fill: beckground
+    }
     Image {
+        id:beckground;
         anchors.fill:parent
-        source: ("http://picsum.photos/" + width + "/" + height + "?random&blur")
-        opacity: 0.62
+        source: "http://pipsum.com/"+width+"x"+height+".jpg"
+        opacity: 0.62;
+        visible: false
     }
 
     P2PStyle.ColorAnimate {
-        opacity: 0.62
+        opacity: 0.62;
         anchors.fill: {parent}
         Component.onCompleted: {
-            setColors([[48,99,137], [10,10,10], [84,116,153], [216,208,182]],200)
+            setColors([[48,99,137], [10,10,10], [84,116,153], [216,208,182]],100)
         }
     }
 
@@ -227,20 +235,8 @@ Drawer {
                             radius: 5
                             samples: (10);
                             color:"#80000000"
-                            source: {timeText;}
-                            anchors.fill:timeText
-                        }
-                        Text {
-                            id: timeText;
-                            text:relative(timeStamp)
-                            font.family: trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(18);
-                            x: textarea.width - implicitWidth + baseItem.x;
-                            anchors {
-                                bottom:parent.bottom
-                                bottomMargin: facade.toPx(2)
-                            }
-                            color: {backgroundColor}
+                            source: timeText;
+                            anchors.fill: {timeText}
                         }
 
                         Rectangle {
@@ -249,6 +245,19 @@ Drawer {
                             x:routeLine.x+baseItem.x
                             visible: (index >= 1) == true && (chatModel.get(index).mySpacing == 0)
                             color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.40,0.94)
+                        }
+
+                        Text {
+                            id: timeText;
+                            text:relative(timeStamp)
+                            color: {backgroundColor}
+                            font.family: trebu4etMsNorm.name
+                            font.pixelSize: facade.doPx(18);
+                            x: textarea.width - implicitWidth + baseItem.x;
+                            anchors {
+                                bottom:parent.bottom
+                                bottomMargin: facade.toPx(2)
+                            }
                         }
                     }
 

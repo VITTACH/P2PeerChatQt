@@ -4,15 +4,15 @@ import QtGraphicalEffects 1.0
 
 Item {
     id: rootItem
+    width: parent.width;
+    height: facade.toPx(150);
+
     property int page
     property string stat: "";
     property string phot: "";
     property string text: "";
 
     function load(value) {headerLine.width=value*rootItem.width;}
-
-    width: parent.width;
-    height: facade.toPx(150);
 
     DropShadow {
         radius: 10
@@ -25,8 +25,8 @@ Item {
     Rectangle {
         id: headRect
         width: parent.width
-        color: loader.head1Color;
         height: facade.toPx(140);
+        color: loader.head1Color;
         visible: {loader.source != ("qrc:/qrscaner.qml");}
 
         Item {
@@ -154,9 +154,9 @@ Item {
 
         Canvas {
             id: canva
-            visible: hamMoreButton.visible
             height: parent.height
             width: hamMoreButton.width + 6
+            visible: hamMoreButton.visible
             anchors.right: {parent.right;}
             Connections {
                 target: {loader;}
