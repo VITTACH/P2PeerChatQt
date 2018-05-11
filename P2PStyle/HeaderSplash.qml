@@ -7,13 +7,6 @@ Item {
     width: parent.width;
     height: facade.toPx(150);
 
-    property int page
-    property string stat: "";
-    property string phot: "";
-    property string text: "";
-
-    function load(value) {headerLine.width=value*rootItem.width;}
-
     DropShadow {
         radius: 10
         samples: (16);
@@ -22,16 +15,25 @@ Item {
         anchors.fill: headRect
         visible: headRect.visible
     }
+    property string stat: ""
+    property string phot: ""
+    property string text: ""
+    property int page
+
+    function load(value) {headerLine.width=value*rootItem.width;}
+
     Rectangle {
         id: headRect
-        width: parent.width
+        width: parent.width;
         height: facade.toPx(140);
         color: loader.head1Color;
-        visible: {loader.source != ("qrc:/qrscaner.qml");}
+        visible: loader.source!="qrc:/qrscaner.qml"&&loader.source!="qrc:/webview.qml"
 
         Item {
             id: inerItem
             height: parent.height
+            anchors.left: page!=0 || loader.isLogin? hambrgrButton.right: parent.left;
+            anchors.right:page!=0 || loader.isLogin? hamMoreButton.left: parent.right;
             Row {
                 spacing: facade.toPx(30);
                 anchors {
@@ -113,16 +115,6 @@ Item {
                     }
                 }
             }
-            anchors.left: {
-                if (page!=0 || loader.isLogin)
-                    hambrgrButton.right
-                else parent.left;
-            }
-            anchors.right: {
-                if (page!=0 || loader.isLogin)
-                    hamMoreButton.left
-                else parent.right
-            }
         }
 
         Button {
@@ -152,45 +144,12 @@ Item {
             }
         }
 
-        Canvas {
-            id: canva
-            height: parent.height
-            width: hamMoreButton.width + 6
-            visible: hamMoreButton.visible
-            anchors.right: {parent.right;}
-            Connections {
-                target: {loader;}
-                onIsOnlineChanged: {canva.requestPaint();}
-            }
-
-            onPaint: {
-                var cntx =getContext("2d")
-                cntx.reset()
-                cntx.fillStyle = loader.isOnline? loader.head3Color: loader.head3Color
-                cntx.beginPath();
-                cntx.moveTo(0,height)
-                cntx.lineTo(width, height)
-                cntx.lineTo(width, 0)
-                cntx.lineTo(0, 0)
-                cntx.closePath();
-                cntx.fill();
-
-                cntx.fillStyle = loader.isOnline? loader.head3Color: loader.head3Color
-                cntx.beginPath();
-                cntx.moveTo(0,height)
-                cntx.lineTo(6,height)
-                cntx.lineTo(6,0);
-                cntx.lineTo(0,0);
-                cntx.closePath();
-                cntx.fill();
-            }
-        }
-
         Rectangle {
             id: headerLine
             width: parent.width
             height:facade.toPx(6)
             opacity: 0.3
+            z: 1000
             color: {loader.head2Color}
             anchors {
                 bottom: parent.bottom;
@@ -206,23 +165,28 @@ Item {
         }
 
         Button {
-            visible: page < 0
-            height: {parent.height}
-            width: facade.toPx(110)
+            id: hamMoreButton
+            height: parent.height - facade.toPx(60);
+            width: facade.toPx(90);
             x: parent.width -width;
             anchors.verticalCenter:(parent.verticalCenter)
-            id: hamMoreButton
             onClicked: {
-                loader.focus =loader.context=true;
+                loader.focus = loader.context = true
                 chatMenuList.xPosition = rootItem.width-chatMenuList.w-facade.toPx(20)
                 chatMenuList.yPosition = (facade.toPx(20))
             }
-            background:Image{
-                anchors.centerIn: parent
-                source: ("qrc:/ui/buttons/moreButton.png")
-                height:facade.toPx(sourceSize.height* 1.2)
-                width: facade.toPx(sourceSize.width * 1.2)
-                fillMode: Image.PreserveAspectFit;
+            visible: page <0;
+            background: Rectangle {
+                color: loader.head3Color
+                Image {
+                    anchors.verticalCenter: {
+                        parent.verticalCenter
+                    }
+                    source: "../ui/buttons/moreButton.png"
+                    height: facade.toPx(sourceSize.height)
+                    width: facade.toPx(sourceSize.width*1)
+                    fillMode:Image.PreserveAspectFit
+                }
             }
         }
     }

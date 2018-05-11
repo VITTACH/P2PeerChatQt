@@ -161,7 +161,7 @@ Drawer {
             lineColor: Math.random(),
             timeStamp: String(times),
             textColor: (flag === 2)?("#545454"):("#535353"),
-            backgroundColor:flag==2?"#CAFFFFFF":"#CAEFFFDE",
+            backgroundColor:flag==2?"#FFFFFFFF":"#CAEFFFDE",
             images: selected
         });
         if (cflag == 2) event_handler.sendMsgs(parseToJSON(message,loader.tel,0))
@@ -181,24 +181,22 @@ Drawer {
     }
 
     FastBlur {
-        radius: 40
+        radius: 30
+        opacity: 0.750;
         source: beckground;
-        transparentBorder:true
         anchors.fill: beckground
     }
     Image {
-        id:beckground;
-        anchors.fill:parent
+        id: beckground;
+        anchors.fill: parent
         source: "http://pipsum.com/"+width+"x"+height+".jpg"
-        opacity: 0.62;
-        visible: false
+        visible: false;
     }
-
     P2PStyle.ColorAnimate {
         opacity: 0.62;
-        anchors.fill: {parent}
+        anchors.fill: parent
         Component.onCompleted: {
-            setColors([[48,99,137], [10,10,10], [84,116,153], [216,208,182]],100)
+            setColors([[67,138,188], [50,50,50], [84,116,153],[173,166,147]],100)
         }
     }
 
@@ -283,28 +281,28 @@ Drawer {
 
                             Rectangle {
                                 id:msCloud
-                                border.width: 4.0
-                                border.color: "#C6D1D7"
-                                property var lightColor
-                                property var darksColor
+                                border.width: 3.0
+                                border.color: "#C6D1D7";
+                                property var lightColor;
+                                property var darksColor;
 
-                                color: backgroundColor;
-                                width: {textarea.contentWidth}
-                                height: textarea.height
-                                radius: facade.toPx(8);
+                                color: backgroundColor
+                                radius: {facade.toPx(8)}
+                                width: textarea.contentWidth
+                                height: textarea.height;
 
-                                Component.onCompleted:{
+                                Component.onCompleted: {
                                     lightColor = Qt.rgba(color.r - 0.06, color.g - 0.04,color.b, 1)
                                     darksColor = Qt.rgba(color.r - 0.13, color.g - 0.10,color.b, 1)
                                 }
 
                                 PropertyAnimation {
                                     duration: 500
-                                    id: circleAnimation
-                                    target: coloresRect
+                                    id: circleAnimation;
+                                    target: coloresRect;
                                     properties: ("width,height,radius")
                                     from: 0
-                                    to: parent.width*3;
+                                    to: parent.width * 3
 
                                     onStopped: {
                                         coloresRect.width = 0;
@@ -319,7 +317,7 @@ Drawer {
                                     Rectangle {
                                         width: 0
                                         height: 0
-                                        id: coloresRect
+                                        id: coloresRect;
                                         color: parent.parent.lightColor
 
                                         transform: Translate {
@@ -464,8 +462,8 @@ Drawer {
                                     Rectangle {
                                         height: width
                                         radius: width/2
-                                        width: parent.width / 2.2
-                                        anchors.centerIn: parent;
+                                        width: parent.width/2.2
+                                        anchors.centerIn:parent
                                         border.color: {(loader.chat2Color)}
                                         border.width: 3
                                         visible:index == chatModel.count-1;
@@ -524,8 +522,8 @@ Drawer {
     PropertyAnimation {
         id: attachMove;
         target: attach;
-        from: attach.move==true ? 0: facade.toPx(280)
-        to: attach.move==true ? facade.toPx(280): (0)
+        from: {(attach.move == true) ? 0 : facade.toPx(280);}
+        to: {(attach.move == true) ? facade.toPx(280) : (0);}
         property: "height";
         duration: 300
     }
@@ -535,7 +533,7 @@ Drawer {
         width: parent.width
         anchors {
             bottom: parent.bottom;
-            bottomMargin: input? parent.height*0.43:0
+            bottomMargin: input == true? parent.height * 43/100: 0;
         }
         Rectangle {
             id: attach
@@ -552,7 +550,7 @@ Drawer {
                 x: facade.toPx(20)
                 spacing: facade.toPx(10)
                 height: parent.height-x;
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenter : {(parent.verticalCenter);}
 
                 Rectangle {
                     id: cam

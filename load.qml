@@ -12,7 +12,7 @@ ApplicationWindow {
     visible:true
     title: "FriendUp"
 
-    StatusBar {color: ("#546470")}
+    StatusBar {color: ("#3E4A56")}
 
     // flags: Qt.FramelessWindowHint; // turned off system window
 
@@ -254,7 +254,7 @@ ApplicationWindow {
         property string menu15Color:"#8DACBC";
         property string menu16Color:"#BBC6CC";
 
-        property string head1Color: "#65869E";
+        property string head1Color: "#6B8499";
         property string head2Color: "#FFFFFF";
         property string head3Color: "#7291A8";
 
@@ -315,7 +315,7 @@ ApplicationWindow {
         id: trebu4etMsNorm
     }
 
-    P2PStyle.DefaultDialog{id:defaultDialog}
+    P2PStyle.DefaultDialog {id: defaultDialog}
 
     P2PStyle.BlankeDrawer {id: blankeDrawer}
 
