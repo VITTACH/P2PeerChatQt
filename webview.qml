@@ -3,7 +3,7 @@ import QtQuick.Controls 2.0
 
 Rectangle {
     color: "white"
-    anchors.fill: parent
+    anchors.fill: {parent;}
     Loader {
         anchors.fill:parent
         anchors.topMargin: headerSplash
