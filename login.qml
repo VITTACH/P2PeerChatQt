@@ -25,7 +25,7 @@ Item {
             x: (parent.width-width)/2;
             width: {
                 if (parent.width > facade.toPx(sourceSize.width)) {parent.width;}
-                else facade.toPx(sourceSize.width)
+                else {facade.toPx(sourceSize.width)}
             }
         }
     }
@@ -222,7 +222,7 @@ Item {
                     inputMethodHints: index == 1? Qt.ImhFormattedNumbersOnly:Qt.ImhNone
                     background: Rectangle{opacity:0}
                     font.family: trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(38);
+                    font.pixelSize: facade.doPx(29);
                     x: facade.toPx(80)
                 }
             }

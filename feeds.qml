@@ -79,7 +79,7 @@ Rectangle {
                                 if (humanModel.count<1||index<0) {
                                     loader.chats.push({phone:obj[i].name, message:[]})
                                     humanModel.append({
-                                        image: "http://lorempixel.com/200/20"+(i),
+                                        image: "http://picsum.photos/20" +i +"/20" +i,
                                         famil: obj[i].family,
                                         login: obj[i].login,
                                         phone: obj[i].name,
@@ -171,9 +171,9 @@ Rectangle {
                         width: parent.parent.width - inerImage.width - (parent.spacing) - (facade.toPx(30));
 
                         rightPadding: parent.parent.radius;
-                        onAccepted: getMePeers(text.toLowerCase())
+                        onAccepted: getMePeers(text.toLowerCase());
                         onTextChanged: if (event_handler.currentOSys() != 1 && event_handler.currentOSys() != 2) getMePeers(text.toLowerCase())
-                        placeholderText:qsTr("Найти новых друзей")
+                        placeholderText: qsTr("Найти новых друзей")
                         font.bold: true;
                         font.pixelSize: facade.doPx(20);
                         font.family: trebu4etMsNorm.name
@@ -243,7 +243,7 @@ Rectangle {
                                 duration: 500
                                 target: coloresRect;
                                 id: circleAnimation;
-                                properties:("width, height, radius")
+                                properties:("width, height, radius");
                                 from: 0
                                 to: (delegaRect.width * 3);
 
@@ -255,28 +255,12 @@ Rectangle {
 
                             MouseArea {
                                 id: myMouseArea
-                                property var presed
                                 anchors.fill: parent;
-                                onPressAndHold: presed=true
-                                drag.target: presed?parent:undefined
-                                drag.axis: Drag.XAxis
-                                drag.minimumX: -width*0.40;
-                                drag.maximumX: 0
-                                onExited: {(circleAnimation.stop())}
+                                onExited: {(circleAnimation.stop());}
                                 onPressed: {
                                     coloresRect.x = mouseX;
                                     coloresRect.y = mouseY;
                                     circleAnimation.start()
-                                }
-                                onReleased: {
-                                    presed = false
-                                    if (parent.x <= drag.minimumX) {
-                                        if (event_handler.currentOSys()!= 1) {
-                                        } else {
-                                            caller.directCall(phone)
-                                        }
-                                    }
-                                    parent.x=0
                                 }
                                 onClicked: {
                                     listView.friend = phone
@@ -287,7 +271,7 @@ Rectangle {
                             Connections {
                                 target: defaultDialog
                                 onChooseChanged: {
-                                    if (listView.memIndex !== index) {
+                                    if (listView.memIndex != index) {
                                         var objct = JSON.parse((loader.frienList))
                                         if (defaultDialog.choose== false && listView.friend!=null) {
                                             if (objct === null) {objct = [];}
@@ -316,39 +300,24 @@ Rectangle {
                                 }
                             }
 
-                            Item {
+                            Column {
                                 id: fo
-                                height: Math.max(fullName.implicitHeight, telPhone.implicitHeight);
-                                anchors.verticalCenter: parent.verticalCenter;
                                 anchors {
                                     left: bug.right
                                     right: parent.right
                                     leftMargin: facade.toPx(30)
                                 }
-
                                 Text {
-                                    id: fullName
                                     text: (login + " " + famil)
+                                    color: listView.currentIndex== index? "#FFFFFFFF": "#FF000000";
                                     font.family:trebu4etMsNorm.name
                                     font.pixelSize: facade.doPx(30)
-                                    color: listView.currentIndex== index? "#FFFFFFFF": "#FF000000";
-                                    anchors{
-                                        verticalCenter: parent.verticalCenter;
-                                    }
                                 }
                                 Text {
-                                    id: telPhone
-                                    elide: Text.ElideRight
-                                    text:phone.substring(0,1)+"("+phone.substring(1,4)+")"+phone.substring(4,7)+"-"+phone.substring(7)+":"+port
+                                    text: "ip: " + ip + ", port: " + port
+                                    color: listView.currentIndex== index? "#FFFFFFFF": "#FF808080";
                                     font.family:trebu4etMsNorm.name
                                     font.pixelSize: facade.doPx(20)
-                                    width: delegaRect.width - bug.width - bug.x - fullName.implicitWidth - 3 * facade.toPx(30);
-                                    color: listView.currentIndex== index? "#FFFFFFFF": "#FF808080";
-                                    anchors{
-                                        right: parent.right
-                                        rightMargin:facade.toPx(30)
-                                        verticalCenter: parent.verticalCenter;
-                                    }
                                 }
                             }
                         }

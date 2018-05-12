@@ -76,7 +76,7 @@ Drawer {
                     }
                     for (var i = 0; i < obj.length; i+=1) {
                         index = findPeer(obj[i].name)
-                        var imgUrl ="http://lorempixel.com/400/20"+i+"/sports"
+                        var imgUrl = "http://picsum.photos/400/20"+i
                         if (usersModel.count<1|| index<0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
                             usersModel.append({

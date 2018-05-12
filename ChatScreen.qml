@@ -12,6 +12,7 @@ Drawer {
     height: parent.height;
 
     property var input
+    property real percent
     property real yPosition;
     property var select;
     property var selectedImage:[];
@@ -25,7 +26,7 @@ Drawer {
     function checkMessage(flag, selectImage) {
         if (textField.text.length >= 1) {
             var text= buferText.text = textField.text;
-            var obj = {text:text,flag:flag,time:new Date(),imgs:selectImage}
+            var obj = {text: text, flag: flag, time:new Date(), imgs:selectImage}
             var nd = blankeDrawer.cindex;
             textField.text=""
             loader.chats[nd].message.push(obj)
@@ -37,14 +38,15 @@ Drawer {
         }
     }
 
-    function hideKeyboard(event){
-        pressedArea.visible= true
-        if (event !== 0)
-            event.accepted = true
-        loader.forceActiveFocus()
-        textField.focus=false
-        Qt.inputMethod.hide()
-        input=false
+    Connections {
+        target: chatScreen;
+        function updatePosition(rotate) {
+            percent = 1-facade.toPx(20)/width
+            if (loader.isLogin == false) position = 0;
+            else if (position > percent || rotate) position = percent
+        }
+        onPositionChanged: updatePosition()
+        onWidthChanged: if (position>0) updatePosition(true)
     }
 
     function loadChatsHistory() {
@@ -81,10 +83,20 @@ Drawer {
         return JSON.stringify({message:message,phone:phone})
     }
 
+    function hideKeyboard(event){
+        pressedArea.visible= true
+        if (event !== 0)
+            event.accepted = true
+        loader.forceActiveFocus()
+        textField.focus=false
+        Qt.inputMethod.hide()
+        input=false
+    }
+
     Connections {
         target: loader
         onContextChanged: {
-            if(!loader.context&&yPosition>0) {chatMenuList.menu=1;select=[]}
+            if (!loader.context && yPosition > 0) {chatMenuList.menu=1;select=[]}
         }
     }
 
@@ -99,7 +111,7 @@ Drawer {
                     }
                 }
                 buferText.text = (obj.message)
-                var object = {text:buferText.text, flag:1, time: new Date()}
+                var object = {text : buferText.text, flag : 1, time : new Date()}
                 loader.chats[i].message.push((object))
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 if(i == blankeDrawer.getCurPeerInd()){
@@ -119,17 +131,17 @@ Drawer {
                 chatMenuList.action=0;
                 var currentInd = blankeDrawer.cindex
                 loader.chats[currentInd].message=[];
-                event_handler.saveSet("chats", JSON.stringify(loader.chats))
+                event_handler.saveSet(qsTr("chats"),JSON.stringify(loader.chats))
             }
             if (chatMenuList.action == (3)) {
-                var text = chatModel.get(select[select.length - 1]).someText
+                var text = chatModel.get(select[(select.length) - (1)]).someText;
                 event_handler.copyText(text);
             } else if (chatMenuList.action == (1)) {
                 select.sort();
                 for(var i=0; i<select.length; i++) {
                     chatModel.remove(select[i] - i);
                     var currentIndex = (blankeDrawer.cindex)
-                    loader.chats[currentIndex].message.splice(select[i]-i,1)
+                    loader.chats[(currentIndex)].message.splice(select[i] - i, 1)
                 }
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
                 for(var i=1; i<chatModel.count; i++)
@@ -140,11 +152,6 @@ Drawer {
             }
             loader.context = false
         }
-    }
-
-    Connections {
-        target:chatScreen;
-        onPositionChanged: if (!loader.isLogin) position = 0
     }
 
     Connections {target: blankeDrawer; onCindexChanged: loadChatsHistory();}
@@ -171,7 +178,7 @@ Drawer {
        var s = (+ new Date() - Date.parse(str))/1e3, m= s/60, h = m/60, d = h/24,
        w = d/7, y = d/365.242, M= y*12;
        function approx(num) {return num < 5? qsTr('Несколько'): Math.round(num);}
-       return s <= 1? qsTr('Только что')  : m<1? approx(s) + qsTr(' сек. назад')
+       return s <= 1? qsTr('только что')  : m<1? approx(s) + qsTr(' сек. назад')
             : m <= 1? qsTr('минуту назад'): h<1? approx(m) + qsTr(' минут назад')
             : h <= 1? qsTr('час назад')   : d<1? approx(h) + qsTr(' часов назад')
             : d <= 1? qsTr('вчера')       : w<1? approx(d) + qsTr(' суток назад')
@@ -181,7 +188,7 @@ Drawer {
     }
 
     FastBlur {
-        radius: 30
+        radius: 20
         opacity: 0.750;
         source: beckground;
         anchors.fill: beckground
@@ -196,7 +203,7 @@ Drawer {
         opacity: 0.62;
         anchors.fill: parent
         Component.onCompleted: {
-            setColors([[67,138,188], [50,50,50], [84,116,153],[173,166,147]],100)
+            setColors([[67,138,188], [50,50,50], [84,116,153],[153,146,130]],100)
         }
     }
 
@@ -711,9 +718,10 @@ Drawer {
 
             Button {
                 id: sendButton
-                height: parent.height;
+                height: {parent.height}
                 anchors.right: {parent.right;}
-                width: {background.width + facade.toPx(20)}
+                anchors.rightMargin: facade.toPx(40)
+                width: background.width
                 onClicked: {
                     checkMessage(2,JSON.stringify(selectedImage))
                     if (event_handler.currentOSys() >= 1) {

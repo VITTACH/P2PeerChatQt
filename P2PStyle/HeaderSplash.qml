@@ -20,7 +20,7 @@ Item {
     property string text: ""
     property int page
 
-    function load(value) {headerLine.width=value*rootItem.width;}
+    function load(value) {headerLine.width = value*rootItem.width}
 
     Rectangle {
         id: headRect
@@ -33,21 +33,22 @@ Item {
             id: inerItem
             height: parent.height
             anchors.left: page!=0 || loader.isLogin? hambrgrButton.right: parent.left;
-            anchors.right:page!=0 || loader.isLogin? hamMoreButton.left: parent.right;
+            anchors.right: {parent.right}
+
             Row {
                 spacing: facade.toPx(30);
                 anchors {
                     verticalCenter: parent.verticalCenter;
-                    left: (loader.isLogin)? parent.left:undefined
-                    centerIn: (loader.isLogin)? undefined: parent
-                    leftMargin: loader.isLogin? facade.toPx(20):0
+                    left: (loader.isLogin)? parent.left: undefined
+                    centerIn: (loader.isLogin)? undefined: parent;
+                    leftMargin: loader.isLogin? facade.toPx(20):0;
                     horizontalCenter: loader.isLogin?undefined:parent.horizontalCenter
                 }
 
                 Item {
                     width: bug.width
                     height: parent.height
-                    visible: {page < 0 && (rootItem.phot !== "")}
+                    visible: {page < 0 && (rootItem.phot !== "");}
 
                     OpacityMask {
                         id: big
@@ -63,7 +64,7 @@ Item {
                         width: facade.toPx(90)
                         height:facade.toPx(90)
                         anchors {
-                            verticalCenter: parent.verticalCenter
+                            verticalCenter: parent.verticalCenter;
                         }
                         Image {
                             source: phot;
@@ -86,7 +87,7 @@ Item {
                         smooth:true
                         visible: false
                         source: "qrc:/ui/mask/round.png"
-                        sourceSize: Qt.size(bug.width,bug.height)
+                        sourceSize: Qt.size(bug.width, bug.height)
                     }
                 }
 
@@ -123,10 +124,13 @@ Item {
             width: facade.toPx(140)
             onClicked: {
                 if (page == 1) page -= 1
-                else if(chatScreen.position>0)
-                    blankeDrawer.open()
                 else if (loader.webview) {
                     loader.webview = false
+                }
+                else if (chatScreen.position > 0) {
+                    loader.focus = loader.context = (true)
+                    chatMenuList.xPosition = (rootItem.width - chatMenuList.w) - (60);
+                    chatMenuList.yPosition=facade.toPx(20)
                 } else blankeDrawer.open()
                 loader.focus = true
             }
@@ -136,11 +140,11 @@ Item {
 
             background: Image {
                 id: hambrgrButtonImage;
-                fillMode: {(Image.PreserveAspectFit)}
-                source: "qrc:/ui/buttons/" + (page == 1 || page < 0 || loader.webview ? "back" : "infor") + "Button.png"
-                anchors.centerIn:parent
                 height:facade.toPx(sourceSize.height* 1.2)
                 width: facade.toPx(sourceSize.width * 1.2)
+                fillMode: {(Image.PreserveAspectFit)}
+                source: "../ui/buttons/" + (page == 1 || loader.webview? "back": (page < 0? "more": "infor")) + "Button.png";
+                anchors.centerIn:parent
             }
         }
 
@@ -160,32 +164,6 @@ Item {
                     if (!(headerLine.width > 0&&headerLine.width < facade.toPx(90))) {
                         headerLine.width = rootItem.width;
                     }
-                }
-            }
-        }
-
-        Button {
-            id: hamMoreButton
-            height: parent.height - facade.toPx(60);
-            width: facade.toPx(90);
-            x: parent.width -width;
-            anchors.verticalCenter:(parent.verticalCenter)
-            onClicked: {
-                loader.focus = loader.context = true
-                chatMenuList.xPosition = rootItem.width-chatMenuList.w-facade.toPx(20)
-                chatMenuList.yPosition = (facade.toPx(20))
-            }
-            visible: page <0;
-            background: Rectangle {
-                color: loader.head3Color
-                Image {
-                    anchors.verticalCenter: {
-                        parent.verticalCenter
-                    }
-                    source: "../ui/buttons/moreButton.png"
-                    height: facade.toPx(sourceSize.height)
-                    width: facade.toPx(sourceSize.width*1)
-                    fillMode:Image.PreserveAspectFit
                 }
             }
         }

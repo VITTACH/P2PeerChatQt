@@ -256,14 +256,13 @@ ApplicationWindow {
 
         property string head1Color: "#6B8499";
         property string head2Color: "#FFFFFF";
-        property string head3Color: "#7291A8";
 
         property string sets1Color: "#64717F";
         property string sets2Color: "#AEBDC4";
         property string sets3Color: "#6C839A";
         property string sets4Color: "#708EA0";
 
-        property string feed1Color: "#7F7875";
+        property string feed1Color: "#7A93A0";
         property string feed2Color: "#8E8784";
 
         property string chat1Color: "#EAEAEA";
