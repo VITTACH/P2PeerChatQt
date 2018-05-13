@@ -129,7 +129,7 @@ Item {
                 }
                 else if (chatScreen.position > 0) {
                     loader.focus = loader.context = (true)
-                    chatMenuList.xPosition = (rootItem.width - chatMenuList.w) - (60);
+                    chatMenuList.xPosition=rootItem.width-chatMenuList.w-facade.toPx(40)
                     chatMenuList.yPosition=facade.toPx(20)
                 } else blankeDrawer.open()
                 loader.focus = true
@@ -140,8 +140,8 @@ Item {
 
             background: Image {
                 id: hambrgrButtonImage;
-                height:facade.toPx(sourceSize.height* 1.2)
-                width: facade.toPx(sourceSize.width * 1.2)
+                height:facade.toPx(sourceSize.height* 1.0)
+                width: facade.toPx(sourceSize.width * 1.0)
                 fillMode: {(Image.PreserveAspectFit)}
                 source: "../ui/buttons/" + (page == 1 || loader.webview? "back": (page < 0? "more": "infor")) + "Button.png";
                 anchors.centerIn:parent

@@ -729,7 +729,7 @@ Drawer {
                     }
                 }
                 background: Image {
-                    source:"ui/buttons/sendButton.png"
+                    source: "ui/buttons/sendButton.png"
                     width: facade.toPx(sourceSize.width);
                     height: facade.toPx(sourceSize.height);
                     anchors {

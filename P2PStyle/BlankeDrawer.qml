@@ -694,7 +694,7 @@ Drawer {
             topMargin: canva.width;
             leftMargin: -width * 1.0;
         }
-        width: 6
+        width: 5
         color: {
             if(loader.isOnline==true) "#647A84"
             else {loader.menu2Color;}

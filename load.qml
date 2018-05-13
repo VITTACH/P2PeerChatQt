@@ -32,7 +32,7 @@ ApplicationWindow {
         if (event_handler.currentOSys()>0) close.accepted =false; else close.accepted=true
     }
 
-    width: {event_handler.currentOSys() < 1? facade.toPx(820): 0}
+    width: {event_handler.currentOSys() < 1? facade.toPx(1440): 0}
     height:event_handler.currentOSys()<1?Screen.height-facade.toPx(100):0
 
     QtObject {
@@ -118,6 +118,43 @@ ApplicationWindow {
 
         property var tmpLogin;
         property var tmpPhone;
+
+        property string menu1Color: "#939393";
+        property string menu2Color: "#E0E0E0";
+        property string menu3Color: "#778899";
+        property string menu4Color: "#6E737F";
+        property string menu5Color: "#B24A3E";
+        property string menu6Color: "#96281B";
+        property string menu7Color: "#F1F1F1";
+        property string menu8Color: "#D3D3D3";
+        property string menu9Color: "#E5E5E5";
+
+        property string menu10Color:"#535353";
+        property string menu11Color:"#597FB2";
+        property string menu12Color:"#4F7E9E";
+        property string menu13Color:"#B1B1B1";
+        property string menu14Color:"#7999AD";
+        property string menu15Color:"#8DACBC";
+        property string menu16Color:"#BBC6CC";
+
+        property string head1Color: "#6B8499";
+        property string head2Color: "#FFFFFF";
+
+        property string sets1Color: "#64717F";
+        property string sets2Color: "#AEBDC4";
+        property string sets3Color: "#6C839A";
+        property string sets4Color: "#708EA0";
+
+        property string feed1Color: "#7A93A0";
+        property string feed2Color: "#8E8784";
+
+        property string chat1Color: "#EAEAEA";
+        property string chat2Color: "#A7A7A7";
+        property string chat3Color: "#CC8B99A4"
+
+        property string feedColor: "#EDEDED";
+
+        property var fields: ["","","","",""]
 
         function goTo(page) {privated.visitedPageList.push(source=page);}
 
@@ -235,43 +272,6 @@ ApplicationWindow {
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             request.send("name="+ loader.tel + "&friend=" + (friend) + "&remove=" + flag);
         }
-
-        property string menu1Color: "#939393";
-        property string menu2Color: "#E0E0E0";
-        property string menu3Color: "#778899";
-        property string menu4Color: "#6E737F";
-        property string menu5Color: "#B24A3E";
-        property string menu6Color: "#96281B";
-        property string menu7Color: "#F1F1F1";
-        property string menu8Color: "#D3D3D3";
-        property string menu9Color: "#E5E5E5";
-
-        property string menu10Color:"#535353";
-        property string menu11Color:"#597FB2";
-        property string menu12Color:"#4F7E9E";
-        property string menu13Color:"#B1B1B1";
-        property string menu14Color:"#7999AD";
-        property string menu15Color:"#8DACBC";
-        property string menu16Color:"#BBC6CC";
-
-        property string head1Color: "#6B8499";
-        property string head2Color: "#FFFFFF";
-
-        property string sets1Color: "#64717F";
-        property string sets2Color: "#AEBDC4";
-        property string sets3Color: "#6C839A";
-        property string sets4Color: "#708EA0";
-
-        property string feed1Color: "#7A93A0";
-        property string feed2Color: "#8E8784";
-
-        property string chat1Color: "#EAEAEA";
-        property string chat2Color: "#A7A7A7";
-        property string chat3Color: "#CC8B99A4"
-
-        property string feedColor: "#EDEDED";
-
-        property var fields: ["","","","",""]
     }
 
     function strartPage() {

@@ -508,24 +508,22 @@ Rectangle {
 
             ListView {
                 clip: true
-                width: parent.width
-                height: facade.toPx(160)
-                spacing: {facade.toPx(27);}
-                orientation: Qt.Horizontal;
-                boundsBehavior: {
-                    Flickable.StopAtBounds;
-                }
+                width: contentWidth
+                x: (parent.width-width)/2
+                height: facade.toPx(160);
+                spacing: facade.toPx(27);
+                orientation:Qt.Horizontal
                 visible: index==2
                 model:ListModel {
-                    ListElement {image:"mus.png"; text: "music"}
-                    ListElement {image:"img.png"; text: "image"}
-                    ListElement {image:"vide.png";text: "video"}
-                    ListElement {image:"play.png";text: "games"}
+                    ListElement {image:"mus.png";}
+                    ListElement {image:"img.png";}
+                    ListElement {image:"vide.png"}
+                    ListElement {image:"play.png"}
                 }
                 delegate: Image {
                     clip: true
-                    width: facade.toPx(sourceSize.width / 3.5)
-                    height: facade.toPx(sourceSize.height / 3.5)
+                    width: facade.toPx(sourceSize.width /3.55)
+                    height: facade.toPx(sourceSize.height /3.55)
                     source: {"qrc:/ui/buttons/feeds/" + (image)}
 
                     PropertyAnimation {
