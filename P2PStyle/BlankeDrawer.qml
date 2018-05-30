@@ -4,12 +4,14 @@ import QtGraphicalEffects 1.0
 
 Drawer {
     id: drawer
+    clip: true
+    edge: Qt.RightEdge;
     property bool find: true
+    dragMargin: facade.toPx(40)
     property alias cindex: listView.currentIndex;
     background: Rectangle {color: "transparent";}
     width: {Math.min(facade.toPx(640), 0.9 * parent.width)}
     height: {parent.height;}
-    dragMargin: facade.toPx(40)
 
     Connections {
         target: drawer;
@@ -63,20 +65,15 @@ Drawer {
     }
 
     function getMePeers(name) {
-        var request = new XMLHttpRequest(), obj,index
+        var request = new XMLHttpRequest(),obj,index,imgUrl
         request.open('POST', "http://www.hoppernet.hol.es")
         request.onreadystatechange =function() {
             if (request.readyState ==XMLHttpRequest.DONE) {
                 if (request.status&&request.status ==200) {
-                    try {
-                        obj=JSON.parse(request.responseText)
-                    } catch(e) {
-                        console.log("parse: "+e)
-                        return
-                    }
+                    obj =JSON.parse(request.responseText)
                     for (var i = 0; i < obj.length; i+=1) {
                         index = findPeer(obj[i].name)
-                        var imgUrl = "http://picsum.photos/400/20"+i
+                        imgUrl= "https://randomuser.me/portraits/men/" + Math.floor(100*Math.random()) + ".jpg"
                         if (usersModel.count<1|| index<0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
                             usersModel.append({
@@ -168,7 +165,8 @@ Drawer {
         color: (loader.isOnline? loader.menu3Color: loader.menu3Color)
         width: parent.width - canva.width;
         anchors {
-            top: (profile.top)
+            top: profile.top;
+            left: canva.right
             bottom: profile.bottom
             topMargin:partnerHeader.height-facade.toPx(18)-iner.height
         }
@@ -178,10 +176,9 @@ Drawer {
         id: canva
         anchors {
             top: leftRect.top;
-            left: leftRect.right
             bottom: profile.bottom
         }
-        width: facade.toPx(120)
+        width:facade.toPx(120)
         Connections {
             target: loader;
             onIsOnlineChanged: canva.requestPaint();
@@ -192,19 +189,19 @@ Drawer {
             var context=getContext("2d")
             context.reset()
             context.fillStyle=loader.isOnline == true? loader.menu3Color:loader.menu3Color
-            context.moveTo(0,0)
-            context.lineTo(width, width)
-            context.lineTo(width,height)
+            context.moveTo(0, width)
             context.lineTo(0,height)
+            context.lineTo(width,height)
+            context.lineTo(width, 0)
             context.closePath()
             context.fill();
 
             context.fillStyle=loader.isOnline == true? loader.menu4Color:loader.menu2Color
             context.beginPath()
-            context.moveTo(0,0)
-            context.lineTo(width-0,width)
-            context.lineTo(width-6,width)
-            context.lineTo(0,6)
+            context.moveTo(width, 0)
+            context.lineTo(0, width)
+            context.lineTo(6, width)
+            context.lineTo(width, 6)
             context.closePath()
             context.fill();
         }
@@ -221,28 +218,29 @@ Drawer {
         }
         Row {
             id: firstRow;
-            Column {
-                Text {
-                    font.bold: true;
-                    style: Text.Raised
-                    styleColor: "black";
-                    color: {"#FFFFFFFF"}
-                    text: usersModel.count > 0 ? usersModel.count: 0
-                    anchors.horizontalCenter:parent.horizontalCenter
-                    font.family: trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(30);
-                }
-                anchors.bottom: parent.bottom
-                Text {
-                    text: qsTr("Друзья")
-                    color: qsTr("white")
-                    anchors.horizontalCenter:parent.horizontalCenter
-                    font.family: trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(24);
-                }
-            }
             anchors.horizontalCenter:parent.horizontalCenter
             spacing:facade.toPx(30)-(facade.toPx(708)-drawer.width)/facade.toPx(10)
+            Column {
+                opacity: 0
+                anchors.bottom: parent.bottom
+                Text {
+                    text: "0"
+                    color: "white"
+                    font.bold: true
+                    styleColor:"black";
+                    style: Text.Raised;
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(30);
+                    anchors.horizontalCenter:parent.horizontalCenter
+                }
+                Text {
+                    text: "Онлайн"
+                    color: "white"
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(24);
+                    anchors.horizontalCenter:parent.horizontalCenter
+                }
+            }
             Button {
                 id: avatarButton
                 width: facade.toPx(230);
@@ -310,24 +308,23 @@ Drawer {
                 }
             }
             Column {
-                opacity: 0
-                anchors.bottom: parent.bottom
                 Text {
-                    text: "0"
-                    color: "white"
-                    font.bold: true
-                    styleColor:"black";
-                    style: Text.Raised;
+                    font.bold: true;
+                    style: Text.Raised
+                    styleColor: "black";
+                    color: {"#FFFFFFFF"}
+                    text: usersModel.count > 0 ? usersModel.count: 0
+                    anchors.horizontalCenter:parent.horizontalCenter
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(30);
-                    anchors.horizontalCenter:parent.horizontalCenter
                 }
+                anchors.bottom: parent.bottom
                 Text {
-                    text: "Онлайн"
-                    color: "white"
+                    text: qsTr("Друзья")
+                    color: qsTr("white")
+                    anchors.horizontalCenter:parent.horizontalCenter
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(24);
-                    anchors.horizontalCenter:parent.horizontalCenter
                 }
             }
         }
@@ -336,18 +333,9 @@ Drawer {
             id: myRow
             width: firstRow.width;
             Text {
-                color: "white"
-                font.bold: {true;}
-                elide: Text.ElideRight
-                font.family: trebu4etMsNorm.name
-                font.pixelSize: {facade.doPx(28);}
-                text:loader.login+" "+loader.famil
-                width: parent.width-scope1.implicitWidth-scope2.implicitWidth-image1.width
-            }
-            Text {
                 id: scope1
-                text: " [ "
-                color: "white"
+                text: "[ "
+                color:"white"
                 font.family: {trebu4etMsNorm.name}
                 font.pixelSize: {facade.doPx(28);}
             }
@@ -355,16 +343,25 @@ Drawer {
                 id: image1
                 anchors.top: parent.top
                 width: facade.toPx(sourceSize.width * 1.5)
-                height: facade.toPx(sourceSize.height * 1.5)
+                height:facade.toPx(sourceSize.height* 1.5)
                 anchors.topMargin: facade.toPx(15)
                 source: "qrc:/ui/profiles/lin.png"
             }
             Text {
                 id: scope2
-                text: " 0 ]"
-                color: "white"
+                text: " 0 ] "
+                color:"white"
                 font.family: {trebu4etMsNorm.name}
                 font.pixelSize: {facade.doPx(28);}
+            }
+            Text {
+                width: {(parent.width) - scope1.implicitWidth - scope2.implicitWidth - image1.width}
+                color: "white"
+                font.bold: {true;}
+                elide: Text.ElideRight
+                font.family: trebu4etMsNorm.name
+                font.pixelSize: {facade.doPx(28);}
+                text:loader.login+" "+loader.famil
             }
         }
 
@@ -433,6 +430,14 @@ Drawer {
 
     ListView {
         id: listView
+        anchors {
+            topMargin: -1
+            leftMargin: 1
+            top: profile.bottom;
+            left: leftMenu.right
+            right: parent.right;
+            bottom: listMenu.top
+        }
         property int memIndex: 0
         model:ListModel {id: usersModel}
         Component.onCompleted: {
@@ -445,13 +450,6 @@ Drawer {
         clip: true
         spacing: 5
 
-        anchors {
-            topMargin: -1
-            top: profile.bottom;
-            left: leftMenu.right
-            right: parent.right;
-            bottom:listMenu.top;
-        }
         delegate: Item {
             id: baseItem
             visible: activity
@@ -570,7 +568,6 @@ Drawer {
                         chatScreen.setInfo(text, usersModel.get(index).image, (json.port == 0) == true? qsTr("Offline"): qsTr("Online"))
                         event_handler.sendMsgs(JSON.stringify(json));
                         chatScreen.open()
-                        drawer.close()
                     }
                     drag.axis: Drag.XAxis
                     drag.minimumX: -width*0.40
@@ -686,60 +683,13 @@ Drawer {
         }
     }
 
-    Rectangle {
-        anchors {
-            top: leftRect.top
-            left: parent.right;
-            bottom: parent.bottom
-            topMargin: canva.width;
-            leftMargin: -width * 1.0;
-        }
-        width: 5
-        color: {
-            if(loader.isOnline==true) "#647A84"
-            else {loader.menu2Color;}
-        }
-    }
-
-    HelperDrawer {
-        x: -width;
-        id: leftMenu
-        property bool direction;
-
-        function move(dir) {
-            leftMenu.direction = dir;
-            opens.start();
-        }
-
-        PropertyAnimation{
-            id: opens;
-            target: leftMenu
-            to: leftMenu.direction?0: -(leftMenu.width);
-            property: "x";
-            duration: 250;
-        }
-    }
-
-    LinearGradient {
-        height: 10
-        anchors.top: {profile.bottom}
-        anchors.topMargin:-1
-        width: parent.width;
-        end: Qt.point(0, height)
-        start: Qt.point(0,0)
-        gradient: Gradient {
-            GradientStop {position:0; color:"#30000000"}
-            GradientStop {position:1; color:"#00000000"}
-        }
-    }
-
-    Rectangle {
+    Item {
         id: leftSlider
-        opacity: 0
-        width: facade.toPx(60)
-        color: loader.menu4Color
+        // visible: false
+        width: facade.toPx(40)
         anchors {
             topMargin: -1;
+            left: leftMenu.right
             top: profile.bottom;
             bottom: listMenu.top
         }
@@ -748,7 +698,7 @@ Drawer {
             anchors.fill:parent;
             onPressed: p=mouse.x
             onPositionChanged: {
-                if (mouse.x>p) {
+                if (mouse.x<p) {
                     leftMenu.move(!(leftMenu.direction))
                 }
             }
@@ -762,7 +712,7 @@ Drawer {
         }
         Row {
             id: linesColumn
-            x: facade.toPx(10);
+            x: facade.toPx(7)
             spacing: {facade.toPx(6)}
             height:0.25*parent.height
             anchors.verticalCenter:parent.verticalCenter
@@ -776,21 +726,68 @@ Drawer {
         }
     }
 
+    HelperDrawer {
+        x: -width-1
+        id: leftMenu
+        property bool direction;
+
+        function move(dir) {
+            leftMenu.direction = dir;
+            opens.start();
+        }
+
+        PropertyAnimation{
+            id: opens;
+            target: leftMenu
+            to: leftMenu.direction?0: -leftMenu.width-1;
+            property: "x";
+            duration: 250;
+        }
+    }
+
+    Rectangle {
+        anchors {
+            top: leftRect.top
+            bottom: parent.bottom
+            topMargin: canva.width;
+        }
+        width: 5
+        color: {
+            if(loader.isOnline==true) "#647A84"
+            else {loader.menu2Color;}
+        }
+    }
+
+    LinearGradient {
+        height: 13
+        anchors.top: {profile.bottom}
+        anchors.topMargin:-1
+        width: parent.width;
+        end: Qt.point(0, height)
+        start: Qt.point(0,0)
+        gradient: Gradient {
+            GradientStop {position:0; color:"#30000000"}
+            GradientStop {position:1; color:"#00000000"}
+        }
+    }
+
     DropShadow {
-        radius: 10
-        samples: 16
-        source: (listMenu)
-        color: "#70000000"
-        anchors.fill: listMenu;
+        radius:13
+        samples: (16)
+        source: listMenu;
+        color: ("#70000000")
+        anchors.fill: listMenu
+        horizontalOffset: radius/2;
     }
     ListView {
         id: listMenu
-        property bool isShowed: false
-        snapMode:ListView.SnapOneItem
+        anchors.right: parent.right
         anchors.bottom: parent.bottom
+        snapMode:ListView.SnapOneItem
         boundsBehavior: Flickable.StopAtBounds;
         Component.onCompleted: currentIndex=-1;
 
+        property bool isShowed: false
         clip: true
         model:ListModel {
             id: navigateDownModel
@@ -916,7 +913,7 @@ Drawer {
                         verticalCenter: {parent.verticalCenter}
                     }
                     color: loader.menu10Color;
-                    font.pixelSize: facade.doPx(26)
+                    font.pixelSize: facade.doPx(28)
                     font.family:trebu4etMsNorm.name
                     text: {
                         if (index == 0) {

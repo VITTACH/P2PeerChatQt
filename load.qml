@@ -69,7 +69,7 @@ ApplicationWindow {
 
         function restores() {
             privated.visitedPageList =[];
-            loader.fields = ["", "", "", "", ""];
+            loader.fields = ["","","","",""]
             loader.tel = ""
             loader.login = ""
             loader.famil = ""
@@ -156,14 +156,10 @@ ApplicationWindow {
 
         property var fields: ["","","","",""]
 
-        function goTo(page) {privated.visitedPageList.push(source=page);}
-
         function back() {
             if (privated.visitedPageList.length > 1) {
                 if (source == "qrc:/loginanDregister.qml") {
-                    if (partnerHeader.page == 1) {
-                        partnerHeader.page = partnerHeader.page-1
-                    }
+                    if (partnerHeader.page == 1) partnerHeader.page = partnerHeader.page-1
                 } else if (loader.source != "profile.qml") {
                     privated.visitedPageList.pop()
                     source = privated.visitedPageList[privated.visitedPageList.length - 1]
@@ -173,14 +169,18 @@ ApplicationWindow {
             }
         }
 
+        function goTo(s) {
+            privated.visitedPageList.push(source=s)
+        }
+
         function loginByVk() {
             function callback(request) {
                 if (request.status === 200) {
-                    var obj= JSON.parse(request.responseText)
-                    loader.tel = obj.response[0].mobile_phone
-                    loader.login = obj.response[0].first_name
-                    loader.famil = obj.response[0].last_name;
-                    loader.avatarPath = obj.response[0].photo_100
+                    var obj=JSON.parse(request.responseText)
+                    loader.avatarPath= obj.response[0].photo_100
+                    loader.tel= obj.response[0].mobile_phone
+                    loader.login= obj.response[0].first_name
+                    loader.famil= obj.response[0].last_name;
                     logon(loader.tel, userId)
                 }
             }

@@ -18,7 +18,7 @@ Item {
     property string stat: ""
     property string phot: ""
     property string text: ""
-    property int page
+    property int page: 0
 
     function load(value) {headerLine.width = value*rootItem.width}
 
@@ -34,6 +34,7 @@ Item {
             height: parent.height
             anchors.left: page!=0 || loader.isLogin? hambrgrButton.right: parent.left;
             anchors.right: {parent.right}
+            anchors.rightMargin: page > 0 ? hambrgrButton.width: 0
 
             Row {
                 spacing: facade.toPx(30);

@@ -30,9 +30,7 @@ Item {
                 width: parent.width - 2*x
 
                 color: {
-                    if (mypos%2 == 0)
-                        loader.sets3Color
-                    else {loader.sets4Color}
+                    loader.sets4Color
                     if (index == curX) {
                         if (mypos == curY) {
                             if (!circleAnimation.running)

@@ -1,14 +1,12 @@
 package quickandroid;
 
-import java.net.*;
-import java.util.Random;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Enumeration;
-
-import org.fourthline.cling.support.model.PortMapping;
+import org.fourthline.cling.support.model.PortMapping;;
 import org.fourthline.cling.android.AndroidUpnpService;
 import org.fourthline.cling.support.igd.PortMappingListener;
+
+import java.net.*;;
+import java.util.*;
+import java.io.IOException;
 
 /**
  * Created by VITTACH on 09.02.2017.
@@ -20,9 +18,9 @@ public class UPForward {
     public InetAddress RemIPAddress;
     private DatagramSocket clientSocket;
     protected DatagramPacket receivePacket;
-    protected byte[] sendData = new byte[1024];
     protected byte[] receiveDat= new byte[1024];
     private AndroidUpnpService uPNPService=null;
+    protected List<byte[]> sendData = new ArrayList<>();
 
     public String getLocalHostlIp() throws IOException {
         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -34,19 +32,6 @@ public class UPForward {
             for (InetAddress address:Collections.list(addr)) {
                 if (!address.isReachable((int)3000)) continue;
                 if (address instanceof Inet6Address) continue;
-                /*
-                try(SocketChannel socket=SocketChannel.open()) {
-                    socket.socket().setSoTimeout(3000);
-                    socket.bind(new InetSocketAddress(address, 8080));
-                    socket.connect(new InetSocketAddress("fb.com", 80));
-                }catch (IOException ex) {
-                    ex.printStackTrace();
-                    continue;
-                }
-
-                System.out.format("ni: %s,ia: %s\n",interface_,address);
-                */
-
                 return address.getHostAddress();
             }
         }
@@ -56,7 +41,7 @@ public class UPForward {
     public String recieve() throws IOException {
         clientSocket.receive(receivePacket);
         this.RemPort = receivePacket.getPort();
-        this.RemIPAddress= receivePacket.getAddress();
+        RemIPAddress = receivePacket.getAddress();
 
         String modifiedSentence = new String(receivePacket.getData(),0, receivePacket.getLength());
         System.out.println("From server:"+modifiedSentence);
@@ -64,10 +49,22 @@ public class UPForward {
         return modifiedSentence;
     }
 
-    public void sendUdp(String message) throws IOException {
-        sendData = message.getBytes();
-        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
+    public void send(byte[] myData) throws IOException {
+        DatagramPacket sendPacket = new DatagramPacket(myData, myData.length, IPAddress, port);
         clientSocket.send(sendPacket);
+    }
+
+    public void sendUdp(String message) throws IOException {
+        int size = 16384;
+        sendData.clear();
+        for (int pos = 0; pos<message.length(); pos+=size) {
+            sendData.add(message.substring(pos, Math.min(message.length(), pos + size)).getBytes());
+        }
+
+        for (byte[] myData: sendData) {
+            System.out.println("Send to client: " + new String(myData));
+            send(myData);
+        }
     }
 
     public void runUPnP(AndroidUpnpService aServ, DatagramSocket clientSocket) throws IOException {

@@ -33,59 +33,25 @@ class UtilsForJavaNative {
  */
 public class PesrRequest {
     private String[] addr;
-    static String stackTrace = "";
-    httpRequest hr =new httpRequest();
-    static DatagramSocket datagramSocket;
-    Integer port;
-    boolean flag;
-    boolean handsShakeDone = true;
-    Activity activ = QtNative.activity();
-    String rmsg = new String ("");
-    UPForward pf= new UPForward();
-    BigInteger pbk = new BigInteger("1");
-    BigInteger mod = new BigInteger("1");
-    RsaEncrypt my_RSA = new RsaEncrypt();
-    RsaEncrypt himRSA = new RsaEncrypt();
-    JSONParser parser = new JSONParser();
-    JSONObject jsonObj= new JSONObject();
+    protected static String stackTrace = "";
+    private httpRequest hr = new httpRequest();
+    private static DatagramSocket datagramSocket;
+    private Integer port;
+    private boolean flag;
+    private boolean handsShakeDone = true;
+    private Activity activ=QtNative.activity();
+    private String rmsg = new String ("");
+    private UPForward pf= new UPForward();
+    private BigInteger pbk=new BigInteger("1");
+    private BigInteger mod=new BigInteger("1");
+    private RsaEncrypt my_RSA=new RsaEncrypt();
+    private RsaEncrypt himRSA=new RsaEncrypt();
+    private JSONParser parser=new JSONParser();
+    public JSONObject jsonObj=new JSONObject();
 
     private static String siteUrl="http://hoppernet.hol.es";
 
     private static String TAG = "PeersRequest";
-
-    private String adaptExceptionsToLog(Exception excepts) {
-        StringWriter writer=new StringWriter();
-        PrintWriter printToWriter = new PrintWriter(writer);
-        excepts.printStackTrace(printToWriter);
-        printToWriter.flush();
-        return writer.toString();
-    }
-
-    public void start(AndroidUpnpService androidsUpnpServ) {
-        my_RSA.init(512);
-        pbk = my_RSA.getPublic();
-        mod = my_RSA.getModulu();
-        himRSA.setPublic(BigInteger.ONE);
-
-        try {
-            addr =this.getStun();
-            hr.setupURL(siteUrl);
-            startHoper(androidsUpnpServ);
-        } catch (Exception exceptioned) {
-            stackTrace += adaptExceptionsToLog(exceptioned);
-        }
-    }
-
-    public void sendPublicModuleKey() {
-        jsonObj.clear();
-        jsonObj.put(("pubKey"),pbk.toString());
-        jsonObj.put(("module"),mod.toString());
-        try {
-            pf.sendUdp(jsonObj.toJSONString());
-        } catch (Exception exceptioned) {
-            stackTrace += adaptExceptionsToLog(exceptioned);
-        }
-    }
 
     public String[]getStun() throws Exception {
         MessageHeader sendMsHeader =new MessageHeader(MessageHeader.MessageHeaderType.BindingRequest);
@@ -144,41 +110,75 @@ public class PesrRequest {
             pf.runUPnP(upnpServices,datagramSocket);
             while(flag) {
             try {
-            String recv= (String) pf.recieve();
-            if (!recv.isEmpty()) {
+                String recv = (String) pf.recieve();
+                if (recv.isEmpty()) continue;
                 if (recv.contains("pubKey")) {
-                jsonObj=(JSONObject) parser.parse(recv);
+                jsonObj = (JSONObject) parser.parse(recv);
                 himRSA.setModulu(new BigInteger((String)jsonObj.get("module")));
                 himRSA.setPublic(new BigInteger((String)jsonObj.get("pubKey")));
                 Log.d(TAG,String.format("startHoper: the himRSA = %s", himRSA));
 
                 // TODO this code need function
-                InetAddress oldAddr;
+                InetAddress oldAdr;
                 int oldPort = pf.port;
-                oldAddr =pf.IPAddress;
-                pf.port = pf.RemPort;
+                (oldAdr) = pf.IPAddress;
+                this.pf.port = pf.RemPort;
                 pf.IPAddress = pf.RemIPAddress;
 
                 if (handsShakeDone) {
-                sendPublicModuleKey();
-                handsShakeDone= false;
+                    sendPublicModuleKey();
+                    handsShakeDone= false;
                 }
 
-                pf.IPAddress= oldAddr;
-                pf.port=oldPort;
-                continue;
+                pf.IPAddress= oldAdr;
+                pf.port = oldPort;
+                } else if (!handsShakeDone) {
+                    BigInteger receiveMsg = new BigInteger(recv);
+                    rmsg = new String(my_RSA.decrypt(receiveMsg).toByteArray());
+                    // magical call c++ listener from java layer!
+                    Log.d(TAG,String.format("startHoper: call msg = %s", rmsg));
+                    UtilsForJavaNative.sendEventReceiveMsg(rmsg);
                 }
-            rmsg=new String(my_RSA.decrypt(new BigInteger(recv)).toByteArray());
-            // magical call c++ listener from java layer!
-            Log.d(TAG,String.format("startHoper: magical call msg = %s", rmsg));
-            UtilsForJavaNative.sendEventReceiveMsg(rmsg);
-            }
             } catch (SocketTimeoutException exception) {}
             }
         } catch (Exception exception){
             stackTrace += "startHoper res = " + adaptExceptionsToLog(exception);
         } finally {
             pf.closeAllUpnp();
+        }
+    }
+
+    private String adaptExceptionsToLog(Exception excepts) {
+        StringWriter writer=new StringWriter();
+        PrintWriter printToWriter = new PrintWriter(writer);
+        excepts.printStackTrace(printToWriter);
+        printToWriter.flush();
+        return writer.toString();
+    }
+
+    public void start(AndroidUpnpService androidsUpnpServ) {
+        my_RSA.init(512);
+        pbk = my_RSA.getPublic();
+        mod = my_RSA.getModulu();
+        himRSA.setPublic(BigInteger.ONE);
+
+        try {
+            addr =this.getStun();
+            hr.setupURL(siteUrl);
+            startHoper(androidsUpnpServ);
+        } catch (Exception exceptioned) {
+            stackTrace += adaptExceptionsToLog(exceptioned);
+        }
+    }
+
+    public void sendPublicModuleKey() {
+        jsonObj.clear();
+        jsonObj.put(("pubKey"),pbk.toString());
+        jsonObj.put(("module"),mod.toString());
+        try {
+            pf.sendUdp(jsonObj.toJSONString());
+        } catch (Exception exceptioned) {
+            stackTrace += adaptExceptionsToLog(exceptioned);
         }
     }
 

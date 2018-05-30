@@ -79,7 +79,7 @@ Rectangle {
                                 if (humanModel.count<1||index<0) {
                                     loader.chats.push({phone:obj[i].name, message:[]})
                                     humanModel.append({
-                                        image: "http://picsum.photos/20" +i +"/20" +i,
+                                        image: "https://randomuser.me/portraits/men/" + Math.floor(100*Math.random()) + ".jpg",
                                         famil: obj[i].family,
                                         login: obj[i].login,
                                         phone: obj[i].name,
@@ -454,6 +454,19 @@ Rectangle {
                             }
                         }
 
+                        PropertyAnimation {
+                            id: circleAnimation2
+                            target: coloresRect2
+                            properties: {"width,height,radius";}
+                            from: 0
+                            duration: 500
+                            to: parent.width * 2
+                            onStopped: {
+                                coloresRect2.width = 0;
+                                coloresRect2.height= 0;
+                            }
+                        }
+
                         height: {
                             newsCardHgt=rssView.height/4-rssView.spacing
                         }
@@ -489,19 +502,6 @@ Rectangle {
                                 font.pixelSize: facade.doPx(20);
                             }
                         }
-
-                        PropertyAnimation {
-                            id: circleAnimation2
-                            target: coloresRect2
-                            properties: {"width,height,radius";}
-                            from: 0
-                            duration: 500
-                            to: parent.width * 2
-                            onStopped: {
-                                coloresRect2.width = 0;
-                                coloresRect2.height= 0;
-                            }
-                        }
                     }
                 }
             }
@@ -523,7 +523,7 @@ Rectangle {
                 delegate: Image {
                     clip: true
                     width: facade.toPx(sourceSize.width /3.55)
-                    height: facade.toPx(sourceSize.height /3.55)
+                    height: facade.toPx(sourceSize.height/3.55)
                     source: {"qrc:/ui/buttons/feeds/" + (image)}
 
                     PropertyAnimation {
