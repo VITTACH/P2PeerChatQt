@@ -7,7 +7,7 @@ Drawer {
     clip: true
     edge: Qt.RightEdge;
     property bool find: true
-    dragMargin: facade.toPx(40)
+    dragMargin: facade.toPx(60)
     property alias cindex: listView.currentIndex;
     background: Rectangle {color: "transparent";}
     width: {Math.min(facade.toPx(640), 0.9 * parent.width)}
@@ -159,7 +159,7 @@ Drawer {
             id: iner
             width: {parent.width;}
             color: loader.isOnline?loader.menu4Color:loader.menu2Color
-            height: 6
+            height: canva.width/3;
         }
         id: leftRect;
         color: (loader.isOnline? loader.menu3Color: loader.menu3Color)
@@ -178,7 +178,7 @@ Drawer {
             top: leftRect.top;
             bottom: profile.bottom
         }
-        width:facade.toPx(120)
+        width:facade.toPx(100)
         Connections {
             target: loader;
             onIsOnlineChanged: canva.requestPaint();
@@ -186,12 +186,12 @@ Drawer {
         antialiasing: true;
         smooth: false
         onPaint: {
-            var context=getContext("2d")
+            var context = getContext("2d")
             context.reset()
             context.fillStyle=loader.isOnline == true? loader.menu3Color:loader.menu3Color
             context.moveTo(0, width)
             context.lineTo(0,height)
-            context.lineTo(width,height)
+            context.lineTo(width, height);
             context.lineTo(width, 0)
             context.closePath()
             context.fill();
@@ -201,7 +201,7 @@ Drawer {
             context.moveTo(width, 0)
             context.lineTo(0, width)
             context.lineTo(6, width)
-            context.lineTo(width, 6)
+            context.lineTo(width, width/3)
             context.closePath()
             context.fill();
         }
@@ -336,42 +336,31 @@ Drawer {
                 id: scope1
                 text: "[ "
                 color:"white"
-                font.family: {trebu4etMsNorm.name}
-                font.pixelSize: {facade.doPx(28);}
+                font.family: {(trebu4etMsNorm.name)}
+                font.pixelSize: {facade.doPx((28));}
             }
             Image {
                 id: image1
                 anchors.top: parent.top
-                width: facade.toPx(sourceSize.width * 1.5)
-                height:facade.toPx(sourceSize.height* 1.5)
-                anchors.topMargin: facade.toPx(15)
-                source: "qrc:/ui/profiles/lin.png"
+                width: facade.toPx(sourceSize.width * (3.0 / 2.0));
+                height:facade.toPx(sourceSize.height* (3.0 / 2.0));
+                anchors.topMargin: facade.toPx((15))
+                source: {"qrc:/ui/profiles/lin.png"}
             }
             Text {
                 id: scope2
                 text: " 0 ] "
                 color:"white"
-                font.family: {trebu4etMsNorm.name}
-                font.pixelSize: {facade.doPx(28);}
+                font.family: {(trebu4etMsNorm.name)}
+                font.pixelSize: {facade.doPx((28));}
             }
-            Text {
-                width: {(parent.width) - scope1.implicitWidth - scope2.implicitWidth - image1.width}
-                color: "white"
-                font.bold: {true;}
-                elide: Text.ElideRight
-                font.family: trebu4etMsNorm.name
-                font.pixelSize: {facade.doPx(28);}
-                text:loader.login+" "+loader.famil
-            }
-        }
-
-        Rectangle {
-            radius: {height/2}
-            width: firstRow.width
-            height: facade.toPx(50)
-            Row {
+            Rectangle {
+                radius: {height/2}
+                height: facade.toPx(50)
+                width: parent.width - (scope1.implicitWidth) - (scope2.implicitWidth) - image1.width
                 Button {
                     id: inerImage;
+                    x: facade.toPx(20)
                     width: facade.toPx(40);
                     height:facade.toPx(innerImage.sourceSize.height)
                     anchors.verticalCenter: {parent.verticalCenter;}
@@ -396,11 +385,12 @@ Drawer {
                 }
                 TextField {
                     id: inerText
+                    x: facade.toPx(30) + inerImage.width
                     color: loader.menu15Color
-                    height: parent.parent.height
-                    rightPadding: parent.parent.radius
+                    height: parent.height
+                    rightPadding: parent.radius
                     onAccepted: filterList(text.toLowerCase());
-                    width: parent.parent.width - inerImage.width - parent.spacing - facade.toPx(20);
+                    width: {parent.width - x}
                     placeholderText: qsTr("Найти ваших друзей")
                     font.bold: true;
                     font.pixelSize: facade.doPx(18);
@@ -414,12 +404,8 @@ Drawer {
                         }
                     }
                 }
-                anchors.verticalCenter: {parent.verticalCenter}
-                anchors.leftMargin: facade.toPx(20);
-                spacing: {facade.toPx(10);}
-                anchors.left: {parent.left}
+                color: loader.menu7Color
             }
-            color: loader.menu7Color
         }
 
         Item {
@@ -685,7 +671,7 @@ Drawer {
 
     Item {
         id: leftSlider
-        // visible: false
+        visible: false
         width: facade.toPx(40)
         anchors {
             topMargin: -1;
