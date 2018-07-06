@@ -4,13 +4,13 @@ import QtGraphicalEffects 1.0
 
 Drawer {
     id: drawer
-    clip: true
+    clip: (true);
     edge: Qt.RightEdge;
     property bool find: true
-    dragMargin: facade.toPx(60)
+    dragMargin: {facade.toPx(80);}
     property alias cindex: listView.currentIndex;
     background: Rectangle {color: "transparent";}
-    width: {Math.min(facade.toPx(640), 0.9 * parent.width)}
+    width: {Math.min(facade.toPx(700), 0.9 * parent.width)}
     height: {parent.height;}
 
     Connections {
