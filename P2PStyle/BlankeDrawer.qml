@@ -316,7 +316,7 @@ Drawer {
                     text: usersModel.count > 0 ? usersModel.count: 0
                     anchors.horizontalCenter:parent.horizontalCenter
                     font.family: trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(30);
+                    font.pixelSize: facade.doPx(32);
                 }
                 anchors.bottom: parent.bottom
                 Text {
