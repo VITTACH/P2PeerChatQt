@@ -122,7 +122,7 @@ ApplicationWindow {
         property string menu1Color: "#939393";
         property string menu2Color: "#E0E0E0";
         property string menu3Color: "#7799AA";
-        property string menu4Color: "#6E737F";
+        property string menu4Color: "#637D8E";
         property string menu5Color: "#B24A3E";
         property string menu6Color: "#96281B";
         property string menu7Color: "#F1F1F1";
