@@ -127,7 +127,7 @@ ApplicationWindow {
         property string menu6Color: "#96281B";
         property string menu7Color: "#F1F1F1";
         property string menu8Color: "#D3D3D3";
-        property string menu9Color: "#ABB5BA";
+        property string menu9Color: "#DEE4E8";
 
         property string menu10Color:"#535353";
         property string menu11Color:"#597FB2";
