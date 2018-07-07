@@ -316,7 +316,7 @@ Drawer {
                     text: usersModel.count > 0 ? usersModel.count: 0
                     anchors.horizontalCenter:parent.horizontalCenter
                     font.family: trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(32);
+                    font.pixelSize: facade.doPx(34);
                 }
                 anchors.bottom: parent.bottom
                 Text {
@@ -593,25 +593,31 @@ Drawer {
                     color: "#70000000"
                     anchors.fill: bug;
                 }
-                Rectangle {
+                Item {
                     id: bug
-                    border.color: "#FFFFFF"
-                    border.width: facade.toPx(4)
                     x: facade.toPx(50) - (facade.toPx(708) - drawer.width) / 5;
                     width: facade.toPx(150)
                     height:facade.toPx(150)
                     anchors.top: parent.top
-                    anchors.topMargin: {facade.toPx(10)}
+                    anchors.topMargin:facade.toPx(10)
                     Item {
                         clip: true
                         anchors.fill:parent
-                        anchors.margins:bug.border.width
+                        anchors.margins: bor.radius/2
                         Image {
                             source: {image}
-                            anchors.centerIn: {(parent)}
+                            anchors.centerIn: parent;
                             height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                             width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                         }
+                    }
+                    Rectangle {
+                        id: bor
+                        anchors.fill:parent
+                        color:"transparent"
+                        border.width: facade.toPx(4);
+                        radius: facade.toPx(10)
+                        border.color: "#FFFFFF"
                     }
                 }
 
@@ -899,7 +905,7 @@ Drawer {
                         verticalCenter: {parent.verticalCenter}
                     }
                     color: loader.menu10Color;
-                    font.pixelSize: facade.doPx(28)
+                    font.pixelSize: facade.doPx(32)
                     font.family:trebu4etMsNorm.name
                     text: {
                         if (index == 0) {
