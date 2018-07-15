@@ -477,14 +477,10 @@ Drawer {
 
             Rectangle {
                 clip: true
-                id: delegaRect
+                id: delegaRect;
                 width: parent.width
-                height: parent.height
-                color: {
-                    if (index === 0) {
-                        loader.menu14Color;
-                    } else loader.feedColor
-                }
+                height: parent.height;
+                color: if (index == 0) loader.menu14Color; else loader.feedColor
 
                 Connections {
                     target: defaultDialog
@@ -517,15 +513,13 @@ Drawer {
                     id: coloresRect
                     color: {
                         if (index === 0) {
-                            if (loader.isOnline) {loader.menu15Color;}
-                            else
-                               loader.menu1Color
-                        } else loader.menu9Color
+                            if (loader.isOnline) {loader.menu15Color;} else {loader.menu1Color}
+                        }else loader.sets2Color
                     }
 
                     transform: Translate {
-                        x: -coloresRect.width /2
-                        y: -coloresRect.height/2
+                        x:-coloresRect.width /2
+                        y:-coloresRect.height/2
                     }
                 }
 
@@ -556,7 +550,7 @@ Drawer {
                         chatScreen.open()
                     }
                     drag.axis: Drag.XAxis
-                    drag.minimumX: -width*0.40
+                    drag.minimumX: -width*0.40;
                     onPressAndHold: presed = true
                     onExited: circleAnimation.stop()
                     drag.target: presed?parent:undefined
@@ -596,8 +590,8 @@ Drawer {
                 Item {
                     id: bug
                     x: facade.toPx(50) - (facade.toPx(708) - drawer.width) / 5;
-                    width: facade.toPx(150)
-                    height:facade.toPx(150)
+                    width: facade.toPx(170)
+                    height:facade.toPx(170)
                     anchors.top: parent.top
                     anchors.topMargin:facade.toPx(10)
                     Item {
@@ -805,7 +799,7 @@ Drawer {
         delegate:Rectangle {
             width: (parent.width)
             height: {facade.toPx(90)}
-            color: ListView.isCurrentItem? loader.menu8Color: loader.menu9Color
+            color: ListView.isCurrentItem? loader.menu15Color:loader.menu9Color
             MouseArea {
                 id: menMouseArea;
                 anchors.fill: parent;
@@ -905,7 +899,7 @@ Drawer {
                         verticalCenter: {parent.verticalCenter}
                     }
                     color: loader.menu10Color;
-                    font.pixelSize: facade.doPx(32)
+                    font.pixelSize: facade.doPx(30)
                     font.family:trebu4etMsNorm.name
                     text: {
                         if (index == 0) {

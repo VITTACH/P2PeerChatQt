@@ -3,116 +3,73 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
 Item {
-    property double curX:-1
-    property double curY:-1
-
-    height: (parent.height)
-    width: Math.min(facade.toPx(130), 0.6 * parent.width)
-
+    height: parent.height
+    width: 2*parent.width/3
     Rectangle {
         clip: true
         width: parent.width
         color: loader.sets2Color;
         y: blankeDrawer.getProfHeight();
-        height: {blankeDrawer.getHelperHeight()}
+        height: blankeDrawer.getHelperHeight()
 
         ListView {
             id: listview
             anchors {
                 fill: parent;
-                topMargin:facade.toPx(15)
-                bottomMargin:facade.toPx(20)
+                topMargin: facade.toPx(15)
+                bottomMargin: facade.toPx(20);
             }
-            delegate: Rectangle {
-                height: width
-                radius: {width / 8}
+            delegate: Row {
                 x: listview.spacing * 2
-                width: parent.width - 2*x
+                Rectangle {
+                    height: width
+                    radius: {width / 8}
+                    width: facade.toPx(140) - (2 * parent.x);
 
-                color: {
-                    loader.sets4Color
-                    if (index == curX) {
-                        if (mypos == curY) {
-                            if (!circleAnimation.running)
-                                loader.sets1Color
-                        }
+                    color: {loader.sets4Color}
+
+                    Image {
+                        scale: 0.7
+                        source: {"qrc:/ui/icons/" + (images)}
+                        width: facade.toPx(sourceSize.width);
+                        height:facade.toPx(sourceSize.height)
+                        anchors.centerIn: (parent);
                     }
                 }
-
-                Item {
-                    clip: true
-                    anchors.fill: parent
-                    anchors.margins: parent.border.width;
-                    Rectangle {
-                        width: 0
-                        height: 0
-                        id: coloresRect
-                        color: loader.sets1Color;
-
-                        transform: Translate {
-                            x: -(coloresRect.width /2.0);
-                            y: -(coloresRect.height/2.0);
-                        }
-                    }
-                }
-
-                Image {
-                    scale: 0.7
-                    source: {"qrc:/ui/icons/" + (images)}
-                    width: facade.toPx(sourceSize.width);
-                    height:facade.toPx(sourceSize.height)
-                    anchors.centerIn: (parent);
-                }
-
-                PropertyAnimation {
-                    duration: (500)
-                    id: circleAnimation
-                    target: coloresRect
-                    properties: {"width, height, radius"}
-                    from: 0
-                    to: parent.width*3;
-                    onStopped: {
-                        coloresRect.width  = 0;
-                        coloresRect.height = 0;
-                    }
-                }
-
-                MouseArea {
-                    function resets() {
-                        curX = -1; curY = -1;
-                        circleAnimation.stop();
-                    }
-                    onEntered: {
-                        curX = index;
-                        curY = mypos;
-                        coloresRect.x = mouseX;
-                        coloresRect.y = mouseY;
-                        circleAnimation.start()
-                    }
-                    anchors.fill: parent
-                    onClicked: resets()
-                    onExited: resets()
+                spacing: facade.toPx(25)
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: loader.menu10Color;
+                    font.pixelSize: facade.doPx(28)
+                    font.family:trebu4etMsNorm.name
+                    text: target
                 }
             }
             spacing: anchors.bottomMargin/3
             model:ListModel {
                 ListElement {
                     mypos: 0; images: "profile.png"
+                    target: qsTr("Профиль")
                 }
                 ListElement {
                     mypos: 1; images: "design.png";
+                    target: qsTr("Внешний вид")
                 }
                 ListElement {
                     mypos: 2; images: "alerts.png";
+                    target: qsTr("Уведомления")
                 }
                 ListElement {
                     mypos: 3; images: "configuration.png"
+                    target: qsTr("Конфигурации")
                 }
                 ListElement {
                     mypos: 4; images:"security.png"
+                    target: qsTr("Безопасность")
                 }
                 ListElement {
                     mypos:5; images:"developer.png"
+                    target: qsTr("Разработчики")
                 }
             }
         }
