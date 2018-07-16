@@ -19,33 +19,24 @@ Item {
                 topMargin: facade.toPx(15)
                 bottomMargin: facade.toPx(20);
             }
+            spacing: facade.toPx(35)
             delegate: Row {
-                x: listview.spacing * 2
-                Rectangle {
-                    height: width
-                    radius: {width / 8}
-                    width: facade.toPx(140) - (2 * parent.x);
-
-                    color: {loader.sets4Color}
-
-                    Image {
-                        scale: 0.7
-                        source: {"qrc:/ui/icons/" + (images)}
-                        width: facade.toPx(sourceSize.width);
-                        height:facade.toPx(sourceSize.height)
-                        anchors.centerIn: (parent);
-                    }
-                }
-                spacing: facade.toPx(25)
-                Text {
+                x: facade.toPx(30)
+                spacing: facade.toPx(30)
+                Image {
+                    source: "qrc:/ui/icons/"+images
+                    width: facade.toPx(sourceSize.width/1.3);
+                    height:facade.toPx(sourceSize.height/1.3)
                     anchors.verticalCenter: parent.verticalCenter
-                    color: loader.menu10Color;
+                }
+                Text {
+                    color: "#D6D6D6"
                     font.pixelSize: facade.doPx(28)
                     font.family:trebu4etMsNorm.name
+                    anchors.verticalCenter: parent.verticalCenter
                     text: target
                 }
             }
-            spacing: anchors.bottomMargin/3
             model:ListModel {
                 ListElement {
                     mypos: 0; images: "profile.png"

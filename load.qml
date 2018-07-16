@@ -121,26 +121,26 @@ ApplicationWindow {
 
         property string menu1Color: "#939393";
         property string menu2Color: "#E0E0E0";
-        property string menu3Color: "#7799AA";
-        property string menu4Color: "#637D8E";
+        property string menu3Color: "#768797";
+        property string menu4Color: "#6C737D";
         property string menu5Color: "#B24A3E";
         property string menu6Color: "#96281B";
         property string menu7Color: "#F1F1F1";
         property string menu8Color: "#D3D3D3";
-        property string menu9Color: "#BACAD1";
+        property string menu9Color: "#AEB8C1";
 
         property string menu10Color:"#535353";
         property string menu11Color:"#597FB2";
         property string menu12Color:"#4F7E9E";
         property string menu13Color:"#B1B1B1";
-        property string menu14Color:"#7999AD";
+        property string menu14Color:"#7899AC";
         property string menu15Color:"#8DACBC";
-        property string menu16Color:"#BBC6CC";
+        property string menu16Color:"#BBC6CA";
 
         property string head1Color: "#6B8499";
         property string head2Color: "#FFFFFF";
 
-        property string sets2Color: "#C9D4D8";
+        property string sets2Color: "#828D99";
         property string sets3Color: "#6C839A";
         property string sets4Color: "#708EA0";
 

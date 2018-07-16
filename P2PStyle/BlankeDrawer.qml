@@ -514,7 +514,7 @@ Drawer {
                     color: {
                         if (index === 0) {
                             if (loader.isOnline) {loader.menu15Color;} else {loader.menu1Color}
-                        }else loader.sets2Color
+                        } else "#E5E5E5"
                     }
 
                     transform: Translate {
@@ -593,25 +593,25 @@ Drawer {
                     width: facade.toPx(170)
                     height:facade.toPx(170)
                     anchors.top: parent.top
-                    anchors.topMargin:facade.toPx(10)
+                    anchors.topMargin: facade.toPx(10);
                     Item {
                         clip: true
                         anchors.fill:parent
-                        anchors.margins: bor.radius/2
+                        anchors.margins: {bor.radius/4}
                         Image {
                             source: {image}
-                            anchors.centerIn: parent;
+                            anchors.centerIn: {parent;}
                             height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                             width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                         }
                     }
                     Rectangle {
                         id: bor
-                        anchors.fill:parent
-                        color:"transparent"
-                        border.width: facade.toPx(4);
-                        radius: facade.toPx(10)
-                        border.color: "#FFFFFF"
+                        anchors.fill: {parent}
+                        color: {"transparent"}
+                        border.color:"#D5D6DA"
+                        border.width: facade.toPx(4.0);
+                        radius:facade.toPx(15)
                     }
                 }
 
@@ -737,7 +737,7 @@ Drawer {
             bottom: parent.bottom
             topMargin: canva.width;
         }
-        width: 5
+        width: 6
         color: {
             if(loader.isOnline==true) "#647A84"
             else {loader.menu2Color;}
@@ -799,7 +799,7 @@ Drawer {
         delegate:Rectangle {
             width: (parent.width)
             height: {facade.toPx(90)}
-            color: ListView.isCurrentItem? loader.menu15Color:loader.menu9Color
+            color: ListView.isCurrentItem? loader.menu16Color:loader.menu9Color
             MouseArea {
                 id: menMouseArea;
                 anchors.fill: parent;
