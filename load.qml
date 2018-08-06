@@ -149,7 +149,7 @@ ApplicationWindow {
 
         property string chat1Color: "#EAEAEA";
         property string chat2Color: "#A7A7A7";
-        property string chat3Color: "#CC8B99A4"
+        property string chat3Color: "#70FFFFFF"
 
         property string feedColor: "#EDEDED";
 

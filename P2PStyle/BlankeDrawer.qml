@@ -10,7 +10,7 @@ Drawer {
     dragMargin: {facade.toPx(80);}
     property alias cindex: listView.currentIndex;
     background: Rectangle {color: "transparent";}
-    width: {Math.min(facade.toPx(700), 0.9 * parent.width)}
+    width: {Math.min(facade.toPx(650), 0.9 * parent.width)}
     height: {parent.height;}
 
     Connections {
