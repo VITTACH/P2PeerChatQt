@@ -16,7 +16,7 @@ Item {
             id: listview
             anchors {
                 fill: parent;
-                topMargin: facade.toPx(15)
+                topMargin: facade.toPx(25)
                 bottomMargin: facade.toPx(20);
             }
             spacing: facade.toPx(35)
@@ -60,7 +60,7 @@ Item {
                 }
                 ListElement {
                     mypos:5; images:"developer.png"
-                    target: qsTr("Разработчики")
+                    target: qsTr("Разработчик")
                 }
             }
         }
