@@ -1,13 +1,14 @@
 import QtQuick 2.7
-import "js/URLQuery.js"as URLQuery
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0;
 import "P2PStyle" as P2PStyle;
+import "js/URLQuery.js"as URLQuery
 
 Item {
     property variant pageWidth
+    property variant title: qsTr("Coinroad TM")
 
-    Component.onCompleted: partnerHeader.text = qsTr("FriendUp")
+    Component.onCompleted: partnerHeader.text =title
 
     Item {
         width: 2*parent.width;
@@ -63,19 +64,12 @@ Item {
             ListElement {
                 image: qsTr(""); plaseHolder:qsTr("Нету аккаунта?")
             }
+            ListElement {image: ""; placeholder: ""}
         }
         delegate: Column {
             width: parent.width
             height: if (index == 0) pageWidth; else facade.toPx(90)
 
-            DropShadow {
-                radius: 12
-                samples: 15
-                visible: index==0
-                color:"#90000000"
-                source: {socials}
-                anchors.fill: {socials;}
-            }
             ListView {
                 id: socials
                 visible: !index
@@ -90,40 +84,52 @@ Item {
                     ListElement {image: "ui/buttons/social/tw.png"}
                     ListElement {image: "ui/buttons/social/vk.png"}
                 }
-                delegate: Image {
-                    source: image
+                delegate: Item {
                     height: width
                     width: {
                         var limitWidth = facade.toPx(1140);
-                        pageWidth = facade.toPx(sourceSize.width * 1.5 * (listView.width > limitWidth? 1 : listView.width/limitWidth))
+                        pageWidth = facade.toPx(social.sourceSize.width * 1.5 * (listView.width>limitWidth? 1: listView.width/limitWidth))
                     }
-                    MouseArea {
+
+                    DropShadow {
+                        radius: 11
+                        samples: 15
+                        source: social
+                        color: "#90000000"
+                        anchors.fill: social
+                    }
+                    Image {
+                        id: social
+                        source: image
                         anchors.fill: parent
-                        onClicked: {
-                            var params
-                            switch (index) {
-                                case 0: params = {
-                                    display: 'popup',
-                                    response_type: 'token',
-                                    client_id:'396748683992616',
-                                    redirect_uri:'https://www.facebook.com/connect/login_success.html'
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                var params
+                                switch (index) {
+                                    case 0: params = {
+                                        display: 'popup',
+                                        response_type: 'token',
+                                        client_id:'396748683992616',
+                                        redirect_uri:'https://www.facebook.com/connect/login_success.html'
+                                    }
+                                    loader.urlLink = "https://graph.facebook.com/oauth/authorize?%1".arg(URLQuery.serializeParams(params))
+                                    partnerHeader.text = "Facebook";
+                                    break;
+                                    case 1:
+                                    case 2: params = {
+                                        display: 'popup',
+                                        client_id: '5813771',
+                                        scope: 'wall, offline',
+                                        response_type: 'token',
+                                        redirect_uri: 'https://oauth.vk.com/blank.html'
+                                    }
+                                    loader.urlLink = (String) ("https://oauth.vk.com/authorize?%1".arg(URLQuery.serializeParams(params)));
+                                    partnerHeader.text = "Вконтакте"
+                                    break;
                                 }
-                                loader.urlLink = "https://graph.facebook.com/oauth/authorize?%1".arg(URLQuery.serializeParams(params))
-                                partnerHeader.text = "Facebook";
-                                break;
-                                case 1:
-                                case 2: params = {
-                                    display: 'popup',
-                                    client_id: '5813771',
-                                    scope: 'wall, offline',
-                                    response_type: 'token',
-                                    redirect_uri: 'https://oauth.vk.com/blank.html'
-                                }
-                                loader.urlLink = (String) ("https://oauth.vk.com/authorize?%1".arg(URLQuery.serializeParams(params)));
-                                partnerHeader.text = "Вконтакте"
-                                break;
+                                loader.goTo("qrc:/webview.qml")
                             }
-                            loader.goTo("qrc:/webview.qml")
                         }
                     }
                 }
@@ -215,39 +221,44 @@ Item {
                     height: facade.toPx(88)
                     width: parent.width-facade.toPx(20)-icon.width;
                     onTextChanged: loader.fields[index - 1] = text;
-                    placeholderText: typeof plaseHolder == "undefined"? "": plaseHolder
-
-                    onFocusChanged: if (text.length === 0 && index === (1)){text = "8"}
-                    echoMode: if (index == 2) TextInput.Password; else TextInput.Normal
-                    inputMethodHints: index == 1? Qt.ImhFormattedNumbersOnly:Qt.ImhNone
+                    placeholderText: {
+                        typeof plaseHolder == "undefined" ? ("") : plaseHolder;
+                    }
+                    inputMethodHints: {
+                        if (index == 1) Qt.ImhFormattedNumbersOnly;
+                        else Qt.ImhNone
+                    }
+                    onFocusChanged: {
+                        if (text.length == 0 && index == 1)text="8"
+                    }
+                    echoMode: index == 2? TextInput.Password : TextInput.Normal
                     background: Rectangle{opacity:0}
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(29);
-                    x: facade.toPx(80)
+                    x: facade.toPx(80);
                 }
             }
 
             Item {
                 visible: index == 5
+                width: Math.min(0.82*parent.width,facade.toPx(900))
+                anchors.horizontalCenter: {parent.horizontalCenter}
+                height:facade.toPx(100)
                 Button {
+                    anchors.right:parent.right
+                    onClicked: partnerHeader.page=1;
+                    anchors.bottom: {parent.bottom;}
                     contentItem: Text {
                         verticalAlignment:Text.AlignVCenter
                         color:parent.down==true? "#D3D3D3": "white"
                         text: {(parent.text);}
                         font: {(parent.font);}
                     }
-                    text: typeof plaseHolder == "undefined"? (""): plaseHolder
+                    text: typeof plaseHolder == "undefined"? ("") : plaseHolder
                     background: Rectangle{opacity:0}
-                    onClicked: partnerHeader.page=1;
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(26);
-                    anchors.bottom: {parent.bottom;}
-                    anchors.right:parent.right
                 }
-
-                width: Math.min(0.82*parent.width,facade.toPx(900))
-                anchors.horizontalCenter: {parent.horizontalCenter}
-                height: facade.toPx(100);
             }
 
             Rectangle {

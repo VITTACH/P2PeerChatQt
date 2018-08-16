@@ -29,7 +29,7 @@ Item {
 
             Loader {
                 id: feedPage
-                Component.onCompleted: source = "qrc:/feeds.qml";
+                Component.onCompleted: source = "qrc:/Feeds.qml";
             }
             Loader {
                 id: musPage

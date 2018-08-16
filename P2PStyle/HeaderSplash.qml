@@ -97,10 +97,7 @@ Item {
                     Text {
                         color: "white"
                         elide: Text.ElideRight
-                        width: {
-                            var margin = chatScreen.position > 0 ? facade.toPx(90) : 0
-                            Math.min(inerItem.width - bug.width-margin, implicitWidth)
-                        }
+                        width: {Math.min((inerItem.width - bug.width), implicitWidth)}
                         text: {rootItem.text.replace("\n", (""));}
 
                         font.family: trebu4etMsNorm.name
@@ -127,8 +124,7 @@ Item {
                 if (page == 1) page -= 1
                 else if (loader.webview) {
                     loader.webview = false
-                }
-                else if (chatScreen.position > 0) {
+                } else if (false) {
                     loader.focus = loader.context = (true)
                     chatMenuList.xPosition=rootItem.width-chatMenuList.w-facade.toPx(40)
                     chatMenuList.yPosition=facade.toPx(20)

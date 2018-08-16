@@ -13,14 +13,14 @@ Drawer {
 
     property var input
     property real percent
-    property real yPosition;
+    property real yPosition
     property var select;
     property var selectedImage:[];
 
     function setInfo(messag, photos, status) {
-        partnersHead.stat =status
-        partnersHead.phot =photos
-        partnersHead.text =messag
+        partnersHead.stat = status
+        partnersHead.phot = photos
+        partnersHead.text = messag
     }
 
     function checkMessage(flag, selectImage) {
@@ -125,18 +125,18 @@ Drawer {
     Connections {
         target: chatMenuList
         onActionChanged: {
-            if (chatMenuList.action == (8)) {
+            if (chatMenuList.payload === 8) {
                 select = [];
                 chatModel.clear()
-                chatMenuList.action=0;
+                chatMenuList.payload = 0;
                 var currentInd = blankeDrawer.cindex
                 loader.chats[currentInd].message=[];
                 event_handler.saveSet(qsTr("chats"),JSON.stringify(loader.chats))
             }
-            if (chatMenuList.action == (3)) {
+            if (chatMenuList.payload === 3) {
                 var text = chatModel.get(select[(select.length) - (1)]).someText;
                 event_handler.copyText(text);
-            } else if (chatMenuList.action == (1)) {
+            } else if (chatMenuList.payload === 1) {
                 select.sort();
                 for(var i=0; i<select.length; i++) {
                     chatModel.remove(select[i] - i);
@@ -147,7 +147,7 @@ Drawer {
                 for(var i=1; i<chatModel.count; i++)
                 chatModel.setProperty(i,"mySpacing",(chatModel.get(i-1).textColor=="#000000"&&chatModel.get(i).textColor=="#960f133d")||(chatModel.get(i).textColor=="#000000"&&chatModel.get(i-1).textColor=="#960f133d")? facade.toPx(30): facade.toPx(0));
                 chatMenuList.menu = 1;
-                chatMenuList.action=0;
+                chatMenuList.payload = 0;
                 select = [];
             }
             loader.context = false
@@ -565,7 +565,7 @@ Drawer {
                     width: height;
                     height: parent.height*0.7
                     Camera {
-                        id: camera
+                        id: camera2
                         flash.mode: Camera.FlashAuto
                         exposure {
                             exposureCompensation: -1
@@ -575,7 +575,7 @@ Drawer {
                     VideoOutput {
                         fillMode: {VideoOutput.PreserveAspectCrop;}
                         focus: visible
-                        source: {camera}
+                        source: camera2;
                         orientation:-90;
                         anchors.fill: parent
                     }

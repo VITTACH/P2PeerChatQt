@@ -10,7 +10,7 @@ Button {
     onClicked: loader.context=false
     background: Rectangle {color: "#12000000";}
     property int w: listText.width;
-    property int action
+    property int payload;
     property int menu: 1;
     property var buttons: [
         ["Удалить", "Переслать", "Копировать"],
@@ -34,7 +34,7 @@ Button {
         color: loader.feedColor
         width: {Math.max(funcs.width, facade.toPx(400))}
         Column {
-            id: funcs
+            id: funcs;
             Repeater {
                 anchors {
                     top: parent.top;
@@ -64,7 +64,7 @@ Button {
                         onClicked: {
                             for (var i = 0, base = 1; i < menu; i+=1)
                                 base += buttons[menu].length;
-                            action = base + index
+                            payload = base + index
                         }
                     }
                 }

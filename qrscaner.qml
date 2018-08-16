@@ -40,9 +40,9 @@ Item {
         running: true
         interval: 3000
         onTriggered: {
-            viewer.grabToImage(function(result) {
+            viewer.grabToImage(function(resultImg) {
                 var fullImageName = "qrcode.png";
-                result.saveToFile(fullImageName);
+                resultImg.saveToFile(fullImageName);
                 imageProcessor.rgbImg(fullImageName)
                 var path = fullImageName
                 imageProcessor.delCaptureImage(path)
@@ -74,12 +74,11 @@ Item {
 
     VideoOutput {
         id: viewer
-        focus: visible
         source: camera
         orientation: -90
         anchors.fill: parent
         fillMode: {
-            VideoOutput.PreserveAspectCrop;
+            (VideoOutput.PreserveAspectCrop);
         }
 
         MouseArea {
@@ -91,104 +90,77 @@ Item {
         }
     }
 
-    // -- rectangle mask
     Rectangle {
-        opacity: 0.5
-        id: uperSquare
-        color: "#000000"
+        color: "#90000000";
         width: parent.width
-        anchors {
-            top: parent.top
-            bottom: center.top
-        }
+        height: (parent.height-  width)/2
+        anchors.top: {parent.top}
     }
 
     Rectangle {
-        opacity: 0.5
-        id: downSquare
-        color: "#000000"
+        color: "#90000000";
         width: parent.width
-        anchors {
-            bottom: parent.bottom;
-            top: center.bottom
-        }
+        height: (parent.height - width)/2
+        anchors.bottom: {(parent.bottom)}
     }
 
     Rectangle {
-        opacity: 0.5
-        id: leftSquare
-        color: "#000000"
-        anchors {
-            left: parent.left
-            top: uperSquare.bottom
-            bottom: downSquare.top
-            right: center.left
-        }
-    }
-
-    Rectangle {
-        opacity: 0.5
-        id: rightSquare
-        color: "#000000"
-        anchors {
-            left:center.right
-            right: parent.right
-            top: uperSquare.bottom
-            bottom: downSquare.top
-        }
-    }
-
-    Rectangle {
-        id: center
+        height: width
+        width: parent.width;
         color: "transparent"
-        border {
-            width: 2; color: "black"
-        }
-
-        width: facade.toPx(500)
-        height: facade.toPx(800)
+        border.width:width/4
+        border.color: "#90000000"
         anchors.centerIn: parent;
 
         Rectangle {
-            id: scanline
-            width: 2
+            id: scaner
+            color: "transparent";
+            border.width: 2;
+            width: {parent.width/2.0}
+            height: width
             anchors.centerIn: parent;
 
-            SequentialAnimation {
-                loops: Animation.Infinite
-                ColorAnimation {
-                    target: scanline;
-                    property: "color"
-                    from: {"#FF0000"}
-                    to: "transparent"
-                    duration: 350
-                }
-                ColorAnimation {
-                    from: {"transparent"}
-                    target: scanline;
-                    property: "color"
-                    to: "red";
-                    duration: 350
-                }
-                running: true
-            }
+            Rectangle {
+                id: scanline
+                width: 2
+                anchors.centerIn: {(parent);}
 
-            SequentialAnimation {
-                running: true
-                loops: Animation.Infinite
-                NumberAnimation {
-                    from: center.height-4
-                    to: 0
-                    duration: 3000
-                    target: {scanline}
-                    property: "height"
+                SequentialAnimation {
+                    loops: Animation.Infinite
+                    ColorAnimation {
+                        target: scanline;
+                        property: "color"
+                        from: {"#FF0000"}
+                        to: "transparent"
+                        duration: 350
+                    }
+                    ColorAnimation {
+                        from: {"transparent"}
+                        target: scanline;
+                        property: "color"
+                        to: "red";
+                        duration: 350
+                    }
+                    running: true
+                }
+
+                SequentialAnimation {
+                    running: true
+                    loops: Animation.Infinite
+                    NumberAnimation {
+                        from: scaner.height-4
+                        to: 0
+                        target: scanline;
+                        property:"height"
+                        duration:3000
+                    }
                 }
             }
         }
     }
 
     /*
-     * todo: make this function working
+     * todo: make this function working pls!
     function sendQrCode(binary) {
         var boundary = String(Math.random()).slice(2);
         var boundaryMiddle = '--' + boundary + '\r\n';

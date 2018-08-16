@@ -103,7 +103,7 @@ Item {
                     }
                 }
                 visible: {image == "_";}
-                width: Math.min(0.76*parent.width,facade.toPx(800))
+                width: Math.min(0.82*parent.width,facade.toPx(800))
                 anchors.horizontalCenter: {parent.horizontalCenter}
                 height: facade.toPx(100)
             }

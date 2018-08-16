@@ -9,15 +9,15 @@ import "js/URLQuery.js"as URLQuery
 ApplicationWindow {
     x: 0
     y: 0
-    visible:true
-    title: "FriendUp"
+    visible: true
+    title: "Coinroad"
 
     StatusBar {color: ("#3E4A56")}
 
     // flags: Qt.FramelessWindowHint; // turned off system window
 
     Timer {
-        id: back
+        id: back;
         interval: 100
         onTriggered: loader.back()
     }
@@ -32,7 +32,7 @@ ApplicationWindow {
         if (event_handler.currentOSys()>0) close.accepted =false; else close.accepted=true
     }
 
-    width: {event_handler.currentOSys() < 1? facade.toPx(1440): 0}
+    width: {event_handler.currentOSys() < 1? Screen.width/2.5: 0}
     height:event_handler.currentOSys()<1?Screen.height-facade.toPx(100):0
 
     QtObject {
@@ -209,7 +209,6 @@ ApplicationWindow {
                         } else response = 0;
                         switch(response){
                             case 1:
-                                blankeDrawer.open()
                                 loader.isOnline = !false;
                                 if (loader.source != "profile.qml") {
                                     loader.goTo("profile.qml")
@@ -303,8 +302,12 @@ ApplicationWindow {
         }
     }
 
+    P2PStyle.DefaultDialog {id: defaultDialog;}
+
+    P2PStyle.ImagesDialog {id: avatarDialog}
+
     P2PStyle.HeaderSplash {
-        visible: loader.source!="qrscan.qml"
+        visible: loader.source != "qrscan.qml";
         id: partnerHeader;
     }
 
@@ -312,12 +315,4 @@ ApplicationWindow {
         source:"qrc:/fonts/TrebuchetMSn.ttf"
         id: trebu4etMsNorm
     }
-
-    P2PStyle.DefaultDialog {id: defaultDialog}
-
-    P2PStyle.BlankeDrawer {id: blankeDrawer}
-
-    P2PStyle.ImagesDialog {id: avatarDialog}
-
-    ChatScreen {id: chatScreen}
 }

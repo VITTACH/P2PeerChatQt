@@ -38,7 +38,7 @@
         <file>profile.qml</file>
         <file>ui/buttons/trashButton.png</file>
         <file>ui/buttons/dialerButton.png</file>
-        <file>feeds.qml</file>
+        <file>Feeds.qml</file>
         <file>ui/buttons/feeds/img.png</file>
         <file>ui/buttons/feeds/mus.png</file>
         <file>ui/buttons/feeds/play.png</file>

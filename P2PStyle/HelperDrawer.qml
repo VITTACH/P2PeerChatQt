@@ -4,11 +4,11 @@ import QtGraphicalEffects 1.0
 
 Item {
     height: parent.height
-    width: 2*parent.width/3
+    width: 2 * parent.width/3.0;
     Rectangle {
         clip: true
         width: parent.width
-        color: loader.sets2Color;
+        color: loader.sets2Color
         y: blankeDrawer.getProfHeight();
         height: blankeDrawer.getHelperHeight()
 

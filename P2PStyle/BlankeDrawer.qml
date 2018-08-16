@@ -7,7 +7,7 @@ Drawer {
     clip: (true);
     edge: Qt.RightEdge;
     property bool find: true
-    dragMargin: {facade.toPx(80);}
+    dragMargin: facade.toPx(100)
     property alias cindex: listView.currentIndex;
     background: Rectangle {color: "transparent";}
     width: {Math.min(facade.toPx(650), 0.9 * parent.width)}
@@ -20,7 +20,7 @@ Drawer {
                 close()
                 position = 0
             } else if (position == 1) {
-                if (typeof loader.frienList == "undefined") {
+                if (typeof loader.frienList=="undefined") {
                     var friend
                     friend =event_handler.loadValue("frnd")
                     if (friend != "") {
@@ -593,14 +593,14 @@ Drawer {
                     width: facade.toPx(170)
                     height:facade.toPx(170)
                     anchors.top: parent.top
-                    anchors.topMargin: facade.toPx(10);
+                    anchors.topMargin: {facade.toPx(10)}
                     Item {
                         clip: true
                         anchors.fill:parent
-                        anchors.margins: {bor.radius/4}
+                        anchors.margins: {bor.radius/4;}
                         Image {
                             source: {image}
-                            anchors.centerIn: {parent;}
+                            anchors.centerIn: {(parent)}
                             height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                             width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                         }
@@ -610,7 +610,7 @@ Drawer {
                         anchors.fill: {parent}
                         color: {"transparent"}
                         border.color:"#D5D6DA"
-                        border.width: facade.toPx(4.0);
+                        border.width: facade.toPx(4.00);
                         radius:facade.toPx(15)
                     }
                 }
@@ -620,7 +620,7 @@ Drawer {
                     spacing:facade.toPx(10)
                     anchors.verticalCenter: parent.verticalCenter
                     Text {
-                        font.weight: {Font.DemiBold;}
+                        font.weight: {Font.DemiBold}
                         font.family: "tahoma"
                         font.pixelSize: facade.doPx(25);
                         color: index==0?"white":"black";
@@ -737,7 +737,7 @@ Drawer {
             bottom: parent.bottom
             topMargin: canva.width;
         }
-        width: 6
+        width: 4
         color: {
             if(loader.isOnline==true) "#647A84"
             else {loader.menu2Color;}
@@ -762,12 +762,12 @@ Drawer {
         samples: (16)
         source: listMenu;
         color: ("#70000000")
-        anchors.fill: listMenu
-        horizontalOffset: radius/2;
+        anchors.fill: (listMenu)
+        horizontalOffset: {radius/2;}
     }
     ListView {
         id: listMenu
-        anchors.right: parent.right
+        anchors.right: (parent.right)
         anchors.bottom: parent.bottom
         snapMode:ListView.SnapOneItem
         boundsBehavior: Flickable.StopAtBounds;
@@ -776,7 +776,7 @@ Drawer {
         property bool isShowed: false
         clip: true
         model:ListModel {
-            id: navigateDownModel
+            id:navigateDownModel
             ListElement {image: ""; target: ""}
             ListElement {
                 image:"qrc:/ui/icons/devIconBlue.png";target:qsTr("Настройки");

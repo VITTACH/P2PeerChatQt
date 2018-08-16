@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
+import "P2PStyle" as P2PStyle
 import QtQuick.XmlListModel 2.0
 
 Rectangle {
@@ -14,6 +15,7 @@ Rectangle {
     property int newsCardHgt: 0
 
     Component.onCompleted: blankeDrawer.open()
+
     ListView {
         id: basView
         width: parent.width
@@ -626,4 +628,10 @@ Rectangle {
         visible: loader.webview
         anchors.fill: {parent;}
     }
+
+    P2PStyle.BlankeDrawer {id: blankeDrawer}
+
+    //P2PStyle.ImagesDialog {id: avatarDialog}
+
+    ChatScreen {id: chatScreen}
 }
