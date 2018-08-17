@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtMultimedia 5.7
 import ImageProcessor 1.0
+import QtQuick.Controls 2.0
 
 Item {
     Timer {
@@ -9,6 +10,32 @@ Item {
         interval:39000
         onTriggered: {loader.back()}
     }
+
+    /*
+     * todo: make this function working pls!
+    function sendQrCode(binary) {
+        var boundary = String(Math.random()).slice(2);
+        var boundaryMiddle = '--' + boundary + '\r\n';
+        var boundaryLast = '--' + boundary + '--\r\n';
+
+        var body=['Content-Disposition: form-data; name="file"; filename="1.png"\r\nContent-Type: text/xml\r\n\r\n' + binary + '\r\n'];
+
+        body = boundaryMiddle + body + boundaryLast;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://api.qrserver.com/v1/read-qr-code/', true);
+
+        xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
+
+        xhr.onreadystatechange = function(){
+          if (xhr.readyState == XMLHttpRequest.DONE) {
+              console.log(xhr.responseText);
+              return;
+          }
+        }
+
+        xhr.send(body);
+    }*/
 
     Camera {
         id: camera
@@ -91,100 +118,74 @@ Item {
     }
 
     Rectangle {
-        color: "#90000000";
-        width: parent.width
-        height: (parent.height-  width)/2
-        anchors.top: {parent.top}
+        width: {parent.width}
+        color: scaner.border.color
+        anchors.top: {parent.top;}
+        anchors.bottom: scaner.top
     }
 
     Rectangle {
-        color: "#90000000";
-        width: parent.width
-        height: (parent.height - width)/2
-        anchors.bottom: {(parent.bottom)}
+        width: {parent.width}
+        color: scaner.border.color
+        anchors.top: scaner.bottom
+        anchors {
+            bottom: parent.bottom;
+        }
     }
 
     Rectangle {
+        id: scaner
         height: width
-        width: parent.width;
-        color: "transparent"
-        border.width:width/4
-        border.color: "#90000000"
-        anchors.centerIn: parent;
+        width: parent.width
+        color: "transparent";
+        border.width: width/4
+        border.color: "#80000000";
+        anchors.centerIn: {parent}
 
         Rectangle {
-            id: scaner
-            color: "transparent";
-            border.width: 2;
-            width: {parent.width/2.0}
             height: width
-            anchors.centerIn: parent;
+            border.width: 2;
+            border.color: "limegreen"
+            color: "transparent";
+            width: parent.width/2
+            anchors.centerIn: {(parent);}
 
             Rectangle {
                 id: scanline
-                width: 2
-                anchors.centerIn: {(parent);}
+                height: 2
+                width: {parent.width - 4}
+                anchors.centerIn: parent;
 
                 SequentialAnimation {
+                    running: true
                     loops: Animation.Infinite
                     ColorAnimation {
                         target: scanline;
                         property: "color"
-                        from: {"#FF0000"}
+                        from: "red"
                         to: "transparent"
-                        duration: 350
+                        duration: {(350)}
                     }
                     ColorAnimation {
                         from: {"transparent"}
                         target: scanline;
                         property: "color"
                         to: "red";
-                        duration: 350
-                    }
-                    running: true
-                }
-
-                SequentialAnimation {
-                    running: true
-                    loops: Animation.Infinite
-                    NumberAnimation {
-                        from: scaner.height-4
-                        to: 0
-                        target: scanline;
-                        property:"height"
-                        duration:3000
+                        duration: {(350)}
                     }
                 }
             }
         }
     }
 
-    /*
-     * todo: make this function working pls!
-    function sendQrCode(binary) {
-        var boundary = String(Math.random()).slice(2);
-        var boundaryMiddle = '--' + boundary + '\r\n';
-        var boundaryLast = '--' + boundary + '--\r\n';
-
-        var body=['Content-Disposition: form-data; name="file"; filename="1.png"\r\nContent-Type: text/xml\r\n\r\n' + binary + '\r\n'];
-
-        body = boundaryMiddle + body + boundaryLast;
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://api.qrserver.com/v1/read-qr-code/', true);
-
-        xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
-
-        xhr.onreadystatechange = function(){
-          if (xhr.readyState == XMLHttpRequest.DONE) {
-              console.log(xhr.responseText);
-              return;
-          }
-        }
-
-        xhr.send(body);
-    }
-    */
-
     ImageProcessor {id: imageProcessor}
+
+    Button {
+        x:(parent.width-width)/2;
+        y:parent.height-parent.height/6
+        font.family:trebu4etMsNorm.name
+        font.pixelSize: facade.doPx(26)
+        text: qsTr("Cancel scan")
+        onClicked: loader.back();
+    }
 }

@@ -25,15 +25,17 @@ Drawer {
                     friend =event_handler.loadValue("frnd")
                     if (friend != "") {
                         var myfriend = (JSON.parse(friend))
-                        var triend = []
+                        var fr = []
                         for(var i=0;i<myfriend.length;i++){
                             usersModel.append({image:"", famil: myfriend[i].famil, login: myfriend[i].login, phone: myfriend[i].phone, port: myfriend[i].port, ip: myfriend[i].ip,activity:1})
-                            triend.push(myfriend[i].phone);
+                            fr.push(myfriend[i].phone)
                         }
+                        loader.frienList=JSON.stringify(fr)
+                        getMePeers(loader.frienList)
+                    } else {
+                        getFriends()
                     }
-                    loader.frienList=JSON.stringify(triend)
                 }
-                getMePeers(loader.frienList)
             } else if (position == (0)) {
                 loader.forceActiveFocus()
                 find = true;
@@ -70,6 +72,7 @@ Drawer {
         request.onreadystatechange =function() {
             if (request.readyState ==XMLHttpRequest.DONE) {
                 if (request.status&&request.status ==200) {
+                    console.log(request.responseText)
                     obj =JSON.parse(request.responseText)
                     for (var i = 0; i < obj.length; i+=1) {
                         index = findPeer(obj[i].name)
@@ -106,6 +109,7 @@ Drawer {
         }
         var urlEncode = 'application/x-www-form-urlencoded'
         request.setRequestHeader('Content-Type', urlEncode)
+        console.log(name)
         request.send("READ=2&name=" +name)
     }
 
@@ -121,6 +125,7 @@ Drawer {
         }
         var urlEncode = 'application/x-www-form-urlencoded'
         request.setRequestHeader('Content-Type', urlEncode)
+        console.log(loader.tel)
         request.send("READ=3&name="+loader.tel);
     }
 
@@ -810,12 +815,11 @@ Drawer {
                             leftMenu.move(!leftMenu.direction);
                             break;
                         case 2:
-                            loader.restores();
-                            chatScreen.close()
                             drawer.close()
-                            loader.goTo("loginanDregister.qml")
+                            loader.restores();
                             event_handler.saveSet("user" , "");
                             event_handler.saveSet("frnd" , "");
+                            loader.goTo("loginanDregister.qml")
                     }
                     if (index == 0) {
                         myswitcher.checked=!myswitcher.checked;

@@ -363,8 +363,12 @@ Drawer {
                                         clip: true
                                         Image {
                                             source: modelData;
-                                            height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
-                                            width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                                            height: {
+                                                sourceSize.width>sourceSize.height?parent.height:sourceSize.height*(parent.width/sourceSize.width)
+                                            }
+                                            width: {
+                                                sourceSize.width>sourceSize.height?sourceSize.width*(parent.height/sourceSize.height):parent.width
+                                            }
                                             anchors.centerIn: {parent;}
                                             MouseArea {
                                                 anchors.fill: {parent;}
@@ -529,8 +533,8 @@ Drawer {
     PropertyAnimation {
         id: attachMove;
         target: attach;
-        from: {(attach.move == true) ? 0 : facade.toPx(280);}
-        to: {(attach.move == true) ? facade.toPx(280) : (0);}
+        from: {(attach.move) ? 0 : facade.toPx(380);}
+        to: {(attach.move) ? facade.toPx(380) : (0);}
         property: "height";
         duration: 300
     }
@@ -545,11 +549,14 @@ Drawer {
         Rectangle {
             id: attach
             color: "#90FFFFFF";
-            width: {parent.width;}
+            width: parent.width
             property bool move: false
             Connections {
                 target: attach;
-                onMoveChanged: {attachMove.restart()}
+                onMoveChanged: {
+                    chatScreen.interactive = !attach.move
+                    attachMove.restart()
+                }
             }
 
             Row {
@@ -600,14 +607,14 @@ Drawer {
                     orientation: Qt.Horizontal;
                     model: ListModel {id:tachModel}
                     Component.onCompleted: {
-                        var photos = (Math.random()*10) + 10
+                        var photos = (Math.random()*10) + 5;
                         for (var i = 0; i < photos; i +=1) {
-                            tachModel.append({image0:"http://picsum.photos/10"+i+"/99?random",image1:"http://picsum.photos/100/10"+i+"?random"})
+                            tachModel.append({image0: "http://picsum.photos/10"+i+"/99?random", image1: "http://picsum.photos/100/10"+i+"?random", image2: "http://picsum.photos/99/10"+i+ "?random", image3: "http://picsum.photos/99/10" + i + "?random"})
                         }
                     }
 
                     onContentXChanged: {
-                        var newX = scrollBar.start + (width - scrollBar.width)*contentX/((tachModel.count - width/height*2)*height/2 - spacing);
+                        var newX = scrollBar.start + (width - scrollBar.width)*contentX / ((tachModel.count - width/height*2)*height/2 - spacing);
                         if (newX>scrollBar.start) scrollBar.x=newX;
                         else {scrollBar.x = scrollBar.start}
                     }
@@ -615,23 +622,23 @@ Drawer {
                     delegate: Column {
                         spacing: imagesList.spacing
                         Repeater {
-                            model: 2
+                            model: 3
                             Rectangle {
-                                clip: true;
                                 width: height
+                                height: imagesList.height/3-spacing
+
+                                clip: true
                                 color: "#D3D3D3"
-                                height: imagesList.height/2-spacing
-
                                 Image {
-                                    source: index==0? image0:image1
-                                    height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
-                                    width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+                                    source: index == 0? image0: (index == 1 ? image1 : image2)
+                                    height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width / sourceSize.width);
+                                    width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height / sourceSize.height): parent.width;
                                     anchors.centerIn: parent
-                                }
 
-                                MouseArea {
-                                    onClicked: selectedImage.push(index == 0? image0: image1);
-                                    anchors.fill: parent
+                                    MouseArea {
+                                        onClicked: selectedImage.push(parent.source);
+                                        anchors.fill: parent
+                                    }
                                 }
                             }
                         }
@@ -642,7 +649,7 @@ Drawer {
             Rectangle {
                 id: scrollBar
                 property var start: cam.height + imgRow.spacing +imgRow.x;
-                width: imagesList.width * imagesList.width/(tachModel.count * (imagesList.height/2 + imagesList.spacing) - imagesList.spacing);
+                width: imagesList.width * imagesList.width / (tachModel.count * (imagesList.height/2 + imagesList.spacing) - imagesList.spacing);
                 x: start
                 anchors.bottom: {imgRow.bottom}
                 height: facade.toPx(5)

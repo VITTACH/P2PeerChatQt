@@ -511,22 +511,21 @@ Rectangle {
             ListView {
                 clip: true
                 width: contentWidth
-                x: (parent.width-width)/2
+                x: (parent.width - width)/2.0
                 height: facade.toPx(160);
                 spacing: facade.toPx(27);
                 orientation:Qt.Horizontal
                 visible: index==2
                 model:ListModel {
-                    ListElement {image:"mus.png";}
-                    ListElement {image:"img.png";}
-                    ListElement {image:"vide.png"}
-                    ListElement {image:"play.png"}
+                    ListElement {image : "qrc:/ui/buttons/feeds/mus.png"}
+                    ListElement {image : "qrc:/ui/buttons/feeds/img.png";}
+                    ListElement {image : "qrc:/ui/buttons/feeds/vide.png";}
+                    ListElement {image : "qrc:/ui/buttons/feeds/play.png";}
                 }
                 delegate: Image {
-                    clip: true
-                    width: facade.toPx(sourceSize.width /3.55)
-                    height: facade.toPx(sourceSize.height/3.55)
-                    source: {"qrc:/ui/buttons/feeds/" + (image)}
+                    width: facade.toPx(sourceSize.width / 3.55);
+                    height: facade.toPx(sourceSize.height /3.55)
+                    source: image
 
                     PropertyAnimation {
                         duration: 1000
@@ -535,36 +534,32 @@ Rectangle {
                         properties: {("width, height, radius");}
                         from: 0
                         to: (parent.width*3)
-
-                        onStopped: {
-                            colorSquare.width  = 0;
-                            colorSquare.height = 0;
-                        }
+                        onStopped: colorSquare.width = colorSquare.height = 0;
                     }
 
-                    Rectangle {
-                        width: 0
-                        height:0
-                        opacity: (0.37)
-                        id: colorSquare
-                        color: {loader.menu9Color;}
-
-                        transform:Translate{
-                            x:-colorSquare.width /2
-                            y:-colorSquare.height/2
+                    Item {
+                        clip: true
+                        anchors.fill: parent
+                        anchors.margins: facade.toPx(10)
+                        Rectangle {
+                            width: 0
+                            height:0
+                            opacity: (0.27)
+                            id: colorSquare
+                            color:loader.menu9Color
+                            transform: Translate {
+                                x:-colorSquare.width/2;y:-colorSquare.height/2
+                            }
                         }
                     }
 
                     MouseArea {
                         anchors.fill: parent
-                        onExited: {
-                            squareAnimation.stop();
-                        }
-                        onPressed:{
-                            colorSquare.x = mouseX;
-                            colorSquare.y = mouseY;
+                        onPressed: {
+                            colorSquare.x = colorSquare.y=mouseY
                             squareAnimation.start()
                         }
+                        onExited: squareAnimation.stop()
                     }
                 }
             }
@@ -630,8 +625,6 @@ Rectangle {
     }
 
     P2PStyle.BlankeDrawer {id: blankeDrawer}
-
-    //P2PStyle.ImagesDialog {id: avatarDialog}
 
     ChatScreen {id: chatScreen}
 }

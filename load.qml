@@ -8,7 +8,7 @@ import "js/URLQuery.js"as URLQuery
 
 ApplicationWindow {
     x: 0
-    y: 0
+    y: facade.toPx(100)
     visible: true
     title: "Coinroad"
 
@@ -32,8 +32,8 @@ ApplicationWindow {
         if (event_handler.currentOSys()>0) close.accepted =false; else close.accepted=true
     }
 
-    width: {event_handler.currentOSys() < 1? Screen.width/2.5: 0}
-    height:event_handler.currentOSys()<1?Screen.height-facade.toPx(100):0
+    width: {event_handler.currentOSys() < 1? Screen.width/2.7: 0}
+    height: event_handler.currentOSys() < 1? Screen.height -y: 0;
 
     QtObject {
         id: facade
@@ -207,7 +207,7 @@ ApplicationWindow {
                             loader.login = obj.login;
                             loader.tel = obj.name;
                         } else response = 0;
-                        switch(response){
+                        switch(response) {
                             case 1:
                                 loader.isOnline = !false;
                                 if (loader.source != "profile.qml") {
@@ -219,7 +219,6 @@ ApplicationWindow {
                                 event_handler.saveSet("user", JSON.stringify(uo))
                                 break;
                             case 0:
-                                blankeDrawer.close()
                                 defaultDialog.show(qsTr("Вы не были зарегистрированы"), 0)
                                 if (loader.source != "qrc:/loginanDregister.qml")
                                     goTo("qrc:/loginanDregister.qml");
@@ -235,7 +234,6 @@ ApplicationWindow {
                                 partnerHeader.page = 1;
                                 break;
                             case -1:
-                                blankeDrawer.close()
                                 defaultDialog.show("Временно нету доступа до интернету",0)
                                 break;
                         }

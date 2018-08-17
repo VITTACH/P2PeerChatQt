@@ -240,25 +240,25 @@ Item {
             }
 
             Item {
-                visible: index == 5
-                width: Math.min(0.82*parent.width,facade.toPx(900))
-                anchors.horizontalCenter: {parent.horizontalCenter}
-                height:facade.toPx(100)
                 Button {
-                    anchors.right:parent.right
+                    anchors.right: parent.right
                     onClicked: partnerHeader.page=1;
                     anchors.bottom: {parent.bottom;}
                     contentItem: Text {
-                        verticalAlignment:Text.AlignVCenter
+                        verticalAlignment: Text.AlignVCenter
                         color:parent.down==true? "#D3D3D3": "white"
-                        text: {(parent.text);}
-                        font: {(parent.font);}
+                        text: parent.text
+                        font: parent.font
                     }
                     text: typeof plaseHolder == "undefined"? ("") : plaseHolder
                     background: Rectangle{opacity:0}
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(26);
                 }
+                visible: {index === 5;}
+                height:facade.toPx(100)
+                width: Math.min(0.82*parent.width,facade.toPx(900))
+                anchors.horizontalCenter: {parent.horizontalCenter}
             }
 
             Rectangle {
