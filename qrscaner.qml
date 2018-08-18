@@ -37,31 +37,6 @@ Item {
         xhr.send(body);
     }*/
 
-    Camera {
-        id: camera
-
-        flash.mode: Camera.FlashAuto
-
-        exposure {
-            exposureCompensation: -1
-            exposureMode: {Camera.ExposurePortrait;}
-        }
-
-        imageProcessing.whiteBalanceMode: {
-            CameraImageProcessing.WhiteBalanceFlash;
-        }
-
-        imageCapture {
-            onImageCaptured: {
-                capture.stop()
-                imageProcessor.processImage(preview)
-            }
-            onImageSaved: {
-                imageProcessor.delCaptureImage(path)
-            }
-        }
-    }
-
     Timer {
         id: capture
         running: true
@@ -104,9 +79,7 @@ Item {
         source: camera
         orientation: -90
         anchors.fill: parent
-        fillMode: {
-            (VideoOutput.PreserveAspectCrop);
-        }
+        fillMode: VideoOutput.PreserveAspectCrop
 
         MouseArea {
             anchors.fill: parent;
@@ -116,6 +89,30 @@ Item {
             }
         }
     }
+
+//    Camera {
+//        id: camera
+//        flash.mode: Camera.FlashAuto
+
+//        exposure {
+//            exposureCompensation: -1
+//            exposureMode: {Camera.ExposurePortrait;}
+//        }
+
+//        imageProcessing.whiteBalanceMode: {
+//            CameraImageProcessing.WhiteBalanceFlash;
+//        }
+
+//        imageCapture {
+//            onImageCaptured: {
+//                capture.stop()
+//                imageProcessor.processImage(preview)
+//            }
+//            onImageSaved: {
+//                imageProcessor.delCaptureImage(path)
+//            }
+//        }
+//    }
 
     Rectangle {
         width: {parent.width}

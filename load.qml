@@ -312,9 +312,5 @@ ApplicationWindow {
 
     P2PStyle.DefaultDialog {id: defaultDialog;}
 
-    P2PStyle.BlankeDrawer {id: blankeDrawer}
-
     P2PStyle.ImagesDialog {id: avatarDialog}
-
-    ChatScreen {z: 1000; id: chatScreen}
 }

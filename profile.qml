@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
+import "P2PStyle" as P2PStyle
 
 Item {
     Connections {
@@ -31,4 +32,8 @@ Item {
             }
         }
     }
+
+    P2PStyle.BlankeDrawer {id: blankeDrawer}
+
+    ChatScreen {z: 1000; id: chatScreen}
 }
