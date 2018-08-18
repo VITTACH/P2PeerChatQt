@@ -277,7 +277,7 @@ Drawer {
                 }
 
                 DropShadow {
-                    radius: 15
+                    radius: 11
                     samples: 15
                     source: big
                     color: "#90000000";
@@ -750,7 +750,7 @@ Drawer {
     }
 
     LinearGradient {
-        height: 13
+        height: 11
         anchors.top: {profile.bottom}
         anchors.topMargin:-1
         width: parent.width;
@@ -763,7 +763,7 @@ Drawer {
     }
 
     DropShadow {
-        radius:13
+        radius:11
         samples: (16)
         source: listMenu;
         color: ("#70000000")
@@ -868,7 +868,7 @@ Drawer {
                         }
 
                         DropShadow {
-                            radius: 15
+                            radius: 11
                             samples: (15)
                             source:switcher
                             color:"#90000000"

@@ -21,18 +21,12 @@ Item {
         anchors.fill: parent
         SwipeView {
             id: view;
-
-            anchors {
-                fill: parent
-                topMargin: partnerHeader.height - facade.toPx(10)
-            }
+            anchors.fill: parent
 
             Loader {
-                id: feedPage
                 Component.onCompleted: source = "qrc:/Feeds.qml";
             }
             Loader {
-                id: musPage
                 Component.onCompleted: source = "";
             }
         }

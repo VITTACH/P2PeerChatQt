@@ -1,11 +1,9 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
-import "P2PStyle" as P2PStyle
 import QtQuick.XmlListModel 2.0
 
 Rectangle {
-    id: rootPage;
     color: loader.feedColor
 
     property var nWidth;
@@ -23,7 +21,7 @@ Rectangle {
         anchors {
             top: parent.top
             bottom: downRow.top
-            topMargin: facade.toPx(40)
+            topMargin: partnerHeader.height + facade.toPx(30)
         }
 
         model: ListModel {
@@ -623,8 +621,4 @@ Rectangle {
         visible: loader.webview
         anchors.fill: {parent;}
     }
-
-    P2PStyle.BlankeDrawer {id: blankeDrawer}
-
-    ChatScreen {id: chatScreen}
 }
