@@ -367,8 +367,8 @@ Rectangle {
                 width: {parent.width;}
                 height: if (visible == true) 4*facade.toPx(200);
                 DropShadow {
-                    radius: 12
-                    samples:18
+                    radius: 8
+                    samples: 18
                     source: {rssView;}
                     color: "#50000000"
                     anchors.fill: {rssView;}
@@ -517,14 +517,14 @@ Rectangle {
                 orientation:Qt.Horizontal
                 visible: index==2
                 model:ListModel {
-                    ListElement {image : "qrc:/ui/buttons/feeds/mus.png"}
-                    ListElement {image : "qrc:/ui/buttons/feeds/img.png";}
-                    ListElement {image : "qrc:/ui/buttons/feeds/vide.png";}
-                    ListElement {image : "qrc:/ui/buttons/feeds/play.png";}
+                    ListElement {image:"qrc:/ui/buttons/feeds/mus.png";}
+                    ListElement {image:"qrc:/ui/buttons/feeds/img.png";}
+                    ListElement {image:"qrc:/ui/buttons/feeds/vide.png"}
+                    ListElement {image:"qrc:/ui/buttons/feeds/play.png"}
                 }
                 delegate: Image {
-                    width: facade.toPx(sourceSize.width / 3.55);
-                    height: facade.toPx(sourceSize.height /3.55)
+                    width: facade.toPx(sourceSize.width/3.55)
+                    height: facade.toPx(sourceSize.height/3.55);
                     source: image
 
                     PropertyAnimation {
