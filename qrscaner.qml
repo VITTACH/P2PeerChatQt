@@ -90,29 +90,29 @@ Item {
         }
     }
 
-//    Camera {
-//        id: camera
-//        flash.mode: Camera.FlashAuto
+    Camera {
+        id: camera
+        flash.mode: Camera.FlashAuto
 
-//        exposure {
-//            exposureCompensation: -1
-//            exposureMode: {Camera.ExposurePortrait;}
-//        }
+        exposure {
+            exposureCompensation: -1
+            exposureMode: {Camera.ExposurePortrait;}
+        }
 
-//        imageProcessing.whiteBalanceMode: {
-//            CameraImageProcessing.WhiteBalanceFlash;
-//        }
+        imageProcessing.whiteBalanceMode: {
+            CameraImageProcessing.WhiteBalanceFlash;
+        }
 
-//        imageCapture {
-//            onImageCaptured: {
-//                capture.stop()
-//                imageProcessor.processImage(preview)
-//            }
-//            onImageSaved: {
-//                imageProcessor.delCaptureImage(path)
-//            }
-//        }
-//    }
+        imageCapture {
+            onImageCaptured: {
+                capture.stop()
+                imageProcessor.processImage(preview)
+            }
+            onImageSaved: {
+                imageProcessor.delCaptureImage(path)
+            }
+        }
+    }
 
     Rectangle {
         width: {parent.width}

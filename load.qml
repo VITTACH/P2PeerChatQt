@@ -5,12 +5,16 @@ import QtQuick.Controls 2.0
 import "P2PStyle" as P2PStyle
 import "js/xHRQuery.js"as XHRQuery
 import "js/URLQuery.js"as URLQuery
+import QtQuick.Controls.Material 2.3
 
 ApplicationWindow {
     x: 0
     y: {event_handler.currentOSys() <= 0 ? facade.toPx(100) : 0;}
     visible: true
     title: "Coinroad"
+
+    Material.theme: Material.Light
+    Material.accent: Material.Purple
 
     StatusBar {color: ("#3E4A56")}
 
@@ -32,8 +36,8 @@ ApplicationWindow {
         if (event_handler.currentOSys()>0) close.accepted =false; else close.accepted=true
     }
 
-    width: {event_handler.currentOSys() < 1? Screen.width/2.7: 0}
-    height: event_handler.currentOSys() < 1? Screen.height -y: 0;
+    width: event_handler.currentOSys()<1?Screen.width / 2.70 : 0;
+    height:event_handler.currentOSys()<1?Screen.height-facade.toPx(100):0
 
     QtObject {
         id: facade
@@ -118,6 +122,8 @@ ApplicationWindow {
 
         property var tmpLogin;
         property var tmpPhone;
+        property var chatOpen;
+        property var drawOpen;
 
         property string menu1Color: "#939393";
         property string menu2Color: "#E0E0E0";

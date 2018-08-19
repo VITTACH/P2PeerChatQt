@@ -211,12 +211,12 @@ Item {
                 anchors.horizontalCenter: (parent.horizontalCenter)
                 Image {
                     id: icon;
-                    source: image
+                    source: image;
                     width: {facade.toPx(sourceSize.width * 15 /10)}
                     height:{facade.toPx(sourceSize.height* 15 /10)}
                 }
                 TextField {
-                    color:"white"
+                    color: "white"
                     height: facade.toPx(88)
                     width: parent.width-facade.toPx(20)-icon.width;
                     onTextChanged: loader.fields[index - 1] = text;

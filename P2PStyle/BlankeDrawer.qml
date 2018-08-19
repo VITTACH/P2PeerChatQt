@@ -8,8 +8,8 @@ Drawer {
     edge: Qt.RightEdge;
     property bool find: true
     dragMargin: facade.toPx(100)
-    property alias cindex: listView.currentIndex;
     background: Rectangle {color: "transparent";}
+    property alias cindex: listView.currentIndex;
     width: {Math.min(facade.toPx(650), 0.9 * parent.width)}
     height: {parent.height;}
 
@@ -18,7 +18,11 @@ Drawer {
         onPositionChanged: {
             if (loader.isLogin != true || loader.webview) {
                 close()
-                position = 0
+                if (loader.source == "loginanDregister.qml") {
+                    position = 0
+                } else if (position == 0) {
+                    loader.goTo("loginanDregister.qml")
+                }
             } else if (position == 1) {
                 if (typeof loader.frienList=="undefined") {
                     var friend
@@ -36,7 +40,7 @@ Drawer {
                         getFriends()
                     }
                 }
-            } else if (position == (0)) {
+            } else if (position == 0) {
                 loader.forceActiveFocus()
                 find = true;
             }
@@ -46,6 +50,12 @@ Drawer {
     Connections {
         target: loader
         onIsOnlineChanged: if(loader.isOnline) getFriends()
+        onDrawOpenChanged: {
+            if (loader.drawOpen) {
+                loader.drawOpen = false;
+                drawer.open()
+            }
+        }
     }
 
     function getHelperHeight() {return (leftSlider.height)}
@@ -547,6 +557,7 @@ Drawer {
                     anchors.fill: parent;
                     property var presed: false;
                     onClicked: {
+                        loader.chatOpen = true;
                         if (index !=-1) listView.currentIndex = index
                         var json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
                         var text = usersModel.get(index).login+" "+usersModel.get(index).famil
@@ -586,8 +597,8 @@ Drawer {
                 }
 
                 DropShadow {
-                    radius: 5
-                    samples: 14
+                    radius: 3
+                    samples: 10
                     source: bug
                     color: "#70000000"
                     anchors.fill: bug;
@@ -762,14 +773,14 @@ Drawer {
         }
     }
 
-    DropShadow {
-        radius:11
-        samples: (16)
-        source: listMenu;
-        color: ("#70000000")
-        anchors.fill: (listMenu)
-        horizontalOffset: {radius/2;}
-    }
+//    DropShadow {
+//        radius:11
+//        samples: (16)
+//        source: listMenu;
+//        color: ("#70000000")
+//        anchors.fill: (listMenu)
+//        horizontalOffset: radius/2;
+//    }
     ListView {
         id: listMenu
         anchors.right: (parent.right)
@@ -808,26 +819,24 @@ Drawer {
             MouseArea {
                 id: menMouseArea;
                 anchors.fill: parent;
+                onExited: listMenu.currentIndex = -1;
                 onEntered: listMenu.currentIndex = index;
                 onClicked: {
                     switch(index) {
-                        case 1:
-                            leftMenu.move(!leftMenu.direction);
-                            break;
-                        case 2:
-                            drawer.close()
-                            loader.restores();
-                            event_handler.saveSet("user" , "");
-                            event_handler.saveSet("frnd" , "");
-                            loader.goTo("loginanDregister.qml")
-                    }
-                    if (index == 0) {
-                        myswitcher.checked=!myswitcher.checked;
-                    } else if (index > 0 && index <= 1) {
-                        listMenu.currentIndex=index
+                    case 0:
+                        myswitcher.checked =!myswitcher.checked
+                        break;
+                    case 1:
+                        listMenu.currentIndex = index
+                        leftMenu.move(!leftMenu.direction)
+                        break;
+                    case 2:
+                        event_handler.saveSet("user", "");
+                        event_handler.saveSet("frnd", "");
+                        loader.restores();
+                        drawer.close()
                     }
                 }
-                onExited: listMenu.currentIndex=-1;
             }
 
             Item {

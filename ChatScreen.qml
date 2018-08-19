@@ -43,10 +43,15 @@ Drawer {
         target: chatScreen;
         function updatePosition(rotate) {
             percent = 1-facade.toPx(20)/width
-            if (loader.isLogin == false) position = 0;
-            else if (position > percent || rotate) position = percent
+            if (!loader.isLogin) {
+                position = 0;
+            } else if (position > percent || rotate) {
+                position = percent
+            } else if (position == 0) {
+                loader.chatOpen = false
+            }
         }
-        onPositionChanged: updatePosition()
+        onPositionChanged: {updatePosition()}
         onWidthChanged: if (position>0) updatePosition(true)
     }
 
@@ -556,8 +561,7 @@ Drawer {
                 target: attach;
                 onMoveChanged: {
                     attach.move ? camera2.start() : camera2.stop();
-
-                    // chatScreen.interactive = !attach.move //5.10
+                    chatScreen.interactive = !(attach.move);
                     attachMove.restart()
                 }
             }
@@ -576,7 +580,7 @@ Drawer {
                     height: parent.height*0.7
                     Camera {
                         id: camera2
-                        Component.onCompleted: camera2.stop()
+                        Component.onCompleted:camera2.stop()
                         position: Camera.FrontFace
                         flash.mode: Camera.FlashAuto
                         exposure {

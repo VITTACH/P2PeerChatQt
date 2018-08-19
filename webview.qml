@@ -6,7 +6,7 @@ Rectangle {
     anchors.fill: {parent;}
     Loader {
         anchors.fill:parent
-        anchors.topMargin: headerSplash
+        anchors.topMargin: partnerHeader.height
         source: event_handler.currentOSys() > 0 ? "qrc:/ibrowser.qml": ""
     }
 }
