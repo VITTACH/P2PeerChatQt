@@ -8,7 +8,7 @@ import "js/URLQuery.js"as URLQuery
 
 ApplicationWindow {
     x: 0
-    y: facade.toPx(100)
+    y: {event_handler.currentOSys() <= 0 ? facade.toPx(100) : 0;}
     visible: true
     title: "Coinroad"
 
@@ -300,10 +300,6 @@ ApplicationWindow {
         }
     }
 
-    P2PStyle.DefaultDialog {id: defaultDialog;}
-
-    P2PStyle.ImagesDialog {id: avatarDialog}
-
     P2PStyle.HeaderSplash {
         visible: loader.source != "qrscan.qml";
         id: partnerHeader;
@@ -313,4 +309,8 @@ ApplicationWindow {
         source:"qrc:/fonts/TrebuchetMSn.ttf"
         id: trebu4etMsNorm
     }
+
+    P2PStyle.DefaultDialog {id: defaultDialog;}
+
+    P2PStyle.ImagesDialog {id: avatarDialog}
 }

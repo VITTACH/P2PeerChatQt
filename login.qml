@@ -6,9 +6,8 @@ import "js/URLQuery.js"as URLQuery
 
 Item {
     property variant pageWidth
-    property variant title: qsTr("Coinroad TM")
 
-    Component.onCompleted: partnerHeader.text =title
+    Component.onCompleted: partnerHeader.text = qsTr("Coinroad TM")
 
     Item {
         width: 2*parent.width;

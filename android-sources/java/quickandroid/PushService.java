@@ -55,7 +55,7 @@ public class PushService {
                             intent = PendingIntent.getActivity(activity, 0, notifyIntent, 0);
 
                             Notification notification = builder.build();
-                            notification.setLatestEventInfo(activity,stitle,message, intent);
+                            // notification.setLatestEventInfo(activity, stitle, message, intent);
 
                             mManager.notify(notifyMyCounter.getAndIncrement(), notification);
                         } catch (Exception e) { }

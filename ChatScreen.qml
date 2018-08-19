@@ -11,12 +11,6 @@ Drawer {
     width: parent.width;
     height: parent.height;
 
-    property var input
-    property real percent
-    property real yPosition
-    property var select;
-    property var selectedImage:[];
-
     function setInfo(messag, photos, status) {
         partnersHead.stat = status
         partnersHead.phot = photos
@@ -37,6 +31,13 @@ Drawer {
             selectedImage=[];
         }
     }
+
+    property var input
+    property real percent
+    property real yPosition
+
+    property var select;
+    property var selectedImage:[];
 
     Connections {
         target: chatScreen;
@@ -554,7 +555,9 @@ Drawer {
             Connections {
                 target: attach;
                 onMoveChanged: {
-                    chatScreen.interactive = !attach.move
+                    attach.move ? camera2.start() : camera2.stop();
+
+                    // chatScreen.interactive = !attach.move //5.10
                     attachMove.restart()
                 }
             }
@@ -573,6 +576,8 @@ Drawer {
                     height: parent.height*0.7
                     Camera {
                         id: camera2
+                        Component.onCompleted: camera2.stop()
+                        position: Camera.FrontFace
                         flash.mode: Camera.FlashAuto
                         exposure {
                             exposureCompensation: -1
@@ -581,9 +586,8 @@ Drawer {
                     }
                     VideoOutput {
                         fillMode: {VideoOutput.PreserveAspectCrop;}
-                        focus: visible
-                        source: camera2;
-                        orientation:-90;
+                        source: camera2
+                        autoOrientation:true
                         anchors.fill: parent
                     }
 
