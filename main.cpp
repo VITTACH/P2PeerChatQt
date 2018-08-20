@@ -44,7 +44,7 @@ int main(int argc,char **argv)
     EventHandler *eventhandler = EventHandler::Instance();
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:///");
-    QQuickStyle::setStyle("Material");
+    QQuickStyle::setStyle("Universal");
     eventhandler->currentSys = currentSys;
 
     qmlRegisterType<StatusBar>("StatusBar", 0 , 1, "StatusBar");

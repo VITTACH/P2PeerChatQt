@@ -5,7 +5,7 @@ import QtQuick.Controls 2.0
 import "P2PStyle" as P2PStyle
 import "js/xHRQuery.js"as XHRQuery
 import "js/URLQuery.js"as URLQuery
-import QtQuick.Controls.Material 2.3
+import QtQuick.Controls.Universal 2.3
 
 ApplicationWindow {
     x: 0
@@ -13,10 +13,8 @@ ApplicationWindow {
     visible: true
     title: "Coinroad"
 
-    Material.theme: Material.Light
-    Material.accent: Material.Purple
-
-    StatusBar {color: ("#3E4A56")}
+    Universal.theme: {Universal.Light}
+    Universal.accent: Universal.Purple
 
     // flags: Qt.FramelessWindowHint; // turned off system window
 
@@ -26,18 +24,18 @@ ApplicationWindow {
         onTriggered: loader.back()
     }
 
+    StatusBar {color: ("#3E4A56")}
+
     Timer {
         id: connect
         interval:4000
         onTriggered:loader.logon(loader.tmpPhone,loader.tmpLogin)
     }
 
-    onClosing: {
-        if (event_handler.currentOSys()>0) close.accepted =false; else close.accepted=true
-    }
+    onClosing: event_handler.currentOSys()>0? close.accepted = false:close.accepted = true
 
-    width: event_handler.currentOSys()<1?Screen.width / 2.70 : 0;
     height:event_handler.currentOSys()<1?Screen.height-facade.toPx(100):0
+    width: event_handler.currentOSys()<1?Screen.width/1.2: 0
 
     QtObject {
         id: facade
@@ -127,19 +125,19 @@ ApplicationWindow {
 
         property string menu1Color: "#939393";
         property string menu2Color: "#E0E0E0";
-        property string menu3Color: "#768797";
-        property string menu4Color: "#6C737D";
+        property string menu3Color: "#8093A3";
+        property string menu4Color: "#777F89";
         property string menu5Color: "#B24A3E";
         property string menu6Color: "#96281B";
         property string menu7Color: "#F1F1F1";
         property string menu8Color: "#D3D3D3";
-        property string menu9Color: "#AEB8C1";
+        property string menu9Color: "#B9C3CC";
 
         property string menu10Color:"#535353";
         property string menu11Color:"#597FB2";
         property string menu12Color:"#4F7E9E";
         property string menu13Color:"#B1B1B1";
-        property string menu14Color:"#7899AC";
+        property string menu14Color:"#80A4B7";
         property string menu15Color:"#8DACBC";
         property string menu16Color:"#BBC6CA";
 

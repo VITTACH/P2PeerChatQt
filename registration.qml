@@ -103,7 +103,7 @@ Item {
                     }
                 }
                 visible: {image == "_";}
-                width: Math.min(0.82*parent.width,facade.toPx(800))
+                width: Math.min(0.82*parent.width,facade.toPx(700))
                 anchors.horizontalCenter: {parent.horizontalCenter}
                 height: facade.toPx(100)
             }
@@ -111,7 +111,7 @@ Item {
             Item {
                 visible:index < 4? 1: 0;
                 height: {parent.height;}
-                width: Math.min(0.82*parent.width,facade.toPx(900))
+                width: Math.min(0.82*parent.width,facade.toPx(700))
                 anchors.horizontalCenter: {parent.horizontalCenter}
                 Image {
                     id: icon
@@ -154,7 +154,7 @@ Item {
 
             Rectangle {
                 anchors.horizontalCenter: {parent.horizontalCenter}
-                width:Math.min(0.82*parent.width, facade.toPx(900))
+                width:Math.min(0.82*parent.width, facade.toPx(700))
                 height: facade.toPx(3)
                 visible:index<4
             }

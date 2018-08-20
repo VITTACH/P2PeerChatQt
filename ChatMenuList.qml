@@ -8,16 +8,17 @@ Button {
     visible: loader.context
     contentItem: Text {opacity: 0;}
     onClicked: loader.context=false
-    background: Rectangle {color: "#12000000";}
     property int w: listText.width;
     property int payload;
-    property int menu: 1;
+    property int menu: (1);
+    property int xPosition;
+    property int yPosition;
     property var buttons: [
         ["Удалить", "Переслать", "Копировать"],
         ["Поиск", "Блокировать", "Отключить push", "Очистить историю"]
     ]
-    property int xPosition;
-    property int yPosition;
+    background: Rectangle {color: "#12000000";}
+
     DropShadow {
         samples: 16
         radius: samples
@@ -27,12 +28,6 @@ Button {
     }
     Rectangle {
         id:listText
-        x: (xPosition)
-        y: (yPosition)
-        radius: 8
-        height:funcs.implicitHeight;
-        color: loader.feedColor
-        width: {Math.max(funcs.width, facade.toPx(400))}
         Column {
             id: funcs;
             Repeater {
@@ -70,5 +65,12 @@ Button {
                 }
             }
         }
+
+        color: loader.feedColor
+        width: {Math.max(funcs.width, facade.toPx(400))}
+        height:funcs.implicitHeight;
+        y: (yPosition)
+        x: (xPosition)
+        radius: 8
     }
 }

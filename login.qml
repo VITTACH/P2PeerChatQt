@@ -12,7 +12,7 @@ Item {
     Item {
         width: 2*parent.width;
         height: parent.height;
-        P2PStyle.ColorAnimate{
+        ColorAnimate {
             anchors.fill: (parent)
             Component.onCompleted: setColors([[108,131,155], [121,153,173]], 500)
         }
@@ -86,8 +86,8 @@ Item {
                 delegate: Item {
                     height: width
                     width: {
-                        var limitWidth = facade.toPx(1140);
-                        pageWidth = facade.toPx(social.sourceSize.width * 1.5 * (listView.width>limitWidth? 1: listView.width/limitWidth))
+                        var limitWidth = facade.toPx(940);
+                        pageWidth = facade.toPx(social.sourceSize.width * 1.1 * (listView.width>limitWidth? 1: listView.width/limitWidth))
                     }
 
                     DropShadow {
@@ -137,7 +137,7 @@ Item {
             Item {
                 height: facade.toPx(100)
                 visible: (index == 3 || index == 4);
-                width: Math.min(0.82*parent.width,facade.toPx(900))
+                width: Math.min(0.82*parent.width,facade.toPx(700))
                 anchors.horizontalCenter: {parent.horizontalCenter}
 
                 DropShadow {
@@ -207,7 +207,7 @@ Item {
             Item {
                 height:facade.toPx(88)
                 visible: index === 1 || index === 2;
-                width: Math.min(0.82*parent.width,facade.toPx(900))
+                width: Math.min(0.82*parent.width,facade.toPx(700))
                 anchors.horizontalCenter: (parent.horizontalCenter)
                 Image {
                     id: icon;
@@ -256,13 +256,13 @@ Item {
                 }
                 visible: {index === 5;}
                 height:facade.toPx(100)
-                width: Math.min(0.82*parent.width,facade.toPx(900))
+                width: Math.min(0.82*parent.width,facade.toPx(700))
                 anchors.horizontalCenter: {parent.horizontalCenter}
             }
 
             Rectangle {
                 anchors.horizontalCenter: {parent.horizontalCenter}
-                width: Math.min(0.82*parent.width,facade.toPx(900))
+                width: Math.min(0.82*parent.width,facade.toPx(700))
                 visible: {index == 1 || index == 2;}
                 height: facade.toPx(3)
             }

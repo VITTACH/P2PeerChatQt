@@ -14,6 +14,13 @@ Rectangle {
 
     Component.onCompleted: blankeDrawer.open()
 
+    ColorAnimate {
+        opacity: 0.75
+        width: parent.width
+        height: feedsModel.get(0).activiti == 1 ? facade.toPx(650) : facade.toPx(280);
+        Component.onCompleted: {setColors([[108, 131, 155], [121, 153, 173]], (500));}
+    }
+
     ListView {
         id: basView
         width: parent.width
@@ -183,55 +190,46 @@ Rectangle {
                 }
             }
 
-            Rectangle {
+            Item {
                 clip: true
                 width: parent.width
-                color: "transparent";
-                property int counter;
+                property int counter: 0
                 height: {
                     var cunter = 0;
                     for (var i = 0; i < listView.count; i ++) {
-                        if (humanModel.get(i).activity==1 && visible ==true) {
-                            cunter++;
-                        }
+                        if (humanModel.get(i).activity == 1 && visible == true) cunter = cunter + 1
                     }
-                    if (cunter>4) cunter=4;
+                    if (cunter > 3) cunter = 3;
                     counter=cunter;
                     cunter*facade.toPx(124)
                 }
-                visible: index==0&&activiti
+                visible: index == 0 && activiti
                 ListView {
                     id: listView
                     spacing: 1
                     anchors.fill:parent
-                    snapMode: ListView.SnapToItem;
-                    boundsBehavior: Flickable.StopAtBounds;
-
+                    snapMode: ListView.SnapToItem
                     property var friend
 
-                    model:ListModel{id:humanModel}
+                    model: ListModel {id:humanModel}
                     delegate: Item {
                         id: baseItem
                         visible: activity
-                        width: parent.width
-                        height: {
-                            if (activity) {
-                                facade.toPx(20)+Math.max(bug.height,fo.height)
-                            } else 0
-                        }
+                        width: parent.width;
+                        height: activity==true? facade.toPx(20) + Math.max(bug.height,fo.height): 0
 
                         Rectangle {
                             clip: true
                             id: delegaRect
                             width: parent.width
-                            height: parent.height;
-                            color: (baseItem.ListView.isCurrentItem)? (loader.isOnline == true? loader.feed1Color: loader.menu4Color): "white";
+                            height: {parent.height;}
+                            color: (baseItem.ListView.isCurrentItem)? (loader.isOnline != true? loader.menu3Color: loader.menu4Color): "white";
 
                             Rectangle {
                                 width: 0
                                 height: 0
                                 id: coloresRect
-                                color: (baseItem.ListView.isCurrentItem)? (loader.isOnline? loader.feed2Color: "darkgray"): (loader.menu9Color)
+                                color: (baseItem.ListView.isCurrentItem)? (loader.isOnline? loader.feed2Color: "darkgray"): (loader.feedColor);
 
                                 transform: Translate {
                                     x:-coloresRect.width /2
@@ -288,6 +286,7 @@ Rectangle {
                                 id: bug
                                 clip: true
                                 smooth: true
+                                color: "lightgray"
                                 x:facade.toPx(30)
                                 width: facade.toPx(100)
                                 height:facade.toPx(100)
@@ -311,13 +310,13 @@ Rectangle {
                                     text: (login + " " + famil)
                                     color: listView.currentIndex== index? "#FFFFFFFF": "#FF000000";
                                     font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(30)
+                                    font.pixelSize: facade.doPx(26)
                                 }
                                 Text {
                                     text: "ip: " + ip + ", port: " + port
                                     color: listView.currentIndex== index? "#FFFFFFFF": "#FF808080";
                                     font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(20)
+                                    font.pixelSize: facade.doPx(16)
                                 }
                             }
                         }

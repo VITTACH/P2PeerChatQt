@@ -7,7 +7,7 @@ Button {
     id: avatardialog
     visible: loader.avatar
     anchors.fill: {parent}
-    background: Rectangle {color : "#AC404040";}
+    background: Rectangle {color : "#60404040";}
 
     onClicked: loader.avatar=false
 
@@ -67,7 +67,7 @@ Button {
             Label {
                 color: "#000000"
                 wrapMode: Text.Wrap;
-                width: parent.width;
+                width: parent.width - facade.toPx(20);
                 horizontalAlignment: {Text.AlignHCenter;}
                 text: avatardialog.text
                 anchors.centerIn:parent

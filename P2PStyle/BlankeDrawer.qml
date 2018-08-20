@@ -652,7 +652,7 @@ Drawer {
                         color:index==0?"white":loader.menu11Color
                         width:fo.width-facade.toPx(100)-bug.width
                         font.family: "tahoma";
-                        font.pixelSize: facade.doPx(25);
+                        font.pixelSize: facade.doPx(20);
                         function previewText() {
                             var indx = 0, m = "", fl
                             if (typeof loader.chats[index] !== ('undefined')) {

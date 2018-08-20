@@ -129,8 +129,8 @@ Drawer {
     }
 
     Connections {
-        target: chatMenuList
-        onActionChanged: {
+        target:chatMenuList
+        onPayloadChanged: {
             if (chatMenuList.payload === 8) {
                 select = [];
                 chatModel.clear()
@@ -205,7 +205,7 @@ Drawer {
         source: "http://pipsum.com/"+width+"x"+height+".jpg"
         visible: false;
     }
-    P2PStyle.ColorAnimate {
+    ColorAnimate {
         opacity: 0.62;
         anchors.fill: parent
         Component.onCompleted: {
@@ -786,7 +786,7 @@ Drawer {
 
     P2PStyle.HeaderSplash {id : partnersHead;}
 
-    P2PStyle.ChatMenuList {id : chatMenuList;}
+    ChatMenuList {id: chatMenuList}
 
     MouseArea {
         anchors.fill: parent
