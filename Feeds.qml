@@ -17,7 +17,7 @@ Rectangle {
     ColorAnimate {
         opacity: 0.75
         width: parent.width
-        height: feedsModel.get(0).activiti == 1 ? facade.toPx(650) : facade.toPx(280);
+        height: find!=true? facade.toPx(650):facade.toPx(280)
         Component.onCompleted: {setColors([[108, 131, 155], [121, 153, 173]], (500));}
     }
 
@@ -206,16 +206,15 @@ Rectangle {
                 visible: index == 0 && activiti
                 ListView {
                     id: listView
-                    spacing: 1
-                    anchors.fill:parent
+                    anchors.fill: parent
                     snapMode: ListView.SnapToItem
-                    property var friend
+                    property var friend;
 
                     model: ListModel {id:humanModel}
                     delegate: Item {
                         id: baseItem
-                        visible: activity
-                        width: parent.width;
+                        visible:activity
+                        width: parent.width
                         height: activity==true? facade.toPx(20) + Math.max(bug.height,fo.height): 0
 
                         Rectangle {

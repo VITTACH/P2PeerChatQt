@@ -562,7 +562,7 @@ Drawer {
                 target: attach;
                 onMoveChanged: {
                     attach.move ? camera2.start() : camera2.stop();
-                    chatScreen.interactive = !(attach.move);
+                    // chatScreen.interactive = !attach.move
                     attachMove.restart()
                 }
             }

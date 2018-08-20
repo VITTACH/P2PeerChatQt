@@ -5,7 +5,7 @@ import QtQuick.Controls 2.0
 import "P2PStyle" as P2PStyle
 import "js/xHRQuery.js"as XHRQuery
 import "js/URLQuery.js"as URLQuery
-import QtQuick.Controls.Universal 2.3
+import QtQuick.Controls.Universal 2.0
 
 ApplicationWindow {
     x: 0
