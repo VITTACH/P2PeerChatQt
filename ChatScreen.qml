@@ -47,6 +47,7 @@ Drawer {
                 position = 0;
             } else if (position > percent || rotate) {
                 position = percent
+                loader.chatOpen = true;
             } else if (position == 0) {
                 loader.chatOpen = false
             }

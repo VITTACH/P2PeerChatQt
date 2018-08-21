@@ -431,31 +431,31 @@ Drawer {
 
     ListView {
         id: listView
-        anchors {
-            topMargin: -1
-            leftMargin: 1
-            top: profile.bottom;
-            left: leftMenu.right
-            right: parent.right;
-            bottom: listMenu.top
-        }
         property int memIndex: 0
-        model:ListModel {id: usersModel}
+        model: ListModel {id: usersModel;}
         Component.onCompleted: {
-            if (loader.chats.length<1) {
+            if (loader.chats.length < 1) {
                 var history = event_handler.loadValue("chats");
-                if (history != "")
-                    loader.chats =JSON.parse(history)
+                if (history != "") loader.chats =JSON.parse(history)
             } usersModel.clear()
         }
         clip: true
         spacing: 5
 
+        anchors {
+            top:profile.bottom
+            left:leftMenu.right
+            right: parent.right;
+            bottom: listMenu.top
+            topMargin: -1
+            leftMargin: 1
+        }
+
         delegate: Item {
             id: baseItem
             visible: activity
             width: parent.width
-            height: activity?facade.toPx(20) + Math.max(bug.height,fo.height):0
+            height: activity? facade.toPx(20) + Math.max(bug.height,fo.height):0
             Row {
                 Repeater {
                     anchors.verticalCenter: parent.verticalCenter
@@ -557,7 +557,6 @@ Drawer {
                     anchors.fill: parent;
                     property var presed: false;
                     onClicked: {
-                        loader.chatOpen = true;
                         if (index !=-1) listView.currentIndex = index
                         var json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
                         var text = usersModel.get(index).login+" "+usersModel.get(index).famil
@@ -596,13 +595,6 @@ Drawer {
                     }
                 }
 
-                DropShadow {
-                    radius: 3
-                    samples: 10
-                    source: bug
-                    color: "#70000000"
-                    anchors.fill: bug;
-                }
                 Item {
                     id: bug
                     x: facade.toPx(50) - (facade.toPx(708) - drawer.width) / 5;
@@ -877,7 +869,7 @@ Drawer {
                         }
 
                         DropShadow {
-                            radius: 11
+                            radius: 8
                             samples: (15)
                             source:switcher
                             color:"#90000000"
