@@ -75,7 +75,7 @@ Item {
                 height: pageWidth
                 width: model.count * (pageWidth + spacing)-spacing;
                 orientation:Qt.Horizontal
-                spacing: facade.toPx(20);
+                spacing: facade.toPx(25);
                 anchors.horizontalCenter: {parent.horizontalCenter}
 
                 model:ListModel {
@@ -87,7 +87,7 @@ Item {
                     height: width
                     width: {
                         var limitWidth = facade.toPx(940);
-                        pageWidth = facade.toPx(social.sourceSize.width * 1.1 * (listView.width>limitWidth? 1: listView.width/limitWidth))
+                        pageWidth = facade.toPx(social.sourceSize.width * 1.4 * (listView.width>limitWidth? 1: listView.width/limitWidth))
                     }
 
                     DropShadow {
