@@ -17,7 +17,7 @@ Rectangle {
     ColorAnimate {
         opacity: 0.75
         width: parent.width
-        height: find!=true? facade.toPx(650):facade.toPx(280)
+        height: {feedsModel.get(0).activiti == 1? facade.toPx(650): facade.toPx(280);}
         Component.onCompleted: {setColors([[108, 131, 155], [121, 153, 173]], (500));}
     }
 
@@ -519,44 +519,9 @@ Rectangle {
                     ListElement {image:"qrc:/ui/buttons/feeds/play.png"}
                 }
                 delegate: Image {
-                    width: facade.toPx(sourceSize.width/3.55)
+                    width: {facade.toPx(sourceSize.width/3.55);}
                     height: facade.toPx(sourceSize.height/3.55);
                     source: image
-
-                    PropertyAnimation {
-                        duration: 1000
-                        target: colorSquare;
-                        id: squareAnimation;
-                        properties: {("width, height, radius");}
-                        from: 0
-                        to: (parent.width*3)
-                        onStopped: colorSquare.width = colorSquare.height = 0;
-                    }
-
-                    Item {
-                        clip: true
-                        anchors.fill: parent
-                        anchors.margins: facade.toPx(10)
-                        Rectangle {
-                            width: 0
-                            height:0
-                            opacity: (0.27)
-                            id: colorSquare
-                            color:loader.menu9Color
-                            transform: Translate {
-                                x:-colorSquare.width/2;y:-colorSquare.height/2
-                            }
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onPressed: {
-                            colorSquare.x = colorSquare.y=mouseY
-                            squareAnimation.start()
-                        }
-                        onExited: squareAnimation.stop()
-                    }
                 }
             }
         }

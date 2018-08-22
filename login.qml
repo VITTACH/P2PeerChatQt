@@ -79,16 +79,14 @@ Item {
                 anchors.horizontalCenter: {parent.horizontalCenter}
 
                 model:ListModel {
+                    id: socModel;
                     ListElement {image: "ui/buttons/social/fb.png"}
                     ListElement {image: "ui/buttons/social/tw.png"}
                     ListElement {image: "ui/buttons/social/vk.png"}
                 }
                 delegate: Item {
                     height: width
-                    width: {
-                        var limitWidth = facade.toPx(940);
-                        pageWidth = facade.toPx(social.sourceSize.width * 1.4 * (listView.width>limitWidth? 1: listView.width/limitWidth))
-                    }
+                    width: pageWidth = (Math.min(0.82*listView.width, facade.toPx(700))-(socModel.count-1)*socials.spacing)/socModel.count
 
                     DropShadow {
                         radius: 11

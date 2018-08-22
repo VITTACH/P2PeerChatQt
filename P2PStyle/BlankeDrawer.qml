@@ -7,7 +7,7 @@ Drawer {
     clip: (true);
     edge: Qt.RightEdge;
     property bool find: true
-    dragMargin: facade.toPx(100)
+    dragMargin: facade.toPx(60)
     background: Rectangle {color: "transparent";}
     property alias cindex: listView.currentIndex;
     width: {Math.min(facade.toPx(650), 0.9 * parent.width)}
@@ -765,14 +765,14 @@ Drawer {
         }
     }
 
-//    DropShadow {
-//        radius:11
-//        samples: (16)
-//        source: listMenu;
-//        color: ("#70000000")
-//        anchors.fill: (listMenu)
-//        horizontalOffset: radius/2;
-//    }
+    DropShadow {
+        radius: 11
+        samples: (16)
+        source: listMenu;
+        color: ("#70000000")
+        anchors.fill: (listMenu)
+        horizontalOffset: radius/2;
+    }
     ListView {
         id: listMenu
         anchors.right: (parent.right)
