@@ -361,7 +361,12 @@ Drawer {
                                     spacing: {facade.toPx(5);}
                                     orientation:Qt.Horizontal;
 
-                                    property var attached: JSON.parse(chatModel.get(index).images);
+                                    property var attached: {
+                                        var images = chatModel.get(index).images;
+                                        if (images != "") {
+                                            JSON.parse(images);
+                                        } else []
+                                    }
 
                                     delegate: Item {
                                         y: attachList.x

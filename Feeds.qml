@@ -17,14 +17,14 @@ Rectangle {
     ColorAnimate {
         opacity: 0.75
         width: parent.width
-        height: {feedsModel.get(0).activiti == 1? facade.toPx(650): facade.toPx(280);}
+        height:facade.toPx(280)
         Component.onCompleted: {setColors([[108, 131, 155], [121, 153, 173]], (500));}
     }
 
     ListView {
         id: basView
         width: parent.width
-        spacing:facade.toPx(20)
+        spacing:facade.toPx(15)
         anchors {
             top: parent.top
             bottom: downRow.top
@@ -358,25 +358,27 @@ Rectangle {
 
             Rectangle {
                 id: rssRect;
-                visible: index==1
+                visible: index == 1;
                 color: "transparent"
-                width: {parent.width;}
-                height: if (visible == true) 4*facade.toPx(200);
+                height: if (visible == true) 4*facade.toPx(206);
+                width: parent.width;
+
                 DropShadow {
                     radius: 8
-                    samples: 18
-                    source: {rssView;}
+                    samples: (18)
+                    source: rssView
                     color: "#50000000"
-                    anchors.fill: {rssView;}
+                    anchors.fill:rssView
                 }
                 ListView {
                     id: rssView
                     clip: true
                     width: parent.width
-                    height: parent.height;
-                    spacing: facade.toPx(20)
+                    height: parent.height - facade.toPx(20);
+                    spacing: facade.toPx(15)
                     model: ListModel {id: rssmodel;}
                     snapMode: {ListView.SnapToItem;}
+                    anchors.bottom: parent.bottom
                     onContentYChanged: {
                         var p = newsCardHgt+spacing;
                         curInd = Math.floor((contentY - 1) / p);
@@ -505,7 +507,6 @@ Rectangle {
             }
 
             ListView {
-                clip: true
                 width: contentWidth
                 x: (parent.width - width)/2.0
                 height: facade.toPx(160);

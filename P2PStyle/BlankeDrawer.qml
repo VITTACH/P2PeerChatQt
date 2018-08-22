@@ -7,10 +7,10 @@ Drawer {
     clip: (true);
     edge: Qt.RightEdge;
     property bool find: true
-    dragMargin: facade.toPx(60)
+    dragMargin: facade.toPx(80)
     background: Rectangle {color: "transparent";}
     property alias cindex: listView.currentIndex;
-    width: {Math.min(facade.toPx(650), 0.9 * parent.width)}
+    width: Math.min(facade.toPx(650), 0.9 * parent.width)
     height: {parent.height;}
 
     Connections {
@@ -787,10 +787,10 @@ Drawer {
             id:navigateDownModel
             ListElement {image: ""; target: ""}
             ListElement {
-                image:"qrc:/ui/icons/devIconBlue.png";target:qsTr("Настройки");
+                image:"qrc:/ui/icons/devIconBlue.png";target:qsTr("Настройки")
             }
             ListElement {
-                image : "qrc:/ui/icons/outIconBlue.png"; target: qsTr("Выйти");
+                image : "qrc:/ui/icons/outIconBlue.png"; target: qsTr("Выйти")
             }
         }
 
@@ -799,7 +799,7 @@ Drawer {
             var length= parent.height
             length -= facade.toPx(540) + getProfHeight();
             var count = Math.ceil(length/facade.toPx(90))
-            if (count> navigateDownModel.count) count = navigateDownModel.count
+            if (count>navigateDownModel.count) count = navigateDownModel.count
             if (count < 1) count = 1;
             (count) * facade.toPx(90)
         }
@@ -807,7 +807,7 @@ Drawer {
         delegate:Rectangle {
             width: (parent.width)
             height: {facade.toPx(90)}
-            color: ListView.isCurrentItem? loader.menu16Color:loader.menu9Color
+            color: ListView.isCurrentItem?loader.menu16Color:loader.menu9Color
             MouseArea {
                 id: menMouseArea;
                 anchors.fill: parent;
@@ -833,12 +833,12 @@ Drawer {
 
             Item {
                 anchors {
-                    fill: parent;
+                    fill: {parent}
                     leftMargin: facade.toPx(30)
                 }
 
                 Image {
-                    source: image
+                    source: image;
                     visible: index >= 1;
                     width: facade.toPx(sourceSize.width * 1.1);
                     height:facade.toPx(sourceSize.height * 1.1)
@@ -848,14 +848,15 @@ Drawer {
                     }
                 }
 
+                Component.onCompleted: {
+                    myswitcher.checked =loader.isOnline
+                }
                 Connections {
-                    target:loader
-                    onIsOnlineChanged: {
-                        myswitcher.checked = (loader.isOnline);
-                    }
+                    target: loader
+                    onIsOnlineChanged: {myswitcher.checked = loader.isOnline;}
                 }
                 Switch {
-                    id:myswitcher
+                    id: myswitcher
                     visible: index==0;
                     indicator: Rectangle {
                         radius: facade.toPx(25)
@@ -864,7 +865,7 @@ Drawer {
                         implicitHeight:facade.toPx(30)
                         color: {
                             if (parent.checked == true) {
-                                loader.menu12Color
+                                loader.menu12Color;
                             } else loader.menu13Color;
                         }
 
@@ -881,7 +882,7 @@ Drawer {
                             color: loader.feedColor
                             width: myswitcher.height/2.3;
                             height: myswitcher.height/2.3
-                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenter: {(parent.verticalCenter);}
                             x: {
                                 if (myswitcher.checked) {
                                     var p=parent.height-height;
