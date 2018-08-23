@@ -1,18 +1,16 @@
-import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 import QtQuick.XmlListModel 2.0
+import QtQuick 2.0
 
 Rectangle {
+    id: baseRect
     color: loader.feedColor
-
-    property var nWidth;
-    property int curInd: 0;
-    property bool find: true;
-    property int oldContentY: 0;
-    property int newsCardHgt: 0;
-
     Component.onCompleted: blankeDrawer.open()
+
+    property int nWidth: 0;
+    property bool find: true;
+    property int oldContentY: 0
 
     ColorAnimate {
         opacity: 0.75
@@ -138,7 +136,8 @@ Rectangle {
             }
 
             Rectangle {
-                radius: height/2;
+                id: searchRow
+                radius: height/2
                 visible: index == 0;
                 width: parent.width;
                 height: visible? (finderRow.height + facade.toPx(20)): 0
@@ -179,7 +178,7 @@ Rectangle {
 
                         rightPadding: parent.parent.radius;
                         onAccepted: getMePeers(text.toLowerCase());
-                        onTextChanged: if (event_handler.currentOSys() != 1 && event_handler.currentOSys() != 2) getMePeers(text.toLowerCase())
+                        onTextChanged: if (event_handler.currentOSys() === 0) getMePeers(text.toLowerCase())
                         placeholderText: qsTr("Найти новых друзей")
                         font.bold: true;
                         font.pixelSize: facade.doPx(20);
@@ -192,6 +191,7 @@ Rectangle {
 
             Item {
                 clip: true
+                id: friendList
                 width: parent.width
                 property int counter: 0
                 height: {
@@ -199,66 +199,33 @@ Rectangle {
                     for (var i = 0; i < listView.count; i ++) {
                         if (humanModel.get(i).activity == 1 && visible == true) cunter = cunter + 1
                     }
-                    if (cunter > 3) cunter = 3;
+                    if (cunter > 2) {cunter = 2}
                     counter=cunter;
-                    cunter*facade.toPx(124)
+                    return cunter * facade.toPx(104)
                 }
-                visible: index == 0 && activiti
+                visible: index == 0 && activiti;
                 ListView {
                     id: listView
-                    anchors.fill: parent
-                    snapMode: ListView.SnapToItem
-                    property var friend;
-
+                    property var friend
+                    anchors.fill: {parent;}
+                    snapMode:ListView.SnapToItem
                     model: ListModel {id:humanModel}
+                    spacing: 1
                     delegate: Item {
                         id: baseItem
-                        visible:activity
+                        visible: activity
                         width: parent.width
                         height: activity==true? facade.toPx(20) + Math.max(bug.height,fo.height): 0
 
                         Rectangle {
                             clip: true
-                            id: delegaRect
-                            width: parent.width
-                            height: {parent.height;}
-                            color: (baseItem.ListView.isCurrentItem)? (loader.isOnline != true? loader.menu3Color: loader.menu4Color): "white";
-
-                            Rectangle {
-                                width: 0
-                                height: 0
-                                id: coloresRect
-                                color: (baseItem.ListView.isCurrentItem)? (loader.isOnline? loader.feed2Color: "darkgray"): (loader.feedColor);
-
-                                transform: Translate {
-                                    x:-coloresRect.width /2
-                                    y:-coloresRect.height/2
-                                }
-                            }
-
-                            PropertyAnimation {
-                                duration: 500
-                                target: coloresRect;
-                                id: circleAnimation;
-                                properties:("width, height, radius");
-                                from: 0
-                                to: (delegaRect.width * 3);
-
-                                onStopped: {
-                                    coloresRect.width  = 0;
-                                    coloresRect.height = 0;
-                                }
-                            }
+                            width: parent.width/2
+                            height: {parent.height}
+                            color: loader.feed2Color;
 
                             MouseArea {
                                 id: myMouseArea
                                 anchors.fill: parent;
-                                onExited: {(circleAnimation.stop());}
-                                onPressed: {
-                                    coloresRect.x = mouseX;
-                                    coloresRect.y = mouseY;
-                                    circleAnimation.start()
-                                }
                                 onClicked: {
                                     listView.friend = phone
                                     defaultDialog.show(qsTr("Отправить заявку в друзья для <strong>") + login + " " + famil + "</strong>?", 2);
@@ -287,8 +254,8 @@ Rectangle {
                                 smooth: true
                                 color: "lightgray"
                                 x:facade.toPx(30)
-                                width: facade.toPx(100)
-                                height:facade.toPx(100)
+                                width: facade.toPx(80)
+                                height:facade.toPx(80)
                                 anchors.verticalCenter: parent.verticalCenter;
                                 Image {
                                     source: image
@@ -309,13 +276,13 @@ Rectangle {
                                     text: (login + " " + famil)
                                     color: listView.currentIndex== index? "#FFFFFFFF": "#FF000000";
                                     font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(26)
+                                    font.pixelSize: facade.doPx(20)
                                 }
                                 Text {
                                     text: "ip: " + ip + ", port: " + port
                                     color: listView.currentIndex== index? "#FFFFFFFF": "#FF808080";
                                     font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(16)
+                                    font.pixelSize: facade.doPx(14)
                                 }
                             }
                         }
@@ -325,7 +292,7 @@ Rectangle {
                     width: parent.width
                     height: facade.toPx(5)
                     end:  Qt.point(0, height)
-                    visible: parent.counter > 2
+                    visible: parent.counter > 0
                     anchors.bottom: parent.bottom
                     start:Qt.point(0, 0)
                     gradient: Gradient {
@@ -358,22 +325,23 @@ Rectangle {
 
             Rectangle {
                 id: rssRect;
-                visible: index == 1
-                color: {"transparent"}
-                width: {parent.width;}
-                height: if (visible) 5*facade.toPx(205);
+                visible: index == 1;
+                property int countCard:Math.floor((baseRect.height-partnerHeader.height-navBottom.height-searchRow.height-friendList.height-(feedsModel.count-1)*basView.spacing)/facade.toPx(205))
+                height: if (index) countCard*facade.toPx(205)
+                color: "transparent"
+                width: parent.width;
 
                 DropShadow {
                     radius: 8
                     samples: (18)
                     source: rssView
                     color: "#50000000"
-                    anchors.fill:rssView
+                    anchors.fill: rssView;
                 }
                 ListView {
                     id: rssView
-                    clip: true;
-                    width: parent.width
+                    clip: visible;
+                    width:parent.width
                     height: {parent.height - facade.toPx(20)}
                     spacing: facade.toPx(10)
                     model: ListModel {id:rssmodel}
@@ -388,6 +356,7 @@ Rectangle {
                         visible: enable
                         width: parent.width;
                         radius: facade.toPx(10)
+                        height: rssView.height/rssRect.countCard-rssView.spacing
                         Item {
                             clip: true
                             anchors.fill:parent
@@ -457,10 +426,6 @@ Rectangle {
                             }
                         }
 
-                        height: {
-                            newsCardHgt=rssView.height/5-rssView.spacing
-                        }
-
                         Column {
                             anchors {
                                 left: bag.right
@@ -497,6 +462,7 @@ Rectangle {
             }
 
             ListView {
+                id: navBottom
                 width: contentWidth
                 x: (parent.width - width)/2.0
                 height: facade.toPx(160);
@@ -527,7 +493,7 @@ Rectangle {
         }
         font.pixelSize: facade.doPx(20)
         font.family:trebu4etMsNorm.name
-        visible: basView.contentY > 0 && (parent.width - nWidth) / 2 >= width;
+        visible: (basView.contentY > 0 && (parent.width - nWidth)/2 >= width);
         contentItem: Text {
             elide:Text.ElideRight
             verticalAlignment: Text.AlignBottom
