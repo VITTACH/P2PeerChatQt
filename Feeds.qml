@@ -24,7 +24,7 @@ Rectangle {
     ListView {
         id: basView
         width: parent.width
-        spacing: facade.toPx(15)
+        spacing: facade.toPx(20)
         anchors {
             top: parent.top
             bottom: downRow.top;
@@ -361,7 +361,7 @@ Rectangle {
                 visible: index == 1
                 color: {"transparent"}
                 width: {parent.width;}
-                height: if (visible == true) 4*facade.toPx(205);
+                height: if (visible) 5*facade.toPx(205);
 
                 DropShadow {
                     radius: 8
@@ -372,25 +372,15 @@ Rectangle {
                 }
                 ListView {
                     id: rssView
-                    clip: true
+                    clip: true;
                     width: parent.width
-                    height: parent.height - facade.toPx(20);
+                    height: {parent.height - facade.toPx(20)}
                     spacing: facade.toPx(10)
-                    model: ListModel {id: rssmodel;}
-                    snapMode: {ListView.SnapToItem;}
-                    anchors.bottom: parent.bottom
-                    onContentYChanged: {
-                        var p = newsCardHgt+spacing;
-                        curInd = Math.floor((contentY - 1) / p);
-                        if (contentY > oldContentY&&curInd>=0) {
-                            rssmodel.get(curInd).enable = false;
-                        } else if (curInd >= -1) {
-                            rssmodel.get(curInd+1).enable = true
-                        }
-                        oldContentY = contentY;
-                    }
+                    model: ListModel {id:rssmodel}
+                    snapMode: ListView.SnapToItem;
+                    anchors.bottom: parent.bottom;
                     boundsBehavior: {
-                        if (contentY < 1) Flickable.StopAtBounds
+                        if(contentY<1) Flickable.StopAtBounds
                         else Flickable.DragAndOvershootBounds
                     }
 
@@ -401,13 +391,13 @@ Rectangle {
                         Item {
                             clip: true
                             anchors.fill:parent
-                            anchors.margins: parent.radius
+                            anchors.margins: {parent.radius;}
                             Rectangle {
                                 id:coloresRect2
                                 color:loader.feedColor
                                 transform: Translate {
-                                    x: -coloresRect2.width /2.0;
-                                    y: -coloresRect2.height/2.0;
+                                    x: -coloresRect2.width /2
+                                    y: -coloresRect2.height/2
                                 }
                             }
                         }
@@ -468,7 +458,7 @@ Rectangle {
                         }
 
                         height: {
-                            newsCardHgt=rssView.height/4-rssView.spacing
+                            newsCardHgt=rssView.height/5-rssView.spacing
                         }
 
                         Column {
