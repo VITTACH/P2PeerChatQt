@@ -9,25 +9,25 @@ Rectangle {
     property var nWidth;
     property int curInd: 0;
     property bool find: true;
-    property int oldContentY: 0
-    property int newsCardHgt: 0
+    property int oldContentY: 0;
+    property int newsCardHgt: 0;
 
     Component.onCompleted: blankeDrawer.open()
 
     ColorAnimate {
         opacity: 0.75
         width: parent.width
-        height:facade.toPx(280)
+        height: facade.toPx(280)
         Component.onCompleted: {setColors([[108, 131, 155], [121, 153, 173]], (500));}
     }
 
     ListView {
         id: basView
         width: parent.width
-        spacing:facade.toPx(15)
+        spacing: facade.toPx(15)
         anchors {
             top: parent.top
-            bottom: downRow.top
+            bottom: downRow.top;
             topMargin: partnerHeader.height + facade.toPx(30)
         }
 
@@ -358,10 +358,10 @@ Rectangle {
 
             Rectangle {
                 id: rssRect;
-                visible: index == 1;
-                color: "transparent"
-                height: if (visible == true) 4*facade.toPx(206);
-                width: parent.width;
+                visible: index == 1
+                color: {"transparent"}
+                width: {parent.width;}
+                height: if (visible == true) 4*facade.toPx(205);
 
                 DropShadow {
                     radius: 8
@@ -375,7 +375,7 @@ Rectangle {
                     clip: true
                     width: parent.width
                     height: parent.height - facade.toPx(20);
-                    spacing: facade.toPx(15)
+                    spacing: facade.toPx(10)
                     model: ListModel {id: rssmodel;}
                     snapMode: {ListView.SnapToItem;}
                     anchors.bottom: parent.bottom
