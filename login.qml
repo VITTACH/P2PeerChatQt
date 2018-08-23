@@ -6,14 +6,13 @@ import "js/URLQuery.js"as URLQuery
 
 Item {
     property variant pageWidth
-    property variant title: qsTr("Coinroad TM")
 
-    Component.onCompleted: partnerHeader.text =title
+    Component.onCompleted: partnerHeader.text = qsTr("Coinroad TM")
 
     Item {
         width: 2*parent.width;
         height: parent.height;
-        P2PStyle.ColorAnimate{
+        ColorAnimate {
             anchors.fill: (parent)
             Component.onCompleted: setColors([[108,131,155], [121,153,173]], 500)
         }
@@ -76,20 +75,18 @@ Item {
                 height: pageWidth
                 width: model.count * (pageWidth + spacing)-spacing;
                 orientation:Qt.Horizontal
-                spacing: facade.toPx(20);
+                spacing: facade.toPx(25);
                 anchors.horizontalCenter: {parent.horizontalCenter}
 
                 model:ListModel {
+                    id: socModel;
                     ListElement {image: "ui/buttons/social/fb.png"}
                     ListElement {image: "ui/buttons/social/tw.png"}
                     ListElement {image: "ui/buttons/social/vk.png"}
                 }
                 delegate: Item {
                     height: width
-                    width: {
-                        var limitWidth = facade.toPx(1140);
-                        pageWidth = facade.toPx(social.sourceSize.width * 1.5 * (listView.width>limitWidth? 1: listView.width/limitWidth))
-                    }
+                    width: pageWidth = (Math.min(0.82*listView.width, facade.toPx(700))-(socModel.count-1)*socials.spacing)/socModel.count
 
                     DropShadow {
                         radius: 11
@@ -138,7 +135,7 @@ Item {
             Item {
                 height: facade.toPx(100)
                 visible: (index == 3 || index == 4);
-                width: Math.min(0.82*parent.width,facade.toPx(900))
+                width: Math.min(0.82*parent.width,facade.toPx(700))
                 anchors.horizontalCenter: {parent.horizontalCenter}
 
                 DropShadow {
@@ -208,16 +205,16 @@ Item {
             Item {
                 height:facade.toPx(88)
                 visible: index === 1 || index === 2;
-                width: Math.min(0.82*parent.width,facade.toPx(900))
+                width: Math.min(0.82*parent.width,facade.toPx(700))
                 anchors.horizontalCenter: (parent.horizontalCenter)
                 Image {
                     id: icon;
-                    source: image
+                    source: image;
                     width: {facade.toPx(sourceSize.width * 15 /10)}
                     height:{facade.toPx(sourceSize.height* 15 /10)}
                 }
                 TextField {
-                    color:"white"
+                    color: "white"
                     height: facade.toPx(88)
                     width: parent.width-facade.toPx(20)-icon.width;
                     onTextChanged: loader.fields[index - 1] = text;
@@ -257,13 +254,13 @@ Item {
                 }
                 visible: {index === 5;}
                 height:facade.toPx(100)
-                width: Math.min(0.82*parent.width,facade.toPx(900))
+                width: Math.min(0.82*parent.width,facade.toPx(700))
                 anchors.horizontalCenter: {parent.horizontalCenter}
             }
 
             Rectangle {
                 anchors.horizontalCenter: {parent.horizontalCenter}
-                width: Math.min(0.82*parent.width,facade.toPx(900))
+                width: Math.min(0.82*parent.width,facade.toPx(700))
                 visible: {index == 1 || index == 2;}
                 height: facade.toPx(3)
             }

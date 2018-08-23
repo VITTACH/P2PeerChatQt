@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
+import "P2PStyle" as P2PStyle
 
 Item {
     Connections {
@@ -21,20 +22,18 @@ Item {
         anchors.fill: parent
         SwipeView {
             id: view;
-
-            anchors {
-                fill: parent
-                topMargin: partnerHeader.height - facade.toPx(10)
-            }
+            anchors.fill: parent
 
             Loader {
-                id: feedPage
                 Component.onCompleted: source = "qrc:/Feeds.qml";
             }
             Loader {
-                id: musPage
                 Component.onCompleted: source = "";
             }
         }
     }
+
+    P2PStyle.BlankeDrawer {id: blankeDrawer}
+
+    ChatScreen {z: 1000; id: chatScreen}
 }

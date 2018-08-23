@@ -7,10 +7,10 @@ Drawer {
     clip: (true);
     edge: Qt.RightEdge;
     property bool find: true
-    dragMargin: facade.toPx(100)
-    property alias cindex: listView.currentIndex;
+    dragMargin: facade.toPx(80)
     background: Rectangle {color: "transparent";}
-    width: {Math.min(facade.toPx(650), 0.9 * parent.width)}
+    property alias cindex: listView.currentIndex;
+    width: Math.min(facade.toPx(650), 0.9 * parent.width)
     height: {parent.height;}
 
     Connections {
@@ -18,7 +18,11 @@ Drawer {
         onPositionChanged: {
             if (loader.isLogin != true || loader.webview) {
                 close()
-                position = 0
+                if (loader.source == "loginanDregister.qml") {
+                    position = 0
+                } else if (position == 0) {
+                    loader.goTo("loginanDregister.qml")
+                }
             } else if (position == 1) {
                 if (typeof loader.frienList=="undefined") {
                     var friend
@@ -36,7 +40,7 @@ Drawer {
                         getFriends()
                     }
                 }
-            } else if (position == (0)) {
+            } else if (position == 0) {
                 loader.forceActiveFocus()
                 find = true;
             }
@@ -46,6 +50,12 @@ Drawer {
     Connections {
         target: loader
         onIsOnlineChanged: if(loader.isOnline) getFriends()
+        onDrawOpenChanged: {
+            if (loader.drawOpen) {
+                loader.drawOpen = false;
+                drawer.open()
+            }
+        }
     }
 
     function getHelperHeight() {return (leftSlider.height)}
@@ -277,7 +287,7 @@ Drawer {
                 }
 
                 DropShadow {
-                    radius: 15
+                    radius: 11
                     samples: 15
                     source: big
                     color: "#90000000";
@@ -421,31 +431,31 @@ Drawer {
 
     ListView {
         id: listView
-        anchors {
-            topMargin: -1
-            leftMargin: 1
-            top: profile.bottom;
-            left: leftMenu.right
-            right: parent.right;
-            bottom: listMenu.top
-        }
         property int memIndex: 0
-        model:ListModel {id: usersModel}
+        model: ListModel {id: usersModel;}
         Component.onCompleted: {
-            if (loader.chats.length<1) {
+            if (loader.chats.length < 1) {
                 var history = event_handler.loadValue("chats");
-                if (history != "")
-                    loader.chats =JSON.parse(history)
+                if (history != "") loader.chats =JSON.parse(history)
             } usersModel.clear()
         }
         clip: true
         spacing: 5
 
+        anchors {
+            top:profile.bottom
+            left:leftMenu.right
+            right: parent.right;
+            bottom: listMenu.top
+            topMargin: -1
+            leftMargin: 1
+        }
+
         delegate: Item {
             id: baseItem
             visible: activity
             width: parent.width
-            height: activity?facade.toPx(20) + Math.max(bug.height,fo.height):0
+            height: activity? facade.toPx(20) + Math.max(bug.height,fo.height):0
             Row {
                 Repeater {
                     anchors.verticalCenter: parent.verticalCenter
@@ -585,13 +595,6 @@ Drawer {
                     }
                 }
 
-                DropShadow {
-                    radius: 5
-                    samples: 14
-                    source: bug
-                    color: "#70000000"
-                    anchors.fill: bug;
-                }
                 Item {
                     id: bug
                     x: facade.toPx(50) - (facade.toPx(708) - drawer.width) / 5;
@@ -641,7 +644,7 @@ Drawer {
                         color:index==0?"white":loader.menu11Color
                         width:fo.width-facade.toPx(100)-bug.width
                         font.family: "tahoma";
-                        font.pixelSize: facade.doPx(25);
+                        font.pixelSize: facade.doPx(20);
                         function previewText() {
                             var indx = 0, m = "", fl
                             if (typeof loader.chats[index] !== ('undefined')) {
@@ -750,7 +753,7 @@ Drawer {
     }
 
     LinearGradient {
-        height: 13
+        height: 11
         anchors.top: {profile.bottom}
         anchors.topMargin:-1
         width: parent.width;
@@ -763,12 +766,12 @@ Drawer {
     }
 
     DropShadow {
-        radius:13
+        radius: 11
         samples: (16)
         source: listMenu;
         color: ("#70000000")
         anchors.fill: (listMenu)
-        horizontalOffset: {radius/2;}
+        horizontalOffset: radius/2;
     }
     ListView {
         id: listMenu
@@ -784,10 +787,10 @@ Drawer {
             id:navigateDownModel
             ListElement {image: ""; target: ""}
             ListElement {
-                image:"qrc:/ui/icons/devIconBlue.png";target:qsTr("Настройки");
+                image:"qrc:/ui/icons/devIconBlue.png";target:qsTr("Настройки")
             }
             ListElement {
-                image : "qrc:/ui/icons/outIconBlue.png"; target: qsTr("Выйти");
+                image : "qrc:/ui/icons/outIconBlue.png"; target: qsTr("Выйти")
             }
         }
 
@@ -796,7 +799,7 @@ Drawer {
             var length= parent.height
             length -= facade.toPx(540) + getProfHeight();
             var count = Math.ceil(length/facade.toPx(90))
-            if (count> navigateDownModel.count) count = navigateDownModel.count
+            if (count>navigateDownModel.count) count = navigateDownModel.count
             if (count < 1) count = 1;
             (count) * facade.toPx(90)
         }
@@ -804,40 +807,38 @@ Drawer {
         delegate:Rectangle {
             width: (parent.width)
             height: {facade.toPx(90)}
-            color: ListView.isCurrentItem? loader.menu16Color:loader.menu9Color
+            color: ListView.isCurrentItem?loader.menu16Color:loader.menu9Color
             MouseArea {
                 id: menMouseArea;
                 anchors.fill: parent;
+                onExited: listMenu.currentIndex = -1;
                 onEntered: listMenu.currentIndex = index;
                 onClicked: {
                     switch(index) {
-                        case 1:
-                            leftMenu.move(!leftMenu.direction);
-                            break;
-                        case 2:
-                            drawer.close()
-                            loader.restores();
-                            event_handler.saveSet("user" , "");
-                            event_handler.saveSet("frnd" , "");
-                            loader.goTo("loginanDregister.qml")
-                    }
-                    if (index == 0) {
-                        myswitcher.checked=!myswitcher.checked;
-                    } else if (index > 0 && index <= 1) {
-                        listMenu.currentIndex=index
+                    case 0:
+                        myswitcher.checked =!myswitcher.checked
+                        break;
+                    case 1:
+                        listMenu.currentIndex = index
+                        leftMenu.move(!leftMenu.direction)
+                        break;
+                    case 2:
+                        event_handler.saveSet("user", "");
+                        event_handler.saveSet("frnd", "");
+                        loader.restores();
+                        drawer.close()
                     }
                 }
-                onExited: listMenu.currentIndex=-1;
             }
 
             Item {
                 anchors {
-                    fill: parent;
+                    fill: {parent}
                     leftMargin: facade.toPx(30)
                 }
 
                 Image {
-                    source: image
+                    source: image;
                     visible: index >= 1;
                     width: facade.toPx(sourceSize.width * 1.1);
                     height:facade.toPx(sourceSize.height * 1.1)
@@ -847,14 +848,15 @@ Drawer {
                     }
                 }
 
+                Component.onCompleted: {
+                    myswitcher.checked =loader.isOnline
+                }
                 Connections {
-                    target:loader
-                    onIsOnlineChanged: {
-                        myswitcher.checked = (loader.isOnline);
-                    }
+                    target: loader
+                    onIsOnlineChanged: {myswitcher.checked = loader.isOnline;}
                 }
                 Switch {
-                    id:myswitcher
+                    id: myswitcher
                     visible: index==0;
                     indicator: Rectangle {
                         radius: facade.toPx(25)
@@ -863,12 +865,12 @@ Drawer {
                         implicitHeight:facade.toPx(30)
                         color: {
                             if (parent.checked == true) {
-                                loader.menu12Color
+                                loader.menu12Color;
                             } else loader.menu13Color;
                         }
 
                         DropShadow {
-                            radius: 15
+                            radius: 8
                             samples: (15)
                             source:switcher
                             color:"#90000000"
@@ -880,7 +882,7 @@ Drawer {
                             color: loader.feedColor
                             width: myswitcher.height/2.3;
                             height: myswitcher.height/2.3
-                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenter: {(parent.verticalCenter);}
                             x: {
                                 if (myswitcher.checked) {
                                     var p=parent.height-height;

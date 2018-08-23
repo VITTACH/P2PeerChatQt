@@ -1,29 +1,34 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
-import "P2PStyle" as P2PStyle
 import QtQuick.XmlListModel 2.0
 
 Rectangle {
-    id: rootPage;
     color: loader.feedColor
 
     property var nWidth;
     property int curInd: 0;
     property bool find: true;
-    property int oldContentY: 0
-    property int newsCardHgt: 0
+    property int oldContentY: 0;
+    property int newsCardHgt: 0;
 
     Component.onCompleted: blankeDrawer.open()
+
+    ColorAnimate {
+        opacity: 0.75
+        width: parent.width
+        height: facade.toPx(280)
+        Component.onCompleted: {setColors([[108, 131, 155], [121, 153, 173]], (500));}
+    }
 
     ListView {
         id: basView
         width: parent.width
-        spacing:facade.toPx(20)
+        spacing: facade.toPx(20)
         anchors {
             top: parent.top
-            bottom: downRow.top
-            topMargin: facade.toPx(40)
+            bottom: downRow.top;
+            topMargin: partnerHeader.height + facade.toPx(30)
         }
 
         model: ListModel {
@@ -185,55 +190,45 @@ Rectangle {
                 }
             }
 
-            Rectangle {
+            Item {
                 clip: true
                 width: parent.width
-                color: "transparent";
-                property int counter;
+                property int counter: 0
                 height: {
                     var cunter = 0;
                     for (var i = 0; i < listView.count; i ++) {
-                        if (humanModel.get(i).activity==1 && visible ==true) {
-                            cunter++;
-                        }
+                        if (humanModel.get(i).activity == 1 && visible == true) cunter = cunter + 1
                     }
-                    if (cunter>4) cunter=4;
+                    if (cunter > 3) cunter = 3;
                     counter=cunter;
                     cunter*facade.toPx(124)
                 }
-                visible: index==0&&activiti
+                visible: index == 0 && activiti
                 ListView {
                     id: listView
-                    spacing: 1
-                    anchors.fill:parent
-                    snapMode: ListView.SnapToItem;
-                    boundsBehavior: Flickable.StopAtBounds;
+                    anchors.fill: parent
+                    snapMode: ListView.SnapToItem
+                    property var friend;
 
-                    property var friend
-
-                    model:ListModel{id:humanModel}
+                    model: ListModel {id:humanModel}
                     delegate: Item {
                         id: baseItem
-                        visible: activity
+                        visible:activity
                         width: parent.width
-                        height: {
-                            if (activity) {
-                                facade.toPx(20)+Math.max(bug.height,fo.height)
-                            } else 0
-                        }
+                        height: activity==true? facade.toPx(20) + Math.max(bug.height,fo.height): 0
 
                         Rectangle {
                             clip: true
                             id: delegaRect
                             width: parent.width
-                            height: parent.height;
-                            color: (baseItem.ListView.isCurrentItem)? (loader.isOnline == true? loader.feed1Color: loader.menu4Color): "white";
+                            height: {parent.height;}
+                            color: (baseItem.ListView.isCurrentItem)? (loader.isOnline != true? loader.menu3Color: loader.menu4Color): "white";
 
                             Rectangle {
                                 width: 0
                                 height: 0
                                 id: coloresRect
-                                color: (baseItem.ListView.isCurrentItem)? (loader.isOnline? loader.feed2Color: "darkgray"): (loader.menu9Color)
+                                color: (baseItem.ListView.isCurrentItem)? (loader.isOnline? loader.feed2Color: "darkgray"): (loader.feedColor);
 
                                 transform: Translate {
                                     x:-coloresRect.width /2
@@ -290,6 +285,7 @@ Rectangle {
                                 id: bug
                                 clip: true
                                 smooth: true
+                                color: "lightgray"
                                 x:facade.toPx(30)
                                 width: facade.toPx(100)
                                 height:facade.toPx(100)
@@ -313,13 +309,13 @@ Rectangle {
                                     text: (login + " " + famil)
                                     color: listView.currentIndex== index? "#FFFFFFFF": "#FF000000";
                                     font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(30)
+                                    font.pixelSize: facade.doPx(26)
                                 }
                                 Text {
                                     text: "ip: " + ip + ", port: " + port
                                     color: listView.currentIndex== index? "#FFFFFFFF": "#FF808080";
                                     font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(20)
+                                    font.pixelSize: facade.doPx(16)
                                 }
                             }
                         }
@@ -362,37 +358,29 @@ Rectangle {
 
             Rectangle {
                 id: rssRect;
-                visible: index==1
-                color: "transparent"
+                visible: index == 1
+                color: {"transparent"}
                 width: {parent.width;}
-                height: if (visible == true) 4*facade.toPx(200);
+                height: if (visible) 5*facade.toPx(205);
+
                 DropShadow {
                     radius: 8
-                    samples: 18
-                    source: {rssView;}
+                    samples: (18)
+                    source: rssView
                     color: "#50000000"
-                    anchors.fill: {rssView;}
+                    anchors.fill:rssView
                 }
                 ListView {
                     id: rssView
-                    clip: true
+                    clip: true;
                     width: parent.width
-                    height: parent.height;
-                    spacing: facade.toPx(20)
-                    model: ListModel {id: rssmodel;}
-                    snapMode: {ListView.SnapToItem;}
-                    onContentYChanged: {
-                        var p = newsCardHgt+spacing;
-                        curInd = Math.floor((contentY - 1) / p);
-                        if (contentY > oldContentY&&curInd>=0) {
-                            rssmodel.get(curInd).enable = false;
-                        } else if (curInd >= -1) {
-                            rssmodel.get(curInd+1).enable = true
-                        }
-                        oldContentY = contentY;
-                    }
+                    height: {parent.height - facade.toPx(20)}
+                    spacing: facade.toPx(10)
+                    model: ListModel {id:rssmodel}
+                    snapMode: ListView.SnapToItem;
+                    anchors.bottom: parent.bottom;
                     boundsBehavior: {
-                        if (contentY < 1) Flickable.StopAtBounds
+                        if(contentY<1) Flickable.StopAtBounds
                         else Flickable.DragAndOvershootBounds
                     }
 
@@ -403,13 +391,13 @@ Rectangle {
                         Item {
                             clip: true
                             anchors.fill:parent
-                            anchors.margins: parent.radius
+                            anchors.margins: {parent.radius;}
                             Rectangle {
                                 id:coloresRect2
                                 color:loader.feedColor
                                 transform: Translate {
-                                    x: -coloresRect2.width /2.0;
-                                    y: -coloresRect2.height/2.0;
+                                    x: -coloresRect2.width /2
+                                    y: -coloresRect2.height/2
                                 }
                             }
                         }
@@ -470,7 +458,7 @@ Rectangle {
                         }
 
                         height: {
-                            newsCardHgt=rssView.height/4-rssView.spacing
+                            newsCardHgt=rssView.height/5-rssView.spacing
                         }
 
                         Column {
@@ -509,7 +497,6 @@ Rectangle {
             }
 
             ListView {
-                clip: true
                 width: contentWidth
                 x: (parent.width - width)/2.0
                 height: facade.toPx(160);
@@ -523,44 +510,9 @@ Rectangle {
                     ListElement {image:"qrc:/ui/buttons/feeds/play.png"}
                 }
                 delegate: Image {
-                    width: facade.toPx(sourceSize.width/3.55)
+                    width: {facade.toPx(sourceSize.width/3.55);}
                     height: facade.toPx(sourceSize.height/3.55);
                     source: image
-
-                    PropertyAnimation {
-                        duration: 1000
-                        target: colorSquare;
-                        id: squareAnimation;
-                        properties: {("width, height, radius");}
-                        from: 0
-                        to: (parent.width*3)
-                        onStopped: colorSquare.width = colorSquare.height = 0;
-                    }
-
-                    Item {
-                        clip: true
-                        anchors.fill: parent
-                        anchors.margins: facade.toPx(10)
-                        Rectangle {
-                            width: 0
-                            height:0
-                            opacity: (0.27)
-                            id: colorSquare
-                            color:loader.menu9Color
-                            transform: Translate {
-                                x:-colorSquare.width/2;y:-colorSquare.height/2
-                            }
-                        }
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onPressed: {
-                            colorSquare.x = colorSquare.y=mouseY
-                            squareAnimation.start()
-                        }
-                        onExited: squareAnimation.stop()
-                    }
                 }
             }
         }
@@ -623,8 +575,4 @@ Rectangle {
         visible: loader.webview
         anchors.fill: {parent;}
     }
-
-    P2PStyle.BlankeDrawer {id: blankeDrawer}
-
-    ChatScreen {id: chatScreen}
 }

@@ -121,7 +121,12 @@ Item {
             height:parent.height
             width: facade.toPx(140)
             onClicked: {
-                if (page == 1) page-=1; else if (loader.webview) loader.webview=false;
+                if (page == 1) page-=1; else if (loader.webview) loader.webview = false;
+                else if (loader.chatOpen) {
+                    loader.focus = loader.context = (true)
+                    chatMenuList.xPosition=rootItem.width-chatMenuList.w-facade.toPx(40)
+                    chatMenuList.yPosition=facade.toPx(20)
+                } else loader.drawOpen=true
                 loader.focus = true
             }
 

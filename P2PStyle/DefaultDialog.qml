@@ -4,9 +4,10 @@ import QtGraphicalEffects 1.0
 
 Button {
     id: rootItem;
-    anchors.fill: parent;
-    visible:loader.dialog
+    anchors.fill: parent
+    visible: {loader.dialog}
     contentItem: Text {opacity: 0}
+    background: Rectangle {color: "#60404040"}
 
     DropShadow {
         radius: 16
@@ -239,8 +240,6 @@ Button {
             }
         }
     }
-
-    background: Rectangle {color: "#AC404040"}
 
     onClicked: {
         loader.focus = !(loader.dialog =false)

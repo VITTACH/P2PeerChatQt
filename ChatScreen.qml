@@ -11,12 +11,6 @@ Drawer {
     width: parent.width;
     height: parent.height;
 
-    property var input
-    property real percent
-    property real yPosition
-    property var select;
-    property var selectedImage:[];
-
     function setInfo(messag, photos, status) {
         partnersHead.stat = status
         partnersHead.phot = photos
@@ -38,14 +32,27 @@ Drawer {
         }
     }
 
+    property var input
+    property real percent
+    property real yPosition
+
+    property var select;
+    property var selectedImage:[];
+
     Connections {
         target: chatScreen;
         function updatePosition(rotate) {
             percent = 1-facade.toPx(20)/width
-            if (loader.isLogin == false) position = 0;
-            else if (position > percent || rotate) position = percent
+            if (!loader.isLogin) {
+                position = 0;
+            } else if (position > percent || rotate) {
+                position = percent
+                loader.chatOpen = true;
+            } else if (position == 0) {
+                loader.chatOpen = false
+            }
         }
-        onPositionChanged: updatePosition()
+        onPositionChanged: {updatePosition()}
         onWidthChanged: if (position>0) updatePosition(true)
     }
 
@@ -123,8 +130,8 @@ Drawer {
     }
 
     Connections {
-        target: chatMenuList
-        onActionChanged: {
+        target:chatMenuList
+        onPayloadChanged: {
             if (chatMenuList.payload === 8) {
                 select = [];
                 chatModel.clear()
@@ -199,7 +206,7 @@ Drawer {
         source: "http://pipsum.com/"+width+"x"+height+".jpg"
         visible: false;
     }
-    P2PStyle.ColorAnimate {
+    ColorAnimate {
         opacity: 0.62;
         anchors.fill: parent
         Component.onCompleted: {
@@ -354,7 +361,12 @@ Drawer {
                                     spacing: {facade.toPx(5);}
                                     orientation:Qt.Horizontal;
 
-                                    property var attached: JSON.parse(chatModel.get(index).images);
+                                    property var attached: {
+                                        var images = chatModel.get(index).images;
+                                        if (images != "") {
+                                            JSON.parse(images);
+                                        } else []
+                                    }
 
                                     delegate: Item {
                                         y: attachList.x
@@ -554,7 +566,8 @@ Drawer {
             Connections {
                 target: attach;
                 onMoveChanged: {
-                    chatScreen.interactive = !attach.move
+                    attach.move ? camera2.start() : camera2.stop();
+                    // chatScreen.interactive = !attach.move
                     attachMove.restart()
                 }
             }
@@ -573,6 +586,8 @@ Drawer {
                     height: parent.height*0.7
                     Camera {
                         id: camera2
+                        Component.onCompleted:camera2.stop()
+                        position: Camera.FrontFace
                         flash.mode: Camera.FlashAuto
                         exposure {
                             exposureCompensation: -1
@@ -581,9 +596,8 @@ Drawer {
                     }
                     VideoOutput {
                         fillMode: {VideoOutput.PreserveAspectCrop;}
-                        focus: visible
-                        source: camera2;
-                        orientation:-90;
+                        source: camera2
+                        autoOrientation:true
                         anchors.fill: parent
                     }
 
@@ -778,7 +792,7 @@ Drawer {
 
     P2PStyle.HeaderSplash {id : partnersHead;}
 
-    P2PStyle.ChatMenuList {id : chatMenuList;}
+    ChatMenuList {id: chatMenuList}
 
     MouseArea {
         anchors.fill: parent

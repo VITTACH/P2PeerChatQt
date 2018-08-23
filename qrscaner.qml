@@ -6,9 +6,9 @@ import QtQuick.Controls 2.0
 Item {
     Timer {
         id: timeout
-        running: true;
-        interval:39000
-        onTriggered: {loader.back()}
+        running: true
+        interval: 39000;
+        onTriggered:loader.back()
     }
 
     /*
@@ -37,35 +37,9 @@ Item {
         xhr.send(body);
     }*/
 
-    Camera {
-        id: camera
-
-        flash.mode: Camera.FlashAuto
-
-        exposure {
-            exposureCompensation: -1
-            exposureMode: {Camera.ExposurePortrait;}
-        }
-
-        imageProcessing.whiteBalanceMode: {
-            CameraImageProcessing.WhiteBalanceFlash;
-        }
-
-        imageCapture {
-            onImageCaptured: {
-                capture.stop()
-                imageProcessor.processImage(preview)
-            }
-            onImageSaved: {
-                imageProcessor.delCaptureImage(path)
-            }
-        }
-    }
-
     Timer {
         id: capture
         running: true
-        interval: 3000
         onTriggered: {
             viewer.grabToImage(function(resultImg) {
                 var fullImageName = "qrcode.png";
@@ -75,6 +49,7 @@ Item {
                 imageProcessor.delCaptureImage(path)
             })
         }
+        interval: 3000
     }
 
     Connections {
@@ -104,15 +79,37 @@ Item {
         source: camera
         orientation: -90
         anchors.fill: parent
-        fillMode: {
-            (VideoOutput.PreserveAspectCrop);
-        }
+        fillMode: VideoOutput.PreserveAspectCrop
 
         MouseArea {
             anchors.fill: parent;
             onClicked: {
                 capture.restart()
                 camera.imageCapture.capture()
+            }
+        }
+    }
+
+    Camera {
+        id: camera
+        flash.mode: Camera.FlashAuto
+
+        exposure {
+            exposureCompensation: -1
+            exposureMode: {Camera.ExposurePortrait;}
+        }
+
+        imageProcessing.whiteBalanceMode: {
+            CameraImageProcessing.WhiteBalanceFlash;
+        }
+
+        imageCapture {
+            onImageCaptured: {
+                capture.stop()
+                imageProcessor.processImage(preview)
+            }
+            onImageSaved: {
+                imageProcessor.delCaptureImage(path)
             }
         }
     }
@@ -181,10 +178,11 @@ Item {
     ImageProcessor {id: imageProcessor}
 
     Button {
-        x:(parent.width-width)/2;
-        y:parent.height-parent.height/6
-        font.family:trebu4etMsNorm.name
-        font.pixelSize: facade.doPx(26)
+        x: (parent.width-width)/2
+        y: parent.height-facade.toPx(200)
+        height: facade.toPx(80)
+        font.family: trebu4etMsNorm.name;
+        font.pixelSize: {facade.doPx(26)}
         text: qsTr("Cancel scan")
         onClicked: loader.back();
     }
