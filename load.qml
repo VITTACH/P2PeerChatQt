@@ -8,10 +8,11 @@ import "js/URLQuery.js"as URLQuery
 import QtQuick.Controls.Universal 2.0
 
 ApplicationWindow {
+    id: mainAppWindow
     x: 0
     y: {event_handler.currentOSys() <= 0 ? facade.toPx(100) : 0;}
     visible: true
-    title: "Coinroad"
+    title: qsTr("CoinFriend")
 
     Universal.theme: {Universal.Light}
     Universal.accent: Universal.Purple
@@ -137,7 +138,7 @@ ApplicationWindow {
         property string menu11Color:"#597FB2";
         property string menu12Color:"#4F7E9E";
         property string menu13Color:"#B1B1B1";
-        property string menu14Color:"#80A4B7";
+        property string menu14Color:"#7C9AAA";
         property string menu15Color:"#8DACBC";
         property string menu16Color:"#BBC6CA";
 

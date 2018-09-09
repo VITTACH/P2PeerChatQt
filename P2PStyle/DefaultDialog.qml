@@ -25,7 +25,7 @@ Button {
         width: Math.min(0.73 * parent.width, facade.toPx(666.6));
 
         Rectangle {
-            color: "#F2F2F2"
+            color: "#E9E9E9"
             anchors {
                 fill: parent
                 margins:dialogWindow.radius

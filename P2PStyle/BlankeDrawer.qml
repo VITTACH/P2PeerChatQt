@@ -86,7 +86,7 @@ Drawer {
                     obj =JSON.parse(request.responseText)
                     for (var i = 0; i < obj.length; i+=1) {
                         index = findPeer(obj[i].name)
-                        imgUrl= "https://randomuser.me/portraits/men/" + Math.floor(100*Math.random()) + ".jpg"
+                        imgUrl= "https://randomuser.me/portraits/men/" + Math.floor(50*Math.random()) + ".jpg"
                         if (usersModel.count<1|| index<0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
                             usersModel.append({
@@ -174,51 +174,14 @@ Drawer {
             id: iner
             width: {parent.width;}
             color: loader.isOnline?loader.menu4Color:loader.menu2Color
-            height: canva.width/3;
+            height: facade.toPx(80)/3
         }
         id: leftRect;
         color: (loader.isOnline? loader.menu3Color: loader.menu3Color)
-        width: parent.width - canva.width;
+        width: parent.width;
         anchors {
-            top: profile.top;
-            left: canva.right
             bottom: profile.bottom
-            topMargin:partnerHeader.height-facade.toPx(18)-iner.height
-        }
-    }
-
-    Canvas {
-        id: canva
-        anchors {
-            top: leftRect.top;
-            bottom: profile.bottom
-        }
-        width:facade.toPx(100)
-        Connections {
-            target: loader;
-            onIsOnlineChanged: canva.requestPaint();
-        }
-        antialiasing: true;
-        smooth: false
-        onPaint: {
-            var context = getContext("2d")
-            context.reset()
-            context.fillStyle=loader.isOnline == true? loader.menu3Color:loader.menu3Color
-            context.moveTo(0, width)
-            context.lineTo(0,height)
-            context.lineTo(width, height);
-            context.lineTo(width, 0)
-            context.closePath()
-            context.fill();
-
-            context.fillStyle=loader.isOnline == true? loader.menu4Color:loader.menu2Color
-            context.beginPath()
-            context.moveTo(width, 0)
-            context.lineTo(0, width)
-            context.lineTo(6, width)
-            context.lineTo(width, width/3)
-            context.closePath()
-            context.fill();
+            top: profile.top
         }
     }
 
@@ -226,11 +189,7 @@ Drawer {
         id: profile
         spacing:facade.toPx(10)
         anchors.horizontalCenter: parent.horizontalCenter
-
-        Item{
-            height: 1
-            width: parent.width
-        }
+        Item {height: 1; width: parent.width}
         Row {
             id: firstRow;
             anchors.horizontalCenter:parent.horizontalCenter
@@ -242,8 +201,8 @@ Drawer {
                     text: "0"
                     color: "white"
                     font.bold: true
-                    styleColor:"black";
-                    style: Text.Raised;
+                    styleColor: "black";
+                    style: {Text.Raised}
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(30);
                     anchors.horizontalCenter:parent.horizontalCenter
@@ -258,15 +217,15 @@ Drawer {
             }
             Button {
                 id: avatarButton
-                width: facade.toPx(230);
-                height: facade.toPx(230)
+                width: facade.toPx(200)
+                height: width
                 Rectangle {
                     id: bag
                     clip: true
                     smooth: true
                     visible: false
-                    width: parent.width - facade.toPx(45.0);
-                    height: parent.height - facade.toPx(45);
+                    width: parent.width - facade.toPx(35.0);
+                    height: width
                     anchors {
                         horizontalCenter: {parent.horizontalCenter;}
                         verticalCenter:parent.verticalCenter
@@ -419,7 +378,7 @@ Drawer {
                         }
                     }
                 }
-                color: loader.menu7Color
+                color: {loader.menu7Color}
             }
         }
 
@@ -431,6 +390,7 @@ Drawer {
 
     ListView {
         id: listView
+        width: parent.width
         property int memIndex: 0
         model: ListModel {id: usersModel;}
         Component.onCompleted: {
@@ -441,15 +401,6 @@ Drawer {
         }
         clip: true
         spacing: 5
-
-        anchors {
-            top:profile.bottom
-            left:leftMenu.right
-            right: parent.right;
-            bottom: listMenu.top
-            topMargin: -1
-            leftMargin: 1
-        }
 
         delegate: Item {
             id: baseItem
@@ -602,10 +553,11 @@ Drawer {
                     height:facade.toPx(170)
                     anchors.top: parent.top
                     anchors.topMargin: {facade.toPx(10)}
-                    Item {
+                    Rectangle {
                         clip: true
+                        color: "gray"
                         anchors.fill:parent
-                        anchors.margins: {bor.radius/4;}
+                        anchors.margins: bor.radius/3.65
                         Image {
                             source: {image}
                             anchors.centerIn: {(parent)}
@@ -675,6 +627,13 @@ Drawer {
                 }
             }
         }
+
+        anchors {
+            top:profile.bottom
+            bottom: listMenu.top
+            topMargin: -1
+            leftMargin: 1
+        }
     }
 
     Item {
@@ -743,7 +702,6 @@ Drawer {
         anchors {
             top: leftRect.top
             bottom: parent.bottom
-            topMargin: canva.width;
         }
         width: 4
         color: {
@@ -769,17 +727,17 @@ Drawer {
         radius: 11
         samples: (16)
         source: listMenu;
-        color: ("#70000000")
-        anchors.fill: (listMenu)
-        horizontalOffset: radius/2;
+        color:"#70000000"
+        anchors.fill: listMenu
+        horizontalOffset:radius/2
     }
     ListView {
         id: listMenu
-        anchors.right: (parent.right)
+        anchors.right: parent.right
         anchors.bottom: parent.bottom
-        snapMode:ListView.SnapOneItem
-        boundsBehavior: Flickable.StopAtBounds;
-        Component.onCompleted: currentIndex=-1;
+        snapMode: ListView.SnapOneItem;
+        boundsBehavior: {(Flickable.StopAtBounds)}
+        Component.onCompleted: currentIndex = -(1)
 
         property bool isShowed: false
         clip: true
@@ -787,27 +745,28 @@ Drawer {
             id:navigateDownModel
             ListElement {image: ""; target: ""}
             ListElement {
-                image:"qrc:/ui/icons/devIconBlue.png";target:qsTr("Настройки")
+                image: "/ui/icons/devIconBlue.png"
+                target: qsTr("Настройки")
             }
             ListElement {
-                image : "qrc:/ui/icons/outIconBlue.png"; target: qsTr("Выйти")
+                image: "/ui/icons/outIconBlue.png"
+                target: qsTr("Выйти")
             }
         }
 
         width: parent.width - 6;
         height: {
             var length= parent.height
-            length -= facade.toPx(540) + getProfHeight();
-            var count = Math.ceil(length/facade.toPx(90))
+            length -= facade.toPx(480) + getProfHeight();
+            var count = Math.ceil(length/facade.toPx(80))
             if (count>navigateDownModel.count) count = navigateDownModel.count
             if (count < 1) count = 1;
-            (count) * facade.toPx(90)
+            (count) * facade.toPx(80)
         }
 
-        delegate:Rectangle {
+        delegate: Rectangle {
             width: (parent.width)
-            height: {facade.toPx(90)}
-            color: ListView.isCurrentItem?loader.menu16Color:loader.menu9Color
+            height: {facade.toPx(80)}
             MouseArea {
                 id: menMouseArea;
                 anchors.fill: parent;
@@ -830,6 +789,8 @@ Drawer {
                     }
                 }
             }
+
+            color: ListView.isCurrentItem?loader.menu16Color:loader.menu9Color
 
             Item {
                 anchors {

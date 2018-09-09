@@ -7,7 +7,7 @@ import "js/URLQuery.js"as URLQuery
 Item {
     property variant pageWidth
 
-    Component.onCompleted: partnerHeader.text = qsTr("Coinroad TM")
+    Component.onCompleted: partnerHeader.text = mainAppWindow.title
 
     Item {
         width: 2*parent.width;

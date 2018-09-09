@@ -329,7 +329,7 @@ Rectangle {
                 visible: index == 1;
                 property int countCard:Math.floor((baseRect.height-partnerHeader.height-navBottom.height-searchRow.height-friendList.height-(feedsModel.count-1)*basView.spacing)/facade.toPx(205))
                 height: if (index) {
-                    countCard = (Screen.orientation == Qt.LandscapeOrientation && event_handler.currentOSys() > 0) ? 6*countCard : countCard
+                    countCard = (Screen.orientation == Qt.LandscapeOrientation && event_handler.currentOSys() > 0) ? 2*countCard : countCard
                     countCard*facade.toPx(205)
                 }
                 color: "transparent"
