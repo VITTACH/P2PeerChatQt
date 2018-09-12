@@ -6,12 +6,13 @@ import QtQuick 2.0
 
 Rectangle {
     id: baseRect
-    color: loader.feedColor
-    Component.onCompleted: blankeDrawer.open()
 
     property int nWidth: 0;
     property bool find: true;
     property int oldContentY: 0
+
+    color: loader.feedColor
+    Component.onCompleted: blankeDrawer.open()
 
     ColorAnimate {
         opacity: 0.75
@@ -32,10 +33,11 @@ Rectangle {
 
         model: ListModel {
             id: feedsModel
-            ListElement {activiti: 0;}
-            ListElement {activiti: 1;}
-            ListElement {activiti: 0;}
+            ListElement {activiti: 0}
+            ListElement {activiti: 1}
+            ListElement {activiti: 0}
         }
+
         boundsBehavior : {
             (contentY <= 0) ? Flickable.StopAtBounds: Flickable.DragAndOvershootBounds
         }
@@ -44,6 +46,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             width: nWidth = Math.min(0.9*parent.width, facade.toPx(900))
             Component.onCompleted: if (index == 1) {restorePref.start()}
+
             function findPeer(phone) {
                 for (var i = 0; i < humanModel.count; i+=1) {
                     if (humanModel.get(i).phone == (phone)) {
@@ -142,6 +145,7 @@ Rectangle {
                 visible: index == 0;
                 width: parent.width;
                 height: visible? (finderRow.height + facade.toPx(20)): 0
+
                 Row {
                     id: finderRow
                     spacing: {facade.toPx(10);}
@@ -160,6 +164,7 @@ Rectangle {
                             if(find == false) find=true;
                             if(find) {inerText.clear(); getMePeers("");}
                         }
+
                         background:Image {
                             id: innerImage
                             width: {facade.toPx(sourceSize.width /1.3);}
@@ -168,10 +173,12 @@ Rectangle {
                             source: "qrc:/ui/icons/" + (find? "searchIconWhite": "DeleteIconWhite") + ".png"
                         }
                     }
+
                     Connections {
                         target: blankeDrawer
                         onPositionChanged: if((blankeDrawer.position === 1) == true) {inerText.focus = false}
                     }
+
                     TextField {
                         id: inerText
                         color: "#C0C8D0"
@@ -195,6 +202,7 @@ Rectangle {
                 id: friendList
                 width: parent.width
                 property int counter: 0
+                visible: index == 0 && activiti;
                 height: {
                     var cunter = 0;
                     for (var i = 0; i < listView.count; i ++) {
@@ -202,9 +210,9 @@ Rectangle {
                     }
                     if (cunter > 2) {cunter = 2}
                     counter=cunter;
-                    return cunter * facade.toPx(104)
+                    cunter * facade.toPx(104)
                 }
-                visible: index == 0 && activiti;
+
                 ListView {
                     id: listView
                     property var friend
@@ -215,13 +223,13 @@ Rectangle {
                     delegate: Item {
                         id: baseItem
                         visible: activity
-                        width: parent.width
+                        width: {parent.width}
                         height: activity==true? facade.toPx(20) + Math.max(bug.height,fo.height): 0
 
                         Rectangle {
                             clip: true
                             width: parent.width/2
-                            height: {parent.height}
+                            height: parent.height
                             color: loader.feed2Color;
 
                             MouseArea {
@@ -258,6 +266,7 @@ Rectangle {
                                 width: facade.toPx(80)
                                 height:facade.toPx(80)
                                 anchors.verticalCenter: parent.verticalCenter;
+
                                 Image {
                                     source: image
                                     anchors.centerIn: parent
@@ -273,12 +282,14 @@ Rectangle {
                                     right: parent.right
                                     leftMargin: facade.toPx(30)
                                 }
+
                                 Text {
                                     text: (login + " " + famil)
                                     color: listView.currentIndex== index? "#FFFFFFFF": "#FF000000";
                                     font.family:trebu4etMsNorm.name
                                     font.pixelSize: facade.doPx(20)
                                 }
+
                                 Text {
                                     text: "ip: " + ip + ", port: " + port
                                     color: listView.currentIndex== index? "#FFFFFFFF": "#FF808080";
@@ -289,6 +300,7 @@ Rectangle {
                         }
                     }
                 }
+
                 LinearGradient {
                     width: parent.width
                     height: facade.toPx(5)
@@ -326,21 +338,15 @@ Rectangle {
 
             Rectangle {
                 id: rssRect;
-                visible: index == 1;
-                property int countCard:Math.floor((baseRect.height-partnerHeader.height-navBottom.height-searchRow.height-friendList.height-(feedsModel.count-1)*basView.spacing)/facade.toPx(205))
-                height: if (index) {
-                    countCard = (Screen.orientation == Qt.LandscapeOrientation && event_handler.currentOSys() > 0) ? 2*countCard : countCard
-                    countCard*facade.toPx(205)
-                }
-                color: "transparent"
-                width: parent.width;
+                visible: index == 1
+                property int countCard: 4
 
                 DropShadow {
-                    radius: 8
+                    radius: 8;
                     samples: (18)
                     source: rssView
                     color: "#50000000"
-                    anchors.fill: rssView;
+                    anchors.fill: rssView
                 }
                 ListView {
                     id: rssView
@@ -390,6 +396,7 @@ Rectangle {
                             }
                             x: (parent.height - height)/2;
                         }
+
                         Image {
                             id: misk
                             smooth: true;
@@ -437,6 +444,7 @@ Rectangle {
                                 leftMargin:facade.toPx(20)
                                 verticalCenter: {parent.verticalCenter;}
                             }
+
                             Text {
                                 text: title
                                 elide: {(Text.ElideRight)}
@@ -445,6 +453,7 @@ Rectangle {
                                 font.family: trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(24);
                             }
+
                             Text {
                                 text: pDate
                                 lineHeight: 1.4
@@ -452,6 +461,7 @@ Rectangle {
                                 font.family: trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(15);
                             }
+
                             Text {
                                 text: pDesc
                                 maximumLineCount: 2
@@ -463,21 +473,33 @@ Rectangle {
                         }
                     }
                 }
+
+                color: "transparent";
+                width: {parent.width}
+                height: if (index == true) {
+                    countCard = Math.floor((baseRect.height - partnerHeader.height - navBottom.height - searchRow.height -friendList.height-(feedsModel.count-1)*basView.spacing)/facade.toPx(205))
+                    countCard = (Screen.orientation == Qt.LandscapeOrientation && event_handler.currentOSys() > 0) ? 2*countCard : countCard
+                    return countCard * facade.toPx(205)
+                }
             }
 
             ListView {
-                id: navBottom
-                width: contentWidth
-                x: (parent.width - width)/2.0
+                clip: true
+                id: navBottom;
+                width: Math.min(contentWidth, parent.width - facade.toPx(50))
+                x: (parent.width-width)/2
                 height: facade.toPx(160);
                 spacing: facade.toPx(27);
                 orientation:Qt.Horizontal
+                anchors.horizontalCenter:parent.horizontalCenter
                 visible: index==2
+
                 model:ListModel {
-                    ListElement {image:"qrc:/ui/buttons/feeds/mus.png";}
-                    ListElement {image:"qrc:/ui/buttons/feeds/img.png";}
-                    ListElement {image:"qrc:/ui/buttons/feeds/vide.png"}
-                    ListElement {image:"qrc:/ui/buttons/feeds/play.png"}
+                    ListElement {image:"ui/buttons/feeds/mus.png";}
+                    ListElement {image:"ui/buttons/feeds/img.png";}
+                    ListElement {image:"ui/buttons/feeds/vide.png"}
+                    ListElement {image:"ui/buttons/feeds/play.png"}
+                    ListElement {image:"ui/buttons/feeds/play.png"}
                 }
                 delegate: Image {
                     width: {facade.toPx(sourceSize.width/3.55);}
@@ -495,6 +517,7 @@ Rectangle {
             bottom: downRow.top;
             right: parent.right;
         }
+
         font.pixelSize: facade.doPx(20)
         font.family:trebu4etMsNorm.name
         visible: (basView.contentY > 0 && (parent.width - nWidth)/2 >= width);
@@ -519,12 +542,14 @@ Rectangle {
         width: parent.width
         height: parent.height > parent.width? facade.toPx(100):facade.toPx(80)
         anchors.bottom: parent.bottom;
+
         Rectangle {
             height: 1
             width: parent.width;
             color: ("lightgray")
             anchors.top: {parent.top;}
         }
+
         Row {
             spacing: {facade.toPx(50)}
             anchors.centerIn: {parent}

@@ -7,7 +7,7 @@ Drawer {
     clip: (true);
     edge: Qt.RightEdge;
     property bool find: true
-    dragMargin: facade.toPx(80)
+    dragMargin: {facade.toPx(80)}
     background: Rectangle {color: "transparent";}
     property alias cindex: listView.currentIndex;
     width: Math.min(facade.toPx(650), 0.9 * parent.width)
@@ -163,37 +163,44 @@ Drawer {
     }
 
     Rectangle {
-        anchors.fill: (parent)
-        color: loader.menu16Color;
+        anchors.fill: parent
+        color: {loader.menu16Color;}
         anchors.topMargin: profile.height;
         opacity: 1.0;
     }
 
     Rectangle {
-        Rectangle {
-            id: iner
-            width: {parent.width;}
-            color: loader.isOnline?loader.menu4Color:loader.menu2Color
-            height: facade.toPx(80)/3
-        }
-        id: leftRect;
+        id: leftRect
         color: (loader.isOnline? loader.menu3Color: loader.menu3Color)
         width: parent.width;
+
+        Rectangle {
+            id: iner
+            width: {(parent.width);}
+            color: loader.isOnline?loader.menu4Color:loader.menu2Color
+            height:facade.toPx(80)/3
+        }
         anchors {
-            bottom: profile.bottom
+            bottom: {profile.bottom}
             top: profile.top
         }
     }
 
     Column {
         id: profile
-        spacing:facade.toPx(10)
-        anchors.horizontalCenter: parent.horizontalCenter
-        Item {height: 1; width: parent.width}
+        Item {
+            height: 1;
+            width: parent.width;
+        }
+
+        spacing: facade.toPx(10)
+        anchors.horizontalCenter: {parent.horizontalCenter;}
+
         Row {
             id: firstRow;
             anchors.horizontalCenter:parent.horizontalCenter
             spacing:facade.toPx(30)-(facade.toPx(708)-drawer.width)/facade.toPx(10)
+
             Column {
                 opacity: 0
                 anchors.bottom: parent.bottom
@@ -207,6 +214,7 @@ Drawer {
                     font.pixelSize: facade.doPx(30);
                     anchors.horizontalCenter:parent.horizontalCenter
                 }
+
                 Text {
                     text: "Онлайн"
                     color: "white"
@@ -215,10 +223,12 @@ Drawer {
                     anchors.horizontalCenter:parent.horizontalCenter
                 }
             }
+
             Button {
                 id: avatarButton
                 width: facade.toPx(200)
                 height: width
+
                 Rectangle {
                     id: bag
                     clip: true
@@ -252,12 +262,14 @@ Drawer {
                     color: "#90000000";
                     anchors.fill: {big}
                 }
+
                 OpacityMask {
                     id: big
                     source: bag
                     maskSource: (misk);
                     anchors.fill: {bag}
                 }
+
                 Image {
                     id: misk
                     smooth: (true)
@@ -292,7 +304,9 @@ Drawer {
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(34);
                 }
+
                 anchors.bottom: parent.bottom
+
                 Text {
                     text: qsTr("Друзья")
                     color: qsTr("white")
@@ -313,6 +327,7 @@ Drawer {
                 font.family: {(trebu4etMsNorm.name)}
                 font.pixelSize: {facade.doPx((28));}
             }
+
             Image {
                 id: image1
                 anchors.top: parent.top
@@ -321,6 +336,7 @@ Drawer {
                 anchors.topMargin: facade.toPx((15))
                 source: {"qrc:/ui/profiles/lin.png"}
             }
+
             Text {
                 id: scope2
                 text: " 0 ] "
@@ -328,6 +344,7 @@ Drawer {
                 font.family: {(trebu4etMsNorm.name)}
                 font.pixelSize: {facade.doPx((28));}
             }
+
             Rectangle {
                 radius: {height/2}
                 height: facade.toPx(50)
@@ -347,6 +364,7 @@ Drawer {
                         source: "qrc:/ui/icons/"+(find? "searchIconWhite": "DeleteIconWhite")+".png"
                     }
                 }
+
                 Connections {
                     target: drawer;
                     onFindChanged:{
@@ -357,14 +375,15 @@ Drawer {
                         }
                     }
                 }
+
                 TextField {
                     id: inerText
                     x: facade.toPx(30) + inerImage.width
-                    color: loader.menu15Color
+                    color: {loader.menu15Color}
                     height: parent.height
                     rightPadding: parent.radius
                     onAccepted: filterList(text.toLowerCase());
-                    width: {parent.width - x}
+                    width: parent.width-x
                     placeholderText: qsTr("Найти ваших друзей")
                     font.bold: true;
                     font.pixelSize: facade.doPx(18);
@@ -404,12 +423,13 @@ Drawer {
 
         delegate: Item {
             id: baseItem
-            visible: activity
+            visible:activity
             width: parent.width
-            height: activity? facade.toPx(20) + Math.max(bug.height,fo.height):0
+            height: activity? facade.toPx(20)+Math.max(bug.height, fo.height): 0
+
             Row {
                 Repeater {
-                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenter: {parent.verticalCenter;}
                     model: [("trashButton.png"), "dialerButton.png"]
                     Rectangle {
                         y: 1
@@ -423,11 +443,9 @@ Drawer {
                             color: loader.menu6Color;
                             x: index * (parent.width - width)
                         }
+
                         Image {
-                            x: {
-                                if (index!=0) parent.width-width-fac
-                                else Math.abs(fac);
-                            }
+                            x: index != 0? parent.width-width-fac: Math.abs(fac)
                             anchors {
                                 verticalCenter:parent.verticalCenter
                             }
@@ -549,15 +567,17 @@ Drawer {
                 Item {
                     id: bug
                     x: facade.toPx(50) - (facade.toPx(708) - drawer.width) / 5;
-                    width: facade.toPx(170)
-                    height:facade.toPx(170)
+                    width: facade.toPx(150)
+                    height:width
                     anchors.top: parent.top
                     anchors.topMargin: {facade.toPx(10)}
+
                     Rectangle {
                         clip: true
-                        color: "gray"
+                        color: "#E2E2E2"
                         anchors.fill:parent
-                        anchors.margins: bor.radius/3.65
+                        anchors.margins: bor.radius/3.6;
+
                         Image {
                             source: {image}
                             anchors.centerIn: {(parent)}
@@ -565,12 +585,13 @@ Drawer {
                             width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                         }
                     }
+
                     Rectangle {
                         id: bor
                         anchors.fill: {parent}
                         color: {"transparent"}
                         border.color:"#D5D6DA"
-                        border.width: facade.toPx(4.00);
+                        border.width: facade.toPx(5.00);
                         radius:facade.toPx(15)
                     }
                 }
@@ -579,15 +600,17 @@ Drawer {
                     id: fo
                     spacing:facade.toPx(10)
                     anchors.verticalCenter: parent.verticalCenter
+
                     Text {
                         font.weight: {Font.DemiBold}
                         font.family: "tahoma"
                         font.pixelSize: facade.doPx(25);
                         color: index==0?"white":"black";
-                        width:fo.width-facade.toPx(100)-bug.width
+                        width: {(fo.width) - facade.toPx(100) - (bug.width)}
                         text: login + " "+ famil
                         elide: {Text.ElideRight}
                     }
+
                     Text {
                         id: preview
                         maximumLineCount: 3
@@ -611,6 +634,7 @@ Drawer {
                             }
                             return m;
                         }
+
                         Connections {
                             target: drawer;
                             onPositionChanged: {
@@ -638,7 +662,7 @@ Drawer {
 
     Item {
         id: leftSlider
-        visible: false
+        visible: (false);
         width: facade.toPx(40)
         anchors {
             topMargin: -1;
@@ -646,6 +670,7 @@ Drawer {
             top: profile.bottom;
             bottom: listMenu.top
         }
+
         MouseArea {
             property int p
             anchors.fill:parent;
@@ -656,6 +681,7 @@ Drawer {
                 }
             }
         }
+
         DropShadow {
             radius: 10
             samples: 10
@@ -663,6 +689,7 @@ Drawer {
             color: "#80000000";
             source:linesColumn;
         }
+
         Row {
             id: linesColumn
             x: facade.toPx(7)
@@ -692,7 +719,7 @@ Drawer {
         PropertyAnimation{
             id: opens;
             target: leftMenu
-            to: leftMenu.direction?0: -leftMenu.width-1;
+            to: leftMenu.direction? 0: -leftMenu.width -1;
             property: "x";
             duration: 250;
         }
@@ -703,11 +730,8 @@ Drawer {
             top: leftRect.top
             bottom: parent.bottom
         }
-        width: 4
-        color: {
-            if(loader.isOnline==true) "#647A84"
-            else {loader.menu2Color;}
-        }
+        width: 2
+        color: loader.isOnline?"#647A84":loader.menu2Color
     }
 
     LinearGradient {
@@ -718,24 +742,24 @@ Drawer {
         end: Qt.point(0, height)
         start: Qt.point(0,0)
         gradient: Gradient {
-            GradientStop {position:0; color:"#30000000"}
-            GradientStop {position:1; color:"#00000000"}
+            GradientStop {position: 0; color: "#30000000"}
+            GradientStop {position: 1; color: "#00000000"}
         }
     }
 
     DropShadow {
         radius: 11
-        samples: (16)
-        source: listMenu;
-        color:"#70000000"
+        samples: (16);
+        source: listMenu
+        color: "#70000000";
         anchors.fill: listMenu
-        horizontalOffset:radius/2
+        horizontalOffset: radius/2
     }
     ListView {
         id: listMenu
-        anchors.right: parent.right
+        anchors.right:parent.right
         anchors.bottom: parent.bottom
-        snapMode: ListView.SnapOneItem;
+        snapMode:ListView.SnapOneItem
         boundsBehavior: {(Flickable.StopAtBounds)}
         Component.onCompleted: currentIndex = -(1)
 
@@ -765,8 +789,8 @@ Drawer {
         }
 
         delegate: Rectangle {
-            width: (parent.width)
-            height: {facade.toPx(80)}
+            width: parent.width
+            height: facade.toPx(80)
             MouseArea {
                 id: menMouseArea;
                 anchors.fill: parent;
@@ -812,10 +836,12 @@ Drawer {
                 Component.onCompleted: {
                     myswitcher.checked =loader.isOnline
                 }
+
                 Connections {
                     target: loader
                     onIsOnlineChanged: {myswitcher.checked = loader.isOnline;}
                 }
+
                 Switch {
                     id: myswitcher
                     visible: index==0;
