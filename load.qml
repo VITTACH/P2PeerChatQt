@@ -125,7 +125,7 @@ ApplicationWindow {
         property var drawOpen;
 
         property string menu1Color: "#939393";
-        property string menu2Color: "#E0E0E0";
+        property string menu2Color: "#A0A8AF";
         property string menu3Color: "#8093A3";
         property string menu4Color: "#777F89";
         property string menu5Color: "#B24A3E";
@@ -140,7 +140,8 @@ ApplicationWindow {
         property string menu13Color:"#B1B1B1";
         property string menu14Color:"#7C9AAA";
         property string menu15Color:"#8DACBC";
-        property string menu16Color:"#BBC6CA";
+        property string menu16Color:"#C4CFD3";
+        property string menu17Color:"#697886";
 
         property string head1Color: "#6B8499";
         property string head2Color: "#FFFFFF";
