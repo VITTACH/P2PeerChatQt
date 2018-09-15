@@ -139,7 +139,7 @@ ApplicationWindow {
         property string menu13Color:"#B1B1B1";
         property string menu14Color:"#7C9AAA";
         property string menu15Color:"#8DACBC";
-        property string menu16Color:"#C4CFD3";
+        property string menu16Color:"#A6B1BC";
         property string menu17Color:"#697886";
 
         property string head1Color: "#6B8499";

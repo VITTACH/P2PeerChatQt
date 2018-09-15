@@ -580,6 +580,7 @@ Drawer {
                             clip: true
                             color: "#E2E2E2"
                             anchors.fill: {parent}
+                            anchors.margins: bor.radius/3.6;
 
                             Image {
                                 source: {image}
@@ -587,6 +588,15 @@ Drawer {
                                 height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                                 width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                             }
+                        }
+
+                        Rectangle {
+                            id: bor
+                            anchors.fill: {parent}
+                            color: {"transparent"}
+                            border.color:"#D5D6DA"
+                            border.width: facade.toPx(5)
+                            radius:facade.toPx(15)
                         }
                     }
 
@@ -645,11 +655,11 @@ Drawer {
                 }
 
                 Rectangle {
-                    anchors.right: parent.right;
+                    width: 2*parent.width/3
+                    height: {facade.toPx(2);}
+                    anchors.right: parent.right
                     anchors.bottom:parent.bottom
                     color: "#30000000"
-                    width: 2*parent.width/3
-                    height: 3
                 }
             }
 
@@ -682,9 +692,9 @@ Drawer {
 
         Rectangle {
             width: parent.width;
-            color:loader.menu17Color
+            color: loader.menu17Color
             anchors.bottom:profile.bottom
-            height: 1
+            height: facade.toPx(2)
         }
 
         LinearGradient {
@@ -756,7 +766,7 @@ Drawer {
                     }
                 }
 
-                color: ListView.isCurrentItem?loader.menu16Color:loader.menu9Color
+                color: ListView.isCurrentItem? loader.menu2Color:loader.menu9Color
 
                 Item {
                     anchors {
@@ -845,10 +855,10 @@ Drawer {
         }
 
         Rectangle {
-            width: parent.width;
+            anchors.top: listMenu.top;
             color: loader.menu2Color
-            anchors.top:listMenu.top
-            height: 1
+            height: facade.toPx(2)
+            width: parent.width
         }
     }
 }
