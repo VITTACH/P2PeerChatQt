@@ -2,6 +2,8 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
+//https://evileg.com/ru/post/110/ - fix SSL error
+
 Drawer {
     id: drawes
     edge: Qt.RightEdge;
@@ -23,21 +25,18 @@ Drawer {
                     loader.goTo("loginanDregister.qml")
                 }
             } else if (position == 1) {
-                if (typeof loader.frienList=="undefined") {
-                    var friend
-                    friend =event_handler.loadValue("frnd")
+                if (typeof loader.frienList =="undefined") {
+                    var friend = event_handler.loadValue("frnd")
+                    var fr = []
                     if (friend != "") {
-                        var myfriend = (JSON.parse(friend))
-                        var fr = []
-                        for(var i=0;i<myfriend.length;i++){
+                        var myfriend = (JSON.parse(friend));
+                        for(var i=0;i<myfriend.length;i++) {
                             usersModel.append({image:"", famil: myfriend[i].famil, login: myfriend[i].login, phone: myfriend[i].phone, port: myfriend[i].port, ip: myfriend[i].ip,activity:1})
                             fr.push(myfriend[i].phone)
                         }
-                        loader.frienList=JSON.stringify(fr)
+                        loader.frienList= JSON.stringify(fr)
                         getMePeers(loader.frienList)
-                    } else {
-                        getFriends()
-                    }
+                    } else getFriends()
                 }
             } else if (position == 0) {
                 loader.forceActiveFocus()
@@ -48,13 +47,8 @@ Drawer {
 
     Connections {
         target: loader
-        onIsOnlineChanged: if(loader.isOnline==true) getFriends()
-        onDrawOpenChanged: {
-            if (loader.drawOpen) {
-                loader.drawOpen = false;
-                drawes.open()
-            }
-        }
+        onIsOnlineChanged: if (loader.isOnline) getFriends()
+        onDrawOpenChanged: if (loader.drawOpen) {loader.drawOpen = false; drawes.open()}
     }
 
     function getHelperHeight() {
@@ -65,30 +59,32 @@ Drawer {
         return (profile.height) + (profile.y - 1)
     }
 
-    function getCurPeerInd() {return listView.currentIndex}
+    function getCurPeerInd() {return listView.currentIndex;}
 
     function filterList(param) {
-        for (var i = 0; i < usersModel.count; i = i+1) {
+        for (var i = 0; i < usersModel.count; i = i + 1) {
             var name = " " + usersModel.get(i).login + usersModel.get(i).famil
-            if (name.toLowerCase().search(param) > 0 || param === "")
+            if (name.toLowerCase().search(param) > 0||param =="")
                 usersModel.setProperty(i, "activity", 1)
-            else
+            else {
                 usersModel.setProperty(i, "activity", 0)
+            }
         }
     }
 
     function getMePeers(name) {
-        var request = new XMLHttpRequest(),obj,index,imgUrl
-        request.open('POST', "http://www.hoppernet.hol.es")
-        request.onreadystatechange =function() {
-            if (request.readyState ==XMLHttpRequest.DONE) {
-                if (request.status&&request.status ==200) {
-                    console.log(request.responseText)
-                    obj =JSON.parse(request.responseText)
-                    for (var i = 0; i < obj.length; i+=1) {
+        console.log("call getMePeers arg s: " + name)
+        var request = new XMLHttpRequest(),obj,index;
+        request.open('POST', "http://www.hoppernet.hol.es");
+        request.onreadystatechange = function() {
+            if (request.readyState == XMLHttpRequest.DONE) {
+                if (request.status == 200) {
+                    console.log("getMePeers response : "+request.responseText)
+                    obj = JSON.parse(request.responseText)
+                    for (var i = 0; i < obj.length; i +=1) {
                         index = findPeer(obj[i].name)
-                        imgUrl= "https://randomuser.me/portraits/men/" + Math.floor(50*Math.random()) + ".jpg"
-                        if (usersModel.count<1|| index<0) {
+                        var imgUrl= "https://randomuser.me/portraits/men/"+Math.floor(50*Math.random())+".jpg"
+                        if (usersModel.count<1 || index<0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
                             usersModel.append({
                                 image: imgUrl,
@@ -114,13 +110,12 @@ Drawer {
                     for (i = 0; i <usersModel.count; i++) {
                         frnds.push({famil: usersModel.get(i).famil, login: usersModel.get(i).login, phone: usersModel.get(i).phone, port: usersModel.get(i).port, ip: usersModel.get(i).ip})
                     }
-                    event_handler.saveSet("frnd",JSON.stringify(frnds))
+                    event_handler.saveSet("frnd", JSON.stringify(frnds))
                 }
             }
         }
         var urlEncode = 'application/x-www-form-urlencoded'
         request.setRequestHeader('Content-Type', urlEncode)
-        console.log(name)
         request.send("READ=2&name=" +name)
     }
 
@@ -129,15 +124,13 @@ Drawer {
         request.open('POST', "http://www.hoppernet.hol.es")
         request.onreadystatechange =function() {
             if (request.readyState ==XMLHttpRequest.DONE) {
-                if (request.status&&request.status ==200) {
-                    getMePeers(loader.frienList =request.responseText)
-                }
+                if (request.status &&request.status == 200) getMePeers(loader.frienList =request.responseText)
             }
         }
         var urlEncode = 'application/x-www-form-urlencoded'
         request.setRequestHeader('Content-Type', urlEncode)
-        console.log(loader.tel)
-        request.send("READ=3&name="+loader.tel);
+        console.log("call getFriends : " + loader.tel)
+        request.send("READ=3&name=" + loader.tel)
     }
 
     function getPeersModel(index, field) {
@@ -170,7 +163,7 @@ Drawer {
         end: Qt.point(width,0)
         start: Qt.point(0, 0);
         gradient: Gradient {
-            GradientStop {position: 1; color: "#30000000"}
+            GradientStop {position: 1; color: "#20000000"}
             GradientStop {position: 0; color: "#00000000"}
         }
     }
@@ -178,26 +171,22 @@ Drawer {
     Item {
         id: drawer
         clip: (true);
-        height:parent.height
-        anchors.right: parent.right
+        height: parent.height
+        anchors.right: {parent.right;}
         width: parent.width - facade.toPx(50)
 
         Rectangle {
             anchors.fill: parent
-            color: {loader.menu16Color;}
-            anchors.topMargin: profile.height;
+            color: loader.menu16Color;
+            anchors.topMargin: profile.height
             opacity: 1.0;
         }
 
         Rectangle {
             id: leftRect
-            color: (loader.isOnline? loader.menu3Color: loader.menu3Color)
-            width: parent.width;
-
-            anchors {
-                bottom: {profile.bottom}
-                top: profile.top
-            }
+            width: parent.width
+            height: profile.height
+            color: {loader.isOnline == true ? loader.menu3Color : (loader.menu3Color);}
         }
 
         Column {
@@ -255,6 +244,7 @@ Drawer {
                             horizontalCenter: {parent.horizontalCenter;}
                             verticalCenter:parent.verticalCenter
                         }
+
                         Image {
                             source:loader.avatarPath
                             height:sourceSize.width > sourceSize.height? parent.height: sourceSize.height*(parent.width / sourceSize.width);
@@ -311,8 +301,8 @@ Drawer {
 
                 Column {
                     Text {
-                        font.bold: true;
-                        style: Text.Raised
+                        font.bold: {(true);}
+                        style: {Text.Raised}
                         styleColor: "black";
                         color: {"#FFFFFFFF"}
                         text: usersModel.count > 0 ? usersModel.count: 0
@@ -442,13 +432,43 @@ Drawer {
                 width: parent.width
                 height: (activity == true) ? facade.toPx(20) + Math.max(facade.toPx(165), fo.height) : 0
 
+                Row {
+                    Repeater {
+                        model: ["trashButton.png" ,"dialerButton.png"]
+                        Rectangle {
+                            y: 1
+                            color: loader.menu3Color
+                            width: baseItem.width *5/10
+                            height: baseItem.height -(2*y)
+                            property var fac: facade.toPx(40)
+
+                            Rectangle {
+                                width: splashImage.width + 2*fac;
+                                x: index * (parent.width - width)
+                                height: {(parent.height)}
+                                color: loader.menu5Color;
+                            }
+                            Image {
+                                anchors.verticalCenter: parent.verticalCenter
+                                x: index != 0? parent.width-width-fac:Math.abs(fac)
+                                source: "qrc:/ui/buttons/" + modelData
+                                width: (facade.toPx(sourceSize.width))
+                                height: facade.toPx(sourceSize.height)
+                                fillMode: Image.PreserveAspectFit
+                                id: splashImage;
+                            }
+                        }
+                        anchors.verticalCenter: parent.verticalCenter;
+                    }
+                }
+
+
                 Rectangle {
-                    z: 1
                     clip: true
                     id: delegaRect;
                     width: parent.width
                     height: parent.height;
-                    color: if (index==0) loader.menu14Color; else loader.menu7Color
+                    color: if (index==0) loader.menu14Color; else loader.menu16Color
 
                     Connections {
                         target: defaultDialog
@@ -456,7 +476,7 @@ Drawer {
                             if (listView.memIndex ==index) {
                                 if (defaultDialog.choose === false) {
                                     var phn=0
-                                    if (typeof usersModel.get(index)!=='undefined')
+                                    if (typeof usersModel.get(index) !=='undefined')
                                         phn = usersModel.get(index).phone;
                                     var obj = JSON.parse(loader.frienList)
                                     for (var i = 0; i < obj.length; i++) {
@@ -482,7 +502,7 @@ Drawer {
                         color: {
                             if (index === 0) {
                                 if (loader.isOnline) {loader.menu15Color;} else {loader.menu1Color}
-                            } else "#E5E5E5"
+                            } else loader.menu9Color
                         }
 
                         transform: Translate {
@@ -552,15 +572,14 @@ Drawer {
                         id: bug
                         x: facade.toPx(50) - (facade.toPx(708) - drawer.width) / 5;
                         height: width
-                        width: facade.toPx(130)
+                        width: facade.toPx(150)
                         anchors.top: parent.top
                         anchors.topMargin: {facade.toPx(10)}
 
                         Rectangle {
                             clip: true
                             color: "#E2E2E2"
-                            anchors.fill:parent
-                            anchors.margins: bor.radius/3.6;
+                            anchors.fill: {parent}
 
                             Image {
                                 source: {image}
@@ -568,15 +587,6 @@ Drawer {
                                 height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                                 width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                             }
-                        }
-
-                        Rectangle {
-                            id: bor
-                            anchors.fill: {parent}
-                            color: {"transparent"}
-                            border.color:"#D5D6DA"
-                            border.width: facade.toPx(5.00);
-                            radius:facade.toPx(15)
                         }
                     }
 
@@ -623,8 +633,7 @@ Drawer {
                                 target: drawes;
                                 onPositionChanged: {
                                     if (position == 1) {
-                                        var a = preview.previewText()
-                                        preview.text = a
+                                        preview.text = preview.previewText()
                                     }
                                 }
                             }
@@ -635,43 +644,12 @@ Drawer {
                     }
                 }
 
-                Row {
-                    Repeater {
-                        anchors.verticalCenter:parent.verticalCenter
-                        model: [("trashButton.png"), "dialerButton.png"]
-
-                        Rectangle {
-                            y: 1
-                            color: loader.menu5Color
-                            width: baseItem.width *5/10
-                            height: baseItem.height -(2*y)
-                            property var fac: facade.toPx(40)
-                            Rectangle {
-                                width: splashImage.width+2*fac;
-                                x: index * (parent.width - width)
-                                height: {(parent.height)}
-                                color: loader.menu6Color;
-                            }
-                            Image {
-                                anchors.verticalCenter:parent.verticalCenter
-                                x: index != 0? parent.width-width-fac:Math.abs(fac)
-                                source: "qrc:/ui/buttons/" + (modelData)
-                                width: {(facade.toPx(sourceSize.width))}
-                                height: {facade.toPx(sourceSize.height)}
-                                fillMode: Image.PreserveAspectFit
-                                id:splashImage
-                            }
-                        }
-                    }
-                }
-
                 Rectangle {
-                    z: 1
-                    height: 1
-                    anchors.bottom:parent.bottom
                     anchors.right: parent.right;
-                    width: {parent.width - bug.x - bug.width;}
-                    color: loader.menu8Color
+                    anchors.bottom:parent.bottom
+                    color: "#30000000"
+                    width: 2*parent.width/3
+                    height: 3
                 }
             }
 
@@ -735,12 +713,10 @@ Drawer {
                 id:navigateDownModel
                 ListElement {image: ""; target: ""}
                 ListElement {
-                    image: "/ui/icons/devIconBlue.png"
-                    target: qsTr("Настройки")
+                    image: "/ui/icons/devIconBlue.png"; target: qsTr("Настройки");
                 }
                 ListElement {
-                    image: "/ui/icons/outIconBlue.png"
-                    target: qsTr("Выйти")
+                    image: "/ui/icons/outIconBlue.png"; target: qsTr("Выйти")
                 }
             }
 
@@ -816,11 +792,7 @@ Drawer {
                             y: parent.height/2-height/2
                             implicitWidth: facade.toPx(56)
                             implicitHeight:facade.toPx(30)
-                            color: {
-                                if (parent.checked == true) {
-                                    loader.menu12Color;
-                                } else loader.menu13Color;
-                            }
+                            color: parent.checked == true? loader.menu12Color : loader.menu13Color
 
                             DropShadow {
                                 radius: 8

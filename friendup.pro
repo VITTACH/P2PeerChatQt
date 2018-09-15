@@ -1,5 +1,5 @@
-CONFIG += c++11 qml_debug warn_on qmltestcase
 QT += qml quick quickcontrols2 network multimedia
+CONFIG += c++11 qml_debug warn_on qmltestcase
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix: !android: target.path =/opt/$${TARGET}/bin
