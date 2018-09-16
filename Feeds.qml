@@ -474,12 +474,12 @@ Rectangle {
                     }
                 }
 
-                color: "transparent";
-                width: {parent.width}
-                height: if (index == true) {
+                color: "transparent"
+                width: parent.width;
+                height: if (index) {
                     countCard = Math.floor((baseRect.height - partnerHeader.height - navBottom.height - searchRow.height -friendList.height-(feedsModel.count-1)*basView.spacing)/facade.toPx(205))
                     countCard = (Screen.orientation == Qt.LandscapeOrientation && event_handler.currentOSys() > 0) ? 2*countCard : countCard
-                    return countCard * facade.toPx(205)
+                    countCard * facade.toPx(205)
                 }
             }
 

@@ -23,7 +23,7 @@ Drawer {
             var obj = {text: text, flag: flag, time:new Date(), imgs:selectImage}
             var nd = blankeDrawer.cindex;
             textField.text=""
-            if (loader.chats[nd].message=="undefined")
+            if (typeof loader.chats[nd] == "undefined")
                 loader.chats.push({phone: nd, message: []});
             loader.chats[nd].message.push(obj)
             var c=JSON.stringify(loader.chats)
@@ -36,24 +36,7 @@ Drawer {
 
     property var select
     property real yPosition:0
-    property var selectedImage:[];
-
-    Connections {
-        target: chatScreen;
-        function updatePosition(rotate) {
-            var percent = 1-facade.toPx(20)/width
-            if (!loader.isLogin) {
-                position = 0;
-            } else if (position > percent || rotate) {
-                position = percent
-                loader.chatOpen = true;
-            } else if (position == 0) {
-                loader.chatOpen = false
-            }
-        }
-        onPositionChanged: {updatePosition()}
-        onWidthChanged: if (position>0) updatePosition(true)
-    }
+    property var selectedImage:[]
 
     function loadChatsHistory() {
         select = [];
@@ -150,6 +133,19 @@ Drawer {
         }
     }
 
+    Connections {
+        target: chatScreen;
+        onPositionChanged: {
+            if (!loader.isLogin) {
+                position = 0
+            } else if (position == 1) {
+                loader.chatOpen = true;
+            } else if (position == 0) {
+                loader.chatOpen = false
+            }
+        }
+    }
+
     Connections {target: blankeDrawer; onCindexChanged: loadChatsHistory();}
 
     Component.onCompleted: {loadChatsHistory(); partnersHead.page = (-1.0);}
@@ -184,9 +180,9 @@ Drawer {
     }
 
     FastBlur {
-        radius: 20
+        radius: 30
         opacity: 0.750;
-        source: beckground;
+        source: {beckground;}
         anchors.fill: beckground
     }
     Image {
@@ -196,29 +192,28 @@ Drawer {
         visible: false;
     }
     ColorAnimate {
-        opacity: 0.62;
+        opacity: 0.52
         anchors.fill: parent;
-        Component.onCompleted: {
-            setColors([[67,138,188], [50,50,50], [84,116,153],[153,146,130]],100)
-        }
+        Component.onCompleted: {setColors([60,60,60], 100);}
     }
 
     Flickable {
         id: flickable
         anchors.fill: parent;
         anchors.bottomMargin: keyboardRect.visible ? keyboardRect.height : 0
-        flickableDirection:Flickable.VerticalFlick
+        flickableDirection: {Flickable.VerticalFlick}
+        boundsBehavior: Flickable.StopAtBounds
 
         ListView {
             id: chatScrenList
             width: parent.width;
-            displayMarginEnd: height/2
-            displayMarginBeginning: height/2
-            model: ListModel {id: chatModel}
+            displayMarginEnd: height / 2
+            displayMarginBeginning: height / 2
+            model: ListModel {id: chatModel;}
 
             delegate:Item {
                 width: {parent.width;}
-                height: basedColumn.implicitHeight
+                height: {basedColumn.implicitHeight;}
 
                 Rectangle {
                     id: baseRect
@@ -680,13 +675,7 @@ Drawer {
                                 }
                             }
                             onActiveFocusChanged: {
-                                if (activeFocus) {
-                                    keyboardRect.visible = activeFocus
-                                    /*
-                                    var posWithinFlickable = mapToItem(chatScrenList, 0, height/2)
-                                    flickable.contentY = posWithinFlickable.y - flickable.height/2
-                                    */
-                                }
+                                keyboardRect.visible = activeFocus
                             }
                             rightPadding:sendButton.width+leftPadding
                             font.family:trebu4etMsNorm.name
@@ -711,7 +700,7 @@ Drawer {
                     id: sendButton
                     height: {parent.height}
                     anchors.right: {parent.right;}
-                    anchors.rightMargin: facade.toPx(40)
+                    anchors.rightMargin: facade.toPx(30)
                     width: background.width
                     onClicked: {
                         attach.move = false
@@ -739,8 +728,8 @@ Drawer {
                     onClicked: attach.move = !attach.move;
                     background: Image {
                         source: "ui/buttons/addButton.png"
-                        width: facade.toPx(sourceSize.width / 11*10);
-                        height: facade.toPx(sourceSize.height/11*10);
+                        width: facade.toPx(sourceSize.width)
+                        height: facade.toPx(sourceSize.height);
                         anchors {
                             horizontalCenter: parent.horizontalCenter
                             bottom: parent.bottom;

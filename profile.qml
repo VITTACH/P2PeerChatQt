@@ -18,8 +18,9 @@ Item {
 
     Component.onCompleted: changeState()
 
-    Item {
+    Rectangle {
         anchors.fill: parent
+        color: loader.feedColor
         SwipeView {
             id: view;
             anchors.fill: parent

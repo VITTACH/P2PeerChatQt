@@ -124,7 +124,7 @@ Item {
                 if (page == 1) page-=1; else if (loader.webview) loader.webview = false;
                 else if (loader.chatOpen) {
                     loader.focus = loader.context = (true)
-                    chatMenuList.xPosition=rootItem.width-chatMenuList.w-facade.toPx(40)
+                    chatMenuList.xPosition=rootItem.width-chatMenuList.w-facade.toPx(30)
                     chatMenuList.yPosition=facade.toPx(20)
                 } else loader.drawOpen=true
                 loader.focus = true
