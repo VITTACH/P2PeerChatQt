@@ -163,7 +163,7 @@ Drawer {
         end: Qt.point(width,0)
         start: Qt.point(0, 0);
         gradient: Gradient {
-            GradientStop {position: 1; color: "#20000000"}
+            GradientStop {position: 1; color: "#15000000"}
             GradientStop {position: 0; color: "#00000000"}
         }
     }
@@ -648,18 +648,21 @@ Drawer {
                                 }
                             }
                         }
-                        anchors.leftMargin: facade.toPx(25);
+                        anchors.leftMargin: {facade.toPx(25);}
                         anchors.left: bug.right;
-                        width: parent.width
+                        width: parent.width;
                     }
                 }
 
                 Rectangle {
-                    width: 2*parent.width/3
-                    height: {facade.toPx(2);}
-                    anchors.right: parent.right
-                    anchors.bottom:parent.bottom
                     color: "#30000000"
+                    visible: (index != (usersModel.count - 1))
+                    width: 2*parent.width/3;
+                    height: facade.toPx(2);
+                    anchors {
+                        bottom:parent.bottom
+                        right: parent.right
+                    }
                 }
             }
 
@@ -855,7 +858,7 @@ Drawer {
         }
 
         Rectangle {
-            anchors.top: listMenu.top;
+            anchors.top:listMenu.top
             color: loader.menu2Color
             height: facade.toPx(2)
             width: parent.width

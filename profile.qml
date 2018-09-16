@@ -28,13 +28,10 @@ Item {
             Loader {
                 Component.onCompleted: source = "qrc:/Feeds.qml";
             }
-            Loader {
-                Component.onCompleted: source = "";
-            }
         }
     }
 
-    P2PStyle.BlankeDrawer {id: blankeDrawer}
+    P2PStyle.BlankeDrawer {id: blankeDrawer;}
 
     ChatScreen {z: 1000; id: chatScreen}
 }

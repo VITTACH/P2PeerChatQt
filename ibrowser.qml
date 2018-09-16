@@ -20,7 +20,6 @@ WebView {
     }
 
     onLoadingChanged: {
-        partnerHeader.load(loadProgress/100)
         var result=URLQuery.parseParams(loadRequest.url.toString())
         if (authRegExpVK.test(loadRequest.url.toString())) {
             loader.userId = (result.user_id)

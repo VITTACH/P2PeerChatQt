@@ -20,8 +20,6 @@ Item {
     property string text: ""
     property int page: 0
 
-    function load(value) {headerLine.width = value*rootItem.width}
-
     Rectangle {
         id: headRect
         width: parent.width;
@@ -120,6 +118,16 @@ Item {
             id: hambrgrButton;
             height:parent.height
             width: facade.toPx(140)
+
+            background: Image {
+                id: hambrgrButtonImage;
+                height:facade.toPx(sourceSize.height* 1.0)
+                width: facade.toPx(sourceSize.width * 1.0)
+                fillMode: {(Image.PreserveAspectFit)}
+                source: "../ui/buttons/" + (page == 1 || loader.webview? "back": (page < 0? "more": "infor")) + "Button.png";
+                anchors.centerIn:parent
+            }
+
             onClicked: {
                 if (page == 1) page-=1; else if (loader.webview) loader.webview = false;
                 else if (loader.chatOpen) {
@@ -132,35 +140,6 @@ Item {
 
             visible: page!=0 || loader.isLogin? true:false
             anchors.verticalCenter: parent.verticalCenter;
-
-            background: Image {
-                id: hambrgrButtonImage;
-                height:facade.toPx(sourceSize.height* 1.0)
-                width: facade.toPx(sourceSize.width * 1.0)
-                fillMode: {(Image.PreserveAspectFit)}
-                source: "../ui/buttons/" + (page == 1 || loader.webview? "back": (page < 0? "more": "infor")) + "Button.png";
-                anchors.centerIn:parent
-            }
-        }
-
-        Rectangle {
-            id: headerLine
-            width: parent.width
-            height:facade.toPx(6)
-            opacity: 0.3
-            z: 1000
-            color: {loader.head2Color}
-            anchors {
-                bottom: parent.bottom;
-            }
-            Connections {
-                target: rootItem;
-                onWidthChanged: {
-                    if (!(headerLine.width > 0&&headerLine.width < facade.toPx(90))) {
-                        headerLine.width = rootItem.width;
-                    }
-                }
-            }
         }
     }
 }

@@ -111,7 +111,6 @@ ApplicationWindow {
         property string famil;
         property string avatarPath: "qrc:/ui/profiles/default/Human.png";
 
-        property bool isNews
         property bool isLogin
         property bool isOnline
 

@@ -6,13 +6,12 @@ import QtQuick 2.0
 
 Rectangle {
     id: baseRect
+    color: loader.feedColor
+    Component.onCompleted: blankeDrawer.open()
 
     property int nWidth: 0;
     property bool find: true;
     property int oldContentY: 0
-
-    color: loader.feedColor
-    Component.onCompleted: blankeDrawer.open()
 
     ColorAnimate {
         opacity: 0.75
@@ -45,7 +44,6 @@ Rectangle {
         delegate: Column {
             anchors.horizontalCenter: parent.horizontalCenter
             width: nWidth = Math.min(0.9*parent.width, facade.toPx(900))
-            Component.onCompleted: if (index == 1) {restorePref.start()}
 
             function findPeer(phone) {
                 for (var i = 0; i < humanModel.count; i+=1) {
@@ -110,24 +108,20 @@ Rectangle {
                 request.send("READ=4")
             }
 
-            Timer {
-                id: restorePref
-                interval: 1000;
-                onTriggered: {restoreFromPref()}
-            }
-
-            function restoreFromPref() {
+            function rssLoadingAndSaving() {
                 if (xmlmodel.count > 0) {
-                    var RssCache = [];
+                    var RsCache = []
                     for (var i = 0; i < xmlmodel.count; i+= 1) {
                         var obj= {enable: true, link: xmlmodel.get(i).link, title: xmlmodel.get(i).title, image: xmlmodel.get(i).image, pDate: xmlmodel.get(i).pDate, pDesc: xmlmodel.get(i).pDesc}
-                        RssCache.push(obj)
+                        RsCache.push(obj)
                         for (var j = 0; j < rssView.model.count; j++) {
-                            if (rssView.model.get(j).title == obj.title) break
+                            if (rssView.model.get(j).title == obj.title)
+                                break
                         }
-                        if (j == rssView.model.count)rssView.model.append(obj)
+                        if (j == rssView.model.count)
+                            rssView.model.append(obj)
                     }
-                    event_handler.saveSet(("rss"), JSON.stringify((RssCache)))
+                    event_handler.saveSet("rss",JSON.stringify(RsCache))
                 } else {
                     var rssNews = event_handler.loadValue("rss");
                     if (rssNews !== "") {
@@ -265,7 +259,7 @@ Rectangle {
                                 x:facade.toPx(30)
                                 width: facade.toPx(80)
                                 height:facade.toPx(80)
-                                anchors.verticalCenter: parent.verticalCenter;
+                                anchors.verticalCenter: parent.verticalCenter
 
                                 Image {
                                     source: image
@@ -309,37 +303,37 @@ Rectangle {
                     anchors.bottom: parent.bottom
                     start:Qt.point(0, 0)
                     gradient: Gradient {
-                        GradientStop {position: (0.00); color: ("#00000000");}
-                        GradientStop {position: (1.00); color: ("#40000000");}
-                    }
-                }
-            }
-
-            XmlListModel {
-                id: xmlmodel
-                query: {"/rss/channel/item";}
-                XmlRole {name: "link"; query: "link/string()"}
-                XmlRole {name: "title"; query: "title/string()";}
-                XmlRole {name: "pDate"; query:"pubDate/string()"}
-                XmlRole {name: "pDesc"; query: "description/string()"}
-                XmlRole {name: "image"; query: "media:content/@url/string()";}
-                source:"http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
-                namespaceDeclarations: "declare namespace media=\"http://search.yahoo.com/mrss/\";"
-                onStatusChanged: {
-                    partnerHeader.load(progress)
-                    if ((status == XmlListModel.Ready) && (rssRect.visible)) {
-                        if (!loader.isNews) {
-                            restorePref.start();
-                            loader.isNews = true
-                        } else restoreFromPref()
+                        GradientStop {position: (0.00); color: ("#00000000")}
+                        GradientStop {position: (1.00); color: ("#40000000")}
                     }
                 }
             }
 
             Rectangle {
                 id: rssRect;
-                visible: index == 1
+                visible: index == 1;
+                color: "transparent"
                 property int countCard: 4
+
+                Component.onCompleted: {
+                    xmlmodel.source = "http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+                }
+
+                XmlListModel {
+                    id: xmlmodel
+                    query: {"/rss/channel/item";}
+                    XmlRole {name: "link"; query: "link/string()"}
+                    XmlRole {name: "title"; query: "title/string()"}
+                    XmlRole {name: "pDate"; query: "pubDate/string()"}
+                    XmlRole {name: "pDesc";query:"description/string()"}
+                    XmlRole {name: "image"; query: "media:content/@url/string()";}
+                    namespaceDeclarations: "declare namespace media=\"http://search.yahoo.com/mrss/\";"
+                    onStatusChanged: {
+                        if ((status == XmlListModel.Ready || status == XmlListModel.Error)) {
+                            rssLoadingAndSaving()
+                        }
+                    }
+                }
 
                 DropShadow {
                     radius: 8;
@@ -474,12 +468,19 @@ Rectangle {
                     }
                 }
 
-                color: "transparent"
                 width: parent.width;
-                height: if (index) {
-                    countCard = Math.floor((baseRect.height - partnerHeader.height - navBottom.height - searchRow.height -friendList.height-(feedsModel.count-1)*basView.spacing)/facade.toPx(205))
-                    countCard = (Screen.orientation == Qt.LandscapeOrientation && event_handler.currentOSys() > 0) ? 2*countCard : countCard
-                    countCard * facade.toPx(205)
+                height: if (rssRect.visible) {
+                    var count = Math.floor((baseRect.height - partnerHeader.height - navBottom.height - searchRow.height -friendList.height-(feedsModel.count-1)*basView.spacing)/facade.toPx(205))
+                    if (count < 1) {
+                        count = 1
+                    }
+                    countCard=count;
+                    if (event_handler.currentOSys() > 0) {
+                        if (Screen.orientation === Qt.LandscapeOrientation) {
+                            countCard = 2*countCard;
+                        }
+                    }
+                    countCard*facade.toPx(205)
                 }
             }
 
@@ -520,7 +521,7 @@ Rectangle {
 
         font.pixelSize: facade.doPx(20)
         font.family:trebu4etMsNorm.name
-        visible: (basView.contentY > 0 && (parent.width - nWidth)/2 >= width);
+        visible: (basView.contentY > 0 && (parent.width - nWidth)/2 >= width)
         contentItem: Text {
             elide:Text.ElideRight
             verticalAlignment: Text.AlignBottom
@@ -540,7 +541,7 @@ Rectangle {
     Rectangle {
         id: downRow
         width: parent.width
-        height: parent.height > parent.width? facade.toPx(100):facade.toPx(80)
+        height: parent.height > parent.width?facade.toPx(100):facade.toPx(80)
         anchors.bottom: parent.bottom;
 
         Rectangle {
@@ -554,7 +555,7 @@ Rectangle {
             spacing: {facade.toPx(50)}
             anchors.centerIn: {parent}
             Repeater {
-                model: ["Реклама", "Для бизнеса", "Все о P2P", "Безопасность"]
+                model: ["Реклама", "Для бизнеса", "Все о P2P","Безопасность"]
                 Text {
                     text: {modelData;}
                     anchors.verticalCenter:parent.verticalCenter
