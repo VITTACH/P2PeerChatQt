@@ -421,8 +421,10 @@ Drawer {
             model: ListModel {id: usersModel;}
             Component.onCompleted: {
                 if (loader.chats.length < 1) {
-                    var history = event_handler.loadValue("chats");
-                    if (history != "") loader.chats =JSON.parse(history)
+                    var chatHistory = event_handler.loadValue("chats")
+                    if (chatHistory != "") {
+                        loader.chats = JSON.parse(chatHistory)
+                    }
                 } usersModel.clear()
             }
 
@@ -434,20 +436,14 @@ Drawer {
 
                 Row {
                     Repeater {
-                        model: ["trashButton.png" ,"dialerButton.png"]
+                        model: ["trashButton.png" ,"trashButton.png"]
                         Rectangle {
                             y: 1
-                            color: loader.menu3Color
+                            color: loader.menu5Color
                             width: baseItem.width *5/10
                             height: baseItem.height -(2*y)
                             property var fac: facade.toPx(40)
 
-                            Rectangle {
-                                width: splashImage.width + 2*fac;
-                                x: index * (parent.width - width)
-                                height: {(parent.height)}
-                                color: loader.menu5Color;
-                            }
                             Image {
                                 anchors.verticalCenter: parent.verticalCenter
                                 x: index != 0? parent.width-width-fac:Math.abs(fac)
