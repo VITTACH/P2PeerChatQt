@@ -163,7 +163,7 @@ Drawer {
         end: Qt.point(width,0)
         start: Qt.point(0, 0);
         gradient: Gradient {
-            GradientStop {position: 1; color: "#15000000"}
+            GradientStop {position: 1; color: "#25000000"}
             GradientStop {position: 0; color: "#00000000"}
         }
     }
@@ -212,19 +212,19 @@ Drawer {
                         text: "0"
                         color: "white"
                         font.bold: true
-                        styleColor: "black";
-                        style: {Text.Raised}
                         font.family: trebu4etMsNorm.name
                         font.pixelSize: facade.doPx(30);
                         anchors.horizontalCenter:parent.horizontalCenter
+                        styleColor: "black";
+                        style: {Text.Raised}
                     }
 
                     Text {
-                        text: "Онлайн"
-                        color: "white"
                         font.family: trebu4etMsNorm.name
                         font.pixelSize: facade.doPx(24);
                         anchors.horizontalCenter:parent.horizontalCenter
+                        text: "Онлайн"
+                        color: "white"
                     }
                 }
 
@@ -428,6 +428,13 @@ Drawer {
                 } usersModel.clear()
             }
 
+            anchors {
+                top:profile.bottom
+                bottom: listMenu.top
+                topMargin: -1
+                leftMargin: 1
+            }
+
             delegate: Item {
                 id: baseItem
                 visible:activity
@@ -436,7 +443,7 @@ Drawer {
 
                 Row {
                     Repeater {
-                        model: ["trashButton.png" ,"trashButton.png"]
+                        model: ["trashButton.png" ,"dialerButton.png"]
                         Rectangle {
                             y: 1
                             color: loader.menu5Color
@@ -464,7 +471,7 @@ Drawer {
                     id: delegaRect;
                     width: parent.width
                     height: parent.height;
-                    color: if (index==0) loader.menu14Color; else loader.menu16Color
+                    color: if (index == 0)loader.menu14Color;else loader.menu16Color
 
                     Connections {
                         target: defaultDialog
@@ -497,8 +504,8 @@ Drawer {
                         id: coloresRect
                         color: {
                             if (index === 0) {
-                                if (loader.isOnline) {loader.menu15Color;} else {loader.menu1Color}
-                            } else loader.menu9Color
+                                if (loader.isOnline) {loader.menu11Color;} else {loader.menu1Color}
+                            } else loader.menu5Color
                         }
 
                         transform: Translate {
@@ -574,8 +581,8 @@ Drawer {
 
                         Rectangle {
                             clip: true
-                            color: "#E2E2E2"
-                            anchors.fill: {parent}
+                            color: loader.menu8Color
+                            anchors.fill: {(parent)}
                             anchors.margins: bor.radius/3.6;
 
                             Image {
@@ -588,11 +595,11 @@ Drawer {
 
                         Rectangle {
                             id: bor
-                            anchors.fill: {parent}
-                            color: {"transparent"}
-                            border.color:"#D5D6DA"
-                            border.width: facade.toPx(5)
-                            radius:facade.toPx(15)
+                            anchors.fill: {parent;}
+                            color: {"transparent";}
+                            border.color: "#D5D6DA"
+                            border.width: facade.toPx(4)
+                            radius: facade.toPx(15)
                         }
                     }
 
@@ -604,8 +611,8 @@ Drawer {
                         Text {
                             font.weight: {Font.DemiBold}
                             font.family: "tahoma"
-                            font.pixelSize: facade.doPx(25);
-                            color: index==0?"white":"black";
+                            font.pixelSize: facade.doPx(29);
+                            color: index == 0? "#FFFFFF" : "#000000";
                             width: {(fo.width) - (facade.toPx(100)) - (bug.width);}
                             text: login + " "+ famil
                             elide: {Text.ElideRight}
@@ -616,14 +623,14 @@ Drawer {
                             maximumLineCount: 3
                             wrapMode: Text.WordWrap;
                             text: previewText()
-                            color:index==0?"white":loader.menu11Color
+                            color:index == 0? "#FFFFFF" : loader.menu11Color
                             width:fo.width-facade.toPx(100)-bug.width
                             font.family: "tahoma";
                             font.pixelSize: facade.doPx(20);
                             function previewText() {
                                 var indx = 0, m = "", fl
                                 if (typeof loader.chats[index] !== ('undefined')) {
-                                    indx = loader.chats[index].message.length
+                                    indx =loader.chats[index].message.length
                                 }
                                 if (indx >= 1) {
                                     fl = loader.chats[index].message[indx - 1].flag
@@ -644,14 +651,14 @@ Drawer {
                                 }
                             }
                         }
-                        anchors.leftMargin: {facade.toPx(25);}
+                        anchors.leftMargin: {facade.toPx(30);}
                         anchors.left: bug.right;
                         width: parent.width;
                     }
                 }
 
                 Rectangle {
-                    color: "#30000000"
+                    color: loader.menu6Color
                     visible: (index != (usersModel.count - 1))
                     width: 2*parent.width/3;
                     height: facade.toPx(2);
@@ -660,13 +667,6 @@ Drawer {
                         right: parent.right
                     }
                 }
-            }
-
-            anchors {
-                top:profile.bottom
-                bottom: listMenu.top
-                topMargin: -1
-                leftMargin: 1
             }
         }
 
@@ -716,7 +716,6 @@ Drawer {
             Component.onCompleted: currentIndex = -(1)
             anchors.horizontalCenter: parent.horizontalCenter
 
-            property bool isShowed: false
             clip: true
             model:ListModel {
                 id:navigateDownModel
@@ -733,15 +732,15 @@ Drawer {
             height: {
                 var length= parent.height
                 length -= facade.toPx(480) + getProfHeight();
-                var count = Math.ceil(length/facade.toPx(80))
+                var count = Math.ceil(length/facade.toPx(85))
                 if (count>navigateDownModel.count) count = navigateDownModel.count
                 if (count < 1) count = 1;
-                (count) * facade.toPx(80)
+                (count) * facade.toPx(85)
             }
 
             delegate: Rectangle {
                 width: parent.width
-                height: facade.toPx(80)
+                height: facade.toPx(85)
                 MouseArea {
                     id: menMouseArea;
                     anchors.fill: parent;
@@ -765,7 +764,7 @@ Drawer {
                     }
                 }
 
-                color: ListView.isCurrentItem? loader.menu2Color:loader.menu9Color
+                color: ListView.isCurrentItem? loader.menu4Color:loader.menu9Color
 
                 Item {
                     anchors {

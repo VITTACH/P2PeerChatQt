@@ -5,7 +5,7 @@ import QtGraphicalEffects 1.0
 Item {
     id: rootItem
     width: parent.width;
-    height: facade.toPx(150);
+    height: facade.toPx(150)
 
     DropShadow {
         radius: 10
@@ -15,17 +15,12 @@ Item {
         anchors.fill: headRect
         visible: headRect.visible
     }
-    property string stat: ""
-    property string phot: ""
-    property string text: ""
-    property int page: 0
-
     Rectangle {
         id: headRect
         width: parent.width;
         height: facade.toPx(140);
         color: loader.head1Color;
-        visible: loader.source!="qrc:/qrscaner.qml"&&loader.source!="qrc:/webview.qml"
+        visible: loader.source != "qrc:/qrscaner.qml"
 
         Item {
             id: inerItem
@@ -142,4 +137,9 @@ Item {
             anchors.verticalCenter: parent.verticalCenter;
         }
     }
+
+    property string stat: ""
+    property string phot: ""
+    property string text: ""
+    property int page: 0
 }
