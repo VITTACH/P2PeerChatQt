@@ -159,11 +159,12 @@ Item {
         }
     }
 
-    ImageProcessor {id: imageProcessor}
+    ImageProcessor{id:imageProcessor}
 
     Button {
         x: (parent.width-width)/2
         y: parent.height-facade.toPx(200)
+        width: scaner.width
         height: facade.toPx(80)
         font.family: trebu4etMsNorm.name;
         font.pixelSize: {facade.doPx(20)}

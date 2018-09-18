@@ -360,7 +360,7 @@ Rectangle {
                         visible: enable
                         width: parent.width;
                         radius: facade.toPx(10)
-                        height: rssView.height/rssRect.countCard-rssView.spacing
+                        height: {(rssView.height) / (rssRect.countCard) - (rssView.spacing);}
                         Item {
                             clip: true
                             anchors.fill:parent
@@ -383,7 +383,7 @@ Rectangle {
                             height:facade.toPx(160)
                             anchors.verticalCenter:parent.verticalCenter
                             Image {
-                                source: {image.replace("https", "http")}
+                                source: typeof image!="undefined"?image.replace("ps","p"):""
                                 anchors.centerIn: {parent}
                                 height:sourceSize.width > sourceSize.height? parent.height: sourceSize.height*(parent.width / sourceSize.width)
                                 width: sourceSize.width > sourceSize.height? sourceSize.width*(parent.height / sourceSize.height): parent.width

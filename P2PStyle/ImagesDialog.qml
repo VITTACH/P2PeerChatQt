@@ -39,14 +39,14 @@ Button {
     }
     Rectangle {
         id: dialogWindow
-        color: "#FFF7F7F7"
+        color: "#F7F7F7"
         height: {2*width/3;}
         radius: {facade.toPx(25);}
         anchors.centerIn: {parent}
         width: Math.min(0.73 * parent.width, facade.toPx(666.6));
 
         Rectangle {
-            color: "#E9E9E9"
+            color: loader.toastColor
             anchors {
                 fill: parent
                 margins: dialogWindow.radius

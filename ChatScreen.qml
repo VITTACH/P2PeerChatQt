@@ -610,9 +610,9 @@ Drawer {
                                     height: imagesList.height/3-spacing
 
                                     clip: true
-                                    color: "#D3D3D3"
+                                    color: loader.menu4Color
                                     Image {
-                                        source: index == 0? image0: (index == 1 ? image1 : image2)
+                                        source: index == 0? image0: (index==1? image1:image2);
                                         height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width / sourceSize.width);
                                         width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height / sourceSize.height): parent.width;
                                         anchors.centerIn: parent
