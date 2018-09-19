@@ -183,16 +183,16 @@ Drawer {
         }
 
         Rectangle {
-            id: leftRect
+            id: leftRect;
             width: parent.width
-            height: profile.height
+            height: {profile.height;}
             color: {loader.isOnline == true ? loader.menu3Color : (loader.menu3Color);}
         }
 
         Column {
             id: profile
             spacing: facade.toPx(10);
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.horizontalCenter: {parent.horizontalCenter;}
 
             Item {
                 height: 1;
@@ -201,7 +201,7 @@ Drawer {
 
             Row {
                 id: firstRow;
-                anchors.horizontalCenter: {parent.horizontalCenter}
+                anchors.horizontalCenter:parent.horizontalCenter
                 spacing:facade.toPx(30)-(facade.toPx(708)-drawer.width)/facade.toPx(10)
 
                 Column {
@@ -542,9 +542,9 @@ Drawer {
                         }
                         drag.axis: Drag.XAxis
                         drag.minimumX: -width*0.40;
-                        onPressAndHold: presed = true
-                        onExited: circleAnimation.stop()
-                        drag.target: presed?parent:undefined
+                        onPressAndHold: presed=true
+                        onExited: {(circleAnimation.stop())}
+                        drag.target: presed == true? parent:undefined
                         drag.maximumX: usersModel.count >= index+1?-drag.minimumX:0
                         onPressed: {
                             coloresRect.x = mouseX;
@@ -579,13 +579,15 @@ Drawer {
                         anchors.top: parent.top
                         anchors.topMargin: {facade.toPx(10)}
 
-                        Rectangle {
+                        BusyIndicator {
                             clip: true
-                            color: loader.menu8Color
-                            anchors.fill: {(parent)}
+                            anchors.fill: {parent;}
                             anchors.margins: bor.radius/3.6;
+                            running: {avatar.status !== Image.Ready;}
+                            contentItem:StyleIndicator{}
 
                             Image {
+                                id: avatar
                                 source: {image}
                                 anchors.centerIn: {(parent)}
                                 height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
@@ -697,7 +699,7 @@ Drawer {
         }
 
         LinearGradient {
-            height: 11
+            height: facade.toPx(8)
             anchors.top: {profile.bottom}
             width: parent.width;
             end: Qt.point(0, height);
@@ -712,9 +714,9 @@ Drawer {
             id: listMenu
             anchors.bottom: parent.bottom
             snapMode:ListView.SnapOneItem
-            boundsBehavior: {(Flickable.StopAtBounds)}
-            Component.onCompleted: currentIndex = -(1)
-            anchors.horizontalCenter: parent.horizontalCenter
+            boundsBehavior: Flickable.StopAtBounds;
+            Component.onCompleted: currentIndex =-1
+            anchors.horizontalCenter: parent.horizontalCenter;
 
             clip: true
             model:ListModel {
@@ -731,8 +733,8 @@ Drawer {
             width: parent.width// - facade.toPx(20)
             height: {
                 var length= parent.height
-                length -= facade.toPx(480) + getProfHeight();
-                var count = Math.ceil(length/facade.toPx(85))
+                length -= (facade.toPx(480) + getProfHeight())
+                var count = Math.ceil(length/facade.toPx(85));
                 if (count>navigateDownModel.count) count = navigateDownModel.count
                 if (count < 1) count = 1;
                 (count) * facade.toPx(85)
@@ -799,13 +801,17 @@ Drawer {
                             radius: facade.toPx(25)
                             y: parent.height/2-height/2
                             implicitWidth: facade.toPx(56)
-                            implicitHeight:facade.toPx(30)
-                            color: parent.checked == true? loader.menu12Color : loader.menu13Color
+                            implicitHeight: {facade.toPx(30)}
+                            color: if(parent.checked) {
+                                    loader.menu12Color;
+                                } else {
+                                    loader.menu13Color;
+                            }
 
                             DropShadow {
-                                radius: 8
+                                radius: facade.toPx(10)
                                 samples: (15)
-                                source:switcher
+                                source: switcher;
                                 color:"#90000000"
                                 anchors.fill: switcher;
                             }

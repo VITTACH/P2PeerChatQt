@@ -40,36 +40,6 @@ Drawer {
     property real yPosition:0
     property var selectedImage:[]
 
-    function loadChatsHistory() {
-        select = [];
-        chatModel.clear()
-        var firstLaunch = true;
-        var i = blankeDrawer.cindex
-        for (var j = 0; j <loader.chats.length; j++) {
-            if (loader.chats[j].message.length >= 1) {
-                firstLaunch = false
-                break;
-            }
-        }
-
-        if (firstLaunch == true) {
-            var hist =event_handler.loadValue("chats")
-            if (hist !== "") loader.chats = JSON.parse(hist)
-        }
-
-        if (typeof loader.chats[i] == "undefined") {return;}
-
-        for (j = 0; j<loader.chats[i].message.length; j++) {
-            buferText.text = loader.chats[i].message[j].text
-            var obj=loader.chats[i].message[j]
-            var image = obj.imgs;
-            console.log(image)
-            appendMessage(obj.text,-obj.flag,obj.time,image)
-        }
-
-        chatScrenList.positionViewAtEnd()
-    }
-
     function parseToJSON(message, phone, ip) {
         return JSON.stringify({message:message,phone:phone})
     }
@@ -179,6 +149,36 @@ Drawer {
             : w <= 1? qsTr('неделю назад'): M<1? approx(w)+qsTr(' неделей назад')
             : M <= 1? qsTr('месяц назад') : y<1? approx(M)+qsTr(' месяцев назад')
             : y <= 1? qsTr('года назад')  : approx(y) + qsTr(' год(а) назад')
+    }
+
+    function loadChatsHistory() {
+        select = [];
+        chatModel.clear()
+        var firstLaunch = true;
+        var i = blankeDrawer.cindex
+        for (var j = 0; j <loader.chats.length; j++) {
+            if (loader.chats[j].message.length >= 1) {
+                firstLaunch = false
+                break;
+            }
+        }
+
+        if (firstLaunch == true) {
+            var hist =event_handler.loadValue("chats")
+            if (hist !== "") loader.chats = JSON.parse(hist)
+        }
+
+        if (typeof loader.chats[i] == "undefined") {return;}
+
+        for (j = 0; j<loader.chats[i].message.length; j++) {
+            buferText.text = loader.chats[i].message[j].text
+            var obj=loader.chats[i].message[j]
+            var image = obj.imgs;
+            console.log(image)
+            appendMessage(obj.text,-obj.flag,obj.time,image)
+        }
+
+        chatScrenList.positionViewAtEnd()
     }
 
     Item {
@@ -344,12 +344,15 @@ Drawer {
                                         spacing: {facade.toPx(5);}
                                         orientation:Qt.Horizontal;
 
-                                        delegate: Item {
+                                        delegate: BusyIndicator {
                                             y: attachList.x
                                             width: parent.height-y
                                             height:parent.height-y
+                                            running: {msgImage.status !== Image.Ready}
+                                            contentItem: P2PStyle.StyleIndicator{}
                                             clip: true
                                             Image {
+                                                id: msgImage
                                                 source: modelData;
                                                 height: {
                                                     sourceSize.width>sourceSize.height?parent.height:sourceSize.height*(parent.width/sourceSize.width)
@@ -584,10 +587,11 @@ Drawer {
                         clip: true
                         id: imagesList;
                         height:parent.height
-                        width: {area.width-cam.width-parent.x-spacing;}
+                        width: {area.width - cam.width - parent.x - (spacing)}
                         spacing: parent.spacing;
-                        orientation: Qt.Horizontal;
+                        orientation: {Qt.Horizontal}
                         model: ListModel {id:tachModel}
+
                         Component.onCompleted: {
                             var photos = (Math.random()*10) + 5;
                             for (var i = 0; i < photos; i +=1) {
@@ -597,7 +601,7 @@ Drawer {
 
                         onContentXChanged: {
                             var newX = scrollBar.start + (width - scrollBar.width)*contentX / ((tachModel.count - width/height*2)*height/2 - spacing);
-                            if (newX>scrollBar.start) scrollBar.x=newX;
+                            if (newX > scrollBar.start) {scrollBar.x = (newX)}
                             else {scrollBar.x = scrollBar.start}
                         }
 
@@ -605,21 +609,26 @@ Drawer {
                             spacing: imagesList.spacing
                             Repeater {
                                 model: 3
-                                Rectangle {
-                                    width: height
-                                    height: imagesList.height/3-spacing
-
+                                Item {
                                     clip: true
-                                    color: loader.menu4Color
-                                    Image {
-                                        source: index == 0? image0: (index==1? image1:image2);
-                                        height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width / sourceSize.width);
-                                        width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height / sourceSize.height): parent.width;
-                                        anchors.centerIn: parent
+                                    width: height
+                                    height: {imagesList.height / 3 - spacing;}
 
-                                        MouseArea {
-                                            onClicked: selectedImage.push("" + parent.source);
-                                            anchors.fill: parent
+                                    BusyIndicator {
+                                        anchors.fill: parent
+                                        running: attachImg.status!=Image.Ready
+
+                                        Image {
+                                            id: attachImg
+                                            source: index == 0? image0: (index==1? image1:image2);
+                                            height:sourceSize.width>sourceSize.height?parent.height:sourceSize.height*(parent.width/sourceSize.width)
+                                            width: sourceSize.width>sourceSize.height?sourceSize.width*(parent.height/sourceSize.height):parent.width
+                                            anchors.centerIn: parent
+
+                                            MouseArea {
+                                                onClicked: selectedImage.push("" + parent.source);
+                                                anchors.fill: parent
+                                            }
                                         }
                                     }
                                 }
@@ -679,7 +688,7 @@ Drawer {
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(34)
                             Keys.onReleased: {
-                                if (event.key === Qt.Key_Control || event.key === Qt.Key_Return) {
+                                if (event.key == Qt.Key_Control||event.key == Qt.Key_Return) {
                                     if (pressCtrl==true&&pressEntr) {
                                         attach.move = false
                                         checkMessage(2, JSON.stringify(selectedImage))

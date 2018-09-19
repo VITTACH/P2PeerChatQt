@@ -66,7 +66,6 @@ ApplicationWindow {
 
     Loader {
         id: loader;
-        focus: true
         objectName: "loader"
         anchors.fill: parent
 
@@ -130,7 +129,6 @@ ApplicationWindow {
         property string menu5Color: "#AFB5BC";
         property string menu6Color: "#30000000"
         property string menu7Color: "#F1F1F1";
-        property string menu8Color: "#B1B7BF";
         property string menu9Color: "#B9C3CC";
 
         property string menu10Color:"#535353";
@@ -207,27 +205,24 @@ ApplicationWindow {
                     if (request.status && request.status==200) {
                         if (request.responseText == "") response = -1;
                         else if (request.responseText != "no") {
-                            response = 1;
+                            response = (1)
                             var obj = JSON.parse(request.responseText)
                             loader.famil = obj.family
                             loader.login = obj.login;
                             loader.tel = obj.name;
-                        } else response = 0;
+                        } else response =0
+
                         switch(response) {
                             case 1:
                                 loader.isOnline = !false;
-                                if (loader.source != "profile.qml") {
-                                    loader.goTo("profile.qml")
-                                }
                                 event_handler.sendMsgs(phone);
                                 var uo = {tel: phone, pass: password, login: loader.login,
                                     family:loader.famil, image:loader.avatarPath}
                                 event_handler.saveSet("user", JSON.stringify(uo))
                                 break;
+
                             case 0:
                                 defaultDialog.show(qsTr("Вы не были зарегистрированы"), 0)
-                                if (loader.source != "qrc:/loginanDregister.qml")
-                                    goTo("qrc:/loginanDregister.qml");
                                 if (loader.aToken != ""){
                                     loader.fields[0] = (loader.login);
                                     loader.fields[1] = (loader.famil);
@@ -236,27 +231,19 @@ ApplicationWindow {
                                     loader.fields[1] = ""
                                     loader.fields[2] =password
                                 }
+                                if (loader.source != "qrc:/loginanDregister.qml")
+                                    goTo("qrc:/loginanDregister.qml");
                                 loader.fields[4] = phone;
-                                partnerHeader.page = 1;
+                                partnerHeader.page = (1);
                                 break;
+
                             case -1:
                                 defaultDialog.show("Временно нету доступа до интернету",0)
                                 break;
                         }
                     } else {
-                        var findResult = false;
-                        for (var i = 0; i<privated.visitedPageList.length; i++) {
-                            if (privated.visitedPageList[i].search("profile.qml") != -1) {
-                                findResult = true
-                                break;
-                            }
-                        }
-                        if (!findResult) {
-                            if (loader.source !="profile.qml")
-                                loader.goTo("profile.qml")
-                            tmpLogin = password
-                            tmpPhone=phone
-                        }
+                        tmpPhone = phone
+                        tmpLogin = password
                         loader.isOnline = false
                         connect.restart();
                     }
@@ -264,12 +251,13 @@ ApplicationWindow {
             }
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             request.send("phone=" + phone + "&pass="+password)
-            loader.isLogin=true
+            if (loader.source != "profile.qml") loader.goTo("profile.qml")
+            loader.isLogin = true
         }
 
         function addFriend(friend, flag) {
             flag = typeof flag !== 'undefined' ? flag : false;
-            var request = new XMLHttpRequest()
+            var request = new XMLHttpRequest();
             request.open('POST',"http://www.hoppernet.hol.es")
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             request.send("name="+ loader.tel + "&friend=" + (friend) + "&remove=" + flag);
