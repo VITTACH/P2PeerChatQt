@@ -63,5 +63,6 @@
         <file>tests/tst_login.qml</file>
         <file>ColorAnimate.qml</file>
         <file>ChatMenuList.qml</file>
+        <file>P2PStyle/StyleIndicator.qml</file>
     </qresource>
 </RCC>

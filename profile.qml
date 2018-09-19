@@ -20,7 +20,7 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: loader.feedColor
+        color: loader.feedColor;
         SwipeView {
             id: view;
             anchors.fill: parent
