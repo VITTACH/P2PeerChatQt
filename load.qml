@@ -133,7 +133,7 @@ ApplicationWindow {
 
         property string menu10Color:"#535353";
         property string menu11Color:"#7C9AAA";
-        property string menu12Color:"#4F7E9E";
+        property string menu12Color:"#677784";
         property string menu13Color:"#B1B1B1";
         property string menu14Color:"#95A1AD";
         property string menu15Color:"#8DACBC";
@@ -242,17 +242,17 @@ ApplicationWindow {
                                 break;
                         }
                     } else {
-                        tmpPhone = phone
-                        tmpLogin = password
-                        loader.isOnline = false
                         connect.restart();
                     }
                 }
             }
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             request.send("phone=" + phone + "&pass="+password)
-            if (loader.source != "profile.qml") loader.goTo("profile.qml")
+            tmpPhone = phone
+            tmpLogin = password
             loader.isLogin = true
+            if (loader.source != "profile.qml")
+                loader.goTo("profile.qml")
         }
 
         function addFriend(friend, flag) {

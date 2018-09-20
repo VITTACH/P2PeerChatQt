@@ -64,5 +64,6 @@
         <file>ColorAnimate.qml</file>
         <file>ChatMenuList.qml</file>
         <file>P2PStyle/StyleIndicator.qml</file>
+        <file>ui/chat/chat0.jpg</file>
     </qresource>
 </RCC>

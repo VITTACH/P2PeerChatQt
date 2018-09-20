@@ -809,7 +809,7 @@ Drawer {
                             }
 
                             DropShadow {
-                                radius: facade.toPx(10)
+                                radius: facade.toPx(11)
                                 samples: (15)
                                 source: switcher;
                                 color:"#90000000"
