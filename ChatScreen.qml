@@ -1,6 +1,7 @@
 import QtQml 2.0
 import QtQuick 2.7
 import QtMultimedia 5.7
+import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.0
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
@@ -9,9 +10,9 @@ import "P2PStyle" as P2PStyle
 // https://falsinsoft.blogspot.com/2018/04/qml-mixed-native-android-and-qml.html;
 
 Drawer {
-    edge: Qt.RightEdge
-    width: parent.width;
-    height: parent.height;
+    edge:Qt.RightEdge
+    width: parent.width
+    height: parent.height
 
     function setInfo(messag, photos, status) {
         partnersHead.stat = status
@@ -36,7 +37,7 @@ Drawer {
         }
     }
 
-    property var select
+    property var select:[]
     property real yPosition:0
     property var selectedImage:[]
 
@@ -122,6 +123,12 @@ Drawer {
 
     Component.onCompleted: {loadChatsHistory(); partnersHead.page = (-1.0);}
 
+    onIsPortraitChanged: {
+        beckground.source = "http://pipsum.com/" + Math.ceil(width) + "x " + Math.ceil(height) + ".jpg"
+    }
+
+    property bool isPortrait: Screen.primaryOrientation == Qt.PortraitOrientation
+
     function appendMessage(message, flag, times, selected) {
         var sp, cflag;
         flag = Math.abs(cflag = flag)
@@ -182,25 +189,26 @@ Drawer {
     }
 
     Item {
+        clip: true
         height: parent.height
-        width: {parent.width > parent.height ? (parent.width / 2) : parent.width}
-        anchors.right: parent.right;
+        width: Screen.orientation ==Qt.LandscapeOrientation? parent.width/2: parent.width
+        anchors.right:parent.right
 
         FastBlur {
             radius: 30
             opacity: 0.750;
-            source: {beckground;}
-            anchors.fill: beckground
+            source: {beckground}
+            anchors.fill: {beckground}
         }
         Image {
             id: beckground;
-            anchors.fill: parent;
-            source: "http://pipsum.com/" + Math.ceil(parent.width) + "x" + Math.ceil(parent.height)+".jpg"
+            anchors.fill: {parent}
+            source: "qrc:/ui/chat/chat0.jpg"
             visible: false;
         }
         ColorAnimate {
             opacity: 0.42
-            anchors.fill: parent;
+            anchors.fill: {parent}
             Component.onCompleted: {setColors([60,60,60], 100);}
         }
 
@@ -224,7 +232,7 @@ Drawer {
                         width: parent.width;
                         Item {
                             width: parent.width
-                            height: timeText.height + mySpacing + (mySpacing == 0? facade.toPx(10): 0)
+                            height: timeText.height + mySpacing + (mySpacing == 0? facade.toPx(10): 0);
 
                             DropShadow {
                                 radius: facade.toPx(5)
@@ -238,8 +246,8 @@ Drawer {
                                 height:parent.height
                                 width: {routeLine.width}
                                 x:routeLine.x+baseItem.x
-                                visible: (index >= 1) == true && (chatModel.get(index).mySpacing == 0)
-                                color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.40,0.94)
+                                visible: (index >= 1) == true && (chatModel.get(index).mySpacing === 0)
+                                color: Qt.hsva(index>0? chatModel.get(index-1).lineColor: 0,0.40, 0.94)
                             }
 
                             Text {
@@ -264,8 +272,8 @@ Drawer {
                             Rectangle {
                                 id: routeLine;
                                 color: Qt.hsva(lineColor, 0.40, 0.94)
-                                x: (Math.abs(falg - 2) == 0? message.x: 0) - width/2 + message.width/2
-                                visible: index<chatModel.count-1&&chatModel.get(index+1).mySpacing==0;
+                                x: (Math.abs(falg - 2) == 0? message.x: 0) - width/2 + message.width/2;
+                                visible: index<chatModel.count-1&&chatModel.get(index+1).mySpacing == 0
                                 width: {facade.toPx(4);}
                                 height: {parent.height;}
                             }
@@ -348,7 +356,7 @@ Drawer {
                                             y: attachList.x
                                             width: parent.height-y
                                             height:parent.height-y
-                                            running: {msgImage.status !== Image.Ready}
+                                            running: msgImage.status!==Image.Ready
                                             contentItem: P2PStyle.StyleIndicator{}
                                             clip: true
                                             Image {
