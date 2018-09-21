@@ -124,7 +124,9 @@ Drawer {
     Component.onCompleted: {loadChatsHistory(); partnersHead.page = (-1.0);}
 
     onIsPortraitChanged: {
-        beckground.source = "http://pipsum.com/" + Math.ceil(width) + "x " + Math.ceil(height) + ".jpg"
+        if (height != 0) {
+            beckground.source = "http://pipsum.com/"+Math.ceil(width) + "x " + Math.ceil(height)+".jpg"
+        }
     }
 
     property bool isPortrait: Screen.primaryOrientation == Qt.PortraitOrientation
@@ -191,25 +193,30 @@ Drawer {
     Item {
         clip: true
         height: parent.height
-        width: Screen.orientation ==Qt.LandscapeOrientation? parent.width/2: parent.width
+        width: Screen.orientation === Qt.InvertedLandscapeOrientation? (parent.width/2) : parent.width;
         anchors.right:parent.right
 
-        FastBlur {
-            radius: 30
-            opacity: 0.750;
-            source: {beckground}
-            anchors.fill: {beckground}
-        }
-        Image {
-            id: beckground;
-            anchors.fill: {parent}
-            source: "qrc:/ui/chat/chat0.jpg"
-            visible: false;
+        Item {
+            FastBlur {
+                radius: 30
+                opacity: 0.750
+                source: beckground
+                anchors.fill: beckground
+            }
+            anchors.fill:parent
+            Image {
+                id: beckground;
+                anchors.centerIn: parent
+                source: "qrc:/ui/chat/chat0.jpg"
+                height:sourceSize.width>sourceSize.height?parent.height:sourceSize.height*(parent.width/sourceSize.width)
+                width: sourceSize.width>sourceSize.height?sourceSize.width*(parent.height/sourceSize.height):parent.width
+                visible: false;
+            }
         }
         ColorAnimate {
             opacity: 0.42
             anchors.fill: {parent}
-            Component.onCompleted: {setColors([60,60,60], 100);}
+            Component.onCompleted: setColors([60,60,60],100)
         }
 
         ListView {
