@@ -1,18 +1,17 @@
-import QtQuick 2.0
+import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 import QtQuick.XmlListModel 2.0
+import QtQuick 2.0
 
 Rectangle {
+    id: baseRect
     color: loader.feedColor
-
-    property var nWidth;
-    property int curInd: 0;
-    property bool find: true;
-    property int oldContentY: 0;
-    property int newsCardHgt: 0;
-
     Component.onCompleted: blankeDrawer.open()
+
+    property int nWidth: 0;
+    property bool find: true;
+    property int oldContentY: 0
 
     ColorAnimate {
         opacity: 0.75
@@ -33,10 +32,11 @@ Rectangle {
 
         model: ListModel {
             id: feedsModel
-            ListElement {activiti: 0;}
-            ListElement {activiti: 1;}
-            ListElement {activiti: 0;}
+            ListElement {activiti: 0}
+            ListElement {activiti: 1}
+            ListElement {activiti: 0}
         }
+
         boundsBehavior : {
             (contentY <= 0) ? Flickable.StopAtBounds: Flickable.DragAndOvershootBounds
         }
@@ -44,7 +44,7 @@ Rectangle {
         delegate: Column {
             anchors.horizontalCenter: parent.horizontalCenter
             width: nWidth = Math.min(0.9*parent.width, facade.toPx(900))
-            Component.onCompleted: if (index == 1) {restorePref.start()}
+
             function findPeer(phone) {
                 for (var i = 0; i < humanModel.count; i+=1) {
                     if (humanModel.get(i).phone == (phone)) {
@@ -108,24 +108,20 @@ Rectangle {
                 request.send("READ=4")
             }
 
-            Timer {
-                id: restorePref
-                interval: 1000;
-                onTriggered: {restoreFromPref()}
-            }
-
-            function restoreFromPref() {
+            function rssLoadingAndSaving() {
                 if (xmlmodel.count > 0) {
-                    var RssCache = [];
+                    var RsCache = []
                     for (var i = 0; i < xmlmodel.count; i+= 1) {
                         var obj= {enable: true, link: xmlmodel.get(i).link, title: xmlmodel.get(i).title, image: xmlmodel.get(i).image, pDate: xmlmodel.get(i).pDate, pDesc: xmlmodel.get(i).pDesc}
-                        RssCache.push(obj)
+                        RsCache.push(obj)
                         for (var j = 0; j < rssView.model.count; j++) {
-                            if (rssView.model.get(j).title == obj.title) break
+                            if (rssView.model.get(j).title == obj.title)
+                                break
                         }
-                        if (j == rssView.model.count)rssView.model.append(obj)
+                        if (j == rssView.model.count)
+                            rssView.model.append(obj)
                     }
-                    event_handler.saveSet(("rss"), JSON.stringify((RssCache)))
+                    event_handler.saveSet("rss",JSON.stringify(RsCache))
                 } else {
                     var rssNews = event_handler.loadValue("rss");
                     if (rssNews !== "") {
@@ -138,10 +134,12 @@ Rectangle {
             }
 
             Rectangle {
-                radius: height/2;
+                id: searchRow
+                radius: height/2
                 visible: index == 0;
                 width: parent.width;
                 height: visible? (finderRow.height + facade.toPx(20)): 0
+
                 Row {
                     id: finderRow
                     spacing: {facade.toPx(10);}
@@ -160,6 +158,7 @@ Rectangle {
                             if(find == false) find=true;
                             if(find) {inerText.clear(); getMePeers("");}
                         }
+
                         background:Image {
                             id: innerImage
                             width: {facade.toPx(sourceSize.width /1.3);}
@@ -168,10 +167,12 @@ Rectangle {
                             source: "qrc:/ui/icons/" + (find? "searchIconWhite": "DeleteIconWhite") + ".png"
                         }
                     }
+
                     Connections {
                         target: blankeDrawer
                         onPositionChanged: if((blankeDrawer.position === 1) == true) {inerText.focus = false}
                     }
+
                     TextField {
                         id: inerText
                         color: "#C0C8D0"
@@ -179,7 +180,7 @@ Rectangle {
 
                         rightPadding: parent.parent.radius;
                         onAccepted: getMePeers(text.toLowerCase());
-                        onTextChanged: if (event_handler.currentOSys() != 1 && event_handler.currentOSys() != 2) getMePeers(text.toLowerCase())
+                        onTextChanged: if (event_handler.currentOSys() === 0) getMePeers(text.toLowerCase())
                         placeholderText: qsTr("Найти новых друзей")
                         font.bold: true;
                         font.pixelSize: facade.doPx(20);
@@ -192,73 +193,42 @@ Rectangle {
 
             Item {
                 clip: true
+                id: friendList
                 width: parent.width
                 property int counter: 0
+                visible: index == 0 && activiti;
                 height: {
                     var cunter = 0;
                     for (var i = 0; i < listView.count; i ++) {
                         if (humanModel.get(i).activity == 1 && visible == true) cunter = cunter + 1
                     }
-                    if (cunter > 3) cunter = 3;
+                    if (cunter > 2) {cunter = 2}
                     counter=cunter;
-                    cunter*facade.toPx(124)
+                    cunter * facade.toPx(104)
                 }
-                visible: index == 0 && activiti
+
                 ListView {
                     id: listView
-                    anchors.fill: parent
-                    snapMode: ListView.SnapToItem
-                    property var friend;
-
+                    property var friend
+                    anchors.fill: {parent;}
+                    snapMode:ListView.SnapToItem
                     model: ListModel {id:humanModel}
+                    spacing: 1
                     delegate: Item {
                         id: baseItem
-                        visible:activity
-                        width: parent.width
+                        visible: activity
+                        width: {parent.width}
                         height: activity==true? facade.toPx(20) + Math.max(bug.height,fo.height): 0
 
                         Rectangle {
                             clip: true
-                            id: delegaRect
-                            width: parent.width
-                            height: {parent.height;}
-                            color: (baseItem.ListView.isCurrentItem)? (loader.isOnline != true? loader.menu3Color: loader.menu4Color): "white";
-
-                            Rectangle {
-                                width: 0
-                                height: 0
-                                id: coloresRect
-                                color: (baseItem.ListView.isCurrentItem)? (loader.isOnline? loader.feed2Color: "darkgray"): (loader.feedColor);
-
-                                transform: Translate {
-                                    x:-coloresRect.width /2
-                                    y:-coloresRect.height/2
-                                }
-                            }
-
-                            PropertyAnimation {
-                                duration: 500
-                                target: coloresRect;
-                                id: circleAnimation;
-                                properties:("width, height, radius");
-                                from: 0
-                                to: (delegaRect.width * 3);
-
-                                onStopped: {
-                                    coloresRect.width  = 0;
-                                    coloresRect.height = 0;
-                                }
-                            }
+                            width: parent.width/2
+                            height: parent.height
+                            color: loader.feed2Color;
 
                             MouseArea {
                                 id: myMouseArea
                                 anchors.fill: parent;
-                                onExited: {(circleAnimation.stop());}
-                                onPressed: {
-                                    coloresRect.x = mouseX;
-                                    coloresRect.y = mouseY;
-                                    circleAnimation.start()
-                                }
                                 onClicked: {
                                     listView.friend = phone
                                     defaultDialog.show(qsTr("Отправить заявку в друзья для <strong>") + login + " " + famil + "</strong>?", 2);
@@ -287,9 +257,10 @@ Rectangle {
                                 smooth: true
                                 color: "lightgray"
                                 x:facade.toPx(30)
-                                width: facade.toPx(100)
-                                height:facade.toPx(100)
-                                anchors.verticalCenter: parent.verticalCenter;
+                                width: facade.toPx(80)
+                                height:facade.toPx(80)
+                                anchors.verticalCenter: parent.verticalCenter
+
                                 Image {
                                     source: image
                                     anchors.centerIn: parent
@@ -305,75 +276,76 @@ Rectangle {
                                     right: parent.right
                                     leftMargin: facade.toPx(30)
                                 }
+
                                 Text {
                                     text: (login + " " + famil)
                                     color: listView.currentIndex== index? "#FFFFFFFF": "#FF000000";
                                     font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(26)
+                                    font.pixelSize: facade.doPx(20)
                                 }
+
                                 Text {
                                     text: "ip: " + ip + ", port: " + port
                                     color: listView.currentIndex== index? "#FFFFFFFF": "#FF808080";
                                     font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(16)
+                                    font.pixelSize: facade.doPx(14)
                                 }
                             }
                         }
                     }
                 }
+
                 LinearGradient {
                     width: parent.width
                     height: facade.toPx(5)
                     end:  Qt.point(0, height)
-                    visible: parent.counter > 2
+                    visible: parent.counter > 0
                     anchors.bottom: parent.bottom
                     start:Qt.point(0, 0)
                     gradient: Gradient {
-                        GradientStop {position: (0.00); color: ("#00000000");}
-                        GradientStop {position: (1.00); color: ("#40000000");}
-                    }
-                }
-            }
-
-            XmlListModel {
-                id: xmlmodel
-                query: {"/rss/channel/item";}
-                XmlRole {name: "link"; query: "link/string()"}
-                XmlRole {name: "title"; query: "title/string()";}
-                XmlRole {name: "pDate"; query:"pubDate/string()"}
-                XmlRole {name: "pDesc"; query: "description/string()"}
-                XmlRole {name: "image"; query: "media:content/@url/string()";}
-                source:"http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
-                namespaceDeclarations: "declare namespace media=\"http://search.yahoo.com/mrss/\";"
-                onStatusChanged: {
-                    partnerHeader.load(progress)
-                    if ((status == XmlListModel.Ready) && (rssRect.visible)) {
-                        if (!loader.isNews) {
-                            restorePref.start();
-                            loader.isNews = true
-                        } else restoreFromPref()
+                        GradientStop {position: (0.00); color: ("#00000000")}
+                        GradientStop {position: (1.00); color: ("#40000000")}
                     }
                 }
             }
 
             Rectangle {
                 id: rssRect;
-                visible: index == 1
-                color: {"transparent"}
-                width: {parent.width;}
-                height: if (visible) 5*facade.toPx(205);
+                visible: index == 1;
+                color: "transparent"
+                property int countCard: 4
+
+                Component.onCompleted: {
+                    xmlmodel.source = "http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+                }
+
+                XmlListModel {
+                    id: xmlmodel
+                    query: {"/rss/channel/item";}
+                    XmlRole {name: "link"; query: "link/string()"}
+                    XmlRole {name: "title"; query: "title/string()"}
+                    XmlRole {name: "pDate"; query: "pubDate/string()"}
+                    XmlRole {name: "pDesc";query:"description/string()"}
+                    XmlRole {name: "image"; query: "media:content/@url/string()";}
+                    namespaceDeclarations: "declare namespace media=\"http://search.yahoo.com/mrss/\";"
+                    onStatusChanged: {
+                        if ((status == XmlListModel.Ready || status == XmlListModel.Error)) {
+                            rssLoadingAndSaving()
+                        }
+                    }
+                }
 
                 DropShadow {
-                    radius: 8
+                    radius: 8;
                     samples: (18)
                     source: rssView
                     color: "#50000000"
-                    anchors.fill:rssView
+                    anchors.fill: rssView
                 }
                 ListView {
                     id: rssView
-                    clip: true;
-                    width: parent.width
+                    clip: visible;
+                    width:parent.width
                     height: {parent.height - facade.toPx(20)}
                     spacing: facade.toPx(10)
                     model: ListModel {id:rssmodel}
@@ -388,6 +360,7 @@ Rectangle {
                         visible: enable
                         width: parent.width;
                         radius: facade.toPx(10)
+                        height: {(rssView.height) / (rssRect.countCard) - (rssView.spacing);}
                         Item {
                             clip: true
                             anchors.fill:parent
@@ -410,13 +383,14 @@ Rectangle {
                             height:facade.toPx(160)
                             anchors.verticalCenter:parent.verticalCenter
                             Image {
-                                source: {image.replace("https", "http")}
+                                source: typeof image!="undefined"?image.replace("ps","p"):""
                                 anchors.centerIn: {parent}
                                 height:sourceSize.width > sourceSize.height? parent.height: sourceSize.height*(parent.width / sourceSize.width)
                                 width: sourceSize.width > sourceSize.height? sourceSize.width*(parent.height / sourceSize.height): parent.width
                             }
                             x: (parent.height - height)/2;
                         }
+
                         Image {
                             id: misk
                             smooth: true;
@@ -457,10 +431,6 @@ Rectangle {
                             }
                         }
 
-                        height: {
-                            newsCardHgt=rssView.height/5-rssView.spacing
-                        }
-
                         Column {
                             anchors {
                                 left: bag.right
@@ -468,6 +438,7 @@ Rectangle {
                                 leftMargin:facade.toPx(20)
                                 verticalCenter: {parent.verticalCenter;}
                             }
+
                             Text {
                                 text: title
                                 elide: {(Text.ElideRight)}
@@ -476,6 +447,7 @@ Rectangle {
                                 font.family: trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(24);
                             }
+
                             Text {
                                 text: pDate
                                 lineHeight: 1.4
@@ -483,6 +455,7 @@ Rectangle {
                                 font.family: trebu4etMsNorm.name
                                 font.pixelSize: facade.doPx(15);
                             }
+
                             Text {
                                 text: pDesc
                                 maximumLineCount: 2
@@ -494,20 +467,40 @@ Rectangle {
                         }
                     }
                 }
+
+                width: parent.width;
+                height: if (rssRect.visible) {
+                    var count = Math.floor((baseRect.height - partnerHeader.height - navBottom.height - searchRow.height -friendList.height-(feedsModel.count-1)*basView.spacing)/facade.toPx(205))
+                    if (count < 1) {
+                        count = 1
+                    }
+                    countCard=count;
+                    if (event_handler.currentOSys() > 0) {
+                        if (Screen.orientation === Qt.LandscapeOrientation) {
+                            countCard = 2*countCard;
+                        }
+                    }
+                    countCard*facade.toPx(205)
+                }
             }
 
             ListView {
-                width: contentWidth
-                x: (parent.width - width)/2.0
+                clip: true
+                id: navBottom;
+                width: Math.min(contentWidth, parent.width - facade.toPx(50))
+                x: (parent.width-width)/2
                 height: facade.toPx(160);
                 spacing: facade.toPx(27);
                 orientation:Qt.Horizontal
+                anchors.horizontalCenter:parent.horizontalCenter
                 visible: index==2
+
                 model:ListModel {
-                    ListElement {image:"qrc:/ui/buttons/feeds/mus.png";}
-                    ListElement {image:"qrc:/ui/buttons/feeds/img.png";}
-                    ListElement {image:"qrc:/ui/buttons/feeds/vide.png"}
-                    ListElement {image:"qrc:/ui/buttons/feeds/play.png"}
+                    ListElement {image:"ui/buttons/feeds/mus.png";}
+                    ListElement {image:"ui/buttons/feeds/img.png";}
+                    ListElement {image:"ui/buttons/feeds/vide.png"}
+                    ListElement {image:"ui/buttons/feeds/play.png"}
+                    ListElement {image:"ui/buttons/feeds/play.png"}
                 }
                 delegate: Image {
                     width: {facade.toPx(sourceSize.width/3.55);}
@@ -525,9 +518,10 @@ Rectangle {
             bottom: downRow.top;
             right: parent.right;
         }
+
         font.pixelSize: facade.doPx(20)
         font.family:trebu4etMsNorm.name
-        visible: basView.contentY > 0 && (parent.width - nWidth) / 2 >= width;
+        visible: (basView.contentY > 0 && (parent.width - nWidth)/2 >= width)
         contentItem: Text {
             elide:Text.ElideRight
             verticalAlignment: Text.AlignBottom
@@ -547,19 +541,21 @@ Rectangle {
     Rectangle {
         id: downRow
         width: parent.width
-        height: parent.height > parent.width? facade.toPx(100):facade.toPx(80)
+        height: parent.height > parent.width?facade.toPx(100):facade.toPx(80)
         anchors.bottom: parent.bottom;
+
         Rectangle {
             height: 1
             width: parent.width;
             color: ("lightgray")
             anchors.top: {parent.top;}
         }
+
         Row {
             spacing: {facade.toPx(50)}
             anchors.centerIn: {parent}
             Repeater {
-                model: ["Реклама", "Для бизнеса", "Все о P2P", "Безопасность"]
+                model: ["Реклама", "Для бизнеса", "Все о P2P","Безопасность"]
                 Text {
                     text: {modelData;}
                     anchors.verticalCenter:parent.verticalCenter

@@ -52,7 +52,7 @@ Item {
                 }
                 ListElement {
                     mypos: 3; images: "configuration.png"
-                    target: qsTr("Конфигурации")
+                    target: qsTr("Конфигураци")
                 }
                 ListElement {
                     mypos: 4; images:"security.png"

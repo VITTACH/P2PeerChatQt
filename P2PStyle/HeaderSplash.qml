@@ -4,8 +4,9 @@ import QtGraphicalEffects 1.0
 
 Item {
     id: rootItem
-    width: parent.width;
-    height: facade.toPx(150);
+    width: parent.width
+    height: facade.toPx(150)
+    property var offset: facade.toPx(10)
 
     DropShadow {
         radius: 10
@@ -15,31 +16,24 @@ Item {
         anchors.fill: headRect
         visible: headRect.visible
     }
-    property string stat: ""
-    property string phot: ""
-    property string text: ""
-    property int page: 0
-
-    function load(value) {headerLine.width = value*rootItem.width}
-
     Rectangle {
         id: headRect
         width: parent.width;
-        height: facade.toPx(140);
         color: loader.head1Color;
-        visible: loader.source!="qrc:/qrscaner.qml"&&loader.source!="qrc:/webview.qml"
+        height: parent.height + offset
+        visible: loader.source != "qrc:/qrscaner.qml"
 
         Item {
             id: inerItem
             height: parent.height
+            anchors.rightMargin: page > 0? hambrgrButton.width: 0;
             anchors.left: page!=0 || loader.isLogin? hambrgrButton.right: parent.left;
             anchors.right: {parent.right}
-            anchors.rightMargin: page > 0 ? hambrgrButton.width: 0
 
             Row {
                 spacing: facade.toPx(30);
                 anchors {
-                    verticalCenter: parent.verticalCenter;
+                    verticalCenter: parent.verticalCenter
                     left: (loader.isLogin)? parent.left: undefined
                     centerIn: (loader.isLogin)? undefined: parent;
                     leftMargin: loader.isLogin? facade.toPx(20):0;
@@ -51,12 +45,6 @@ Item {
                     height: parent.height
                     visible: {page < 0 && (rootItem.phot !== "");}
 
-                    OpacityMask {
-                        id: big
-                        source: bug
-                        maskSource: mask;
-                        anchors.fill: bug
-                    }
                     Rectangle {
                         id: bug
                         clip: true
@@ -83,6 +71,13 @@ Item {
                         }
                     }
 
+                    OpacityMask {
+                        id: big
+                        source: bug
+                        maskSource: mask;
+                        anchors.fill: bug
+                    }
+
                     Image {
                         id: mask
                         smooth:true
@@ -104,34 +99,22 @@ Item {
                         font.pixelSize: loader.isLogin?facade.doPx(28):facade.doPx(34)
                     }
                     Text {
+                        property string str: {return rootItem.stat.replace("\n", "");}
                         text: str
                         font.bold: true
                         font.family: trebu4etMsNorm.name
                         font.pixelSize: facade.doPx(20);
                         visible: loader.isLogin && !loader.webview
                         color: str == "Online"? "white":"darkgrey"
-                        property string str: {return rootItem.stat.replace("\n", "");}
                     }
                 }
             }
         }
 
         Button {
-            id: hambrgrButton;
+            id: hambrgrButton
             height:parent.height
             width: facade.toPx(140)
-            onClicked: {
-                if (page == 1) page-=1; else if (loader.webview) loader.webview = false;
-                else if (loader.chatOpen) {
-                    loader.focus = loader.context = (true)
-                    chatMenuList.xPosition=rootItem.width-chatMenuList.w-facade.toPx(40)
-                    chatMenuList.yPosition=facade.toPx(20)
-                } else loader.drawOpen=true
-                loader.focus = true
-            }
-
-            visible: page!=0 || loader.isLogin? true:false
-            anchors.verticalCenter: parent.verticalCenter;
 
             background: Image {
                 id: hambrgrButtonImage;
@@ -141,26 +124,24 @@ Item {
                 source: "../ui/buttons/" + (page == 1 || loader.webview? "back": (page < 0? "more": "infor")) + "Button.png";
                 anchors.centerIn:parent
             }
-        }
 
-        Rectangle {
-            id: headerLine
-            width: parent.width
-            height:facade.toPx(6)
-            opacity: 0.3
-            z: 1000
-            color: {loader.head2Color}
-            anchors {
-                bottom: parent.bottom;
+            onClicked: {
+                if (page == 1) page-=1; else if (loader.webview) loader.webview = false;
+                else if (loader.chatOpen) {
+                    loader.focus = loader.context = (true)
+                    chatMenuList.xPosition=rootItem.width-chatMenuList.w-facade.toPx(30)
+                    chatMenuList.yPosition=facade.toPx(20)
+                } else loader.drawOpen=true
+                loader.focus = true
             }
-            Connections {
-                target: rootItem;
-                onWidthChanged: {
-                    if (!(headerLine.width > 0&&headerLine.width < facade.toPx(90))) {
-                        headerLine.width = rootItem.width;
-                    }
-                }
-            }
+
+            visible: page!=0 || loader.isLogin? true:false
+            anchors.verticalCenter: parent.verticalCenter;
         }
     }
+
+    property string stat: ""
+    property string phot: ""
+    property string text: ""
+    property int page: 0
 }

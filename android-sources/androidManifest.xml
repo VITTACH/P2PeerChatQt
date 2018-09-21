@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <manifest package="org.qtproject.example.friendup" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0.1" android:versionCode="1" android:installLocation="auto">
-    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="FriendFinds" android:icon="@drawable/icon">
-        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="quickandroid.QuickAndroidActivity" android:label="FriendFinds" android:icon="@drawable/icon" android:screenOrientation="unspecified" android:launchMode="singleTop">
+    <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="CoinFriend" android:icon="@drawable/icon">
+        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|locale|fontScale|keyboard|keyboardHidden|navigation" android:windowSoftInputMode="adjustResize" android:name="quickandroid.QuickAndroidActivity" android:label="CoinFriend" android:icon="@drawable/icon" android:screenOrientation="unspecified" android:launchMode="singleTop">
 
             <meta-data android:name="android.app.repository" android:value="default"/>
             <meta-data android:name="android.app.lib_name" android:value="friendup"/>
             <meta-data android:name="android.app.background_running" android:value="true"/>
             <meta-data android:name="android.app.extract_android_style" android:value="full"/>
-            <meta-data android:name="android.app.auto_screen_scale_factor" android:value="false"/>
             <meta-data android:name="android.app.libs_prefix" android:value="/data/local/tmp/qt/"/>
+            <meta-data android:name="android.app.auto_screen_scale_factor" android:value="false"/>
             <meta-data android:name="android.app.qt_libs_resource_id" android:resource="@array/qt_libs"/>
             <meta-data android:value="@string/fatal_error_msg" android:name="android.app.fatal_error_msg"/>
             <meta-data android:name="android.app.load_local_libs" android:value="-- %%INSERT_LOCAL_LIBS%% --"/>

@@ -115,42 +115,26 @@ Item {
     }
 
     Rectangle {
-        width: {parent.width}
-        color: scaner.border.color
-        anchors.top: {parent.top;}
-        anchors.bottom: scaner.top
-    }
-
-    Rectangle {
-        width: {parent.width}
-        color: scaner.border.color
-        anchors.top: scaner.bottom
-        anchors {
-            bottom: parent.bottom;
-        }
-    }
-
-    Rectangle {
         id: scaner
         height: width
-        width: parent.width
-        color: "transparent";
-        border.width: width/4
-        border.color: "#80000000";
-        anchors.centerIn: {parent}
+        width: Math.min(parent.width, facade.toPx(1000))
+        color: "transparent"
+        border.width: {width/4}
+        border.color: "#80000000"
+        anchors.centerIn: parent;
 
         Rectangle {
             height: width
-            border.width: 2;
-            border.color: "limegreen"
             color: "transparent";
-            width: parent.width/2
-            anchors.centerIn: {(parent);}
+            width: {parent.width/2.0}
+            border.color: "limegreen"
+            border.width: 2;
+            anchors.centerIn: parent;
 
             Rectangle {
                 id: scanline
                 height: 2
-                width: {parent.width - 4}
+                width: parent.width-4
                 anchors.centerIn: parent;
 
                 SequentialAnimation {
@@ -158,32 +142,32 @@ Item {
                     loops: Animation.Infinite
                     ColorAnimation {
                         target: scanline;
-                        property: "color"
+                        property: {"color"}
                         from: "red"
-                        to: "transparent"
-                        duration: {(350)}
+                        to: {"transparent"}
+                        duration: 350
                     }
                     ColorAnimation {
-                        from: {"transparent"}
+                        from: "transparent"
                         target: scanline;
                         property: "color"
                         to: "red";
-                        duration: {(350)}
+                        duration: 350
                     }
                 }
             }
         }
+
+        Button {
+            anchors.bottom: {parent.bottom}
+            width: parent.width
+            height: facade.toPx(80)
+            font.family:trebu4etMsNorm.name
+            font.pixelSize: facade.doPx(20)
+            text: qsTr("Cancel scan")
+            onClicked: loader.back();
+        }
     }
 
-    ImageProcessor {id: imageProcessor}
-
-    Button {
-        x: (parent.width-width)/2
-        y: parent.height-facade.toPx(200)
-        height: facade.toPx(80)
-        font.family: trebu4etMsNorm.name;
-        font.pixelSize: {facade.doPx(26)}
-        text: qsTr("Cancel scan")
-        onClicked: loader.back();
-    }
+    ImageProcessor{id:imageProcessor}
 }

@@ -3,7 +3,6 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
 Button {
-    id: contextDialogs
     anchors.fill: parent;
     visible: loader.context
     contentItem: Text {opacity: 0;}

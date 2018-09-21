@@ -8,7 +8,7 @@ SwipeView {
 
     Loader {
         id: loginScreen
-        Component.onCompleted: source ="qrc:/login.qml"
+        Component.onCompleted: source = "qrc:/login.qml";
     }
 
     Loader {
@@ -22,12 +22,12 @@ SwipeView {
         partnerHeader.page = currentIndex
         switch(currentIndex) {
             case 0:
-                partnerHeader.text= qsTr("Coinroad TM")
+                partnerHeader.text = mainAppWindow.title;
                 loginScreen.focus = false
                 reginScreen.focus = true;
                 break;
             case 1:
-                partnerHeader.text= qsTr("Регистрация")
+                partnerHeader.text = qsTr("Регистрация");
                 reginScreen.focus = false
                 loginScreen.focus = true;
                 break;

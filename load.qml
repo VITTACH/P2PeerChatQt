@@ -8,10 +8,11 @@ import "js/URLQuery.js"as URLQuery
 import QtQuick.Controls.Universal 2.0
 
 ApplicationWindow {
+    id: mainAppWindow
     x: 0
     y: {event_handler.currentOSys() <= 0 ? facade.toPx(100) : 0;}
     visible: true
-    title: "Coinroad"
+    title: qsTr("CoinFriend")
 
     Universal.theme: {Universal.Light}
     Universal.accent: Universal.Purple
@@ -65,7 +66,6 @@ ApplicationWindow {
 
     Loader {
         id: loader;
-        focus: true
         objectName: "loader"
         anchors.fill: parent
 
@@ -110,7 +110,6 @@ ApplicationWindow {
         property string famil;
         property string avatarPath: "qrc:/ui/profiles/default/Human.png";
 
-        property bool isNews
         property bool isLogin
         property bool isOnline
 
@@ -124,22 +123,22 @@ ApplicationWindow {
         property var drawOpen;
 
         property string menu1Color: "#939393";
-        property string menu2Color: "#E0E0E0";
+        property string menu2Color: "#A0A8AF";
         property string menu3Color: "#8093A3";
-        property string menu4Color: "#777F89";
-        property string menu5Color: "#B24A3E";
-        property string menu6Color: "#96281B";
+        property string menu4Color: "#B2BCC4";
+        property string menu5Color: "#AFB5BC";
+        property string menu6Color: "#30000000"
         property string menu7Color: "#F1F1F1";
-        property string menu8Color: "#D3D3D3";
         property string menu9Color: "#B9C3CC";
 
         property string menu10Color:"#535353";
-        property string menu11Color:"#597FB2";
-        property string menu12Color:"#4F7E9E";
+        property string menu11Color:"#7C9AAA";
+        property string menu12Color:"#677784";
         property string menu13Color:"#B1B1B1";
-        property string menu14Color:"#80A4B7";
+        property string menu14Color:"#95A1AD";
         property string menu15Color:"#8DACBC";
-        property string menu16Color:"#BBC6CA";
+        property string menu16Color:"#B8BFC6";
+        property string menu17Color:"#697886";
 
         property string head1Color: "#6B8499";
         property string head2Color: "#FFFFFF";
@@ -149,9 +148,10 @@ ApplicationWindow {
         property string sets4Color: "#708EA0";
 
         property string feed1Color: "#7A93A0";
-        property string feed2Color: "#8E8784";
+        property string feed2Color: "#C68585";
 
-        property string chat1Color: "#EAEAEA";
+        property string toastColor: "#ECECEC";
+
         property string chat2Color: "#A7A7A7";
         property string chat3Color: "#70FFFFFF"
 
@@ -205,27 +205,24 @@ ApplicationWindow {
                     if (request.status && request.status==200) {
                         if (request.responseText == "") response = -1;
                         else if (request.responseText != "no") {
-                            response = 1;
+                            response = (1)
                             var obj = JSON.parse(request.responseText)
                             loader.famil = obj.family
                             loader.login = obj.login;
                             loader.tel = obj.name;
-                        } else response = 0;
+                        } else response =0
+
                         switch(response) {
                             case 1:
                                 loader.isOnline = !false;
-                                if (loader.source != "profile.qml") {
-                                    loader.goTo("profile.qml")
-                                }
                                 event_handler.sendMsgs(phone);
                                 var uo = {tel: phone, pass: password, login: loader.login,
                                     family:loader.famil, image:loader.avatarPath}
                                 event_handler.saveSet("user", JSON.stringify(uo))
                                 break;
+
                             case 0:
                                 defaultDialog.show(qsTr("Вы не были зарегистрированы"), 0)
-                                if (loader.source != "qrc:/loginanDregister.qml")
-                                    goTo("qrc:/loginanDregister.qml");
                                 if (loader.aToken != ""){
                                     loader.fields[0] = (loader.login);
                                     loader.fields[1] = (loader.famil);
@@ -234,40 +231,33 @@ ApplicationWindow {
                                     loader.fields[1] = ""
                                     loader.fields[2] =password
                                 }
+                                if (loader.source != "qrc:/loginanDregister.qml")
+                                    goTo("qrc:/loginanDregister.qml");
                                 loader.fields[4] = phone;
-                                partnerHeader.page = 1;
+                                partnerHeader.page = (1);
                                 break;
+
                             case -1:
                                 defaultDialog.show("Временно нету доступа до интернету",0)
                                 break;
                         }
                     } else {
-                        var findResult = false;
-                        for (var i = 0; i<privated.visitedPageList.length; i++) {
-                            if (privated.visitedPageList[i].search("profile.qml") != -1) {
-                                findResult = true
-                                break;
-                            }
-                        }
-                        if (!findResult) {
-                            if (loader.source !="profile.qml")
-                                loader.goTo("profile.qml")
-                            tmpLogin = password
-                            tmpPhone=phone
-                        }
-                        loader.isOnline = false
                         connect.restart();
                     }
                 }
             }
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             request.send("phone=" + phone + "&pass="+password)
-            loader.isLogin=true
+            tmpPhone = phone
+            tmpLogin = password
+            loader.isLogin = true
+            if (loader.source != "profile.qml")
+                loader.goTo("profile.qml")
         }
 
         function addFriend(friend, flag) {
             flag = typeof flag !== 'undefined' ? flag : false;
-            var request = new XMLHttpRequest()
+            var request = new XMLHttpRequest();
             request.open('POST',"http://www.hoppernet.hol.es")
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             request.send("name="+ loader.tel + "&friend=" + (friend) + "&remove=" + flag);
