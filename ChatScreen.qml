@@ -165,25 +165,23 @@ Drawer {
         chatModel.clear()
         var firstLaunch = true;
         var i = blankeDrawer.cindex
-        for (var j = 0; j <loader.chats.length; j++) {
-            if (loader.chats[j].message.length >= 1) {
-                firstLaunch = false
-                break;
-            }
+        for (var j= 0; j < loader.chats.length; j++) {
+            if (loader.chats[j].message.length >= 1) {firstLaunch=false; break;}
         }
 
         if (firstLaunch == true) {
             var hist =event_handler.loadValue("chats")
             if (hist !== "") loader.chats = JSON.parse(hist)
+            console.log("ChatScreen. loadChatsHistory [hist]:" +loader.chats[i])
         }
 
         if (typeof loader.chats[i] == "undefined") {return;}
 
-        for (j = 0; j<loader.chats[i].message.length; j++) {
+        for (j=0; j < loader.chats[i].message.length; j++) {
             buferText.text = loader.chats[i].message[j].text
-            var obj=loader.chats[i].message[j]
+            var obj = loader.chats[i].message[j]
+            console.log("ChatScreen. loadChatsHistory [obj.imgs]:" + (obj.imgs))
             var image = obj.imgs;
-            console.log(image)
             appendMessage(obj.text,-obj.flag,obj.time,image)
         }
 
@@ -193,7 +191,7 @@ Drawer {
     Item {
         clip: true
         height: parent.height
-        width: Screen.orientation === Qt.InvertedLandscapeOrientation? (parent.width/2) : parent.width;
+        width: !isPortrait? (parent.width/2) : parent.width;
         anchors.right:parent.right
 
         Item {

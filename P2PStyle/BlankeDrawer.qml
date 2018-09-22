@@ -8,16 +8,17 @@ Drawer {
     id: drawes
     edge: Qt.RightEdge;
     property bool find: true
-    dragMargin: {facade.toPx(80)}
+    dragMargin: facade.toPx(80)
     background: Rectangle {color: "transparent";}
-    property alias cindex: listView.currentIndex;
-    width: Math.min(facade.toPx(700), 0.9 * parent.width)
+    width: Math.min(facade.toPx(700), 0.9*parent.width)
     height: {parent.height;}
+
+    property alias cindex: listView.currentIndex;
 
     Connections {
         target: drawes;
         onPositionChanged: {
-            if (loader.isLogin != true || loader.webview) {
+            if (loader.isLogin !== true || loader.webview) {
                 close()
                 if (loader.source == ("loginanDregister.qml")) {
                     position = 0
@@ -25,17 +26,16 @@ Drawer {
                     loader.goTo("loginanDregister.qml")
                 }
             } else if (position == 1) {
-                if (typeof loader.frienList =="undefined") {
+                if (loader.isOnline) {
                     var friend = event_handler.loadValue("frnd")
-                    var fr = []
                     if (friend != "") {
+                        var fr = []
                         var myfriend = (JSON.parse(friend));
                         for(var i=0;i<myfriend.length;i++) {
                             usersModel.append({image:"", famil: myfriend[i].famil, login: myfriend[i].login, phone: myfriend[i].phone, port: myfriend[i].port, ip: myfriend[i].ip,activity:1})
                             fr.push(myfriend[i].phone)
                         }
                         loader.frienList= JSON.stringify(fr)
-                        getMePeers(loader.frienList)
                     } else getFriends()
                 }
             } else if (position == 0) {
@@ -48,7 +48,7 @@ Drawer {
     Connections {
         target: loader
         onIsOnlineChanged: if (loader.isOnline) getFriends()
-        onDrawOpenChanged: if (loader.drawOpen) {loader.drawOpen = false; drawes.open()}
+        onDrawOpenChanged: if (loader.drawOpen) {loader.drawOpen = false;drawes.open()}
     }
 
     function getHelperHeight() {
@@ -73,14 +73,13 @@ Drawer {
     }
 
     function getMePeers(name) {
-        console.log("call getMePeers arg s: " + name)
         var request = new XMLHttpRequest(),obj,index;
-        request.open('POST', "http://www.hoppernet.hol.es");
+        request.open('POST',"http://www.hoppernet.hol.es")
         request.onreadystatechange = function() {
             if (request.readyState == XMLHttpRequest.DONE) {
                 if (request.status == 200) {
-                    console.log("getMePeers response : "+request.responseText)
                     obj = JSON.parse(request.responseText)
+                    console.log("BlankDrawer. getMePeers [response]:"+request.responseText)
                     for (var i = 0; i < obj.length; i +=1) {
                         index = findPeer(obj[i].name)
                         var imgUrl= "https://randomuser.me/portraits/men/"+Math.floor(50*Math.random())+".jpg"
@@ -97,7 +96,7 @@ Drawer {
                             });
                             if(obj[i].name==loader.tel)listView.currentIndex=i
                         } else {
-                            if (usersModel.get(index).image == "") {
+                            if (usersModel.get(index).image === "") {
                                 usersModel.setProperty(index, "image", imgUrl)
                             }
                             usersModel.setProperty(index,"famil",obj[i].famil)
@@ -114,6 +113,8 @@ Drawer {
                 }
             }
         }
+        console.log("BlankDrawer. getMePeers [name]:"+name)
+
         var urlEncode = 'application/x-www-form-urlencoded'
         request.setRequestHeader('Content-Type', urlEncode)
         request.send("READ=2&name=" +name)
@@ -124,12 +125,13 @@ Drawer {
         request.open('POST', "http://www.hoppernet.hol.es")
         request.onreadystatechange =function() {
             if (request.readyState ==XMLHttpRequest.DONE) {
-                if (request.status &&request.status == 200) getMePeers(loader.frienList =request.responseText)
+                if (request.status &&request.status == 200)
+                    getMePeers(loader.frienList = request.responseText);
             }
         }
         var urlEncode = 'application/x-www-form-urlencoded'
         request.setRequestHeader('Content-Type', urlEncode)
-        console.log("call getFriends : " + loader.tel)
+        console.log("BlankDrawer. getFriends [loader.tel]: "+loader.tel)
         request.send("READ=3&name=" + loader.tel)
     }
 
