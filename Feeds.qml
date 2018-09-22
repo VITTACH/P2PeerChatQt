@@ -469,18 +469,19 @@ Rectangle {
                 }
 
                 width: parent.width;
-                height: if (rssRect.visible) {
-                    var count = Math.floor((baseRect.height - partnerHeader.height - navBottom.height - searchRow.height -friendList.height-(feedsModel.count-1)*basView.spacing)/facade.toPx(205))
-                    if (count < 1) {
-                        count = 1
+                height: if (rssRect.visible ==true) {
+                    var cardHeight = facade.toPx(205)
+                    if (cardHeight > 0) {
+                        var count = Math.floor((baseRect.height - partnerHeader.height - navBottom.height - searchRow.height - friendList.height - (feedsModel.count - 1)*basView.spacing)/cardHeight);
+                        if (count < 4) count = 4
+                        countCard = count
                     }
-                    countCard=count;
                     if (event_handler.currentOSys() > 0) {
                         if (Screen.orientation === Qt.LandscapeOrientation) {
-                            countCard = 2*countCard;
+                            countCard = 2 *countCard;
                         }
                     }
-                    countCard*facade.toPx(205)
+                    countCard*cardHeight;
                 }
             }
 
