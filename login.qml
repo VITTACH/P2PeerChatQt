@@ -21,8 +21,8 @@ Item {
             opacity: 0.55
             anchors.bottom: parent.bottom
             source: {("qrc:/ui/backind/back1.png");}
-            height: {facade.doPx(sourceSize.height)}
-            x: (parent.width-width)/2;
+            height: parent.height/4
+            x: (parent.width-width)/2
             width: {
                 if (parent.width > facade.toPx(sourceSize.width)) {parent.width;}
                 else {facade.toPx(sourceSize.width)}
