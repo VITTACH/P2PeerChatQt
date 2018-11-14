@@ -24,7 +24,7 @@ Drawer {
         if (textField.text.length >= 1) {
             var text= buferText.text = textField.text;
             var obj = {text: text, flag: flag, time:new Date(), imgs:selectImage}
-            var nd = blankeDrawer.cindex;
+            var nd = navDrawer.cindex;
             textField.text=""
             if (typeof loader.chats[nd] == "undefined")
                 loader.chats.push({phone: nd, message: []});
@@ -66,7 +66,7 @@ Drawer {
                 var object = {text : buferText.text, flag : 1, time : new Date()}
                 loader.chats[i].message.push((object))
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
-                if(i == blankeDrawer.getCurPeerInd()){
+                if(i == navDrawer.getCurPeerInd()){
                     appendMessage(buferText.text,1,object.time,"")
                     chatScrenList.positionViewAtEnd();
                 }
@@ -81,7 +81,7 @@ Drawer {
                 select = [];
                 chatModel.clear()
                 chatMenuList.payload = 0;
-                var currentInd = blankeDrawer.cindex
+                var currentInd = navDrawer.cindex
                 loader.chats[currentInd].message=[];
                 event_handler.saveSet(qsTr("chats"),JSON.stringify(loader.chats))
             }
@@ -92,7 +92,7 @@ Drawer {
                 select.sort();
                 for(var i=0; i<select.length; i++) {
                     chatModel.remove(select[i] - i);
-                    var currentIndex = (blankeDrawer.cindex)
+                    var currentIndex = (navDrawer.cindex)
                     loader.chats[(currentIndex)].message.splice(select[i] - i, 1)
                 }
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
@@ -119,7 +119,7 @@ Drawer {
         }
     }
 
-    Connections {target: blankeDrawer; onCindexChanged: loadChatsHistory();}
+    Connections {target: navDrawer; onCindexChanged: loadChatsHistory();}
 
     Component.onCompleted: {loadChatsHistory(); partnersHead.page = (-1.0);}
 
@@ -164,7 +164,7 @@ Drawer {
         select = [];
         chatModel.clear()
         var firstLaunch = true;
-        var i = blankeDrawer.cindex
+        var i = navDrawer.cindex
         for (var j= 0; j < loader.chats.length; j++) {
             if (loader.chats[j].message.length >= 1) {firstLaunch=false; break;}
         }
@@ -362,7 +362,7 @@ Drawer {
                                             width: parent.height-y
                                             height:parent.height-y
                                             running: msgImage.status!==Image.Ready
-                                            contentItem: P2PStyle.StyleIndicator{}
+                                            contentItem: P2PStyle.IndicatorBusy{ }
                                             clip: true
                                             Image {
                                                 id: msgImage
@@ -629,7 +629,8 @@ Drawer {
 
                                     BusyIndicator {
                                         anchors.fill: parent
-                                        running: attachImg.status!=Image.Ready
+                                        contentItem: P2PStyle.IndicatorBusy{ }
+                                        running:attachImg.status!==Image.Ready
 
                                         Image {
                                             id: attachImg
@@ -680,11 +681,7 @@ Drawer {
                             property variant memHeight;
                             property bool pressCtrl: false;
                             property bool pressEntr: false;
-                            placeholderText: {
-                                if (event_handler.currentOSys() <= 0)
-                                    qsTr("Ctrl+Enter Для Отправки..")
-                                else qsTr("Ваше Сообщение")
-                            }
+                            placeholderText: {if (event_handler.currentOSys() <= 0)  qsTr("Ctrl+Enter Для Отправки.."); else qsTr("Ваше Сообщение");}
                             wrapMode: TextEdit.Wrap
                             verticalAlignment: {(Text.AlignVCenter);}
                             background: Rectangle {color:"#FFFEFEFE"}

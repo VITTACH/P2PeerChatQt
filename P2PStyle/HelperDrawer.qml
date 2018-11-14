@@ -9,8 +9,8 @@ Item {
         clip: true
         width: parent.width
         color: loader.sets2Color
-        y: blankeDrawer.getProfHeight();
-        height: blankeDrawer.getHelperHeight()
+        y: navDrawer.getProfHeight()
+        height: navDrawer.getHelperHeight()
 
         ListView {
             id: listview
@@ -25,13 +25,13 @@ Item {
                 spacing: facade.toPx(30)
                 Image {
                     source: "qrc:/ui/icons/"+images
-                    width: facade.toPx(sourceSize.width/1.3);
-                    height:facade.toPx(sourceSize.height/1.3)
+                    width: facade.toPx(sourceSize.width/1.5);
+                    height:facade.toPx(sourceSize.height/1.5)
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Text {
                     color: "#D6D6D6"
-                    font.pixelSize: facade.doPx(28)
+                    font.pixelSize: facade.doPx(26)
                     font.family:trebu4etMsNorm.name
                     anchors.verticalCenter: parent.verticalCenter
                     text: target

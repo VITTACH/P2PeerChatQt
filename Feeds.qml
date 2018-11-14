@@ -7,17 +7,16 @@ import QtQuick 2.0
 Rectangle {
     id: baseRect
     color: loader.feedColor
-    Component.onCompleted: blankeDrawer.open()
+    Component.onCompleted: navDrawer.open()
 
     property int nWidth: 0;
     property bool find: true;
     property int oldContentY: 0
 
-    ColorAnimate {
-        opacity: 0.75
+    Rectangle {
         width: parent.width
         height: facade.toPx(280)
-        Component.onCompleted: {setColors([[108, 131, 155], [121, 153, 173]], (500));}
+        color: loader.feed3Color
     }
 
     ListView {
@@ -169,8 +168,8 @@ Rectangle {
                     }
 
                     Connections {
-                        target: blankeDrawer
-                        onPositionChanged: if((blankeDrawer.position === 1) == true) {inerText.focus = false}
+                        target: navDrawer
+                        onPositionChanged: if((navDrawer.position === 1) == true) {inerText.focus = false}
                     }
 
                     TextField {
@@ -212,7 +211,7 @@ Rectangle {
                     property var friend
                     anchors.fill: {parent;}
                     snapMode:ListView.SnapToItem
-                    model: ListModel {id:humanModel}
+                    model: ListModel {id: humanModel}
                     spacing: 1
                     delegate: Item {
                         id: baseItem
@@ -222,12 +221,12 @@ Rectangle {
 
                         Rectangle {
                             clip: true
-                            width: parent.width/2
-                            height: parent.height
+                            width:parent.width/2
+                            height:parent.height
                             color: loader.feed2Color;
 
                             MouseArea {
-                                id: myMouseArea
+                                id: myMouseArea;
                                 anchors.fill: parent;
                                 onClicked: {
                                     listView.friend = phone
@@ -361,13 +360,14 @@ Rectangle {
                         width: parent.width;
                         radius: facade.toPx(10)
                         height: {(rssView.height) / (rssRect.countCard) - (rssView.spacing);}
+                        color: loader.feed1Color
                         Item {
                             clip: true
                             anchors.fill:parent
                             anchors.margins: {parent.radius;}
                             Rectangle {
                                 id:coloresRect2
-                                color:loader.feedColor
+                                color: loader.feed4Color
                                 transform: Translate {
                                     x: -coloresRect2.width /2
                                     y: -coloresRect2.height/2

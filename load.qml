@@ -124,11 +124,12 @@ ApplicationWindow {
 
         property string menu1Color: "#939393";
         property string menu2Color: "#A0A8AF";
-        property string menu3Color: "#8093A3";
+        property string menu3Color: "#648493";
         property string menu4Color: "#B2BCC4";
         property string menu5Color: "#AFB5BC";
         property string menu6Color: "#30000000"
         property string menu7Color: "#F1F1F1";
+        property string menu8Color: "#DDDDDD";
         property string menu9Color: "#B9C3CC";
 
         property string menu10Color:"#535353";
@@ -140,22 +141,23 @@ ApplicationWindow {
         property string menu16Color:"#B8BFC6";
         property string menu17Color:"#697886";
 
-        property string head1Color: "#6B8499";
+        property string head1Color: "#566B7A";
         property string head2Color: "#FFFFFF";
 
         property string sets2Color: "#828D99";
         property string sets3Color: "#6C839A";
         property string sets4Color: "#708EA0";
 
-        property string feed1Color: "#7A93A0";
+        property string feedColor: "#8F979E";
+        property string feed1Color: "#C1C1C1";
         property string feed2Color: "#C68585";
+        property string feed3Color: "#536777";
+        property string feed4Color: "#AAAAAA";
 
         property string toastColor: "#ECECEC";
 
         property string chat2Color: "#A7A7A7";
         property string chat3Color: "#70FFFFFF"
-
-        property string feedColor: "#EDEDED";
 
         property var fields: ["","","","",""]
 
