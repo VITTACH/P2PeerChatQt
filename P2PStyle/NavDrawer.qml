@@ -165,8 +165,8 @@ Drawer {
         end: Qt.point(width,0)
         start: Qt.point(0, 0);
         gradient: Gradient {
-            GradientStop {position: 1; color: "#25000000"}
-            GradientStop {position: 0; color: "#00000000"}
+            GradientStop {position: 1; color: "#20000000"}
+            GradientStop {position: 0.2; color: "#02000000"}
         }
     }
 
@@ -586,7 +586,7 @@ Drawer {
                             anchors.fill: {parent;}
                             anchors.margins: bor.radius/3.6;
                             running: {avatar.status !== Image.Ready;}
-                            contentItem:StyleIndicator{}
+                            contentItem: IndicatorBusy{}
 
                             Image {
                                 id: avatar
@@ -734,8 +734,7 @@ Drawer {
 
             width: parent.width// - facade.toPx(20)
             height: {
-                var length= parent.height
-                length -= (facade.toPx(480) + getProfHeight())
+                var length = parent.height - (facade.toPx(680) + getProfHeight());
                 var count = Math.ceil(length/facade.toPx(85));
                 if (count>navigateDownModel.count) count = navigateDownModel.count
                 if (count < 1) count = 1;
@@ -749,7 +748,7 @@ Drawer {
                     id: menMouseArea;
                     anchors.fill: parent;
                     onExited: listMenu.currentIndex = -1;
-                    onEntered: listMenu.currentIndex = index;
+                    onEntered: listMenu.currentIndex = (index)
                     onClicked: {
                         switch(index) {
                         case 0:
@@ -820,7 +819,7 @@ Drawer {
                             Rectangle {
                                 id: switcher
                                 radius: {width/2}
-                                color: loader.feedColor
+                                color: loader.menu8Color
                                 width: myswitcher.height/2.3;
                                 height:myswitcher.height/2.3;
                                 anchors.verticalCenter: {(parent.verticalCenter);}

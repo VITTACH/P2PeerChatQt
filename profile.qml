@@ -6,7 +6,7 @@ Item {
     Connections {
         target: loader
         onIsOnlineChanged: changeState()
-        onWebviewChanged: if (loader.webview==false)changeState()
+        onWebviewChanged: if (!loader.webview) changeState()
         onAvatarPathChanged: partnerHeader.phot=loader.avatarPath
     }
 
@@ -31,7 +31,7 @@ Item {
         }
     }
 
-    P2PStyle.BlankeDrawer {id: blankeDrawer;}
+    P2PStyle.NavDrawer {id: navDrawer;}
 
-    ChatScreen {z: 1000; id: chatScreen}
+    ChatScreen {id: chatScreen;}
 }

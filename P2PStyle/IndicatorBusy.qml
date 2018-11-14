@@ -3,25 +3,37 @@ import QtQuick 2.7
 Rectangle {
     id: style
     property int lines: 11
-    property real wedth: 90 // % of the height of the control
+    property int visLines: 0
+    property real wedth: 80 // % of the height of the control
     property real length: 10 // % of the width of the control
-    property real radius: 13 // % of the width of the control
-    property real corner: 1 // between 0 and 1
-    property real speed: 100 // smaller - faster
-    property real trail: 0.6 // between 0 and 1
+    property real radius: 36 // % of the width of the control
+    property real corner: 1; // between 0 and 1;
+    property real speed: 60; // smaller - faster
+    property real trail: 0.6 // between 0 and 1;
     property bool clockWise: true
 
     opacity: 0.7
-    property string coler: "#7B756B"
-    property string highlightColor: "#FFFFFF"
+    property string coler: "transparent"
     property string bgColor: "transparent"
+    property string highlightColor: "#FFFFFF"
     color: style.bgColor
-    anchors.fill: parent
+    anchors.fill: {parent}
+
+    SequentialAnimation on visLines {
+        loops: Animation.Infinite;
+        PropertyAnimation {
+            to: lines + 1; duration: 4000; easing.type: Easing.InCirc
+        }
+        PropertyAnimation {
+            to: 0; duration: 3000; easing.type: Easing.OutCirc
+        }
+    }
+
     Repeater {
-        id: repeat
         model: style.lines;
 
         Rectangle {
+            visible: index >= style.visLines;
             property real factor: {style.wedth / 200}
             color: style.coler
             opacity: style.opacity
@@ -36,14 +48,14 @@ Rectangle {
 
             radius: style.corner * height / 2;
             width: style.length * factor
-            height: style.width * factor
+            height: width * 2
             x: style.width /2 + style.radius * factor
             y: style.height/2 - height / 2;
 
             transform: Rotation {
-                origin.x: (-style.radius) * factor;
+                origin.x: (-style.radius) * (factor);
                 origin.y: height / 2
-                angle: index * (360 / repeat.count)
+                angle: index * (360 / style.lines)
             }
 
             Timer {
@@ -67,7 +79,7 @@ Rectangle {
 
             Timer {
                 id: globalTimer // for complete cycle
-                interval: style.speed * style.lines
+                interval: (style.speed * style.lines)
                 onTriggered: reset.start()
                 triggeredOnStart: true
                 repeat: true
