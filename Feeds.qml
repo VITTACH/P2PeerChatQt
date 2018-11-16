@@ -6,7 +6,7 @@ import QtQuick 2.0
 
 Rectangle {
     id: baseRect
-    color: loader.feedColor
+    color: loader.menu16Color
     Component.onCompleted: navDrawer.open()
 
     property int nWidth: 0;
@@ -42,7 +42,7 @@ Rectangle {
 
         delegate: Column {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: nWidth = Math.min(0.9*parent.width, facade.toPx(900))
+            width: nWidth = Math.min(0.98*parent.width, facade.toPx(900))
 
             function findPeer(phone) {
                 for (var i = 0; i < humanModel.count; i+=1) {
@@ -494,7 +494,7 @@ Rectangle {
                 spacing: facade.toPx(27);
                 orientation:Qt.Horizontal
                 anchors.horizontalCenter:parent.horizontalCenter
-                visible: index==2
+                visible: false
 
                 model:ListModel {
                     ListElement {image:"ui/buttons/feeds/mus.png";}
