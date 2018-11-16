@@ -19,7 +19,7 @@ Item {
                 topMargin: facade.toPx(25)
                 bottomMargin: facade.toPx(20);
             }
-            spacing: facade.toPx(35)
+            spacing: facade.toPx(45)
             delegate: Row {
                 x: facade.toPx(30)
                 spacing: facade.toPx(30)
@@ -52,7 +52,7 @@ Item {
                 }
                 ListElement {
                     mypos: 3; images: "configuration.png"
-                    target: qsTr("Конфигураци")
+                    target: qsTr("Параметры")
                 }
                 ListElement {
                     mypos: 4; images:"security.png"
