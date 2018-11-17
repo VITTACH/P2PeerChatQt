@@ -4,9 +4,8 @@
         <file>P2PStyle/HeaderSplash.qml</file>
         <file>ui/buttons/backButton.png</file>
         <file>ui/buttons/sendButton.png</file>
-        <file>ChatScreen.qml</file>
-        <file>load.qml</file>
-        <file>login.qml</file>
+        <file>ChatScreenView.qml</file>
+        <file>LoaderService.qml</file>
         <file>ui/chat/leFtMessage.png</file>
         <file>ui/chat/rightMessag.png</file>
         <file>js/URLQuery.js</file>
@@ -27,18 +26,17 @@
         <file>ui/buttons/inforButton.png</file>
         <file>ui/icons/searchIconWhite.png</file>
         <file>ui/buttons/moreButton.png</file>
-        <file>loginanDregister.qml</file>
         <file>ui/buttons/social/fb.png</file>
         <file>ui/buttons/social/gp.png</file>
         <file>ui/buttons/social/tw.png</file>
         <file>ui/buttons/social/vk.png</file>
-        <file>ibrowser.qml</file>
-        <file>webview.qml</file>
-        <file>qrscaner.qml</file>
-        <file>profile.qml</file>
+        <file>WebService.qml</file>
+        <file>WebView.qml</file>
+        <file>QrScaner.qml</file>
+        <file>ProfileView.qml</file>
         <file>ui/buttons/trashButton.png</file>
         <file>ui/buttons/dialerButton.png</file>
-        <file>Feeds.qml</file>
+        <file>FeedsView.qml</file>
         <file>ui/buttons/feeds/img.png</file>
         <file>ui/buttons/feeds/mus.png</file>
         <file>ui/buttons/feeds/play.png</file>
@@ -50,7 +48,7 @@
         <file>ui/icons/PassWIconWhite.png</file>
         <file>ui/icons/devIconBlue.png</file>
         <file>ui/icons/outIconBlue.png</file>
-        <file>registration.qml</file>
+        <file>RegistrationView.qml</file>
         <file>P2PStyle/DefaultDialog.qml</file>
         <file>ui/buttons/addButton.png</file>
         <file>ui/icons/alerts.png</file>
@@ -59,11 +57,12 @@
         <file>ui/icons/developer.png</file>
         <file>ui/icons/profile.png</file>
         <file>ui/icons/security.png</file>
-        <file>tests/tst_login.qml</file>
         <file>ColorAnimate.qml</file>
         <file>ChatMenuList.qml</file>
         <file>ui/chat/chat0.jpg</file>
-        <file>P2PStyle/NavDrawer.qml</file>
         <file>P2PStyle/IndicatorBusy.qml</file>
+        <file>MainScreenView.qml</file>
+        <file>LoginView.qml</file>
+        <file>P2PStyle/MainDrawer.qml</file>
     </qresource>
 </RCC>

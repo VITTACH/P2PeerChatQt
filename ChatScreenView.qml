@@ -24,7 +24,7 @@ Drawer {
         if (textField.text.length >= 1) {
             var text= buferText.text = textField.text;
             var obj = {text: text, flag: flag, time:new Date(), imgs:selectImage}
-            var nd = navDrawer.cindex;
+            var nd = mainDrawer.cindex;
             textField.text=""
             if (typeof loader.chats[nd] == "undefined")
                 loader.chats.push({phone: nd, message: []});
@@ -66,7 +66,7 @@ Drawer {
                 var object = {text : buferText.text, flag : 1, time : new Date()}
                 loader.chats[i].message.push((object))
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
-                if(i == navDrawer.getCurPeerInd()){
+                if(i == mainDrawer.getCurPeerInd()){
                     appendMessage(buferText.text,1,object.time,"")
                     chatScrenList.positionViewAtEnd();
                 }
@@ -81,7 +81,7 @@ Drawer {
                 select = [];
                 chatModel.clear()
                 chatMenuList.payload = 0;
-                var currentInd = navDrawer.cindex
+                var currentInd = mainDrawer.cindex
                 loader.chats[currentInd].message=[];
                 event_handler.saveSet(qsTr("chats"),JSON.stringify(loader.chats))
             }
@@ -92,7 +92,7 @@ Drawer {
                 select.sort();
                 for(var i=0; i<select.length; i++) {
                     chatModel.remove(select[i] - i);
-                    var currentIndex = (navDrawer.cindex)
+                    var currentIndex = (mainDrawer.cindex)
                     loader.chats[(currentIndex)].message.splice(select[i] - i, 1)
                 }
                 event_handler.saveSet("chats", JSON.stringify(loader.chats))
@@ -119,7 +119,7 @@ Drawer {
         }
     }
 
-    Connections {target: navDrawer; onCindexChanged: loadChatsHistory();}
+    Connections {target: mainDrawer; onCindexChanged: loadChatsHistory();}
 
     Component.onCompleted: {loadChatsHistory(); partnersHead.page = (-1.0);}
 
@@ -163,8 +163,8 @@ Drawer {
     function loadChatsHistory() {
         select = [];
         chatModel.clear()
-        var firstLaunch = true;
-        var i = navDrawer.cindex
+        var firstLaunch = true
+        var i = mainDrawer.cindex;
         for (var j= 0; j < loader.chats.length; j++) {
             if (loader.chats[j].message.length >= 1) {firstLaunch=false; break;}
         }

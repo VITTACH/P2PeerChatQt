@@ -20,10 +20,10 @@ Drawer {
         onPositionChanged: {
             if (loader.isLogin !== true || loader.webview) {
                 close()
-                if (loader.source == ("loginanDregister.qml")) {
+                if (loader.source == ("MainScreenView.qml")) {
                     position = 0
                 } else if (position == 0) {
-                    loader.goTo("loginanDregister.qml")
+                    loader.goTo("MainScreenView.qml")
                 }
             } else if (position == 1) {
                 if (loader.isOnline) {
@@ -742,20 +742,19 @@ Drawer {
             }
 
             delegate: Rectangle {
-                width: parent.width
+                width: parent.width;
                 height: facade.toPx(85)
                 MouseArea {
-                    id: menMouseArea;
-                    anchors.fill: parent;
-                    onExited: listMenu.currentIndex = -1;
-                    onEntered: listMenu.currentIndex = (index)
+                    id: menMouseArea
+                    anchors.fill:parent
+                    onExited: listMenu.currentIndex = -1
+                    onEntered: listMenu.currentIndex = index
                     onClicked: {
                         switch(index) {
                         case 0:
-                            myswitcher.checked =!myswitcher.checked
+                            myswitcher.checked = !myswitcher.checked
                             break;
                         case 1:
-                            listMenu.currentIndex = index
                             leftMenu.move(!leftMenu.direction)
                             break;
                         case 2:
@@ -767,7 +766,11 @@ Drawer {
                     }
                 }
 
-                color: ListView.isCurrentItem? loader.menu4Color:loader.menu9Color
+                color: {
+                    if (ListView.isCurrentItem ||(index==1 && leftMenu.direction))
+                        loader.menu4Color;
+                    else loader.menu9Color
+                }
 
                 Item {
                     anchors {
@@ -778,8 +781,8 @@ Drawer {
                     Image {
                         source: image;
                         visible: index >= 1;
-                        width: facade.toPx(sourceSize.width * 1.1);
-                        height:facade.toPx(sourceSize.height * 1.1)
+                        width: facade.toPx(sourceSize.width * 1.10)
+                        height:facade.toPx(sourceSize.height* 1.10)
                         horizontalAlignment: {(Image.AlignHCenter)}
                         anchors {
                             verticalCenter: (parent.verticalCenter)
@@ -799,15 +802,13 @@ Drawer {
                         id: myswitcher
                         visible: index==0;
                         indicator: Rectangle {
+                            property bool checked: parent.checked
+                            anchors.horizontalCenter: parent.horizontalCenter
                             radius: facade.toPx(25)
                             y: parent.height/2-height/2
-                            implicitWidth: facade.toPx(56)
+                            implicitWidth: facade.toPx(55)
                             implicitHeight: {facade.toPx(30)}
-                            color: if(parent.checked) {
-                                    loader.menu12Color;
-                                } else {
-                                    loader.menu13Color;
-                            }
+                            color: checked? loader.menu12Color: loader.menu13Color
 
                             DropShadow {
                                 radius: facade.toPx(11)
@@ -819,9 +820,9 @@ Drawer {
                             Rectangle {
                                 id: switcher
                                 radius: {width/2}
-                                color: loader.menu8Color
-                                width: myswitcher.height/2.3;
-                                height:myswitcher.height/2.3;
+                                color:loader.menu8Color
+                                width: myswitcher.height/2.6;
+                                height:width
                                 anchors.verticalCenter: {(parent.verticalCenter);}
                                 x: {
                                     if (myswitcher.checked) {
@@ -834,7 +835,7 @@ Drawer {
                             }
                         }
                         onCheckedChanged: loader.isOnline = checked
-                        width: facade.toPx(64)
+                        width: facade.toPx(60)
                         height: parent.height;
                     }
 

@@ -5,11 +5,12 @@ import "js/URLQuery.js" as URLQuery
 
 WebView {
     url: loader.urlLink
-    anchors.fill:parent
+    anchors.fill: (parent)
 
     property var authRegExpVK: {
         /^https:\/\/oauth.vk.com\/blank.html/;
     }
+
     property var authRegExpFB: {
         /^https:\/\/www.facebook.com\/connect\/login_success.html/;
     }

@@ -31,10 +31,10 @@ class UtilsForJavaNative {
 /**
  *Created by VITTACH on 11.04.2017
  */
-public class PesrRequest {
+public class PeerFinderService {
     private String[] addr;
     protected static String stackTrace = "";
-    private httpRequest hr = new httpRequest();
+    private HttpClientService hr = new HttpClientService();
     private static DatagramSocket datagramSocket;
     private Integer port;
     private boolean flag;

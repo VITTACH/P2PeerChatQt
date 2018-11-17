@@ -39,7 +39,7 @@ Button {
                 Rectangle {
                     width: listText.width
                     height: inerText.implicitHeight + facade.toPx(60)
-                    color: {loader.feedColor;}
+                    color: loader.feed1Color
                     radius: {listText.radius;}
                     Text {
                         id: inerText
@@ -53,7 +53,7 @@ Button {
                     }
                     MouseArea {
                         anchors.fill: {parent}
-                        onExited: parent.color = loader.feedColor;
+                        onExited: parent.color = loader.menu16Color;
                         onEntered: parent.color = "#20000000"
                         onClicked: {
                             for (var i = 0, base = 1; i < menu; i+=1)
@@ -65,7 +65,7 @@ Button {
             }
         }
 
-        color: loader.feedColor
+        color: loader.menu16Color
         width: {Math.max(funcs.width, facade.toPx(400))}
         height:funcs.implicitHeight;
         y: (yPosition)

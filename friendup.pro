@@ -33,7 +33,7 @@ HEADERS += \
 
 test_conf {
     SOURCES += \
-        tst_friendUpqml.cpp
+        tst_friendupqml.cpp
 } else {
     SOURCES += \
         main.cpp\
