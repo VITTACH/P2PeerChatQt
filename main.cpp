@@ -77,7 +77,7 @@ int main(int argc,char **argv)
     eventhandler->connect(&client, SIGNAL(recieved(QString, QString)), eventhandler, SLOT(display(QString, QString)));
     #endif
 
-    engine.load(QUrl("qrc:/load.qml"));
+    engine.load(QUrl("qrc:/LoaderService.qml"));
     QObject *root_obj = engine.rootObjects().first();
     QObject *loader = root_obj->findChild <QObject*> ("loader");
     loader->setProperty

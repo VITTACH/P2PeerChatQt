@@ -20,18 +20,18 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: loader.feedColor;
+        color: loader.menu16Color
         SwipeView {
             id: view;
-            anchors.fill: parent
+            anchors.fill: parent;
 
             Loader {
-                Component.onCompleted: source = "qrc:/Feeds.qml";
+                Component.onCompleted: source = "qrc:/FeedsView.qml";
             }
         }
     }
 
-    P2PStyle.NavDrawer {id: navDrawer;}
+    P2PStyle.MainDrawer {id: mainDrawer}
 
-    ChatScreen {id: chatScreen;}
+    ChatScreenView {id: chatScreen}
 }

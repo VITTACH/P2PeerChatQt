@@ -9,14 +9,10 @@ Item {
 
     Component.onCompleted: partnerHeader.text = mainAppWindow.title
 
-    Item {
-        width: 2*parent.width;
-        height: parent.height;
-        ColorAnimate {
-            anchors.fill: (parent)
-            Component.onCompleted: setColors([[108,131,155], [121,153,173]], 500)
-        }
-
+    Rectangle {
+        height: parent.height
+        width: 2 * parent.width
+        color: loader.feed3Color;
         Image {
             opacity: 0.55
             anchors.bottom: parent.bottom
@@ -89,32 +85,33 @@ Item {
                     width: pageWidth = (Math.min(0.82*listView.width, facade.toPx(700))-(socModel.count-1)*socials.spacing)/socModel.count
 
                     DropShadow {
-                        radius: 11
+                        radius:11
                         samples: 15
                         source: social
                         color: "#90000000"
                         anchors.fill: social
                     }
+
                     Image {
                         id: social
                         source: image
                         anchors.fill: parent
+
                         MouseArea {
-                            anchors.fill: parent
                             onClicked: {
-                                var params
                                 switch (index) {
-                                    case 0: params = {
+                                    case 0: var params = {
                                         display: 'popup',
                                         response_type: 'token',
                                         client_id:'396748683992616',
                                         redirect_uri:'https://www.facebook.com/connect/login_success.html'
                                     }
                                     loader.urlLink = "https://graph.facebook.com/oauth/authorize?%1".arg(URLQuery.serializeParams(params))
-                                    partnerHeader.text = "Facebook";
+                                    partnerHeader.text = qsTr("Facebook");
                                     break;
+
                                     case 1:
-                                    case 2: params = {
+                                    case 2: var params = {
                                         display: 'popup',
                                         client_id: '5813771',
                                         scope: 'wall, offline',
@@ -122,11 +119,14 @@ Item {
                                         redirect_uri: 'https://oauth.vk.com/blank.html'
                                     }
                                     loader.urlLink = (String) ("https://oauth.vk.com/authorize?%1".arg(URLQuery.serializeParams(params)));
-                                    partnerHeader.text = "Вконтакте"
+                                    partnerHeader.text = qsTr("Вконтакте")
                                     break;
                                 }
-                                loader.goTo("qrc:/webview.qml")
+
+                                loader.webview = true
+                                loader.goTo("qrc:/WebView.qml")
                             }
+                            anchors.fill: parent
                         }
                     }
                 }
@@ -170,7 +170,7 @@ Item {
                             }
                             break;
                         case 4:
-                            loader.goTo("qrc:/qrscaner.qml");
+                            loader.goTo("qrc:/QrScaner.qml");
                             break;
                         }
                     }
@@ -207,12 +207,14 @@ Item {
                 visible: index === 1 || index === 2;
                 width: Math.min(0.82*parent.width,facade.toPx(700))
                 anchors.horizontalCenter: (parent.horizontalCenter)
+
                 Image {
                     id: icon;
                     source: image;
                     width: {facade.toPx(sourceSize.width * 15 /10)}
                     height:{facade.toPx(sourceSize.height* 15 /10)}
                 }
+
                 TextField {
                     color: "white"
                     height: facade.toPx(88)
@@ -252,6 +254,7 @@ Item {
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(26);
                 }
+
                 visible: {index === 5;}
                 height:facade.toPx(100)
                 width: Math.min(0.82*parent.width,facade.toPx(700))
@@ -262,7 +265,7 @@ Item {
                 anchors.horizontalCenter: {parent.horizontalCenter}
                 width: Math.min(0.82*parent.width,facade.toPx(700))
                 visible: {index == 1 || index == 2;}
-                height: facade.toPx(3)
+                height: facade.toPx(3);
             }
         }
     }

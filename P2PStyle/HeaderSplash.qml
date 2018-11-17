@@ -5,23 +5,29 @@ import QtGraphicalEffects 1.0
 Item {
     id: rootItem
     width: parent.width
-    height: facade.toPx(150)
-    property var offset: facade.toPx(10)
+    height: facade.toPx(150);
 
     DropShadow {
         radius: 10
         samples: (16);
         source: headRect;
-        color: {"#70000000"}
+        color: {"#70000000";}
         anchors.fill: headRect
         visible: headRect.visible
     }
+
+    property var offset: facade.toPx(10)
+    property string stat: "";
+    property string phot: "";
+    property string text: "";
+    property int page: 0
+
     Rectangle {
         id: headRect
-        width: parent.width;
+        width: parent.width
         color: loader.head1Color;
         height: parent.height + offset
-        visible: loader.source != "qrc:/qrscaner.qml"
+        visible: loader.source != "qrc:/QrScaner.qml"
 
         Item {
             id: inerItem
@@ -55,11 +61,13 @@ Item {
                         anchors {
                             verticalCenter: parent.verticalCenter;
                         }
+
                         Image {
                             source: phot;
                             anchors.centerIn: parent
                             height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                             width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
+
                             RadialGradient {
                                 anchors.fill: parent
                                 gradient: Gradient {
@@ -89,6 +97,7 @@ Item {
 
                 Column {
                     spacing: {facade.toPx(10)}
+
                     Text {
                         color: "white"
                         elide: Text.ElideRight
@@ -98,6 +107,7 @@ Item {
                         font.family: trebu4etMsNorm.name
                         font.pixelSize: loader.isLogin?facade.doPx(28):facade.doPx(34)
                     }
+
                     Text {
                         property string str: {return rootItem.stat.replace("\n", "");}
                         text: str
@@ -116,32 +126,30 @@ Item {
             height:parent.height
             width: facade.toPx(140)
 
+            visible: page != 0 || loader.isLogin || loader.webview
+            anchors.verticalCenter: parent.verticalCenter;
+
             background: Image {
                 id: hambrgrButtonImage;
                 height:facade.toPx(sourceSize.height* 1.0)
                 width: facade.toPx(sourceSize.width * 1.0)
-                fillMode: {(Image.PreserveAspectFit)}
+                fillMode: Image.PreserveAspectFit
                 source: "../ui/buttons/" + (page == 1 || loader.webview? "back": (page < 0? "more": "infor")) + "Button.png";
                 anchors.centerIn:parent
             }
 
             onClicked: {
-                if (page == 1) page-=1; else if (loader.webview) loader.webview = false;
-                else if (loader.chatOpen) {
+                if (page==1) page = page - 1;
+                else if (loader.webview == true) {
+                    loader.webview = false
+                    if (!loader.isLogin) loader.back()
+                } else if (loader.chatOpen) {
                     loader.focus = loader.context = (true)
                     chatMenuList.xPosition=rootItem.width-chatMenuList.w-facade.toPx(30)
                     chatMenuList.yPosition=facade.toPx(20)
-                } else loader.drawOpen=true
+                } else loader.drawOpen = true
                 loader.focus = true
             }
-
-            visible: page!=0 || loader.isLogin? true:false
-            anchors.verticalCenter: parent.verticalCenter;
         }
     }
-
-    property string stat: ""
-    property string phot: ""
-    property string text: ""
-    property int page: 0
 }

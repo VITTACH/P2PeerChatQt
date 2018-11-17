@@ -43,9 +43,9 @@ android {
     $$PWD/java/quickandroid/QuickAndroidActivity.java \
     $$PWD/java/quickandroid/UPForward.java \
     $$PWD/java/quickandroid/RsaEncrypt.java \
-    $$PWD/java/quickandroid/PesrRequest.java \
+    $$PWD/java/quickandroid/PeerFinderService.java \
     $$PWD/java/quickandroid/ImagePicker.java \
-    $$PWD/java/quickandroid/httpRequest.java \
+    $$PWD/java/quickandroid/HttpClientService.java \
     $$PWD/java/quickandroid/SystemDispatcher.java
 
     INSTALLS += QA_JAVASRC
@@ -55,10 +55,10 @@ DISTFILES += \
     $$PWD/java/quickandroid/QuickAndroidActivity.java \
     $$PWD/java/quickandroid/UPForward.java \
     $$PWD/java/quickandroid/RsaEncrypt.java \
-    $$PWD/java/quickandroid/PesrRequest.java \
     $$PWD/java/com/lasconic/QShareUtils.java \
     $$PWD/java/quickandroid/ImagePicker.java \
-    $$PWD/java/quickandroid/httpRequest.java \
     $$PWD/java/quickandroid/SystemDispatcher.java \
-    $$PWD/gradle.properties.in
+    $$PWD/gradle.properties.in \
+    $$PWD/java/quickandroid/PeerFinderService.java \
+    $$PWD/java/quickandroid/HttpClientService.java
 

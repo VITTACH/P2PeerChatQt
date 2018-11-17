@@ -115,45 +115,35 @@ Item {
     }
 
     Rectangle {
-        id: scaner
-        height: width
-        width: Math.min(parent.width, facade.toPx(1000))
-        color: "transparent"
-        border.width: {width/4}
-        border.color: "#80000000"
+        width: height
+        height: parent.width > parent.height? parent.width/3: parent.height/3
+        border.width: 2;
+        border.color: "limegreen"
         anchors.centerIn: parent;
+        color: "transparent"
 
         Rectangle {
-            height: width
-            color: "transparent";
-            width: {parent.width/2.0}
-            border.color: "limegreen"
-            border.width: 2;
+            id: scanline
+            height: 2
+            width: parent.width-4
             anchors.centerIn: parent;
 
-            Rectangle {
-                id: scanline
-                height: 2
-                width: parent.width-4
-                anchors.centerIn: parent;
-
-                SequentialAnimation {
-                    running: true
-                    loops: Animation.Infinite
-                    ColorAnimation {
-                        target: scanline;
-                        property: {"color"}
-                        from: "red"
-                        to: {"transparent"}
-                        duration: 350
-                    }
-                    ColorAnimation {
-                        from: "transparent"
-                        target: scanline;
-                        property: "color"
-                        to: "red";
-                        duration: 350
-                    }
+            SequentialAnimation {
+                running: true
+                loops: {Animation.Infinite}
+                ColorAnimation {
+                    target: scanline;
+                    property: {"color"}
+                    from: "red"
+                    to: {"transparent"}
+                    duration: 350
+                }
+                ColorAnimation {
+                    from: "transparent"
+                    target: scanline;
+                    property: "color"
+                    to: "red";
+                    duration: 350
                 }
             }
         }
@@ -164,10 +154,10 @@ Item {
             height: facade.toPx(80)
             font.family:trebu4etMsNorm.name
             font.pixelSize: facade.doPx(20)
-            text: qsTr("Cancel scan")
-            onClicked: loader.back();
+            text: qsTr("Cancel scan");
+            onClicked:loader.back()
         }
     }
 
-    ImageProcessor{id:imageProcessor}
+    ImageProcessor {id:imageProcessor}
 }

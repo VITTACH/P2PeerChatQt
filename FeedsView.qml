@@ -7,7 +7,7 @@ import QtQuick 2.0
 Rectangle {
     id: baseRect
     color: loader.menu16Color
-    Component.onCompleted: navDrawer.open()
+    Component.onCompleted: mainDrawer.open()
 
     property int nWidth: 0;
     property bool find: true;
@@ -31,9 +31,9 @@ Rectangle {
 
         model: ListModel {
             id: feedsModel
-            ListElement {activiti: 0}
-            ListElement {activiti: 1}
-            ListElement {activiti: 0}
+            ListElement {activiti: 0;}
+            ListElement {activiti: 1;}
+            ListElement {activiti: 0;}
         }
 
         boundsBehavior : {
@@ -42,7 +42,7 @@ Rectangle {
 
         delegate: Column {
             anchors.horizontalCenter: parent.horizontalCenter
-            width: nWidth = Math.min(0.98*parent.width, facade.toPx(900))
+            width: nWidth = Math.min(0.96*parent.width, facade.toPx(900))
 
             function findPeer(phone) {
                 for (var i = 0; i < humanModel.count; i+=1) {
@@ -136,7 +136,7 @@ Rectangle {
                 id: searchRow
                 radius: height/2
                 visible: index == 0;
-                width: parent.width;
+                width: Math.min(0.88 * parent.width, facade.toPx(900))
                 height: visible? (finderRow.height + facade.toPx(20)): 0
 
                 Row {
@@ -168,8 +168,8 @@ Rectangle {
                     }
 
                     Connections {
-                        target: navDrawer
-                        onPositionChanged: if((navDrawer.position === 1) == true) {inerText.focus = false}
+                        target: mainDrawer
+                        onPositionChanged: if((mainDrawer.position === 1) == true) {inerText.focus = false}
                     }
 
                     TextField {
@@ -346,7 +346,7 @@ Rectangle {
                     clip: visible;
                     width:parent.width
                     height: {parent.height - facade.toPx(20)}
-                    spacing: facade.toPx(10)
+                    spacing: facade.toPx(15)
                     model: ListModel {id:rssmodel}
                     snapMode: ListView.SnapToItem;
                     anchors.bottom: parent.bottom;
@@ -400,9 +400,9 @@ Rectangle {
                         }
 
                         MouseArea {
-                            anchors.fill: {parent;}
+                            anchors.fill: parent
                             onClicked: {
-                                if (chatScreen.position>0)return
+                                if (chatScreen.position > 0) {return;}
                                 loader.urlLink = link;
                                 if (event_handler.currentOSys() > (0)) {
                                     loader.webview = true;
@@ -470,7 +470,7 @@ Rectangle {
 
                 width: parent.width;
                 height: if (rssRect.visible ==true) {
-                    var cardHeight = facade.toPx(205)
+                    var cardHeight = facade.toPx(210)
                     if (cardHeight > 0) {
                         var count = Math.floor((baseRect.height - partnerHeader.height - navBottom.height - searchRow.height - friendList.height - (feedsModel.count - 1)*basView.spacing)/cardHeight);
                         if (count < 4) count = 4
@@ -559,7 +559,7 @@ Rectangle {
                 model: ["Реклама", "Для бизнеса", "Все о P2P","Безопасность"]
                 Text {
                     text: {modelData;}
-                    anchors.verticalCenter:parent.verticalCenter
+                    anchors.verticalCenter: parent.verticalCenter;
                     font.family: trebu4etMsNorm.name
                     font.pixelSize:{facade.doPx(16)}
                 }
@@ -568,8 +568,11 @@ Rectangle {
     }
 
     Loader {
-        source: event_handler.currentOSys()>0? "ibrowser.qml":""
+        source: event_handler.currentOSys()>0? "WebService.qml":""
         visible: loader.webview
-        anchors.fill: {parent;}
+        anchors {
+            fill: parent
+            topMargin: partnerHeader.height - partnerHeader.offset
+        }
     }
 }

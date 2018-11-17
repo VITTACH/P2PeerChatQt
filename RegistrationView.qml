@@ -4,7 +4,7 @@ import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
 
 Item {
-    function reg(login, family, password, phone) {
+    function reg(LoginView, family, password, phone) {
         var request=new XMLHttpRequest()
         request.open('POST', "http://hoppernet.hol.es/default.php")
         request.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
@@ -14,7 +14,7 @@ Item {
                     if (request.responseText == "yes") {
                         loader.tel = phone;
                         loader.famil = family
-                        loader.login = login;
+                        loader.LoginView = LoginView;
                         event_handler.saveSet("phone", loader.tel);
                         event_handler.saveSet("passw", (password));
                         var objectFrnd=JSON.parse(loader.frienList)
@@ -23,14 +23,14 @@ Item {
                         loader.frienList=JSON.stringify(objectFrnd)
                         loader.addFriends()
                         loader.isLogin = true;
-                        goTo("profile.qml")
+                        goTo("ProfileView.qml")
                     } else if (request.responseText == "no") {
                         defaultDialog.show("Что-то пошло не так",0)
                     }
                 }
             }
         }
-        request.send("name=" + phone + "&family=" + family + "&pass=" + password + "&login= " + (login))
+        request.send("name=" + phone + "&family=" + family + "&pass=" + password + "&LoginView= " + (LoginView))
     }
 
     ListView {

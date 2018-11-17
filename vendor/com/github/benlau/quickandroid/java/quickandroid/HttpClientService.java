@@ -5,12 +5,12 @@ import java.net.URL;
 import java.net.HttpURLConnection;
 import java.util.Objects;
 
-public class httpRequest {
+public class HttpClientService {
     private URL obj;
     private HttpURLConnection con;
     String UAGENT = "Mozilla/5.0";
 
-    public httpRequest(){}
+    public HttpClientService(){}
 
     public String sendRequest(String msg)throws IOException {
         con=(HttpURLConnection) obj.openConnection();

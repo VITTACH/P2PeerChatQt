@@ -132,14 +132,14 @@ ApplicationWindow {
         property string menu8Color: "#DDDDDD";
         property string menu9Color: "#A9B0BA";
 
-        property string menu10Color:"#535353";
-        property string menu11Color:"#7C9AAA";
-        property string menu12Color:"#677784";
-        property string menu13Color:"#B1B1B1";
-        property string menu14Color:"#95A1AD";
-        property string menu15Color:"#8DACBC";
-        property string menu16Color:"#B8BFC6";
-        property string menu17Color:"#697886";
+        property string menu10Color: "#535353"
+        property string menu11Color: "#7C9AAA"
+        property string menu12Color: "#677784"
+        property string menu13Color: "#999999"
+        property string menu14Color: "#95A1AD"
+        property string menu15Color: "#8DACBC"
+        property string menu16Color: "#B8BFC6"
+        property string menu17Color: "#697886"
 
         property string head1Color: "#546475";
         property string head2Color: "#FFFFFF";
@@ -151,7 +151,7 @@ ApplicationWindow {
         property string feed1Color: "#FFFFFF";
         property string feed2Color: "#C68585";
         property string feed3Color: "#526275";
-        property string feed4Color: "#EDEDED";
+        property string feed4Color: "#F4F1E1";
 
         property string toastColor: "#ECECEC";
 
@@ -162,9 +162,9 @@ ApplicationWindow {
 
         function back() {
             if (privated.visitedPageList.length > 1) {
-                if (source == "qrc:/loginanDregister.qml") {
+                if (source == "qrc:/MainScreenView.qml") {
                     if (partnerHeader.page == 1) partnerHeader.page = partnerHeader.page-1
-                } else if (loader.source != "profile.qml") {
+                } else if (loader.source != "ProfileView.qml") {
                     privated.visitedPageList.pop()
                     source = privated.visitedPageList[privated.visitedPageList.length - 1]
                 }
@@ -232,8 +232,8 @@ ApplicationWindow {
                                     loader.fields[1] = ""
                                     loader.fields[2] =password
                                 }
-                                if (loader.source != "qrc:/loginanDregister.qml")
-                                    goTo("qrc:/loginanDregister.qml");
+                                if (loader.source != "qrc:/MainScreenView.qml")
+                                    goTo("qrc:/MainScreenView.qml");
                                 loader.fields[4] = phone;
                                 partnerHeader.page = (1);
                                 break;
@@ -252,8 +252,8 @@ ApplicationWindow {
             tmpPhone = phone
             tmpLogin = password
             loader.isLogin = true
-            if (loader.source != "profile.qml")
-                loader.goTo("profile.qml")
+            if (loader.source != "ProfileView.qml")
+                loader.goTo("ProfileView.qml")
         }
 
         function addFriend(friend, flag) {
@@ -267,36 +267,35 @@ ApplicationWindow {
 
     function strartPage() {
         var eh =event_handler.loadValue("user")
-        if (eh!="") {
+        if (eh != "") {
             var objct = JSON.parse(eh);
             loader.avatarPath = objct.image
             loader.logon(objct.tel, objct.pass)
             loader.login = objct.login;
             loader.famil = objct.family
             loader.tel = objct.tel;
-        } else {
-            loader.goTo("loginanDregister.qml")
-        }
+        } else loader.goTo("qrc:/MainScreenView.qml")
     }
 
     function listenBack(event) {
         loader.forceActiveFocus()
         if (event.key === Qt.Key_Back || event.key === Qt.Key_Escape || event === true) {
             event.accepted = true
-            if (loader.dialog ==true) {
+            if (loader.dialog == true) {
                 loader.dialog = !loader.dialog;
             } else if (loader.avatar) {
                 loader.avatar = !loader.avatar;
-            } else if(loader.context) {
-                loader.context=!loader.context;
-            } else if(loader.webview) {
-                loader.webview=!loader.webview;
+            } else if (loader.context) {
+                loader.context= !loader.context
+            } else if (loader.webview) {
+                loader.webview= !loader.webview
+                if (!loader.isLogin) {loader.back();}
             } else back.restart()
         }
     }
 
     P2PStyle.HeaderSplash {
-        visible: loader.source != "qrscan.qml";
+        visible: {loader.source != "qrc:/QrScan.qml"}
         id: partnerHeader;
     }
 

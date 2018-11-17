@@ -8,14 +8,12 @@ SwipeView {
 
     Loader {
         id: loginScreen
-        Component.onCompleted: source = "qrc:/login.qml";
+        Component.onCompleted: source = "qrc:/LoginView.qml"
     }
 
     Loader {
         id: reginScreen
-        Component.onCompleted: {
-            source="registration.qml"
-        }
+        Component.onCompleted: source = "qrc:/RegistrationView.qml"
     }
 
     onCurrentIndexChanged: {
