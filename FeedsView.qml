@@ -6,12 +6,13 @@ import QtQuick 2.0
 
 Rectangle {
     id: baseRect
-    color: loader.menu16Color
-    Component.onCompleted: mainDrawer.open()
 
     property int nWidth: 0;
     property bool find: true;
-    property int oldContentY: 0
+    property int oldContentY: 0;
+
+    color: loader.menu16Color
+    Component.onCompleted: mainDrawer.open()
 
     Rectangle {
         width: parent.width
@@ -334,19 +335,12 @@ Rectangle {
                     }
                 }
 
-                DropShadow {
-                    radius: 8;
-                    samples: (18)
-                    source: rssView
-                    color: "#50000000"
-                    anchors.fill: rssView
-                }
                 ListView {
                     id: rssView
                     clip: visible;
                     width:parent.width
                     height: {parent.height - facade.toPx(20)}
-                    spacing: facade.toPx(15)
+                    spacing: facade.toPx(10)
                     model: ListModel {id:rssmodel}
                     snapMode: ListView.SnapToItem;
                     anchors.bottom: parent.bottom;
@@ -542,7 +536,7 @@ Rectangle {
     Rectangle {
         id: downRow
         width: parent.width
-        height: parent.height > parent.width?facade.toPx(100):facade.toPx(80)
+        height: parent.height > parent.width?facade.toPx(80): facade.toPx(70)
         anchors.bottom: parent.bottom;
 
         Rectangle {

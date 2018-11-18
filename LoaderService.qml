@@ -125,12 +125,11 @@ ApplicationWindow {
         property string menu1Color: "#939393";
         property string menu2Color: "#A0A8AF";
         property string menu3Color: "#657587";
-        property string menu4Color: "#B2BCC4";
+        property string menu4Color: "#DDDDDD";
         property string menu5Color: "#AFB5BC";
         property string menu6Color: "#30000000"
         property string menu7Color: "#F1F1F1";
-        property string menu8Color: "#DDDDDD";
-        property string menu9Color: "#A9B0BA";
+        property string menu9Color: "#CCCCCC";
 
         property string menu10Color: "#535353"
         property string menu11Color: "#7C9AAA"
@@ -138,20 +137,20 @@ ApplicationWindow {
         property string menu13Color: "#999999"
         property string menu14Color: "#95A1AD"
         property string menu15Color: "#8DACBC"
-        property string menu16Color: "#B8BFC6"
+        property string menu16Color: "#7A8899"
         property string menu17Color: "#697886"
 
         property string head1Color: "#546475";
-        property string head2Color: "#FFFFFF";
+        property string head2Color: "#FEFEFE";
 
-        property string sets2Color: "#828D99";
+        property string sets2Color: "#68707A";
         property string sets3Color: "#6C839A";
         property string sets4Color: "#708EA0";
 
-        property string feed1Color: "#FFFFFF";
+        property string feed1Color: "#EDEDED";
         property string feed2Color: "#C68585";
         property string feed3Color: "#526275";
-        property string feed4Color: "#F4F1E1";
+        property string feed4Color: "#FFFFFF";
 
         property string toastColor: "#ECECEC";
 
@@ -168,9 +167,7 @@ ApplicationWindow {
                     privated.visitedPageList.pop()
                     source = privated.visitedPageList[privated.visitedPageList.length - 1]
                 }
-            } else {
-                strartPage();
-            }
+            } else strartPage()
         }
 
         function goTo(s) {

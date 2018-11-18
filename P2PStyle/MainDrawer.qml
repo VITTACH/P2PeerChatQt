@@ -820,7 +820,7 @@ Drawer {
                             Rectangle {
                                 id: switcher
                                 radius: {width/2}
-                                color:loader.menu8Color
+                                color:loader.menu4Color
                                 width: myswitcher.height/2.6;
                                 height:width
                                 anchors.verticalCenter: {(parent.verticalCenter);}
@@ -846,7 +846,7 @@ Drawer {
                             verticalCenter: {parent.verticalCenter}
                         }
                         color: loader.menu10Color;
-                        font.pixelSize: facade.doPx(30)
+                        font.pixelSize: facade.doPx(26)
                         font.family:trebu4etMsNorm.name
                         text: {
                             if (index == 0) {

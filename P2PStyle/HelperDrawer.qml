@@ -16,10 +16,11 @@ Item {
             id: listview
             anchors {
                 fill: parent;
-                topMargin: facade.toPx(25)
-                bottomMargin: facade.toPx(20);
+                topMargin: {facade.toPx(25)}
+                bottomMargin:facade.toPx(20)
             }
-            spacing: facade.toPx(50)
+
+            spacing: facade.toPx(40)
             delegate: Row {
                 x: facade.toPx(30)
                 spacing: facade.toPx(30)
@@ -30,19 +31,19 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Text {
-                    color: "#D6D6D6"
-                    font.bold: true;
+                    color: loader.feed4Color
                     font.pixelSize: facade.doPx(26);
                     font.family: trebu4etMsNorm.name
                     anchors.verticalCenter: parent.verticalCenter
                     text: target
                 }
             }
+
             model:ListModel {
                 ListElement {
                     mypos: 0;
                     images: "profile.png";
-                    target: qsTr("Мой профиль");
+                    target: qsTr("Профиль");
                 }
                 ListElement {
                     mypos: 1;
@@ -57,12 +58,12 @@ Item {
                 ListElement {
                     mypos: 3;
                     images: "security.png"
-                    target: qsTr("Безопасность")
+                    target: qsTr("Шифрование")
                 }
                 ListElement {
                     mypos: 4;
                     images: "alerts.png"
-                    target: qsTr("Уведомления");
+                    target: qsTr("Поддержка");
                 }
                 ListElement {
                     mypos: 5;
