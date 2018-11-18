@@ -570,7 +570,7 @@ Drawer {
                         height: parent.height*0.7
                         Camera {
                             id: camera2
-                            Component.onCompleted:camera2.stop()
+                            Component.onCompleted: camera2.stop()
                             position: Camera.FrontFace
                             flash.mode: Camera.FlashAuto
                             exposure {
@@ -581,14 +581,14 @@ Drawer {
                         VideoOutput {
                             fillMode: {VideoOutput.PreserveAspectCrop;}
                             source: camera2
-                            autoOrientation:true
-                            anchors.fill: parent
+                            autoOrientation: true
+                            anchors.fill: parent;
                         }
 
                         MouseArea {
-                            anchors.fill: parent
+                            anchors.fill: parent;
                             onClicked: {
-                                attach.move = false
+                                attach.move=false
                                 if (event_handler.currentOSys() != 0) {
                                     imagePicker.item.takePhoto()
                                 }
