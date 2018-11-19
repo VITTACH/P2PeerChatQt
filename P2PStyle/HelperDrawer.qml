@@ -4,9 +4,9 @@ import QtGraphicalEffects 1.0
 
 Item {
     height: parent.height
-    width: 2 * parent.width/3.0;
+    width: 2 * parent.width/3
+
     Rectangle {
-        clip: true
         width: parent.width
         color: loader.sets2Color
         y: mainDrawer.getProfHeight()
@@ -14,28 +14,41 @@ Item {
 
         ListView {
             id: listview
+            spacing: facade.toPx(40);
             anchors {
                 fill: parent;
                 topMargin: {facade.toPx(25)}
                 bottomMargin:facade.toPx(20)
             }
 
-            spacing: facade.toPx(40)
             delegate: Row {
                 x: facade.toPx(30)
                 spacing: facade.toPx(30)
                 Image {
-                    source: "qrc:/ui/icons/"+ images
-                    width: facade.toPx(sourceSize.width/1.4);
+                    source: "qrc:/ui/icons/"+images;
+                    width: facade.toPx(sourceSize.width/1.40)
                     height:facade.toPx(sourceSize.height/1.4)
                     anchors.verticalCenter: parent.verticalCenter
                 }
                 Text {
                     color: loader.feed4Color
-                    font.pixelSize: facade.doPx(26);
+                    font.pixelSize: facade.doPx(25);
                     font.family: trebu4etMsNorm.name
                     anchors.verticalCenter: parent.verticalCenter
                     text: target
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            switch(mypos) {
+                            case 5:
+                                event_handler.saveSet("user", "")
+                                event_handler.saveSet("frnd", "")
+                                loader.restores();
+                                drawes.close()
+                                break
+                            }
+                        }
+                    }
                 }
             }
 
@@ -68,7 +81,7 @@ Item {
                 ListElement {
                     mypos: 5;
                     images:"developer.png"
-                    target: qsTr("Версия")
+                    target: qsTr("Выйти")
                 }
             }
         }

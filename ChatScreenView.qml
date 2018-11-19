@@ -10,7 +10,8 @@ import "P2PStyle" as P2PStyle
 // https://falsinsoft.blogspot.com/2018/04/qml-mixed-native-android-and-qml.html;
 
 Drawer {
-    edge:Qt.RightEdge
+    id: chatRootView
+    edge: Qt.RightEdge
     width: parent.width
     height: parent.height
 
@@ -75,7 +76,7 @@ Drawer {
     }
 
     Connections {
-        target:chatMenuList
+        target: chatMenuList
         onPayloadChanged: {
             if (chatMenuList.payload === 8) {
                 select = [];
@@ -107,7 +108,7 @@ Drawer {
     }
 
     Connections {
-        target: chatScreen;
+        target: chatScreen
         onPositionChanged: {
             if (!loader.isLogin) {
                 position = 0
@@ -119,9 +120,15 @@ Drawer {
         }
     }
 
-    Connections {target: mainDrawer; onCindexChanged: loadChatsHistory();}
+    Connections {
+        target: mainDrawer
+        onCindexChanged: loadChatsHistory()
+    }
 
-    Component.onCompleted: {loadChatsHistory(); partnersHead.page = (-1.0);}
+    Component.onCompleted: {
+        loadChatsHistory()
+        partnersHead.page = -1
+    }
 
     onIsPortraitChanged: {
         if (height != 0) {
@@ -192,7 +199,7 @@ Drawer {
         clip: true
         height: parent.height
         width: !isPortrait? (parent.width/2) : parent.width;
-        anchors.right:parent.right
+        anchors.right: parent.right
 
         Item {
             FastBlur {
@@ -550,7 +557,7 @@ Drawer {
                 Connections {
                     target: attach;
                     onMoveChanged: {
-                        attach.move ? camera2.start() : camera2.stop();
+                        // attach.move? camera2.start(): camera2.stop()
                         // chatScreen.interactive = !attach.move
                         attachMove.restart()
                     }
@@ -565,19 +572,18 @@ Drawer {
 
                     Rectangle {
                         id: cam
-                        color: "black"
                         width: height;
                         height: parent.height*0.7
-                        Camera {
-                            id: camera2
-                            Component.onCompleted: camera2.stop()
+                        visible: chatRootView.position>0
+                        /*Camera {
+                            id:camera2
                             position: Camera.FrontFace
                             flash.mode: Camera.FlashAuto
                             exposure {
                                 exposureCompensation: -1
                                 exposureMode: {Camera.ExposurePortrait}
                             }
-                        }
+                        }*/
                         VideoOutput {
                             fillMode: {VideoOutput.PreserveAspectCrop;}
                             source: camera2
@@ -600,9 +606,9 @@ Drawer {
                         clip: true
                         id: imagesList;
                         height:parent.height
-                        width: {area.width - cam.width - parent.x - (spacing)}
-                        spacing: parent.spacing;
-                        orientation: {Qt.Horizontal}
+                        width: area.width-cam.width-parent.x-spacing
+                        spacing: {parent.spacing;}
+                        orientation: Qt.Horizontal
                         model: ListModel {id:tachModel}
 
                         Component.onCompleted: {
@@ -629,7 +635,7 @@ Drawer {
 
                                     BusyIndicator {
                                         anchors.fill: parent
-                                        contentItem: P2PStyle.IndicatorBusy{ }
+                                        contentItem: P2PStyle.IndicatorBusy {}
                                         running:attachImg.status!==Image.Ready
 
                                         Image {
