@@ -16,7 +16,7 @@ Rectangle {
 
     Rectangle {
         width: parent.width
-        height: facade.toPx(280)
+        height: facade.toPx(240)
         color: loader.feed3Color
     }
 
@@ -30,20 +30,23 @@ Rectangle {
             topMargin: partnerHeader.height + facade.toPx(30)
         }
 
-        model: ListModel {
-            id: feedsModel
-            ListElement {activiti: 0;}
-            ListElement {activiti: 1;}
-            ListElement {activiti: 0;}
-        }
-
         boundsBehavior : {
             (contentY <= 0) ? Flickable.StopAtBounds: Flickable.DragAndOvershootBounds
         }
 
+        model: ListModel {
+            id: feedsModel
+            ListElement {
+                activiti: 0
+            }
+            ListElement {
+                activiti: 1
+            }
+        }
+
         delegate: Column {
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: nWidth = Math.min(0.96*parent.width, facade.toPx(900))
+            x: facade.toPx(20)
+            width: nWidth = Math.min(0.96*parent.width - x/2, facade.toPx(900))
 
             function findPeer(phone) {
                 for (var i = 0; i < humanModel.count; i+=1) {
@@ -135,8 +138,9 @@ Rectangle {
 
             Rectangle {
                 id: searchRow
-                radius: height/2
-                visible: index == 0;
+                radius: height/2;
+                visible: index == 0
+                anchors.horizontalCenter: parent.horizontalCenter
                 width: Math.min(0.88 * parent.width, facade.toPx(900))
                 height: visible? (finderRow.height + facade.toPx(20)): 0
 
@@ -196,7 +200,7 @@ Rectangle {
                 id: friendList
                 width: parent.width
                 property int counter: 0
-                visible: index == 0 && activiti;
+                visible: index == 0 && activiti
                 height: {
                     var cunter = 0;
                     for (var i = 0; i < listView.count; i ++) {
@@ -217,13 +221,13 @@ Rectangle {
                     delegate: Item {
                         id: baseItem
                         visible: activity
-                        width: {parent.width}
+                        width: parent.width
                         height: activity==true? facade.toPx(20) + Math.max(bug.height,fo.height): 0
 
                         Rectangle {
                             clip: true
-                            width:parent.width/2
-                            height:parent.height
+                            width: parent.width/2
+                            height: parent.height
                             color: loader.feed2Color;
 
                             MouseArea {
@@ -292,19 +296,6 @@ Rectangle {
                                 }
                             }
                         }
-                    }
-                }
-
-                LinearGradient {
-                    width: parent.width
-                    height: facade.toPx(5)
-                    end:  Qt.point(0, height)
-                    visible: parent.counter > 0
-                    anchors.bottom: parent.bottom
-                    start:Qt.point(0, 0)
-                    gradient: Gradient {
-                        GradientStop {position: (0.00); color: ("#00000000")}
-                        GradientStop {position: (1.00); color: ("#40000000")}
                     }
                 }
             }
@@ -462,45 +453,18 @@ Rectangle {
                     }
                 }
 
-                width: parent.width;
-                height: if (rssRect.visible ==true) {
-                    var cardHeight = facade.toPx(210)
-                    if (cardHeight > 0) {
-                        var count = Math.floor((baseRect.height - partnerHeader.height - navBottom.height - searchRow.height - friendList.height - (feedsModel.count - 1)*basView.spacing)/cardHeight);
-                        if (count < 4) count = 4
-                        countCard = count
-                    }
+                width: {parent.width}
+                height: if (rssRect.visible == true) {
+                    var cardHeight = facade.toPx(210);
+                    var count = Math.floor((baseRect.height - partnerHeader.height - searchRow.height - friendList.height - (feedsModel.count - 1)*basView.spacing)/cardHeight);
+                    if (count < 4) count = 4
+                    countCard = count
                     if (event_handler.currentOSys() > 0) {
                         if (Screen.orientation === Qt.LandscapeOrientation) {
-                            countCard = 2 *countCard;
+                            countCard = 2 * countCard
                         }
                     }
-                    countCard*cardHeight;
-                }
-            }
-
-            ListView {
-                clip: true
-                id: navBottom;
-                width: Math.min(contentWidth, parent.width - facade.toPx(50))
-                x: (parent.width-width)/2
-                height: facade.toPx(160);
-                spacing: facade.toPx(27);
-                orientation:Qt.Horizontal
-                anchors.horizontalCenter:parent.horizontalCenter
-                visible: false
-
-                model:ListModel {
-                    ListElement {image:"ui/buttons/feeds/mus.png";}
-                    ListElement {image:"ui/buttons/feeds/img.png";}
-                    ListElement {image:"ui/buttons/feeds/vide.png"}
-                    ListElement {image:"ui/buttons/feeds/play.png"}
-                    ListElement {image:"ui/buttons/feeds/play.png"}
-                }
-                delegate: Image {
-                    width: {facade.toPx(sourceSize.width/3.55);}
-                    height: facade.toPx(sourceSize.height/3.55);
-                    source: image
+                    return countCard*cardHeight-rssView.spacing;
                 }
             }
         }
@@ -526,9 +490,9 @@ Rectangle {
             text: (parent.text);
         }
         onClicked: basView.positionViewAtBeginning()
-        width: facade.toPx(250);
+        width: facade.toPx(200);
         background: Rectangle {
-            color: ("#B0FFFFFF")
+            color: ("#C0FFFFFF")
             anchors.fill:parent;
         }
     }

@@ -5,7 +5,7 @@ import QtGraphicalEffects 1.0
 Item {
     id: rootItem
     width: parent.width
-    height: facade.toPx(150);
+    height: facade.toPx(120);
 
     DropShadow {
         radius: 10
@@ -142,10 +142,12 @@ Item {
                 if (page==1) page = page - 1;
                 else if (loader.webview == true) {
                     loader.webview = false
-                    if (!loader.isLogin) loader.back()
+                    if (loader.isLogin == false) {
+                        loader.back()
+                    }
                 } else if (loader.chatOpen) {
                     loader.focus = loader.context = (true)
-                    chatMenuList.xPosition=rootItem.width-chatMenuList.w-facade.toPx(30)
+                    chatMenuList.xPosition=rootItem.width - chatMenuList.w - facade.toPx(30)
                     chatMenuList.yPosition=facade.toPx(20)
                 } else loader.drawOpen = true
                 loader.focus = true

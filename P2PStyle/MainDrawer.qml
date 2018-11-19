@@ -10,7 +10,7 @@ Drawer {
     property bool find: true
     dragMargin: facade.toPx(80)
     background: Rectangle {color: "transparent";}
-    width: Math.min(facade.toPx(700), 0.9*parent.width)
+    width: Math.min(facade.toPx(600), 0.9*parent.width)
     height: {parent.height;}
 
     property alias cindex: listView.currentIndex;
@@ -722,14 +722,9 @@ Drawer {
 
             clip: true
             model:ListModel {
-                id:navigateDownModel
+                id: navigateDownModel
                 ListElement {image: ""; target: ""}
-                ListElement {
-                    image: "/ui/icons/devIconBlue.png"; target: qsTr("Настройки");
-                }
-                ListElement {
-                    image: "/ui/icons/outIconBlue.png"; target: qsTr("Выйти")
-                }
+                ListElement {image: "/ui/icons/devIconBlue.png"; target:"Аккаунт"}
             }
 
             width: parent.width// - facade.toPx(20)
@@ -748,7 +743,7 @@ Drawer {
                     id: menMouseArea
                     anchors.fill:parent
                     onExited: listMenu.currentIndex = -1
-                    onEntered: listMenu.currentIndex = index
+                    onEntered: listMenu.currentIndex = (index)
                     onClicked: {
                         switch(index) {
                         case 0:
@@ -757,11 +752,6 @@ Drawer {
                         case 1:
                             leftMenu.move(!leftMenu.direction)
                             break;
-                        case 2:
-                            event_handler.saveSet("user", "");
-                            event_handler.saveSet("frnd", "");
-                            loader.restores();
-                            drawes.close()
                         }
                     }
                 }
@@ -852,7 +842,7 @@ Drawer {
                             if (index == 0) {
                                 if (myswitcher.checked)
                                     qsTr(("Вы онлайн"))
-                                else qsTr("Невидимы")
+                                else qsTr("Невидимый");
                             } else target
                         }
                     }
