@@ -49,7 +49,6 @@
         <file>ui/icons/devIconBlue.png</file>
         <file>ui/icons/outIconBlue.png</file>
         <file>RegistrationView.qml</file>
-        <file>P2PStyle/DefaultDialog.qml</file>
         <file>ui/buttons/addButton.png</file>
         <file>ui/icons/alerts.png</file>
         <file>ui/icons/configuration.png</file>
@@ -64,5 +63,6 @@
         <file>MainScreenView.qml</file>
         <file>LoginView.qml</file>
         <file>P2PStyle/MainDrawer.qml</file>
+        <file>P2PStyle/DefaultDialog.qml</file>
     </qresource>
 </RCC>

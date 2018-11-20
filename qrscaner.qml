@@ -115,17 +115,126 @@ Item {
     }
 
     Rectangle {
+        id: uperSquare
+        color: "#AA000000"
+        width: parent.width
+        anchors {
+            top: parent.top
+            bottom: center.top
+        }
+    }
+
+    Rectangle {
+        id: downSquare
+        color: "#AA000000"
+        width: parent.width
+        anchors {
+            bottom: parent.bottom;
+            top: center.bottom
+        }
+    }
+
+    Rectangle {
+        id: leftSquare
+        color: "#AA000000"
+        anchors {
+            left: parent.left
+            top: uperSquare.bottom
+            bottom: downSquare.top
+            right: center.left
+        }
+    }
+
+    Rectangle {
+        id: rightSquare
+        color: "#AA000000"
+        anchors {
+            right: parent.right
+            top: uperSquare.bottom
+            bottom: downSquare.top
+            left: center.right
+        }
+    }
+
+    Rectangle {
+        id: center
         width: height
-        height: parent.width > parent.height? parent.width/3: parent.height/3
-        border.width: 2;
-        border.color: "limegreen"
-        anchors.centerIn: parent;
         color: "transparent"
+        height: parent.width > parent.height? parent.width/3: parent.height/3
+        anchors.centerIn: parent;
+
+        Rectangle {
+            width: 4
+            height: {parent.height/5}
+            anchors.left: parent.left
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            width: 4
+            height: parent.height/5
+            anchors.right: parent.right
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            width: 4
+            height: {parent.height/5}
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            width: 4
+            height: parent.height/5
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            height: 4
+            width: {parent.height/5}
+            anchors.left: parent.left
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            height: 4
+            width: {parent.height/5}
+            anchors.right: parent.right
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            height: 4
+            width: {parent.height/5}
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            height: 4
+            width: parent.height/5
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            radius: width
+            color: "limegreen"
+        }
 
         Rectangle {
             id: scanline
             height: 2
-            width: parent.width-4
+            width: parent.width - 2*height;
             anchors.centerIn: parent;
 
             SequentialAnimation {
@@ -147,17 +256,7 @@ Item {
                 }
             }
         }
-
-        Button {
-            anchors.bottom: {parent.bottom}
-            width: parent.width
-            height: facade.toPx(80)
-            font.family:trebu4etMsNorm.name
-            font.pixelSize: facade.doPx(20)
-            text: qsTr("Cancel scan");
-            onClicked:loader.back()
-        }
     }
 
-    ImageProcessor {id:imageProcessor}
+    ImageProcessor {id: imageProcessor}
 }

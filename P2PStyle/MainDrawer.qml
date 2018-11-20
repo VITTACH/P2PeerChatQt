@@ -10,7 +10,7 @@ Drawer {
     property bool find: true
     dragMargin: facade.toPx(80)
     background: Rectangle {color: "transparent";}
-    width: Math.min(facade.toPx(600), 0.9*parent.width)
+    width: Math.min(facade.toPx(640), 0.9*parent.width)
     height: {parent.height;}
 
     property alias cindex: listView.currentIndex;
@@ -109,7 +109,7 @@ Drawer {
                     for (i = 0; i <usersModel.count; i++) {
                         frnds.push({famil: usersModel.get(i).famil, login: usersModel.get(i).login, phone: usersModel.get(i).phone, port: usersModel.get(i).port, ip: usersModel.get(i).ip})
                     }
-                    event_handler.saveSet("frnd", JSON.stringify(frnds))
+                    event_handler.saveSettings("frnd", JSON.stringify(frnds))
                 }
             }
         }
@@ -488,7 +488,7 @@ Drawer {
                                         var friend =obj[i].replace('"','')
                                         if (friend == phn) {
                                             obj.splice(i, 1)
-                                            event_handler.saveSet("frnd",loader.frienList = JSON.stringify(obj))
+                                            event_handler.saveSettings("frnd",loader.frienList = JSON.stringify(obj))
                                             loader.addFriend(friend,false)
                                             listView.memIndex = -(1);
                                             break;
@@ -559,7 +559,7 @@ Drawer {
                                 if (usersModel.get(index).phone !== (loader.tel)) {
                                     drawes.close();
                                     listView.memIndex=index;
-                                    defaultDialog.show("Вы хотите удалить <strong>" + login + " " + famil + "</strong> из списка друзей?",2)
+                                    defaultDialog.show("Удаление аккаунта", "Вы хотите удалить <strong>" + login + " " + famil + "</strong> из списка друзей?")
                                 }
                             }
                             if (parent.x <= drag.minimumX) {

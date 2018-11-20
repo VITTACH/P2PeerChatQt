@@ -7,7 +7,7 @@ Item {
     function reg(LoginView, family, password, phone) {
         var request=new XMLHttpRequest()
         request.open('POST', "http://hoppernet.hol.es/default.php")
-        request.setRequestHeader('Content-Type','application/x-www-form-urlencoded')
+        request.setRequestHeader('Content-Type', ('application/x-www-form-urlencoded'))
         request.onreadystatechange = function() {
             if (request.readyState === XMLHttpRequest.DONE) {
                 if (request.status && request.status == 200) {
@@ -15,17 +15,17 @@ Item {
                         loader.tel = phone;
                         loader.famil = family
                         loader.LoginView = LoginView;
-                        event_handler.saveSet("phone", loader.tel);
-                        event_handler.saveSet("passw", (password));
+                        event_handler.saveSettings("phone", loader.tel);
+                        event_handler.saveSettings("passw", (password));
                         var objectFrnd=JSON.parse(loader.frienList)
                         objectFrnd.push(phone)
-                        defaultDialog.show("Вы зарегистрированы",0)
+                        defaultDialog.show("Ошибка регистрации", "Вы зарегистрированы")
                         loader.frienList=JSON.stringify(objectFrnd)
                         loader.addFriends()
                         loader.isLogin = true;
                         goTo("ProfileView.qml")
                     } else if (request.responseText == "no") {
-                        defaultDialog.show("Что-то пошло не так",0)
+                        defaultDialog.show("Ошибка регистрации", "Что-то пошло не так")
                     }
                 }
             }
@@ -61,16 +61,16 @@ Item {
                     onClicked: {
                         if(index == 5) {
                             if (loader.fields[0].length < 2) {
-                                defaultDialog.show("Ваше имя менее чем 2 символа",0)
+                                defaultDialog.show("Ошибка регистрации", "Ваше имя менее чем 2 символа")
                             }
                             else if (loader.fields[1].length < 2) {
-                                defaultDialog.show("Фамилия короче двух символов",0)
+                                defaultDialog.show("Ошибка регистрации", "Фамилия короче двух символов")
                             }
                             else if (loader.fields[2].length < 5) {
-                                defaultDialog.show("Ваш пароль < 5 - ти символов",0)
+                                defaultDialog.show("Ошибка регистрации", "Ваш пароль < 5 - ти символов")
                             }
                             else if (loader.fields[3].length <11) {
-                                defaultDialog.show("Ваш номер короче 11 символов",0)
+                                defaultDialog.show("Ошибка регистрации", "Ваш номер короче 11 символов")
                             } else {
                                 reg(loader.fields[0],loader.fields[1],loader.fields[2],loader.fields[3])
                             }

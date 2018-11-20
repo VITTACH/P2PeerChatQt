@@ -31,7 +31,7 @@ Drawer {
                 loader.chats.push({phone: nd, message: []});
             loader.chats[nd].message.push(obj)
             var c=JSON.stringify(loader.chats)
-            event_handler.saveSet("chats", c);
+            event_handler.saveSettings("chats", c);
             appendMessage(text, flag, obj.time, selectImage)
             chatScrenList.positionViewAtEnd();
             selectedImage=[];
@@ -66,7 +66,7 @@ Drawer {
                 buferText.text = (obj.message)
                 var object = {text : buferText.text, flag : 1, time : new Date()}
                 loader.chats[i].message.push((object))
-                event_handler.saveSet("chats", JSON.stringify(loader.chats))
+                event_handler.saveSettings("chats", JSON.stringify(loader.chats))
                 if(i == mainDrawer.getCurPeerInd()){
                     appendMessage(buferText.text,1,object.time,"")
                     chatScrenList.positionViewAtEnd();
@@ -84,7 +84,7 @@ Drawer {
                 chatMenuList.payload = 0;
                 var currentInd = mainDrawer.cindex
                 loader.chats[currentInd].message=[];
-                event_handler.saveSet(qsTr("chats"),JSON.stringify(loader.chats))
+                event_handler.saveSettings(qsTr("chats"),JSON.stringify(loader.chats))
             }
             if (chatMenuList.payload === 3) {
                 var text = chatModel.get(select[(select.length) - (1)]).someText;
@@ -96,7 +96,7 @@ Drawer {
                     var currentIndex = (mainDrawer.cindex)
                     loader.chats[(currentIndex)].message.splice(select[i] - i, 1)
                 }
-                event_handler.saveSet("chats", JSON.stringify(loader.chats))
+                event_handler.saveSettings("chats", JSON.stringify(loader.chats))
                 for(var i=1; i<chatModel.count; i++)
                 chatModel.setProperty(i,"mySpacing",(chatModel.get(i-1).textColor=="#000000"&&chatModel.get(i).textColor=="#960f133d")||(chatModel.get(i).textColor=="#000000"&&chatModel.get(i-1).textColor=="#960f133d")? facade.toPx(30): facade.toPx(0));
                 chatMenuList.menu = 1;
@@ -557,7 +557,7 @@ Drawer {
                 Connections {
                     target: attach;
                     onMoveChanged: {
-                        // attach.move? camera2.start(): camera2.stop()
+                        attach.move? camera2.start(): (camera2.stop());
                         // chatScreen.interactive = !attach.move
                         attachMove.restart()
                     }
@@ -574,8 +574,7 @@ Drawer {
                         id: cam
                         width: height;
                         height: parent.height*0.7
-                        visible: chatRootView.position>0
-                        /*Camera {
+                        Camera {
                             id:camera2
                             position: Camera.FrontFace
                             flash.mode: Camera.FlashAuto
@@ -583,7 +582,8 @@ Drawer {
                                 exposureCompensation: -1
                                 exposureMode: {Camera.ExposurePortrait}
                             }
-                        }*/
+                            Component.onCompleted:stop()
+                        }
                         VideoOutput {
                             fillMode: {VideoOutput.PreserveAspectCrop;}
                             source: camera2

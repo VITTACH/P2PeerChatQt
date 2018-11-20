@@ -59,8 +59,8 @@ QString EventHandler::loadValue(QString key) {
     return setting->value(key).toString();
 }
 
-void EventHandler::saveSet(QString key, QString vals) {
-    setting->setValue(key, vals);
+void EventHandler::saveSettings(QString key, QString value) {
+    setting->setValue(key, value);
 }
 
 bool EventHandler::relogin(QString tel, QString pass) {
