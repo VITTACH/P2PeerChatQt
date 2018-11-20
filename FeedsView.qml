@@ -16,7 +16,7 @@ Rectangle {
 
     Rectangle {
         width: parent.width
-        height: facade.toPx(240)
+        height: facade.toPx(250)
         color: loader.feed3Color
     }
 
@@ -124,7 +124,7 @@ Rectangle {
                         if (j == rssView.model.count)
                             rssView.model.append(obj)
                     }
-                    event_handler.saveSet("rss",JSON.stringify(RsCache))
+                    event_handler.saveSettings("rss",JSON.stringify(RsCache))
                 } else {
                     var rssNews = event_handler.loadValue("rss");
                     if (rssNews !== "") {
@@ -235,7 +235,7 @@ Rectangle {
                                 anchors.fill: parent;
                                 onClicked: {
                                     listView.friend = phone
-                                    defaultDialog.show(qsTr("Отправить заявку в друзья для <strong>") + login + " " + famil + "</strong>?", 2);
+                                    defaultDialog.show("Добавление аккаунта", "Отправить заявку в друзья для <strong>" + login + " " + famil + "</strong>?");
                                 }
                             }
 

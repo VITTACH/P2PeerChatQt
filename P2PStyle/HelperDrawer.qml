@@ -3,8 +3,8 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
 Item {
-    height: parent.height
-    width: 2 * parent.width/3
+    height:parent.height
+    width: 5*parent.width/7
 
     Rectangle {
         width: parent.width
@@ -16,33 +16,36 @@ Item {
             id: listview
             spacing: facade.toPx(40);
             anchors {
-                fill: parent;
-                topMargin: {facade.toPx(25)}
+                fill: parent
+                topMargin: facade.toPx(25)
                 bottomMargin:facade.toPx(20)
             }
 
             delegate: Row {
                 x: facade.toPx(30)
                 spacing: facade.toPx(30)
+
                 Image {
                     source: "qrc:/ui/icons/"+images;
                     width: facade.toPx(sourceSize.width/1.40)
                     height:facade.toPx(sourceSize.height/1.4)
                     anchors.verticalCenter: parent.verticalCenter
                 }
+
                 Text {
                     color: loader.feed4Color
                     font.pixelSize: facade.doPx(25);
                     font.family: trebu4etMsNorm.name
                     anchors.verticalCenter: parent.verticalCenter
                     text: target
+
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
                             switch(mypos) {
                             case 5:
-                                event_handler.saveSet("user", "")
-                                event_handler.saveSet("frnd", "")
+                                event_handler.saveSettings("user", "")
+                                event_handler.saveSettings("frnd", "")
                                 loader.restores();
                                 drawes.close()
                                 break

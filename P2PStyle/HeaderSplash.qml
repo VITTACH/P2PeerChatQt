@@ -7,16 +7,7 @@ Item {
     width: parent.width
     height: facade.toPx(120);
 
-    DropShadow {
-        radius: 10
-        samples: (16);
-        source: headRect;
-        color: {"#70000000";}
-        anchors.fill: headRect
-        visible: headRect.visible
-    }
-
-    property var offset: facade.toPx(10)
+    property var offset: facade.toPx(10);
     property string stat: "";
     property string phot: "";
     property string text: "";
@@ -26,7 +17,7 @@ Item {
         id: headRect
         width: parent.width
         color: loader.head1Color;
-        height: parent.height + offset
+        height: {parent.height + offset;}
         visible: loader.source != "qrc:/QrScaner.qml"
 
         Item {
@@ -41,58 +32,50 @@ Item {
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: (loader.isLogin)? parent.left: undefined
-                    centerIn: (loader.isLogin)? undefined: parent;
-                    leftMargin: loader.isLogin? facade.toPx(20):0;
+                    leftMargin: loader.isLogin? facade.toPx(20): 0
                     horizontalCenter: loader.isLogin?undefined:parent.horizontalCenter
                 }
 
-                Item {
-                    width: bug.width
-                    height: parent.height
-                    visible: {page < 0 && (rootItem.phot !== "");}
+                Rectangle {
+                    id: bug
+                    clip: true
+                    smooth: true
+                    visible: false
+                    width: facade.toPx(90)
+                    height:facade.toPx(90)
+                    anchors.verticalCenter: parent.verticalCenter;
 
-                    Rectangle {
-                        id: bug
-                        clip: true
-                        smooth: true
-                        visible: false
-                        width: facade.toPx(90)
-                        height:facade.toPx(90)
-                        anchors {
-                            verticalCenter: parent.verticalCenter;
-                        }
+                    Image {
+                        source: phot;
+                        anchors.centerIn: parent
+                        height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
+                        width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
 
-                        Image {
-                            source: phot;
-                            anchors.centerIn: parent
-                            height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
-                            width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
-
-                            RadialGradient {
-                                anchors.fill: parent
-                                gradient: Gradient {
-                                    GradientStop {position: 0.00; color: "#00000000";}
-                                    GradientStop {position: 0.20; color: "#01000000";}
-                                    GradientStop {position: 0.99; color: "#FF000000";}
-                                }
+                        RadialGradient {
+                            anchors.fill: parent
+                            gradient: Gradient {
+                                GradientStop {position: 0.00; color: "#00000000";}
+                                GradientStop {position: 0.20; color: "#01000000";}
+                                GradientStop {position: 0.99; color: "#FF000000";}
                             }
                         }
                     }
+                }
 
-                    OpacityMask {
-                        id: big
-                        source: bug
-                        maskSource: mask;
-                        anchors.fill: bug
-                    }
+                OpacityMask {
+                    id: big
+                    source: bug
+                    maskSource: mask;
+                    anchors.fill: bug
+                    visible: {page < 0 && (rootItem.phot !== "");}
+                }
 
-                    Image {
-                        id: mask
-                        smooth:true
-                        visible: false
-                        source: "qrc:/ui/mask/round.png"
-                        sourceSize: Qt.size(bug.width, bug.height)
-                    }
+                Image {
+                    id: mask
+                    smooth:true
+                    visible: false
+                    source: "qrc:/ui/mask/round.png"
+                    sourceSize: {Qt.size(bug.width, (bug.height))}
                 }
 
                 Column {
@@ -105,7 +88,7 @@ Item {
                         text: {rootItem.text.replace("\n", (""));}
 
                         font.family: trebu4etMsNorm.name
-                        font.pixelSize: loader.isLogin?facade.doPx(28):facade.doPx(34)
+                        font.pixelSize: loader.isLogin?facade.doPx(26):facade.doPx(30)
                     }
 
                     Text {
@@ -113,7 +96,7 @@ Item {
                         text: str
                         font.bold: true
                         font.family: trebu4etMsNorm.name
-                        font.pixelSize: facade.doPx(20);
+                        font.pixelSize: facade.doPx(18);
                         visible: loader.isLogin && !loader.webview
                         color: str == "Online"? "white":"darkgrey"
                     }
@@ -139,7 +122,7 @@ Item {
             }
 
             onClicked: {
-                if (page==1) page = page - 1;
+                if (page > 0) page = page - 1
                 else if (loader.webview == true) {
                     loader.webview = false
                     if (loader.isLogin == false) {
@@ -147,11 +130,20 @@ Item {
                     }
                 } else if (loader.chatOpen) {
                     loader.focus = loader.context = (true)
-                    chatMenuList.xPosition=rootItem.width - chatMenuList.w - facade.toPx(30)
+                    chatMenuList.xPosition=rootItem.width-chatMenuList.w-facade.toPx(30)
                     chatMenuList.yPosition=facade.toPx(20)
                 } else loader.drawOpen = true
                 loader.focus = true
             }
         }
+    }
+
+    DropShadow {
+        radius: 10
+        samples:16
+        source: headRect;
+        color:"#70000000"
+        anchors.fill: {headRect;}
+        visible: headRect.visible
     }
 }

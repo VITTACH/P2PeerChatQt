@@ -162,7 +162,7 @@ ApplicationWindow {
         function back() {
             if (privated.visitedPageList.length > 1) {
                 if (source == "qrc:/MainScreenView.qml") {
-                    if (partnerHeader.page == 1) partnerHeader.page = partnerHeader.page-1
+                    if (partnerHeader.page == 1) {partnerHeader.page = 0}
                 } else if (loader.source != "ProfileView.qml") {
                     privated.visitedPageList.pop()
                     source = privated.visitedPageList[privated.visitedPageList.length - 1]
@@ -200,7 +200,7 @@ ApplicationWindow {
             request.open('POST',"http://hoppernet.hol.es/default.php")
             request.onreadystatechange = function() {
                 if (request.readyState == XMLHttpRequest.DONE) {
-                    if (request.status && request.status==200) {
+                    if (request.status && request.status == 200) {
                         if (request.responseText == "") response = -1;
                         else if (request.responseText != "no") {
                             response = (1)
@@ -212,15 +212,21 @@ ApplicationWindow {
 
                         switch(response) {
                             case 1:
-                                loader.isOnline = !false;
-                                event_handler.sendMsgs(phone);
-                                var uo = {tel: phone, pass: password, login: loader.login,
-                                    family:loader.famil, image:loader.avatarPath}
-                                event_handler.saveSet("user", JSON.stringify(uo))
+                                var userModel = {
+                                    tel: phone,
+                                    pass: password,
+                                    login: loader.login,
+                                    family:loader.famil,
+                                    image: loader.avatarPath
+                                }
+
+                                loader.isOnline = true
+                                event_handler.sendMsgs(phone)
+                                event_handler.saveSettings("user", JSON.stringify(userModel))
                                 break;
 
                             case 0:
-                                defaultDialog.show(qsTr("Вы не были зарегистрированы"), 0)
+                                defaultDialog.show("Ошибка входа", "Вы не зарегистрированы");
                                 if (loader.aToken != ""){
                                     loader.fields[0] = (loader.login);
                                     loader.fields[1] = (loader.famil);
@@ -229,14 +235,15 @@ ApplicationWindow {
                                     loader.fields[1] = ""
                                     loader.fields[2] =password
                                 }
-                                if (loader.source != "qrc:/MainScreenView.qml")
+                                if (loader.source != "qrc:/MainScreenView.qml") {
                                     goTo("qrc:/MainScreenView.qml");
+                                }
                                 loader.fields[4] = phone;
                                 partnerHeader.page = (1);
                                 break;
 
                             case -1:
-                                defaultDialog.show("Временно нету доступа до интернету",0)
+                                defaultDialog.show("Ошибка входа", "Нет доступа в интернет");
                                 break;
                         }
                     } else {

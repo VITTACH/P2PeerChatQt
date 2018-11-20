@@ -13,6 +13,7 @@ Item {
         height: parent.height
         width: 2 * parent.width
         color: loader.feed3Color;
+
         Image {
             opacity: 0.55
             anchors.bottom: parent.bottom
@@ -154,15 +155,14 @@ Item {
                     }
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(29);
+
                     onClicked: {
                         switch(index) {
                         case 3:
                             if (loader.fields[0].length <= 10) {
-                                var text1 = "Телефон не правильный"
-                                defaultDialog.show(text1, (0))
+                                defaultDialog.show("Ошибка входа", "Телефон не правильный")
                             } else if (loader.fields[1].length<5) {
-                                var text2 = "Пароль < 5ти символов"
-                                defaultDialog.show(text2, (0))
+                                defaultDialog.show("Ошибка входа", "Пароль < 5ти символов")
                             } else {
                                 var telephone = loader.fields[(0)];
                                 var passwords = loader.fields[(1)];

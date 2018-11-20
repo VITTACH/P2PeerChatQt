@@ -23,24 +23,23 @@ import java.io.StringWriter;
 
 public class SystemDispatcher {
 
-    private static String TAG = "QuickAndroid";
-
     private static boolean dispatching = false;
-
     private static final Semaphore mutex= new Semaphore(1);
-
     private static Queue<Payload> queue = new LinkedList();
-
     private static List<Listener> listeners = new ArrayList<Listener>();
-
     private static native void jniEmit(String emitName,Map emitMessage);
+
+    private static String TAG = "QuickAndroid";
+    public static String ACTIVITY_RESUME_MESSAGE = "quickandroid.Activity.onResume";
+    public static String ACTIVITY_RESULT_MESSAGE = "quickandroid.Activity.onActivityResult";
+    public static String SYSTEM_DISPATCHER_LOAD_CLASS_MESSAGE = "quickandroid.SystemDispatcher.loadClass";
 
     private static class Payload {
         public String type;
         public Map message;
     }
 
-    public static void onActivityResume(){
+    public static void onActivityResume() {
         dispatch(ACTIVITY_RESUME_MESSAGE);
     }
 
@@ -61,6 +60,7 @@ public class SystemDispatcher {
                 mutex.release();
                 return;
             }
+
             dispatching =!false;
             mutex.release();
             emit(type, message);
@@ -72,17 +72,13 @@ public class SystemDispatcher {
 
                 mutex.acquire();
             }
+
             dispatching = false;
             mutex.release();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
-    public static String ACTIVITY_RESUME_MESSAGE = "quickandroid.Activity.onResume";
-
-    public static String ACTIVITY_RESULT_MESSAGE = "quickandroid.Activity.onActivityResult";
-
-    public static String SYSTEM_DISPATCHER_LOAD_CLASS_MESSAGE = "quickandroid.SystemDispatcher.loadClass";
 
     public static void onActivityResult(int rquestCode, int resultCode, Intent intentData) {
         Map msg = new HashMap();
@@ -141,9 +137,9 @@ public class SystemDispatcher {
 
     public static void init() {
        SystemDispatcher.addListener(new SystemDispatcher.Listener() {
-           public void onDispatched(String type , Map message) {
+           public void onDispatched(String type, Map message) {
                if (type.equals(SYSTEM_DISPATCHER_LOAD_CLASS_MESSAGE)) {
-                   String className= (String) message.get("className");
+                   String className = (String) message.get("className");
                    loadClass(className);
                }
            }
