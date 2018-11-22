@@ -539,21 +539,24 @@ Drawer {
         PropertyAnimation {
             id: attachMove;
             target: attach;
-            from: {(attach.move) ? 0 : facade.toPx(380);}
-            to: {(attach.move) ? facade.toPx(380) : (0);}
+            from: attach.move? 0: facade.toPx(380)
+            to: attach.move? facade.toPx(380): (0)
             property: "height";
             duration: 300
         }
+
         Column {
             id: area
             clip: true;
             width: parent.width
             anchors.bottom: parent.bottom
+
             Rectangle {
                 id: attach
                 color: "#90FFFFFF";
                 width: parent.width
                 property bool move: false
+
                 Connections {
                     target: attach;
                     onMoveChanged: {
@@ -574,6 +577,7 @@ Drawer {
                         id: cam
                         width: height;
                         height: parent.height*0.7
+
                         Camera {
                             id:camera2
                             position: Camera.FrontFace
@@ -584,6 +588,7 @@ Drawer {
                             }
                             Component.onCompleted:stop()
                         }
+
                         VideoOutput {
                             fillMode: {VideoOutput.PreserveAspectCrop;}
                             source: camera2
@@ -670,12 +675,13 @@ Drawer {
             Item {
                 width: parent.width
                 height:textField.memHeight
+
                 Item {
                     anchors.fill: {parent}
                     Flickable {
                         height: {
                             if (textField.lineCount == 1) {
-                                textField.memHeight =facade.toPx(110)
+                                textField.memHeight =facade.toPx(90)
                             } else if (textField.lineCount < 6) {
                                 textField.memHeight =textField.implicitHeight;
                             } else {
@@ -702,7 +708,7 @@ Drawer {
                             }
                             rightPadding:sendButton.width+leftPadding
                             font.family:trebu4etMsNorm.name
-                            font.pixelSize: facade.doPx(34)
+                            font.pixelSize: facade.doPx(26)
                             Keys.onReleased: {
                                 if (event.key == Qt.Key_Control||event.key == Qt.Key_Return) {
                                     if (pressCtrl==true&&pressEntr) {
