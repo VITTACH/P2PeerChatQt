@@ -21,6 +21,7 @@ ios {
     QML_IMPORT_PATH += $$PWD/vendor/com/github/benlau/quickios-master/
 }
 
+include(QZXing/QZXing.pri)
 include(vendor/vendor.pri)
 
 HEADERS += \
@@ -29,7 +30,8 @@ HEADERS += \
     HttpNetwork.h \
     eventhandler.h \
     PHoneswrapper.h \
-    imageprocessor.h
+    imageprocessor.h \
+    cameracontroler.h
 
 test_conf {
     SOURCES += \
@@ -49,6 +51,7 @@ RESOURCES += \
     qml.qrc
 
 DISTFILES += \
+    QZXing/QZXing.pri \
     android-sources/gradlew \
     android-sources/gradlew.bat \
     android-sources/build.gradle \
@@ -89,3 +92,6 @@ contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
         $$PWD/ssl/libcrypto.so \
         $$PWD/ssl/libssl.so
 }
+
+SOURCES += \
+    cameracontroler.cpp

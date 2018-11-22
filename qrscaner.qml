@@ -1,14 +1,12 @@
 import QtQuick 2.0
 import QtMultimedia 5.7
-import ImageProcessor 1.0
 import QtQuick.Controls 2.0
 
 Item {
     Timer {
-        id: timeout
         running: true
-        interval: 39000;
-        onTriggered:loader.back()
+        interval: 39000
+        onTriggered: loader.back()
     }
 
     /*
@@ -37,55 +35,36 @@ Item {
         xhr.send(body);
     }*/
 
+
     Timer {
-        id: capture
-        running: true
+        interval: 2000
+        triggeredOnStart: false
+
         onTriggered: {
             viewer.grabToImage(function(resultImg) {
-                var fullImageName = "qrcode.png";
-                resultImg.saveToFile(fullImageName);
-                imageProcessor.rgbImg(fullImageName)
-                var path = fullImageName
-                imageProcessor.delCaptureImage(path)
+                cameracontroler.decodeQMLImage(resultImg)
             })
         }
-        interval: 3000
-    }
 
-    Connections {
-        target: imageProcessor
-        onResultScanToQML: {
-            if(response!="") {
-            response = response.replace(/\\\//g,"/")
-            console.log(response)
-            var obj
-            obj= JSON.parse(response);
-            var url
-            url= obj[0].symbol[0].data
-
-            if (url != null) {
-                timeout.restart()
-                var re=JSON.parse(url)
-                loader.logon(re.phone, re.passwords)
-            }
-            else
-                capture.restart()
-            }
-        }
+        running:true
+        repeat: true
     }
 
     VideoOutput {
         id: viewer
         source: camera
-        orientation: -90
         anchors.fill: parent
+        autoOrientation:true
         fillMode: VideoOutput.PreserveAspectCrop
 
-        MouseArea {
+        PinchArea {
             anchors.fill: parent;
-            onClicked: {
-                capture.restart()
-                camera.imageCapture.capture()
+            pinch.minimumScale: 1
+            pinch.maximumScale: camera.maximumDigitalZoom
+            scale: camera.digitalZoom
+
+            onPinchUpdated: {
+                camera.digitalZoom = pinch.scale
             }
         }
     }
@@ -93,6 +72,7 @@ Item {
     Camera {
         id: camera
         flash.mode: Camera.FlashAuto
+        captureMode: Camera.CaptureStillImage
 
         exposure {
             exposureCompensation: -1
@@ -105,7 +85,6 @@ Item {
 
         imageCapture {
             onImageCaptured: {
-                capture.stop()
                 imageProcessor.processImage(preview)
             }
             onImageSaved: {
@@ -167,6 +146,7 @@ Item {
             width: 4
             height: {parent.height/5}
             anchors.left: parent.left
+            anchors.leftMargin: -width/2;
             radius: width
             color: "limegreen"
         }
@@ -175,6 +155,7 @@ Item {
             width: 4
             height: parent.height/5
             anchors.right: parent.right
+            anchors.rightMargin: -width/2
             radius: width
             color: "limegreen"
         }
@@ -184,6 +165,7 @@ Item {
             height: {parent.height/5}
             anchors.left: parent.left
             anchors.bottom: parent.bottom
+            anchors.leftMargin: -width/2;
             radius: width
             color: "limegreen"
         }
@@ -192,6 +174,7 @@ Item {
             width: 4
             height: parent.height/5
             anchors.right: parent.right
+            anchors.rightMargin: -width/2
             anchors.bottom: parent.bottom
             radius: width
             color: "limegreen"
@@ -199,25 +182,29 @@ Item {
 
         Rectangle {
             height: 4
-            width: {parent.height/5}
-            anchors.left: parent.left
+            width: parent.height/5;
+            anchors.top: parent.top
+            anchors.topMargin: -height/2;
             radius: width
             color: "limegreen"
         }
 
         Rectangle {
             height: 4
-            width: {parent.height/5}
-            anchors.right: parent.right
+            width: parent.height/5;
+            anchors.top: parent.top
+            anchors.right: {parent.right}
+            anchors.topMargin: -height/2;
             radius: width
             color: "limegreen"
         }
 
         Rectangle {
             height: 4
-            width: {parent.height/5}
+            width: {parent.height/5;}
             anchors.left: parent.left
             anchors.bottom: parent.bottom
+            anchors.bottomMargin: -height/2
             radius: width
             color: "limegreen"
         }
@@ -227,14 +214,17 @@ Item {
             width: parent.height/5
             anchors.right: parent.right
             anchors.bottom: parent.bottom
+            anchors.bottomMargin: -height/2
             radius: width
             color: "limegreen"
         }
 
         Rectangle {
             id: scanline
+
             height: 2
-            width: parent.width - 2*height;
+            radius: height
+            width: parent.width
             anchors.centerIn: parent;
 
             SequentialAnimation {
@@ -242,21 +232,19 @@ Item {
                 loops: {Animation.Infinite}
                 ColorAnimation {
                     target: scanline;
-                    property: {"color"}
+                    property: "color"
                     from: "red"
-                    to: {"transparent"}
-                    duration: 350
+                    to: "transparent"
+                    duration: 200
                 }
                 ColorAnimation {
                     from: "transparent"
                     target: scanline;
                     property: "color"
                     to: "red";
-                    duration: 350
+                    duration: 200
                 }
             }
         }
     }
-
-    ImageProcessor {id: imageProcessor}
 }

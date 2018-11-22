@@ -7,28 +7,37 @@ Item {
     width: parent.width
     height: facade.toPx(120);
 
-    property var offset: facade.toPx(10);
+    property var offset: facade.toPx(10)
     property string stat: "";
     property string phot: "";
     property string text: "";
     property int page: 0
 
+    DropShadow {
+        source: headRect
+        color: "#70000000"
+        radius: 10;
+        samples: 16
+        visible: headRect.visible
+        anchors.fill: {headRect;}
+    }
+
     Rectangle {
         id: headRect
         width: parent.width
         color: loader.head1Color;
-        height: {parent.height + offset;}
-        visible: loader.source != "qrc:/QrScaner.qml"
+        height: parent.height + offset
+        visible: loader.source != "qrc:/QrScaner.qml"? true: false
 
         Item {
             id: inerItem
             height: parent.height
             anchors.rightMargin: page > 0? hambrgrButton.width: 0;
             anchors.left: page!=0 || loader.isLogin? hambrgrButton.right: parent.left;
-            anchors.right: {parent.right}
+            anchors.right: parent.right
 
             Row {
-                spacing: facade.toPx(30);
+                spacing:facade.toPx(30)
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: (loader.isLogin)? parent.left: undefined
@@ -125,25 +134,13 @@ Item {
                 if (page > 0) page = page - 1
                 else if (loader.webview == true) {
                     loader.webview = false
-                    if (loader.isLogin == false) {
-                        loader.back()
-                    }
+                    if (loader.isLogin == false) loader.back()
                 } else if (loader.chatOpen) {
                     loader.focus = loader.context = (true)
                     chatMenuList.xPosition=rootItem.width-chatMenuList.w-facade.toPx(30)
                     chatMenuList.yPosition=facade.toPx(20)
                 } else loader.drawOpen = true
-                loader.focus = true
             }
         }
-    }
-
-    DropShadow {
-        radius: 10
-        samples:16
-        source: headRect;
-        color:"#70000000"
-        anchors.fill: {headRect;}
-        visible: headRect.visible
     }
 }
