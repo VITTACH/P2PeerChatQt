@@ -21,7 +21,7 @@ ios {
     QML_IMPORT_PATH += $$PWD/vendor/com/github/benlau/quickios-master/
 }
 
-include(QZXing/QZXing.pri)
+include(QZXING/QZXING.pri)
 include(vendor/vendor.pri)
 
 HEADERS += \
@@ -51,7 +51,7 @@ RESOURCES += \
     qml.qrc
 
 DISTFILES += \
-    QZXing/QZXing.pri \
+    QZXING/QZXING.pri \
     android-sources/gradlew \
     android-sources/gradlew.bat \
     android-sources/build.gradle \
