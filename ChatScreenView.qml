@@ -16,8 +16,8 @@ Drawer {
     height: parent.height
 
     function setInfo(messag, photos, status) {
-        partnersHead.stat = status
-        partnersHead.phot = photos
+        partnersHead.status = status
+        partnersHead.photo = photos
         partnersHead.text = messag
     }
 
@@ -757,7 +757,7 @@ Drawer {
                     onClicked: attach.move = !attach.move;
                     background: Image {
                         source: "ui/buttons/addButton.png"
-                        width: facade.toPx(sourceSize.width)
+                        width: facade.toPx(sourceSize.width);
                         height: facade.toPx(sourceSize.height);
                         anchors {
                             horizontalCenter: parent.horizontalCenter

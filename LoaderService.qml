@@ -140,7 +140,7 @@ ApplicationWindow {
         property string menu16Color: "#7A8899"
         property string menu17Color: "#697886"
 
-        property string head1Color: "#546475";
+        property string head1Color: "#495766";
         property string head2Color: "#FEFEFE";
 
         property string sets2Color: "#68707A";
@@ -299,16 +299,16 @@ ApplicationWindow {
     }
 
     P2PStyle.HeaderSplash {
-        visible: {loader.source != "qrc:/QrScan.qml"}
+        visible: loader.source != "qrc:/QrScaner.qml"
         id: partnerHeader;
     }
 
     FontLoader {
-        source:"qrc:/fonts/TrebuchetMSn.ttf"
+        source: "qrc:/fonts/TrebuchetMSn.ttf"
         id: trebu4etMsNorm
     }
 
     P2PStyle.DefaultDialog {id: defaultDialog;}
 
-    P2PStyle.ImagesDialog {id: avatarDialog}
+    P2PStyle.ImagesDialog {id: avatarDialog;}
 }

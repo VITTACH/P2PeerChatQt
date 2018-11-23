@@ -302,8 +302,8 @@ Rectangle {
 
             Rectangle {
                 id: rssRect;
-                visible: index == 1;
-                color: "transparent"
+                visible: index == 1
+                color: {"transparent"}
                 property int countCard: 4
 
                 Component.onCompleted: {
@@ -489,6 +489,7 @@ Rectangle {
             font: (parent.font);
             text: (parent.text);
         }
+
         onClicked: basView.positionViewAtBeginning()
         width: facade.toPx(200);
         background: Rectangle {
@@ -500,37 +501,62 @@ Rectangle {
     Rectangle {
         id: downRow
         width: parent.width
-        height: parent.height > parent.width?facade.toPx(80): facade.toPx(70)
+        height: facade.toPx(80);
         anchors.bottom: parent.bottom;
 
         Rectangle {
-            height: 1
+            id: border
+            height: 1;
             width: parent.width;
             color: ("lightgray")
             anchors.top: {parent.top;}
         }
 
-        Row {
-            spacing: {facade.toPx(50)}
-            anchors.centerIn: {parent}
-            Repeater {
-                model: ["Реклама", "Для бизнеса", "Все о P2P","Безопасность"]
-                Text {
-                    text: {modelData;}
-                    anchors.verticalCenter: parent.verticalCenter;
-                    font.family: trebu4etMsNorm.name
-                    font.pixelSize:{facade.doPx(16)}
+        Item {
+            width: nWidth
+            x: facade.toPx(20)
+            height: parent.height
+
+            ListView {
+                clip: true
+                id: bottomNav
+                property var buttonWidth: facade.toPx(140)
+
+                height: parent.height - border.height;
+                width: (buttonWidth+spacing)*model.count+spacing;
+                spacing: facade.toPx(50)
+                orientation: Qt.Horizontal
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                model: ListModel {
+                    ListElement {message: "Новости"}
+                    ListElement {message: "Партнерам"}
+                    ListElement {message: "Поделись";}
+                    ListElement {message: "Все о P2P"}
+                }
+
+                delegate: Button {
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: buttonWidth;
+
+                    contentItem: Text {
+                        text: message
+                        font.bold: true
+                        font.family: trebu4etMsNorm.name
+                        horizontalAlignment: {Text.AlignHCenter;}
+                        font.pixelSize: facade.doPx(16);
+                    }
                 }
             }
         }
     }
 
     Loader {
-        source: event_handler.currentOSys()>0? "WebService.qml":""
+        source: event_handler.currentOSys()>0?"WebService.qml":""
         visible: loader.webview
         anchors {
             fill: parent
-            topMargin: partnerHeader.height - partnerHeader.offset
+            topMargin: partnerHeader.height -partnerHeader.offset
         }
     }
 }

@@ -8,24 +8,24 @@ SwipeView {
 
     Loader {
         id: loginScreen
-        Component.onCompleted: source = "qrc:/LoginView.qml"
+        Component.onCompleted: source = "LoginView.qml";
     }
 
     Loader {
         id: reginScreen
-        Component.onCompleted: source = "qrc:/RegistrationView.qml"
+        Component.onCompleted: source = "RegistrationView.qml";
     }
 
     onCurrentIndexChanged: {
         partnerHeader.page = currentIndex
         switch(currentIndex) {
             case 0:
-                partnerHeader.text = mainAppWindow.title;
+                partnerHeader.text = ""
                 loginScreen.focus = false
                 reginScreen.focus = true;
                 break;
             case 1:
-                partnerHeader.text = qsTr("Регистрация");
+                partnerHeader.text = qsTr("Зарегистрироваться")
                 reginScreen.focus = false
                 loginScreen.focus = true;
                 break;

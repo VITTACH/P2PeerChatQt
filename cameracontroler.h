@@ -1,13 +1,13 @@
 #ifndef CAMERACONTROLER_H
 #define CAMERACONTROLER_H
 
-#include <QZXing/QZXing.h>
+#include <QZXING/QZXing.h>
 #include <QObject>
 
 class CameraControler: public QObject {
     Q_OBJECT
 public:
-    explicit CameraControler(QObject *parent = 0);
+    explicit CameraControler(QObject *p=0);
 
 signals:
     void errorMessage(QString message);

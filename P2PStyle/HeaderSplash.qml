@@ -5,29 +5,19 @@ import QtGraphicalEffects 1.0
 Item {
     id: rootItem
     width: parent.width
-    height: facade.toPx(120);
+    height: facade.toPx(120)
 
-    property var offset: facade.toPx(10)
-    property string stat: "";
-    property string phot: "";
-    property string text: "";
     property int page: 0
-
-    DropShadow {
-        source: headRect
-        color: "#70000000"
-        radius: 10;
-        samples: 16
-        visible: headRect.visible
-        anchors.fill: {headRect;}
-    }
+    property string text: ""
+    property string photo: ""
+    property string status: ""
+    property var offset:facade.toPx(10)
 
     Rectangle {
         id: headRect
         width: parent.width
         color: loader.head1Color;
-        height: parent.height + offset
-        visible: loader.source != "qrc:/QrScaner.qml"? true: false
+        height: parent.height + offset;
 
         Item {
             id: inerItem
@@ -37,7 +27,7 @@ Item {
             anchors.right: parent.right
 
             Row {
-                spacing:facade.toPx(30)
+                spacing: facade.toPx(30)
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: (loader.isLogin)? parent.left: undefined
@@ -55,7 +45,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter;
 
                     Image {
-                        source: phot;
+                        source: photo;
                         anchors.centerIn: parent
                         height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                         width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
@@ -101,7 +91,7 @@ Item {
                     }
 
                     Text {
-                        property string str: {return rootItem.stat.replace("\n", "");}
+                        property string str: {return rootItem.status.replace("\n","")}
                         text: str
                         font.bold: true
                         font.family: trebu4etMsNorm.name
@@ -115,19 +105,18 @@ Item {
 
         Button {
             id: hambrgrButton
-            height:parent.height
-            width: facade.toPx(140)
-
+            height: parent.height
+            width: {facade.toPx(140);}
             visible: page != 0 || loader.isLogin || loader.webview
             anchors.verticalCenter: parent.verticalCenter;
 
             background: Image {
-                id: hambrgrButtonImage;
+                id: hambrgrButtonImage
                 height:facade.toPx(sourceSize.height* 1.0)
                 width: facade.toPx(sourceSize.width * 1.0)
                 fillMode: Image.PreserveAspectFit
                 source: "../ui/buttons/" + (page == 1 || loader.webview? "back": (page < 0? "more": "infor")) + "Button.png";
-                anchors.centerIn:parent
+                anchors.centerIn: {parent}
             }
 
             onClicked: {

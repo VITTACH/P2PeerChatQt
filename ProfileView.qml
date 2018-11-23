@@ -11,8 +11,8 @@ Item {
     }
 
     function changeState() {
-        partnerHeader.phot = loader.avatarPath
-        partnerHeader.stat = loader.isOnline? "Online": "Offline"
+        partnerHeader.photo = loader.avatarPath
+        partnerHeader.status = loader.isOnline ? "Online" : "Offline"
         partnerHeader.text = (loader.login + " " + loader.famil);
     }
 

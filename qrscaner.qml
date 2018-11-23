@@ -35,9 +35,8 @@ Item {
         xhr.send(body);
     }*/
 
-
     Timer {
-        interval: 2000
+        interval: 1000
         triggeredOnStart: false
 
         onTriggered: {
@@ -48,6 +47,19 @@ Item {
 
         running:true
         repeat: true
+    }
+
+    Connections {
+        target: cameracontroler
+
+        onTagFound: {
+            var qrResult = JSON.parse(idScanned);
+            loader.logon(qrResult.tel, qrResult.password)
+        }
+
+        onErrorMessage: {
+            console.log(message)
+        }
     }
 
     VideoOutput {
@@ -235,14 +247,14 @@ Item {
                     property: "color"
                     from: "red"
                     to: "transparent"
-                    duration: 200
+                    duration: 300
                 }
                 ColorAnimation {
                     from: "transparent"
                     target: scanline;
                     property: "color"
                     to: "red";
-                    duration: 200
+                    duration: 300
                 }
             }
         }

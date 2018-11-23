@@ -5,9 +5,7 @@ import "P2PStyle" as P2PStyle;
 import "js/URLQuery.js"as URLQuery
 
 Item {
-    property variant pageWidth
-
-    Component.onCompleted: partnerHeader.text = mainAppWindow.title
+    property var pageWidth
 
     Rectangle {
         height: parent.height
