@@ -478,8 +478,8 @@ Rectangle {
             right: parent.right;
         }
 
-        font.pixelSize: facade.doPx(20);
-        font.family: trebu4etMsNorm.name
+        font.pixelSize: facade.doPx(20)
+        font.family:trebu4etMsNorm.name
         visible: (basView.contentY > 0 && (parent.width - nWidth)/2 >= width)
         contentItem: Text {
             elide:Text.ElideRight
