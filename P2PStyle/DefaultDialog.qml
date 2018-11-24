@@ -1,9 +1,11 @@
 import QtQuick 2.0
-import QtQuick.Dialogs 1.2
+import QtQuick.Controls 2.1;
 
 Dialog {
     id: dialog
     property string message;
+
+    standardButtons: Dialog.Ok | Dialog.Cancel
 
     contentItem: Rectangle {
         color: "lightskyblue"
