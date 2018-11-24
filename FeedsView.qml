@@ -482,7 +482,7 @@ Rectangle {
         font.family:trebu4etMsNorm.name
         visible: (basView.contentY > 0 && (parent.width - nWidth)/2 >= width)
         contentItem: Text {
-            elide:Text.ElideRight
+            elide: Text.ElideRight
             verticalAlignment: Text.AlignBottom
             horizontalAlignment: {Text.AlignHCenter}
             width: parent.width;
