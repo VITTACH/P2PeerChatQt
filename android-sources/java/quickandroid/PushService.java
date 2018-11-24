@@ -23,7 +23,7 @@ public class PushService {
     static{notifyMyCounter=new AtomicInteger(1);}
 
     static void start() {
-        SystemDispatcher.addListener(new SystemDispatcher.Listener(){
+        SystemDispatcher.addListener(new SystemDispatcher.Listener() {
 
             NotificationManager mManager;
             Notification.Builder builder;

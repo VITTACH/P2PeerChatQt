@@ -54,8 +54,8 @@ int main(int argc,char **argv)
     context->setContextProperty("caller", &jwr);
     context->setContextProperty("event_handler",  eventhandler);
 
-    CameraControler qzxing;
-    context->setContextProperty("cameracontroler",  &qzxing);
+    CameraControler controler;
+    context->setContextProperty("cameracontroler",  &controler);
 
     #if !defined(Q_OS_ANDROID)
     Client client;
