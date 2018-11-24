@@ -14,10 +14,10 @@ Item {
 
         ListView {
             id: listview
-            spacing: facade.toPx(40);
+            spacing: facade.toPx(50);
             anchors {
                 fill: parent
-                topMargin: facade.toPx(25)
+                topMargin: facade.toPx(30)
                 bottomMargin:facade.toPx(20)
             }
 
@@ -34,7 +34,7 @@ Item {
 
                 Text {
                     color: loader.feed4Color
-                    font.pixelSize: facade.doPx(25);
+                    font.pixelSize: facade.doPx(24);
                     font.family: trebu4etMsNorm.name
                     anchors.verticalCenter: parent.verticalCenter
                     text: target

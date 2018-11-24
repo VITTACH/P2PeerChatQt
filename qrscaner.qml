@@ -107,7 +107,7 @@ Item {
 
     Rectangle {
         id: uperSquare
-        color: "#AA000000"
+        color: "#70000000"
         width: parent.width
         anchors {
             top: parent.top
@@ -117,7 +117,7 @@ Item {
 
     Rectangle {
         id: downSquare
-        color: "#AA000000"
+        color: "#70000000"
         width: parent.width
         anchors {
             bottom: parent.bottom;
@@ -127,7 +127,7 @@ Item {
 
     Rectangle {
         id: leftSquare
-        color: "#AA000000"
+        color: "#70000000"
         anchors {
             left: parent.left
             top: uperSquare.bottom
@@ -138,7 +138,7 @@ Item {
 
     Rectangle {
         id: rightSquare
-        color: "#AA000000"
+        color: "#70000000"
         anchors {
             right: parent.right
             top: uperSquare.bottom
