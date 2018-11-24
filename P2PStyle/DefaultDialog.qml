@@ -1,26 +1,31 @@
-import QtQuick 2.0
-import QtQuick.Controls 2.1;
+import QtQuick 2.7
+import QtQuick.Controls 2.2;
 
 Dialog {
     id: dialog
     property string message;
+    x:(parent.width-width)/2
+    y: parent.height-height-parent.height/6
 
-    standardButtons: Dialog.Ok | Dialog.Cancel
+    width: Math.min(0.73*parent.width, facade.toPx(666));
+    height: 2*width/3
+
+    standardButtons: Dialog.Ok
 
     contentItem: Rectangle {
-        color: "lightskyblue"
-        implicitWidth: facade.toPx(400)
-        implicitHeight:facade.toPx(100)
         Text {
             text: message
-            color: "navy"
-            anchors.centerIn: {parent;}
+            anchors.centerIn:parent
+            font {
+                pixelSize: facade.doPx(20);
+                family: trebu4etMsNorm.name
+            }
         }
     }
 
     function show(title, message) {
         dialog.message = message
         dialog.title = title
-        visible = true
+        dialog.open()
     }
 }

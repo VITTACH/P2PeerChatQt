@@ -39,7 +39,7 @@ Button {
         id: dialogWindow
         radius: facade.toPx(25)
         anchors.bottom: parent.bottom
-        anchors.bottomMargin:parent.height/6
+        anchors.bottomMargin: parent.height/6
         anchors.horizontalCenter: parent.horizontalCenter
         width: Math.min(0.73 * parent.width, facade.toPx(666.6));
         height: {2*width/3;}

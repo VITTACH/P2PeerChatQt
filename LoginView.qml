@@ -222,7 +222,7 @@ Item {
                         typeof plaseHolder == "undefined" ? ("") : plaseHolder;
                     }
                     inputMethodHints: {
-                        if (index == 1) Qt.ImhFormattedNumbersOnly;
+                        if (index == 1) Qt.ImhDialableCharactersOnly
                         else Qt.ImhNone
                     }
                     onFocusChanged: {
