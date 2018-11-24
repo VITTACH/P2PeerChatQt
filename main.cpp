@@ -4,7 +4,7 @@
 #include <QInputDialog>
 #include "HttpNetwork.h"
 #include "eventhandler.h"
-#include "imageprocessor.h"
+#include "cameracontroler.h"
 
 #include <QScreen>
 #include <QQmlContext>
@@ -47,13 +47,15 @@ int main(int argc,char **argv)
     QQuickStyle::setStyle("P2PStyle");
     eventhandler->currentSys = currentSys;
 
-    qmlRegisterType<StatusBar>("StatusBar", 0 , 1, "StatusBar");
-    qmlRegisterType<ImageProcessor>("ImageProcessor", 1, 0, "ImageProcessor");
+    qmlRegisterType <StatusBar>("StatusBar", 0, 1, "StatusBar");
 
     QQmlContext *context = engine.rootContext();
     Wrapper jwr;
     context->setContextProperty("caller", &jwr);
     context->setContextProperty("event_handler",  eventhandler);
+
+    CameraControler controler;
+    context->setContextProperty("cameracontroler",  &controler);
 
     #if !defined(Q_OS_ANDROID)
     Client client;
@@ -77,7 +79,7 @@ int main(int argc,char **argv)
     eventhandler->connect(&client, SIGNAL(recieved(QString, QString)), eventhandler, SLOT(display(QString, QString)));
     #endif
 
-    engine.load(QUrl("qrc:/load.qml"));
+    engine.load(QUrl("qrc:/LoaderService.qml"));
     QObject *root_obj = engine.rootObjects().first();
     QObject *loader = root_obj->findChild <QObject*> ("loader");
     loader->setProperty

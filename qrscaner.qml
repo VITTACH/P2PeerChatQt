@@ -1,14 +1,12 @@
 import QtQuick 2.0
 import QtMultimedia 5.7
-import ImageProcessor 1.0
 import QtQuick.Controls 2.0
 
 Item {
     Timer {
-        id: timeout
         running: true
-        interval: 39000;
-        onTriggered:loader.back()
+        interval: 39000
+        onTriggered: loader.back()
     }
 
     /*
@@ -38,54 +36,47 @@ Item {
     }*/
 
     Timer {
-        id: capture
-        running: true
+        interval: 1000
+        triggeredOnStart: false
+
         onTriggered: {
             viewer.grabToImage(function(resultImg) {
-                var fullImageName = "qrcode.png";
-                resultImg.saveToFile(fullImageName);
-                imageProcessor.rgbImg(fullImageName)
-                var path = fullImageName
-                imageProcessor.delCaptureImage(path)
+                cameracontroler.decodeQMLImage(resultImg)
             })
         }
-        interval: 3000
+
+        running:true
+        repeat: true
     }
 
     Connections {
-        target: imageProcessor
-        onResultScanToQML: {
-            if(response!="") {
-            response = response.replace(/\\\//g,"/")
-            console.log(response)
-            var obj
-            obj= JSON.parse(response);
-            var url
-            url= obj[0].symbol[0].data
+        target: cameracontroler
 
-            if (url != null) {
-                timeout.restart()
-                var re=JSON.parse(url)
-                loader.logon(re.phone, re.passwords)
-            }
-            else
-                capture.restart()
-            }
+        onTagFound: {
+            var qrResult = JSON.parse(idScanned);
+            loader.logon(qrResult.tel, qrResult.password)
+        }
+
+        onErrorMessage: {
+            console.log(message)
         }
     }
 
     VideoOutput {
         id: viewer
         source: camera
-        orientation: -90
         anchors.fill: parent
+        autoOrientation:true
         fillMode: VideoOutput.PreserveAspectCrop
 
-        MouseArea {
+        PinchArea {
             anchors.fill: parent;
-            onClicked: {
-                capture.restart()
-                camera.imageCapture.capture()
+            pinch.minimumScale: 1
+            pinch.maximumScale: camera.maximumDigitalZoom
+            scale: camera.digitalZoom
+
+            onPinchUpdated: {
+                camera.digitalZoom = pinch.scale
             }
         }
     }
@@ -93,6 +84,7 @@ Item {
     Camera {
         id: camera
         flash.mode: Camera.FlashAuto
+        captureMode: Camera.CaptureStillImage
 
         exposure {
             exposureCompensation: -1
@@ -105,7 +97,6 @@ Item {
 
         imageCapture {
             onImageCaptured: {
-                capture.stop()
                 imageProcessor.processImage(preview)
             }
             onImageSaved: {
@@ -115,59 +106,157 @@ Item {
     }
 
     Rectangle {
-        id: scaner
-        height: width
-        width: Math.min(parent.width, facade.toPx(1000))
-        color: "transparent"
-        border.width: {width/4}
-        border.color: "#80000000"
-        anchors.centerIn: parent;
-
-        Rectangle {
-            height: width
-            color: "transparent";
-            width: {parent.width/2.0}
-            border.color: "limegreen"
-            border.width: 2;
-            anchors.centerIn: parent;
-
-            Rectangle {
-                id: scanline
-                height: 2
-                width: parent.width-4
-                anchors.centerIn: parent;
-
-                SequentialAnimation {
-                    running: true
-                    loops: Animation.Infinite
-                    ColorAnimation {
-                        target: scanline;
-                        property: {"color"}
-                        from: "red"
-                        to: {"transparent"}
-                        duration: 350
-                    }
-                    ColorAnimation {
-                        from: "transparent"
-                        target: scanline;
-                        property: "color"
-                        to: "red";
-                        duration: 350
-                    }
-                }
-            }
-        }
-
-        Button {
-            anchors.bottom: {parent.bottom}
-            width: parent.width
-            height: facade.toPx(80)
-            font.family:trebu4etMsNorm.name
-            font.pixelSize: facade.doPx(20)
-            text: qsTr("Cancel scan")
-            onClicked: loader.back();
+        id: uperSquare
+        color: "#AA000000"
+        width: parent.width
+        anchors {
+            top: parent.top
+            bottom: center.top
         }
     }
 
-    ImageProcessor{id:imageProcessor}
+    Rectangle {
+        id: downSquare
+        color: "#AA000000"
+        width: parent.width
+        anchors {
+            bottom: parent.bottom;
+            top: center.bottom
+        }
+    }
+
+    Rectangle {
+        id: leftSquare
+        color: "#AA000000"
+        anchors {
+            left: parent.left
+            top: uperSquare.bottom
+            bottom: downSquare.top
+            right: center.left
+        }
+    }
+
+    Rectangle {
+        id: rightSquare
+        color: "#AA000000"
+        anchors {
+            right: parent.right
+            top: uperSquare.bottom
+            bottom: downSquare.top
+            left: center.right
+        }
+    }
+
+    Rectangle {
+        id: center
+        width: height
+        color: "transparent"
+        height: parent.width > parent.height? parent.width/3: parent.height/3
+        anchors.centerIn: parent;
+
+        Rectangle {
+            width: 4
+            height: {parent.height/5}
+            anchors.left: parent.left
+            anchors.leftMargin: -width/2;
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            width: 4
+            height: parent.height/5
+            anchors.right: parent.right
+            anchors.rightMargin: -width/2
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            width: 4
+            height: {parent.height/5}
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: -width/2;
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            width: 4
+            height: parent.height/5
+            anchors.right: parent.right
+            anchors.rightMargin: -width/2
+            anchors.bottom: parent.bottom
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            height: 4
+            width: parent.height/5;
+            anchors.top: parent.top
+            anchors.topMargin: -height/2;
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            height: 4
+            width: parent.height/5;
+            anchors.top: parent.top
+            anchors.right: {parent.right}
+            anchors.topMargin: -height/2;
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            height: 4
+            width: {parent.height/5;}
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: -height/2
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            height: 4
+            width: parent.height/5
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: -height/2
+            radius: width
+            color: "limegreen"
+        }
+
+        Rectangle {
+            id: scanline
+
+            height: 2
+            radius: height
+            width: parent.width
+            anchors.centerIn: parent;
+
+            SequentialAnimation {
+                running: true
+                loops: {Animation.Infinite}
+                ColorAnimation {
+                    target: scanline;
+                    property: "color"
+                    from: "red"
+                    to: "transparent"
+                    duration: 300
+                }
+                ColorAnimation {
+                    from: "transparent"
+                    target: scanline;
+                    property: "color"
+                    to: "red";
+                    duration: 300
+                }
+            }
+        }
+    }
 }

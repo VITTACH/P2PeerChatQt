@@ -4,10 +4,10 @@ import QtQuick.Controls 2.0
 Rectangle {
     anchors.fill: parent
     Loader {
-        source: event_handler.currentOSys()>0?"qrc:/ibrowser.qml":""
+        source: event_handler.currentOSys() > 0? "WebService.qml":""
         anchors {
             fill: parent
-            topMargin: (partnerHeader.height - partnerHeader.offset)
+            topMargin: partnerHeader.height
         }
     }
 }

@@ -7,26 +7,32 @@ Button {
     visible: loader.context
     contentItem: Text {opacity: 0;}
     onClicked: loader.context=false
+    background: Rectangle {color: "#12000000";}
     property int w: listText.width;
     property int payload;
-    property int menu: (1);
+    property int menu: 1;
     property int xPosition;
     property int yPosition;
     property var buttons: [
         ["Удалить", "Переслать", "Копировать"],
         ["Поиск", "Блокировать", "Отключить push", "Очистить историю"]
     ]
-    background: Rectangle {color: "#12000000";}
 
     DropShadow {
         samples: 16
         radius: samples
         color: "#C0000000";
         source: {listText;}
-        anchors.fill: listText;
+        anchors.fill: {listText}
     }
     Rectangle {
-        id:listText
+        id: listText
+        color: loader.feed1Color
+        width: {Math.max(funcs.width, facade.toPx(400))}
+        height:funcs.implicitHeight;
+        y: (yPosition)
+        x: (xPosition)
+        radius: 8
         Column {
             id: funcs;
             Repeater {
@@ -38,9 +44,9 @@ Button {
                 model: buttons[menu]
                 Rectangle {
                     width: listText.width
+                    radius: listText.radius
                     height: inerText.implicitHeight + facade.toPx(60)
-                    color: {loader.feedColor;}
-                    radius: {listText.radius;}
+                    color: listText.color
                     Text {
                         id: inerText
                         text: {modelData}
@@ -53,8 +59,8 @@ Button {
                     }
                     MouseArea {
                         anchors.fill: {parent}
-                        onExited: parent.color = loader.feedColor;
-                        onEntered: parent.color = "#20000000"
+                        onExited: parent.color = loader.feed1Color
+                        onEntered: {parent.color = loader.menu4Color}
                         onClicked: {
                             for (var i = 0, base = 1; i < menu; i+=1)
                                 base += buttons[menu].length;
@@ -64,12 +70,5 @@ Button {
                 }
             }
         }
-
-        color: loader.feedColor
-        width: {Math.max(funcs.width, facade.toPx(400))}
-        height:funcs.implicitHeight;
-        y: (yPosition)
-        x: (xPosition)
-        radius: 8
     }
 }

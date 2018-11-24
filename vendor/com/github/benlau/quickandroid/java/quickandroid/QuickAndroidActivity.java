@@ -13,7 +13,7 @@ import org.fourthline.cling.android.AndroidUpnpServiceImpl;
 public class QuickAndroidActivity
     extends org.qtproject.qt5.android.bindings.QtActivity {
     private static Context myContext;
-    static PesrRequest androidUpnpInstance;
+    static PeerFinderService androidUpnpInstance;
 
     public static void startUpNpForwards() {
         new AsynchronedRequest().execute();
@@ -30,7 +30,7 @@ public class QuickAndroidActivity
     }
 
     public static String getStacTrace() {
-        return PesrRequest.stackTrace;
+        return PeerFinderService.stackTrace;
     }
 
     public static void openingMap(String lat, String lon) {
@@ -62,7 +62,7 @@ public class QuickAndroidActivity
 
     static class AsynchronedRequest extends AsyncTask<Void,Void,Void> {
         protected Void doInBackground(Void... params) {
-            (androidUpnpInstance=new PesrRequest()).start(upnpServices);
+            (androidUpnpInstance=new PeerFinderService()).start(upnpServices);
             return null;
         }
     }

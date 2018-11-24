@@ -3,64 +3,88 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
 Item {
-    height: parent.height
-    width: 2 * parent.width/3.0;
+    height:parent.height
+    width: 5*parent.width/7
+
     Rectangle {
-        clip: true
         width: parent.width
         color: loader.sets2Color
-        y: blankeDrawer.getProfHeight();
-        height: blankeDrawer.getHelperHeight()
+        y: mainDrawer.getProfHeight()
+        height: mainDrawer.getHelperHeight()
 
         ListView {
             id: listview
+            spacing: facade.toPx(40);
             anchors {
-                fill: parent;
+                fill: parent
                 topMargin: facade.toPx(25)
-                bottomMargin: facade.toPx(20);
+                bottomMargin:facade.toPx(20)
             }
-            spacing: facade.toPx(35)
+
             delegate: Row {
                 x: facade.toPx(30)
                 spacing: facade.toPx(30)
+
                 Image {
-                    source: "qrc:/ui/icons/"+images
-                    width: facade.toPx(sourceSize.width/1.3);
-                    height:facade.toPx(sourceSize.height/1.3)
+                    source: "qrc:/ui/icons/"+images;
+                    width: facade.toPx(sourceSize.width/1.40)
+                    height:facade.toPx(sourceSize.height/1.4)
                     anchors.verticalCenter: parent.verticalCenter
                 }
+
                 Text {
-                    color: "#D6D6D6"
-                    font.pixelSize: facade.doPx(28)
-                    font.family:trebu4etMsNorm.name
+                    color: loader.feed4Color
+                    font.pixelSize: facade.doPx(25);
+                    font.family: trebu4etMsNorm.name
                     anchors.verticalCenter: parent.verticalCenter
                     text: target
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            switch(mypos) {
+                            case 5:
+                                event_handler.saveSettings("user", "")
+                                event_handler.saveSettings("frnd", "")
+                                loader.restores();
+                                drawes.close()
+                                break
+                            }
+                        }
+                    }
                 }
             }
+
             model:ListModel {
                 ListElement {
-                    mypos: 0; images: "profile.png"
-                    target: qsTr("Профиль")
+                    mypos: 0;
+                    images: "profile.png";
+                    target: qsTr("Профиль");
                 }
                 ListElement {
-                    mypos: 1; images: "design.png";
-                    target: qsTr("Внешний вид")
+                    mypos: 1;
+                    images: "configuration.png";
+                    target: qsTr("Плагины")
                 }
                 ListElement {
-                    mypos: 2; images: "alerts.png";
-                    target: qsTr("Уведомления")
+                    mypos: 2;
+                    images: "design.png"
+                    target: qsTr("Внешний вид");
                 }
                 ListElement {
-                    mypos: 3; images: "configuration.png"
-                    target: qsTr("Конфигураци")
+                    mypos: 3;
+                    images: "security.png"
+                    target: qsTr("Шифрование")
                 }
                 ListElement {
-                    mypos: 4; images:"security.png"
-                    target: qsTr("Безопасность")
+                    mypos: 4;
+                    images: "alerts.png"
+                    target: qsTr("Поддержка");
                 }
                 ListElement {
-                    mypos:5; images:"developer.png"
-                    target: qsTr("Разработчик")
+                    mypos: 5;
+                    images:"developer.png"
+                    target: qsTr("Выйти")
                 }
             }
         }

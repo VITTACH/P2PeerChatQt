@@ -29,9 +29,9 @@ signals:
 public slots:
     QString myError();
     QString loadValue(QString);
-    void saveSet(QString , QString);
-    void display(QString , QString);
-    bool relogin(QString , QString);
+    void saveSettings(QString key, QString val);
+    void display(QString, QString);
+    bool relogin(QString, QString);
     int currentOSys();
 
     void copyText(QString);

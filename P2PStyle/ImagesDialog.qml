@@ -4,23 +4,28 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
 Button {
-    id: avatardialog
+    anchors.fill: parent
     visible: loader.avatar
-    anchors.fill: {parent}
-    background: Rectangle {color : "#60404040";}
+    onClicked: loader.avatar = false;
 
-    onClicked: loader.avatar=false
+    property string color1: "#F7F7F7"
+    property string color2: "#000000"
+    property string color3: "#D7D7D7"
+    property string color4: "#808080"
+    property string color5: "#34AADC"
 
-    contentItem:Text {opacity: 0;}
+    background: Rectangle {color : "#80727272";}
+
     Connections {
         target: loader;
         onAvatarChanged: {loader.focus = !false}
     }
 
+    contentItem: Text {opacity: (0);}
     text: "Установите свою фотографию на аватар"
 
     FileDialog {
-        id:fileDialog
+        id: fileDialog;
         folder: shortcuts.home
         title: "Выберите изображение"
         nameFilters:["Изображения (*.jpg *.png)","Все файлы (*)"]
@@ -30,20 +35,15 @@ Button {
         }
     }
 
-    DropShadow {
-        radius: 16
-        samples: 20
-        color: {"#C0000000"}
-        source:dialogWindow;
-        anchors.fill: dialogWindow
-    }
     Rectangle {
         id: dialogWindow
-        color: "#F7F7F7"
-        height: {2*width/3;}
-        radius: {facade.toPx(25);}
-        anchors.centerIn: {parent}
+        radius: facade.toPx(25)
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin:parent.height/6
+        anchors.horizontalCenter: parent.horizontalCenter
         width: Math.min(0.73 * parent.width, facade.toPx(666.6));
+        height: {2*width/3;}
+        color: color1
 
         Rectangle {
             color: loader.toastColor
@@ -65,11 +65,11 @@ Button {
             width: (parent.width - 2*dialogWindow.radius)
 
             Label {
-                color: "#000000"
+                color: color2
                 wrapMode: Text.Wrap;
                 width: parent.width - facade.toPx(20);
                 horizontalAlignment: {Text.AlignHCenter;}
-                text: avatardialog.text
+                text: parent.parent.parent.text;
                 anchors.centerIn:parent
                 font {
                     pixelSize: (facade.doPx(27))
@@ -83,20 +83,19 @@ Button {
             height:picDialogAndroidButtonGallery.height/2
             anchors.top: picDialogAndroidrow.top
             anchors.topMargin:facade.toPx(102.4)
-            color: picDialogAndroidButtonGallery.pressed==true? "#d7d7d7": "#f7f7f7";
+            color: picDialogAndroidButtonGallery.pressed==true? color3: color1;
         }
 
         Column {
+            id: picDialogAndroidrow
+            anchors.bottom: parent.bottom
             width: parent.width
-            height:facade.toPx(202);
-            id: picDialogAndroidrow;
-            anchors.bottom:parent.bottom
+            height: facade.toPx(202)
 
             Rectangle {
                 height: 1
-                color: "#808080"
+                color: color4
                 width: parent.width;
-                id: picDialogDividerHorizontal1;
             }
 
             Button {
@@ -104,55 +103,54 @@ Button {
                 height: facade.toPx(100)
                 id: picDialogAndroidButtonCamera
 
-                onClicked: {
-                    loader.avatar=false;
-                    imagePicker.item.takePhoto()
-                }
-
                 contentItem: Text {
-                    color: "#34aadc"
-                    text: {qsTr("Сделать новый снимок");}
-                    verticalAlignment: Text.AlignVCenter;
-                    horizontalAlignment:Text.AlignHCenter
+                    color: color5
+                    text: qsTr("Сделать новый снимок")
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
                     font {
-                    bold: true
-                    pixelSize: facade.doPx(27);
-                    family: trebu4etMsNorm.name
+                        bold: true
+                        pixelSize: facade.doPx(27);
+                        family: trebu4etMsNorm.name
                     }
                 }
 
                 background: Rectangle {
-                    color: picDialogAndroidButtonCamera.pressed? "#d7d7d7": "#f7f7f7"
+                    color: picDialogAndroidButtonCamera.pressed? color3: color1
+                }
+
+                onClicked: {
+                    loader.avatar = false
+                    imagePicker.item.takePhoto();
                 }
             }
 
             Rectangle {
                 height: 1
-                color: "#808080"
+                color: color4
                 width: parent.width
-                id: picDialogDividerHorizontal2;
             }
 
             Button {
                 width: parent.width
                 height: facade.toPx(100)
-                id:picDialogAndroidButtonGallery
+                id: picDialogAndroidButtonGallery
 
                 contentItem: Text {
-                    color:"#34aadc"
-                    text: {qsTr("Подгрузить из галереи")}
-                    verticalAlignment: Text.AlignVCenter;
-                    horizontalAlignment:Text.AlignHCenter
+                    color: color5
+                    text: qsTr("Подгрузить из галереи")
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
                     font {
-                    bold: true
-                    pixelSize: facade.doPx(27);
-                    family: trebu4etMsNorm.name
+                        bold: true
+                        pixelSize: facade.doPx(27);
+                        family: trebu4etMsNorm.name
                     }
                 }
 
                 background: Rectangle {
                     radius:facade.toPx(25)
-                    color: picDialogAndroidButtonGallery.pressed? "#d7d7d7":"#f7f7f7"
+                    color: picDialogAndroidButtonGallery.pressed?color3: color1
                 }
 
                 onClicked: {
