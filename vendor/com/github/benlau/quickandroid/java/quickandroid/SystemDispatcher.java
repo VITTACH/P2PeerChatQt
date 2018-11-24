@@ -7,8 +7,8 @@ import java.util.Set;
 import java.util.List;
 import java.util.Queue;
 import java.lang.Thread;
-import java.lang.String;
 import java.util.HashMap;
+import java.lang.String;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.lang.ClassLoader;
@@ -23,10 +23,10 @@ import java.io.StringWriter;
 
 public class SystemDispatcher {
     private static boolean dispatching = false;
-    private static final Semaphore mutex= new Semaphore(1);
+    private static Semaphore mutex= new Semaphore(1);
     private static Queue<Payload> queue = new LinkedList();
     private static List<Listener> listeners = new ArrayList<Listener>();
-    private static native void jniEmit(String emitName,Map emitMessage);
+    private static native void jniEmit(String name, Map message);
 
     private static String TAG = "QuickAndroid";
     public static String ACTIVITY_RESUME_MESSAGE = "quickandroid.Activity.onResume";

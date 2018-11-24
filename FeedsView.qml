@@ -513,17 +513,17 @@ Rectangle {
         }
 
         Item {
+            clip: true
             width: nWidth
-            x: facade.toPx(20)
             height: parent.height
+            x: facade.toPx(20)
 
             ListView {
-                clip: true
                 id: bottomNav
                 property var buttonWidth: facade.toPx(140)
 
                 height: parent.height - border.height;
-                width: (buttonWidth+spacing)*model.count+spacing;
+                width: (buttonWidth+spacing)*model.count-spacing;
                 spacing: facade.toPx(50)
                 orientation: Qt.Horizontal
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -537,7 +537,7 @@ Rectangle {
 
                 delegate: Button {
                     anchors.verticalCenter: parent.verticalCenter
-                    width: buttonWidth;
+                    width: bottomNav.buttonWidth
 
                     contentItem: Text {
                         text: message
@@ -556,7 +556,7 @@ Rectangle {
         visible: loader.webview
         anchors {
             fill: parent
-            topMargin: partnerHeader.height -partnerHeader.offset
+            topMargin: partnerHeader.height
         }
     }
 }
