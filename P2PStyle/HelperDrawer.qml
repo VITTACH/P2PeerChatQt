@@ -7,6 +7,7 @@ Item {
     width: 5*parent.width/7
 
     Rectangle {
+        clip: true
         color: loader.sets2Color
         y: mainDrawer.getProfHeight()
 
@@ -68,7 +69,7 @@ Item {
                 ListElement {
                     mypos: 0;
                     images: "profile.png";
-                    target: qsTr("Профиль")
+                    target: qsTr("Мой профиль")
                 }
 
                 ListElement {
