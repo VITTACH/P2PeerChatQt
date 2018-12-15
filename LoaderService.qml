@@ -2,6 +2,7 @@ import QtQuick 2.7
 import StatusBar 0.1
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
+import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
 import "js/xHRQuery.js"as XHRQuery
 import "js/URLQuery.js"as URLQuery
@@ -124,12 +125,13 @@ ApplicationWindow {
 
         property string menu1Color: "#939393";
         property string menu2Color: "#A0A8AF";
-        property string menu3Color: "#657587";
-        property string menu4Color: "#DDDDDD";
+        property string menu3Color: "#6A8399";
+        property string menu4Color: "#CCCCCC";
         property string menu5Color: "#AFB5BC";
         property string menu6Color: "#30000000"
         property string menu7Color: "#F1F1F1";
-        property string menu9Color: "#CCCCCC";
+        property string menu8Color: "#BBC6CA";
+        property string menu9Color: "#DDDDDD";
 
         property string menu10Color: "#535353"
         property string menu11Color: "#7C9AAA"
@@ -137,15 +139,16 @@ ApplicationWindow {
         property string menu13Color: "#999999"
         property string menu14Color: "#95A1AD"
         property string menu15Color: "#8DACBC"
-        property string menu16Color: "#7A8899"
+        property string menu16Color: "#424A54"
         property string menu17Color: "#697886"
 
         property string head1Color: "#495766";
         property string head2Color: "#FEFEFE";
 
-        property string sets2Color: "#68707A";
-        property string sets3Color: "#6C839A";
-        property string sets4Color: "#708EA0";
+        property string sets1Color: "#647785";
+        property string sets2Color: "#AEBCC5";
+        property string sets3Color: "#6A8399";
+        property string sets4Color: "#6F8EA0";
 
         property string feed1Color: "#EDEDED";
         property string feed2Color: "#C68585";

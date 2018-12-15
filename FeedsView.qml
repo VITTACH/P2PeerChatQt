@@ -541,8 +541,8 @@ Rectangle {
 
                     contentItem: Text {
                         text: message
-                        font.bold: true
                         font.family: trebu4etMsNorm.name
+                        verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: {Text.AlignHCenter;}
                         font.pixelSize: facade.doPx(16);
                     }

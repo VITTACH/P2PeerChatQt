@@ -6,12 +6,11 @@ import QtGraphicalEffects 1.0
 
 Drawer {
     id: drawes
-    edge: Qt.RightEdge;
-    property bool find: true
-    dragMargin: facade.toPx(80)
+    property variant find: true
+    dragMargin: facade.toPx(40)
     background: Rectangle {color: "transparent";}
-    width: Math.min(facade.toPx(640), 0.9*parent.width)
-    height: {parent.height;}
+    width: Math.min(facade.toPx(640), (0.9) * parent.width);
+    height: parent.height
 
     property alias cindex: listView.currentIndex;
 
@@ -20,7 +19,7 @@ Drawer {
         onPositionChanged: {
             if (loader.isLogin !== true || loader.webview) {
                 close()
-                if (loader.source == ("MainScreenView.qml")) {
+                if (loader.source == "MainScreenView.qml") {
                     position = 0
                 } else if (position == 0) {
                     loader.goTo("MainScreenView.qml")
@@ -158,35 +157,30 @@ Drawer {
         return -1;
     }
 
-
-    LinearGradient {
+    Rectangle {
+        id: gradient
+        width: facade.toPx(6)
+        color: loader.sets1Color
+        anchors.left: drawer.right
         height: parent.height;
-        width: facade.toPx(50)
-        end: Qt.point(width,0)
-        start: Qt.point(0, 0);
-        gradient: Gradient {
-            GradientStop {position: 1; color: "#20000000"}
-            GradientStop {position: 0.2; color: "#02000000"}
-        }
     }
 
     Item {
-        id: drawer
-        clip: (true);
-        height: parent.height
-        anchors.right: {parent.right;}
-        width: parent.width - facade.toPx(50)
+        id: drawer;
+        clip: true;
+        height: parent.height;
+        width: parent.width - gradient.width;
 
         Rectangle {
             anchors.fill: parent
-            color: loader.menu16Color;
+            color: loader.menu8Color;
             anchors.topMargin: profile.height
             opacity: 1.0;
         }
 
         Rectangle {
             id: leftRect;
-            width: parent.width
+            width: parent.width;
             height: {profile.height;}
             color: {loader.isOnline == true ? loader.menu3Color : (loader.menu3Color);}
         }
@@ -303,8 +297,8 @@ Drawer {
 
                 Column {
                     Text {
-                        font.bold: {(true);}
-                        style: {Text.Raised}
+                        font.bold: true
+                        style: Text.Raised
                         styleColor: "black";
                         color: {"#FFFFFFFF"}
                         text: usersModel.count > 0 ? usersModel.count: 0
@@ -504,15 +498,16 @@ Drawer {
                         width: 0
                         height: 0
                         id: coloresRect
-                        color: {
-                            if (index === 0) {
-                                if (loader.isOnline) {loader.menu11Color;} else {loader.menu1Color}
+                        color: {if (index == 0) {
+                                if (loader.isOnline) {
+                                    loader.menu11Color
+                                } else {loader.menu1Color;}
                             } else loader.menu5Color
                         }
 
                         transform: Translate {
-                            x:-coloresRect.width /2
-                            y:-coloresRect.height/2
+                            x: -coloresRect.width /2
+                            y: -coloresRect.height/2
                         }
                     }
 
@@ -647,7 +642,7 @@ Drawer {
                             }
 
                             Connections {
-                                target: drawes;
+                                target: {drawes}
                                 onPositionChanged: {
                                     if (position == 1) {
                                         preview.text = preview.previewText()
@@ -656,7 +651,7 @@ Drawer {
                             }
                         }
                         anchors.leftMargin: {facade.toPx(30);}
-                        anchors.left: bug.right;
+                        anchors.left: bug.right
                         width: parent.width;
                     }
                 }
@@ -665,10 +660,10 @@ Drawer {
                     color: loader.menu6Color
                     visible: (index != (usersModel.count - 1))
                     width: 2*parent.width/3;
-                    height: facade.toPx(2);
+                    height: facade.toPx(2)
                     anchors {
                         bottom:parent.bottom
-                        right: parent.right
+                        right: parent.right;
                     }
                 }
             }
@@ -684,8 +679,8 @@ Drawer {
                 opens.start();
             }
 
-            PropertyAnimation{
-                id: opens;
+            PropertyAnimation {
+                id: opens
                 target: leftMenu
                 to: leftMenu.direction? 0: -leftMenu.width -1;
                 property: "x";
@@ -697,7 +692,7 @@ Drawer {
             width: parent.width;
             color: loader.menu17Color
             anchors.bottom:profile.bottom
-            height: facade.toPx(2)
+            height: facade.toPx(4)
         }
 
         LinearGradient {
@@ -707,7 +702,7 @@ Drawer {
             end: Qt.point(0, height);
             start: Qt.point(0,0)
             gradient: Gradient {
-                GradientStop {position: 0; color: "#30000000"}
+                GradientStop {position: 0; color: "#60000000"}
                 GradientStop {position: 1; color: "#00000000"}
             }
         }
@@ -794,18 +789,18 @@ Drawer {
                         indicator: Rectangle {
                             property bool checked: parent.checked
                             anchors.horizontalCenter: parent.horizontalCenter
-                            radius: facade.toPx(25)
-                            y: parent.height/2-height/2
+                            radius: {facade.toPx(25)}
+                            y: parent.height/2-height/2;
                             implicitWidth: facade.toPx(55)
                             implicitHeight: {facade.toPx(30)}
                             color: checked? loader.menu12Color: loader.menu13Color
 
                             DropShadow {
-                                radius: facade.toPx(11)
                                 samples: (15)
                                 source: switcher;
                                 color:"#90000000"
                                 anchors.fill: switcher;
+                                radius: facade.toPx(11)
                             }
                             Rectangle {
                                 id: switcher
@@ -851,7 +846,7 @@ Drawer {
         }
 
         Rectangle {
-            anchors.top:listMenu.top
+            anchors.top: listMenu.top
             color: loader.menu2Color
             height: facade.toPx(2)
             width: parent.width

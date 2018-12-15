@@ -10,8 +10,8 @@ Rectangle {
     property string status: ""
 
     width: parent.width
-    height: facade.toPx(120)
-    color: loader.head1Color
+    height:facade.toPx(120)
+    color: loader.head1Color;
 
     Item {
         id: inerItem
@@ -95,6 +95,14 @@ Rectangle {
                 }
             }
         }
+    }
+
+    Rectangle {
+        width:parent.width
+        height: facade.toPx(5)
+        color: loader.head2Color;
+        anchors.bottom: parent.bottom
+        opacity: 0.5
     }
 
     Button {

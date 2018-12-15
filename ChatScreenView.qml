@@ -624,7 +624,7 @@ Drawer {
                         }
 
                         onContentXChanged: {
-                            var newX = scrollBar.start + (width - scrollBar.width)*contentX / ((tachModel.count - width/height*2)*height/2 - spacing);
+                            var newX = scrollBar.start + (width - scrollBar.width)*contentX / ((tachModel.count -width/height*2)*height/2-spacing)
                             if (newX > scrollBar.start) {scrollBar.x = (newX)}
                             else {scrollBar.x = scrollBar.start}
                         }
@@ -638,22 +638,16 @@ Drawer {
                                     width: height
                                     height: {imagesList.height / 3 - spacing;}
 
-                                    BusyIndicator {
-                                        anchors.fill: parent
-                                        contentItem: P2PStyle.IndicatorBusy {}
-                                        running:attachImg.status!==Image.Ready
+                                    Image {
+                                        id: attachImg
+                                        source: index == 0? image0: (index==1? image1:image2);
+                                        height:sourceSize.width>sourceSize.height?parent.height:sourceSize.height*(parent.width/sourceSize.width)
+                                        width: sourceSize.width>sourceSize.height?sourceSize.width*(parent.height/sourceSize.height):parent.width
+                                        anchors.centerIn: parent
 
-                                        Image {
-                                            id: attachImg
-                                            source: index == 0? image0: (index==1? image1:image2);
-                                            height:sourceSize.width>sourceSize.height?parent.height:sourceSize.height*(parent.width/sourceSize.width)
-                                            width: sourceSize.width>sourceSize.height?sourceSize.width*(parent.height/sourceSize.height):parent.width
-                                            anchors.centerIn: parent
-
-                                            MouseArea {
-                                                onClicked: selectedImage.push("" + parent.source);
-                                                anchors.fill: parent
-                                            }
+                                        MouseArea {
+                                            onClicked: selectedImage.push("" + parent.source);
+                                            anchors.fill: parent
                                         }
                                     }
                                 }
@@ -665,7 +659,7 @@ Drawer {
                 Rectangle {
                     id: scrollBar
                     property var start: cam.height + imgRow.spacing +imgRow.x;
-                    width: imagesList.width * imagesList.width / (tachModel.count * (imagesList.height/2 + imagesList.spacing) - imagesList.spacing);
+                    width: imagesList.width * imagesList.width / (tachModel.count * (imagesList.height/2 +imagesList.spacing)-imagesList.spacing)
                     x: start
                     anchors.bottom: {imgRow.bottom}
                     height: facade.toPx(5)
@@ -693,7 +687,7 @@ Drawer {
                             property variant memHeight;
                             property bool pressCtrl: false;
                             property bool pressEntr: false;
-                            placeholderText: {if (event_handler.currentOSys() <= 0)  qsTr("Ctrl+Enter Для Отправки.."); else qsTr("Ваше Сообщение");}
+                            placeholderText: if (event_handler.currentOSys() <= 0) qsTr("Ctrl+Enter Для Отправки.."); else qsTr("Ваше Сообщение")
                             wrapMode: TextEdit.Wrap
                             verticalAlignment: {(Text.AlignVCenter);}
                             background: Rectangle {color:"#FFFEFEFE"}
