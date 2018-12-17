@@ -142,7 +142,7 @@ ApplicationWindow {
         property string menu16Color: "#424A54"
         property string menu17Color: "#697886"
 
-        property string head1Color: "#495766";
+        property string head1Color: "#708598";
         property string head2Color: "#FEFEFE";
 
         property string sets1Color: "#647785";
@@ -152,7 +152,7 @@ ApplicationWindow {
 
         property string feed1Color: "#EDEDED";
         property string feed2Color: "#C68585";
-        property string feed3Color: "#526275";
+        property string feed3Color: "#7291A5";
         property string feed4Color: "#FFFFFF";
 
         property string toastColor: "#ECECEC";
