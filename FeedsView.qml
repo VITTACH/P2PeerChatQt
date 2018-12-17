@@ -45,8 +45,8 @@ Rectangle {
         }
 
         delegate: Column {
-            x: facade.toPx(20)
-            width: nWidth = Math.min(0.96*parent.width - x/2, facade.toPx(900))
+            x: facade.toPx(10)
+            width: nWidth = Math.min(parent.width-2*x, facade.toPx(900))
 
             function findPeer(phone) {
                 for (var i = 0; i < humanModel.count; i+=1) {
@@ -453,7 +453,7 @@ Rectangle {
                     }
                 }
 
-                width: {parent.width}
+                width: parent.width
                 height: if (rssRect.visible == true) {
                     var cardHeight = facade.toPx(210);
                     var count = Math.floor((baseRect.height - partnerHeader.height - searchRow.height - friendList.height - (feedsModel.count - 1)*basView.spacing)/cardHeight);
@@ -516,10 +516,10 @@ Rectangle {
             clip: true
             width: nWidth
             height: parent.height
-            x: facade.toPx(20)
+            x: facade.toPx(10)
 
             ListView {
-                id: bottomNav
+                id: bottomNav;
                 property var buttonWidth: facade.toPx(140)
 
                 height: parent.height - border.height;
