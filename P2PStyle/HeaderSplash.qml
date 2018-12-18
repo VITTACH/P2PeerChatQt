@@ -10,7 +10,7 @@ Rectangle {
     property string status: ""
 
     width: parent.width
-    height:facade.toPx(120)
+    height:facade.toPx(140)
     color: loader.head1Color;
 
     Item {
@@ -98,10 +98,10 @@ Rectangle {
     }
 
     Rectangle {
-        width:parent.width
-        height: facade.toPx(5)
-        color: loader.head2Color;
-        anchors.bottom: parent.bottom
+        width: parent.width
+        height: {facade.toPx(5)}
+        color: loader.head2Color
+        anchors.bottom: parent.bottom;
         opacity: 0.5
     }
 

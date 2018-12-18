@@ -16,7 +16,7 @@ Rectangle {
 
     Rectangle {
         width: parent.width
-        height: facade.toPx(250)
+        height: partnerHeader.height + facade.toPx(120)
         color: loader.feed3Color
     }
 
@@ -27,7 +27,7 @@ Rectangle {
         anchors {
             top: parent.top
             bottom: downRow.top;
-            topMargin: partnerHeader.height + facade.toPx(30)
+            topMargin: partnerHeader.height + facade.toPx(20)
         }
 
         boundsBehavior : {
@@ -36,17 +36,14 @@ Rectangle {
 
         model: ListModel {
             id: feedsModel
-            ListElement {
-                activiti: 0
-            }
-            ListElement {
-                activiti: 1
-            }
+            ListElement { activiti: 0 }
+            ListElement { activiti: 1 }
+            ListElement { activiti: 0 }
         }
 
         delegate: Column {
-            x: facade.toPx(10)
-            width: nWidth = Math.min(parent.width-2*x, facade.toPx(900))
+            x: facade.toPx(15)
+            width: (nWidth = Math.min(parent.width, facade.toPx(900))) - 2*x
 
             function findPeer(phone) {
                 for (var i = 0; i < humanModel.count; i+=1) {
@@ -138,11 +135,12 @@ Rectangle {
 
             Rectangle {
                 id: searchRow
+                visible: index==0
                 radius: height/2;
-                visible: index == 0
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: facade.toPx(10)
+                height: finderRow.height + facade.toPx(20)
                 width: Math.min(0.88 * parent.width, facade.toPx(900))
-                height: visible? (finderRow.height + facade.toPx(20)): 0
 
                 Row {
                     id: finderRow
@@ -326,12 +324,19 @@ Rectangle {
                     }
                 }
 
+                DropShadow {
+                    samples:18
+                    radius: facade.toPx(15);
+                    anchors.fill: {rssView;}
+                    source: {rssView;}
+                    color: "#50000000"
+                }
                 ListView {
                     id: rssView
                     clip: visible;
                     width:parent.width
                     height: {parent.height - facade.toPx(20)}
-                    spacing: facade.toPx(10)
+                    spacing: facade.toPx(20)
                     model: ListModel {id:rssmodel}
                     snapMode: ListView.SnapToItem;
                     anchors.bottom: parent.bottom;
@@ -465,6 +470,31 @@ Rectangle {
                         }
                     }
                     return countCard*cardHeight-rssView.spacing;
+                }
+            }
+
+            ListView {
+                clip: true
+                id: navBottom;
+                width: Math.min(contentWidth, parent.width - facade.toPx(50))
+                x: (parent.width-width)/2
+                height: facade.toPx(160);
+                spacing: facade.toPx(27);
+                orientation:Qt.Horizontal
+                anchors.horizontalCenter:parent.horizontalCenter
+                visible: index==2
+
+                model:ListModel {
+                    ListElement { image: "ui/buttons/feeds/mus.png"; }
+                    ListElement { image: "ui/buttons/feeds/img.png"; }
+                    ListElement { image: "ui/buttons/feeds/vide.png" }
+                    ListElement { image: "ui/buttons/feeds/play.png" }
+                    ListElement { image: "ui/buttons/feeds/play.png" }
+                }
+                delegate: Image {
+                    width: {facade.toPx(sourceSize.width/3.55);}
+                    height: facade.toPx(sourceSize.height/3.55);
+                    source: image
                 }
             }
         }

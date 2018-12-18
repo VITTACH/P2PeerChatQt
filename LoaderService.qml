@@ -139,28 +139,28 @@ ApplicationWindow {
         property string menu13Color: "#999999"
         property string menu14Color: "#95A1AD"
         property string menu15Color: "#8DACBC"
-        property string menu16Color: "#66717F"
+        property string menu16Color: "#EAEAEA"
         property string menu17Color: "#697886"
 
-        property string head1Color: "#708598";
-        property string head2Color: "#FEFEFE";
+        property string head1Color: "#637A8E";
+        property string head2Color: "#FFFFFF";
 
         property string sets1Color: "#647785";
         property string sets2Color: "#AEBCC5";
         property string sets3Color: "#6A8399";
         property string sets4Color: "#6F8EA0";
 
-        property string feed1Color: "#EDEDED";
+        property string feed1Color: "#FDFDFD";
         property string feed2Color: "#C68585";
-        property string feed3Color: "#6B8799";
-        property string feed4Color: "#FFFFFF";
+        property string feed3Color: "#7E95A0";
+        property string feed4Color: "#F6F4F7";
 
         property string toastColor: "#ECECEC";
 
         property string chat2Color: "#A7A7A7";
         property string chat3Color: "#70FFFFFF"
 
-        property var fields: ["","","","",""]
+        property var fields: ["","","","",""];
 
         function back() {
             if (privated.visitedPageList.length > 1) {

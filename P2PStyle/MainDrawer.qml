@@ -159,10 +159,10 @@ Drawer {
 
     Rectangle {
         id: gradient
-        width: facade.toPx(6)
+        height: parent.height
         color: loader.sets1Color
         anchors.left: drawer.right
-        height: parent.height;
+        width: facade.toPx(5)
     }
 
     Item {
@@ -467,7 +467,7 @@ Drawer {
                     id: delegaRect;
                     width: parent.width
                     height: parent.height;
-                    color: if (index == 0)loader.menu14Color;else loader.menu16Color
+                    color: if (index==0) loader.menu14Color; else loader.menu16Color
 
                     Connections {
                         target: defaultDialog
@@ -689,10 +689,10 @@ Drawer {
         }
 
         Rectangle {
-            width: parent.width;
             color: loader.menu17Color
             anchors.bottom:profile.bottom
             height: facade.toPx(4)
+            width: {parent.width;}
         }
 
         LinearGradient {
@@ -846,7 +846,7 @@ Drawer {
         }
 
         Rectangle {
-            anchors.top: listMenu.top
+            anchors.top: listMenu.top;
             color: loader.menu2Color
             height: facade.toPx(2)
             width: parent.width
