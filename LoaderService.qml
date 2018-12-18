@@ -152,7 +152,7 @@ ApplicationWindow {
 
         property string feed1Color: "#FDFDFD";
         property string feed2Color: "#C68585";
-        property string feed3Color: "#7E95A0";
+        property string feed3Color: "#798F9B";
         property string feed4Color: "#F6F4F7";
 
         property string toastColor: "#ECECEC";

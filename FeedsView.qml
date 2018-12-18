@@ -337,9 +337,9 @@ Rectangle {
                     width:parent.width
                     height: {parent.height - facade.toPx(20)}
                     spacing: facade.toPx(20)
-                    model: ListModel {id:rssmodel}
-                    snapMode: ListView.SnapToItem;
-                    anchors.bottom: parent.bottom;
+                    model: ListModel{id:rssmodel}
+                    snapMode: ListView.SnapToItem
+                    anchors.bottom: parent.bottom
                     boundsBehavior: {
                         if(contentY<1) Flickable.StopAtBounds
                         else Flickable.DragAndOvershootBounds
@@ -349,14 +349,16 @@ Rectangle {
                         visible: enable
                         width: parent.width;
                         radius: facade.toPx(10)
-                        height: {(rssView.height) / (rssRect.countCard) - (rssView.spacing);}
-                        color: loader.feed1Color
+                        height: {Math.max(bag.height, description.height) + facade.toPx(15)}
+                        color: loader.feed1Color;
+
                         Item {
                             clip: true
-                            anchors.fill:parent
+                            anchors.fill: parent;
                             anchors.margins: {parent.radius;}
+
                             Rectangle {
-                                id:coloresRect2
+                                id: coloresRect2;
                                 color: loader.feed4Color
                                 transform: Translate {
                                     x: -coloresRect2.width /2
@@ -369,20 +371,19 @@ Rectangle {
                             id: bag;
                             clip: true
                             smooth: true
+                            x: facade.toPx(10)
                             width: facade.toPx(160)
                             height:facade.toPx(160)
-                            anchors.verticalCenter:parent.verticalCenter
+                            y: x
                             Image {
                                 source: typeof image!="undefined"?image.replace("ps","p"):""
                                 anchors.centerIn: {parent}
                                 height:sourceSize.width > sourceSize.height? parent.height: sourceSize.height*(parent.width / sourceSize.width)
                                 width: sourceSize.width > sourceSize.height? sourceSize.width*(parent.height / sourceSize.height): parent.width
                             }
-                            x: (parent.height - height)/2;
                         }
 
                         Image {
-                            id: misk
                             smooth: true;
                             visible:false
                             source: {"ui/mask/round.png";}
@@ -422,11 +423,13 @@ Rectangle {
                         }
 
                         Column {
+                            id: description
                             anchors {
                                 left: bag.right
-                                right: parent.right
-                                leftMargin:facade.toPx(20)
-                                verticalCenter: {parent.verticalCenter;}
+                                right: parent.right;
+                                topMargin:facade.toPx(5)
+                                leftMargin: facade.toPx(20)
+                                top: parent.top
                             }
 
                             Text {
@@ -435,7 +438,7 @@ Rectangle {
                                 width: {parent.width - facade.toPx(30);}
                                 font.bold: true
                                 font.family: trebu4etMsNorm.name
-                                font.pixelSize: facade.doPx(24);
+                                font.pixelSize: facade.doPx(22);
                             }
 
                             Text {
@@ -448,11 +451,11 @@ Rectangle {
 
                             Text {
                                 text: pDesc
-                                maximumLineCount: 2
+                                maximumLineCount: 4
                                 width: {parent.width - facade.toPx(30);}
-                                wrapMode:Text.Wrap;
+                                wrapMode: Text.Wrap
                                 font.family: trebu4etMsNorm.name
-                                font.pixelSize: facade.doPx(20);
+                                font.pixelSize: facade.doPx(18);
                             }
                         }
                     }
