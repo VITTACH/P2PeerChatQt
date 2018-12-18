@@ -372,8 +372,8 @@ Rectangle {
                             clip: true
                             smooth: true
                             x: facade.toPx(10)
-                            width: facade.toPx(160)
-                            height:facade.toPx(160)
+                            width: facade.toPx(170)
+                            height:facade.toPx(170)
                             y: x
                             Image {
                                 source: typeof image!="undefined"?image.replace("ps","p"):""
@@ -455,7 +455,7 @@ Rectangle {
                                 width: {parent.width - facade.toPx(30);}
                                 wrapMode: Text.Wrap
                                 font.family: trebu4etMsNorm.name
-                                font.pixelSize: facade.doPx(18);
+                                font.pixelSize: facade.doPx(20);
                             }
                         }
                     }
