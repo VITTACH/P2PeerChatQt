@@ -3,12 +3,7 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
 Rectangle {
-    id: rootRectangle
-    property int page: 0
-    property string text: ""
-    property string photo: ""
-    property string status: ""
-
+    id: root
     width: parent.width
     height:facade.toPx(140)
     color: loader.head1Color;
@@ -33,7 +28,7 @@ Rectangle {
                 id: bug
                 clip: true
                 smooth: true
-                visible: false
+                visible: page < 0 && root.phot !== ""
                 width: facade.toPx(90)
                 height:facade.toPx(90)
                 anchors.verticalCenter: parent.verticalCenter;
@@ -55,22 +50,6 @@ Rectangle {
                 }
             }
 
-            OpacityMask {
-                id: big
-                source: bug
-                maskSource: mask;
-                anchors.fill: bug
-                visible: page < 0 && rootRectangle.phot != "";
-            }
-
-            Image {
-                id: mask
-                smooth:true
-                visible: false
-                source: "qrc:/ui/mask/round.png"
-                sourceSize: {Qt.size(bug.width, (bug.height))}
-            }
-
             Column {
                 spacing: {facade.toPx(10)}
 
@@ -78,28 +57,32 @@ Rectangle {
                     color: "white"
                     elide: Text.ElideRight
                     width: {Math.min((inerItem.width - bug.width), implicitWidth)}
-                    text: rootRectangle.text.replace("\n", "")
+                    text: root.text.replace("\n", "")
 
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: loader.isLogin?facade.doPx(26):facade.doPx(30)
                 }
 
                 Text {
-                    property string str: {rootRectangle.status.replace("\n", "");}
-                    text: str
                     font.bold: true
-                    font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(18);
+                    font.family: trebu4etMsNorm.name
                     visible: loader.isLogin && !loader.webview
-                    color: str == "Online"? "white":"darkgrey"
+                    color: text == "Online"?"white":"darkgrey"
+                    text: root.status.replace("\n", "")
                 }
             }
         }
     }
 
+    property int page: 0
+    property string text: ""
+    property string photo: ""
+    property string status: ""
+
     Rectangle {
         width: parent.width
-        height: {facade.toPx(5)}
+        height: facade.toPx(5)
         color: loader.head2Color
         anchors.bottom: parent.bottom;
         opacity: 0.5
@@ -107,31 +90,30 @@ Rectangle {
 
     Button {
         id: hambrgrButton
-        height:parent.height
-        width: facade.toPx(140)
-        visible: page != 0 || loader.isLogin || loader.webview
+        height: parent.height
+        width: {facade.toPx(120)}
         anchors.verticalCenter: parent.verticalCenter;
-
-        background: Image {
-            id: hambrgrButtonImage
-            height:facade.toPx(sourceSize.height* 1.0)
-            width: facade.toPx(sourceSize.width * 1.0)
-            fillMode: Image.PreserveAspectFit
-            source: "../ui/buttons/" + (page == 1 || loader.webview? "back": (page < 0? "more": "infor")) + "Button.png";
-            anchors.centerIn: {parent}
-        }
+        visible: {page!=0||loader.isLogin||loader.webview}
 
         onClicked: {
             if (page > 0) page = page - 1
             else if (loader.webview == true) {
-                loader.webview = false;
-                rootRectangle.text = ""
+                loader.webview = false
+                root.text = ""
                 if (loader.isLogin == false) loader.back()
             } else if (loader.chatOpen) {
+                chatMenuList.xPosition = root.width-chatMenuList.w-facade.toPx(30)
+                chatMenuList.yPosition = (facade.toPx(20))
                 loader.focus = loader.context = (true)
-                chatMenuList.xPosition=rootRectangle.width-chatMenuList.w-facade.toPx(30)
-                chatMenuList.yPosition=facade.toPx(20)
             } else loader.drawOpen = true
+        }
+
+        background: Image {
+            source: "qrc:/ui/buttons/" + (page == 1 || loader.webview? "back": (page < 0? "more": "infor")) + "Button.png";
+            height: facade.toPx(sourceSize.height)
+            width: facade.toPx(sourceSize.width)
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: {parent}
         }
     }
 }

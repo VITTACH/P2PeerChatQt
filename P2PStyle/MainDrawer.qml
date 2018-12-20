@@ -25,17 +25,26 @@ Drawer {
                     loader.goTo("MainScreenView.qml")
                 }
             } else if (position == 1) {
-                if (loader.isOnline) {
-                    var friend = event_handler.loadValue("frnd")
-                    if (friend != "") {
-                        var fr = []
-                        var myfriend = (JSON.parse(friend));
-                        for(var i=0;i<myfriend.length;i++) {
-                            usersModel.append({image:"", famil: myfriend[i].famil, login: myfriend[i].login, phone: myfriend[i].phone, port: myfriend[i].port, ip: myfriend[i].ip,activity:1})
-                            fr.push(myfriend[i].phone)
-                        }
-                        loader.frienList= JSON.stringify(fr)
-                    } else getFriends()
+                var friend = event_handler.loadValue("frnd")
+                if (friend != "") {
+                    var fr = []
+                    var myfriend = (JSON.parse(friend));
+                    for (var i = 0; i < myfriend.length; i++) {
+                        usersModel.append({image:"", famil: myfriend[i].famil, login: myfriend[i].login, phone: myfriend[i].phone, port: myfriend[i].port, ip: myfriend[i].ip,activity:1})
+                        fr.push(myfriend[i].phone)
+                    }
+                    loader.frienList= JSON.stringify(fr)
+                } else {
+                    usersModel.append({
+                        image: "https://randomuser.me/portraits/men/"+Math.floor(50*Math.random())+".jpg",
+                        famil: "Жариков",
+                        login: "Виталий",
+                        phone: "+79117273996",
+                        port: "",
+                        ip: "",
+                        activity: 1
+                    })
+                    // getFriends() // TODO uncomment this
                 }
             } else if (position == 0) {
                 loader.forceActiveFocus()
@@ -82,7 +91,7 @@ Drawer {
                     for (var i = 0; i < obj.length; i +=1) {
                         index = findPeer(obj[i].name)
                         var imgUrl= "https://randomuser.me/portraits/men/"+Math.floor(50*Math.random())+".jpg"
-                        if (usersModel.count<1 || index<0) {
+                        if (usersModel.count < 1 || index < 0) {
                             loader.chats.push({phone:obj[i].name, message:[]})
                             usersModel.append({
                                 image: imgUrl,
@@ -136,15 +145,15 @@ Drawer {
 
     function getPeersModel(index, field) {
         var results =""
-        if(field == "famil")
+        if (field == "famil")
             results = usersModel.get(index).famil
-        if(field == "login")
+        if (field == "login")
             results = usersModel.get(index).login
-        if(field == "image")
+        if (field == "image")
             results = usersModel.get(index).image
-        if(field == "phone")
+        if (field == "phone")
             results = usersModel.get(index).phone
-        if(field == "port")
+        if (field == "port")
             results = usersModel.get(index).port;
         return results
     }
@@ -198,7 +207,7 @@ Drawer {
             Row {
                 id: firstRow;
                 anchors.horizontalCenter:parent.horizontalCenter
-                spacing:facade.toPx(30)-(facade.toPx(708)-drawer.width)/facade.toPx(10)
+                spacing:facade.toPx(40)
 
                 Column {
                     opacity: 0
@@ -498,11 +507,12 @@ Drawer {
                         width: 0
                         height: 0
                         id: coloresRect
-                        color: {if (index == 0) {
+                        color: {
+                            if (index === 0) {
                                 if (loader.isOnline) {
                                     loader.menu11Color
                                 } else {loader.menu1Color;}
-                            } else loader.menu5Color
+                            } else loader.feed4Color
                         }
 
                         transform: Translate {

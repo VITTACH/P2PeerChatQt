@@ -16,7 +16,7 @@ Rectangle {
 
     Rectangle {
         width: parent.width
-        height: partnerHeader.height + facade.toPx(120)
+        height: partnerHeader.height + facade.toPx(90)
         color: loader.feed3Color
     }
 
@@ -27,7 +27,7 @@ Rectangle {
         anchors {
             top: parent.top
             bottom: downRow.top;
-            topMargin: partnerHeader.height + facade.toPx(20)
+            topMargin: partnerHeader.height + facade.toPx(10)
         }
 
         boundsBehavior : {
@@ -135,12 +135,13 @@ Rectangle {
 
             Rectangle {
                 id: searchRow
-                visible: index==0
                 radius: height/2;
+                visible: index == 0;
+                height: {finderRow.height + facade.toPx(20);}
+                width: Math.min(0.88 * parent.width, facade.toPx(900))
+
                 anchors.right: parent.right
                 anchors.rightMargin: facade.toPx(10)
-                height: finderRow.height + facade.toPx(20)
-                width: Math.min(0.88 * parent.width, facade.toPx(900))
 
                 Row {
                     id: finderRow
@@ -157,8 +158,8 @@ Rectangle {
                         height:facade.toPx(innerImage.sourceSize.height)
                         anchors.verticalCenter: {parent.verticalCenter;}
                         onClicked: {
-                            if(find == false) find=true;
-                            if(find) {inerText.clear(); getMePeers("");}
+                            if (find == false) {find = true;}
+                            if (find) {inerText.clear(); getMePeers("")}
                         }
 
                         background:Image {
@@ -180,15 +181,15 @@ Rectangle {
                         color: "#C0C8D0"
                         width: parent.parent.width - inerImage.width - (parent.spacing) - (facade.toPx(30));
 
-                        rightPadding: parent.parent.radius;
+                        rightPadding: parent.parent.radius
                         onAccepted: getMePeers(text.toLowerCase());
                         onTextChanged: if (event_handler.currentOSys() === 0) getMePeers(text.toLowerCase())
                         placeholderText: qsTr("Найти новых друзей")
                         font.bold: true;
-                        font.pixelSize: facade.doPx(20);
-                        font.family: trebu4etMsNorm.name
-                        onActiveFocusChanged:find=false;
-                        background: Rectangle{opacity:0}
+                        font.pixelSize: {facade.doPx(20);}
+                        font.family: {trebu4etMsNorm.name}
+                        onActiveFocusChanged: find = false
+                        background: Rectangle {opacity: 0}
                     }
                 }
             }
@@ -216,6 +217,7 @@ Rectangle {
                     snapMode:ListView.SnapToItem
                     model: ListModel {id: humanModel}
                     spacing: 1
+
                     delegate: Item {
                         id: baseItem
                         visible: activity
@@ -298,10 +300,9 @@ Rectangle {
                 }
             }
 
-            Rectangle {
-                id: rssRect;
+            Item {
+                id: rssItem
                 visible: index == 1
-                color: {"transparent"}
                 property int countCard: 4
 
                 Component.onCompleted: {
@@ -334,12 +335,11 @@ Rectangle {
                 ListView {
                     id: rssView
                     clip: visible;
-                    width:parent.width
-                    height: {parent.height - facade.toPx(20)}
+                    width: parent.width
+                    height: parent.height
                     spacing: facade.toPx(20)
                     model: ListModel{id:rssmodel}
                     snapMode: ListView.SnapToItem
-                    anchors.bottom: parent.bottom
                     boundsBehavior: {
                         if(contentY<1) Flickable.StopAtBounds
                         else Flickable.DragAndOvershootBounds
@@ -462,7 +462,7 @@ Rectangle {
                 }
 
                 width: parent.width
-                height: if (rssRect.visible == true) {
+                height: if (rssItem.visible == true) {
                     var cardHeight = facade.toPx(210);
                     var count = Math.floor((baseRect.height - partnerHeader.height - searchRow.height - friendList.height - (feedsModel.count - 1)*basView.spacing)/cardHeight);
                     if (count < 4) count = 4
