@@ -3,35 +3,30 @@ import StatusBar 0.1
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
+import QtQuick.Controls.Universal 2.0
+
 import "P2PStyle" as P2PStyle
 import "js/xHRQuery.js"as XHRQuery
 import "js/URLQuery.js"as URLQuery
-import QtQuick.Controls.Universal 2.0
 
 ApplicationWindow {
     id: mainAppWindow
     x: 0
-    y: {event_handler.currentOSys() <= 0 ? facade.toPx(100) : 0;}
+    y: {event_handler.currentOSys() <= 0 ? facade.toPx(100) : (0);}
     visible: true
     title: qsTr("CoinFriend")
 
-    Universal.theme: {Universal.Light}
-    Universal.accent: Universal.Purple
+    // Universal.theme: {Universal.Light}
+    // Universal.accent: Universal.Purple
 
     // flags: Qt.FramelessWindowHint; // turned off system window
-
-    Timer {
-        id: back;
-        interval: 100
-        onTriggered: loader.back()
-    }
 
     StatusBar {color: ("#3E4A56")}
 
     Timer {
         id: connect
-        interval:4000
-        onTriggered:loader.logon(loader.tmpPhone,loader.tmpLogin)
+        interval: 4000
+        onTriggered: loader.logon(loader.tmpPhone, loader.tmpLogin)
     }
 
     onClosing: event_handler.currentOSys()>0? close.accepted = false:close.accepted = true
@@ -150,7 +145,7 @@ ApplicationWindow {
         property string sets3Color: "#6A8399";
         property string sets4Color: "#6F8EA0";
 
-        property string feed1Color: "#FDFDFD";
+        property string feed1Color: "#80FDFDFD";
         property string feed2Color: "#C68585";
         property string feed3Color: "#798F9B";
         property string feed4Color: "#F6F4F7";
@@ -297,7 +292,7 @@ ApplicationWindow {
             } else if (loader.webview) {
                 loader.webview= !loader.webview
                 if (!loader.isLogin) {loader.back();}
-            } else back.restart()
+            } else loader.back()
         }
     }
 

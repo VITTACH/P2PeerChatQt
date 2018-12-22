@@ -6,44 +6,56 @@ import QtQuick 2.0
 
 Rectangle {
     id: baseRect
-
-    property int nWidth: 0;
-    property bool find: true;
-    property int oldContentY: 0;
-
-    color: loader.menu16Color
+    color: loader.feed3Color
     Component.onCompleted: mainDrawer.open()
 
-    Rectangle {
-        width: parent.width
-        height: partnerHeader.height + facade.toPx(90)
-        color: loader.feed3Color
+    property int nWidth: 0
+    property bool find: true
+    property int oldContentY: 0
+
+    Item {
+        FastBlur {
+            radius: 30
+            opacity: 0.450
+            source: beckground
+            anchors.fill: beckground
+        }
+
+        anchors.fill: {parent;}
+
+        Image {
+            id: beckground;
+            anchors.centerIn: parent
+            visible: false;
+            height: Math.max(4.6 * parent.height /7, sourceSize.height*(width / sourceSize.width))
+            width: parent.width
+        }
     }
 
     ListView {
         id: basView
         width: parent.width
-        spacing: facade.toPx(20)
+        spacing: facade.toPx(15)
         anchors {
             top: parent.top
             bottom: downRow.top;
+            bottomMargin: facade.toPx(10)
             topMargin: partnerHeader.height + facade.toPx(10)
         }
 
         boundsBehavior : {
-            (contentY <= 0) ? Flickable.StopAtBounds: Flickable.DragAndOvershootBounds
+            contentY <= 0 ? Flickable.StopAtBounds : Flickable.DragAndOvershootBounds;
         }
 
         model: ListModel {
             id: feedsModel
-            ListElement { activiti: 0 }
-            ListElement { activiti: 1 }
-            ListElement { activiti: 0 }
+            ListElement {}
+            ListElement {}
         }
 
         delegate: Column {
             x: facade.toPx(15)
-            width: (nWidth = Math.min(parent.width, facade.toPx(900))) - 2*x
+            width: nWidth = Math.min(parent.width - facade.toPx(80), facade.toPx(800))
 
             function findPeer(phone) {
                 for (var i = 0; i < humanModel.count; i+=1) {
@@ -60,16 +72,11 @@ Rectangle {
                     var name = " " + humanModel.get(i).login + humanModel.get(i).famil
                     if (name.toLowerCase().search(param)>0) {
                         humanModel.setProperty(i, ("activity"), 1)
-                        if (!succesFind) {listView.currentIndex=i}
+                        if (!succesFind) listView.currentIndex = i
                         succesFind =true
                     } else {
                         humanModel.setProperty(i, ("activity"), 0)
                     }
-                }
-                if (succesFind ==true) {
-                    feedsModel.setProperty(0, "activiti", 1);
-                } else {
-                    feedsModel.setProperty(0, "activiti", 0);
                 }
                 listView.positionViewAtBeginning()
             }
@@ -111,6 +118,7 @@ Rectangle {
             function rssLoadingAndSaving() {
                 if (xmlmodel.count > 0) {
                     var RsCache = []
+                    beckground.source = xmlmodel.get(Math.random()*xmlmodel.count).image.replace("ps","p")
                     for (var i = 0; i < xmlmodel.count; i+= 1) {
                         var obj= {enable: true, link: xmlmodel.get(i).link, title: xmlmodel.get(i).title, image: xmlmodel.get(i).image, pDate: xmlmodel.get(i).pDate, pDesc: xmlmodel.get(i).pDesc}
                         RsCache.push(obj)
@@ -133,176 +141,8 @@ Rectangle {
                 }
             }
 
-            Rectangle {
-                id: searchRow
-                radius: height/2;
-                visible: index == 0;
-                height: {finderRow.height + facade.toPx(20);}
-                width: Math.min(0.88 * parent.width, facade.toPx(900))
-
-                anchors.right: parent.right
-                anchors.rightMargin: facade.toPx(10)
-
-                Row {
-                    id: finderRow
-                    spacing: {facade.toPx(10);}
-                    anchors {
-                        left: parent.left
-                        leftMargin: facade.toPx(30);
-                        verticalCenter: parent.verticalCenter
-                    }
-
-                    Button {
-                        id:inerImage
-                        width: facade.toPx(40);
-                        height:facade.toPx(innerImage.sourceSize.height)
-                        anchors.verticalCenter: {parent.verticalCenter;}
-                        onClicked: {
-                            if (find == false) {find = true;}
-                            if (find) {inerText.clear(); getMePeers("")}
-                        }
-
-                        background:Image {
-                            id: innerImage
-                            width: {facade.toPx(sourceSize.width /1.3);}
-                            height:{facade.toPx(sourceSize.height/1.3);}
-                            anchors.verticalCenter:parent.verticalCenter
-                            source: "qrc:/ui/icons/" + (find? "searchIconWhite": "DeleteIconWhite") + ".png"
-                        }
-                    }
-
-                    Connections {
-                        target: mainDrawer
-                        onPositionChanged: if((mainDrawer.position === 1) == true) {inerText.focus = false}
-                    }
-
-                    TextField {
-                        id: inerText
-                        color: "#C0C8D0"
-                        width: parent.parent.width - inerImage.width - (parent.spacing) - (facade.toPx(30));
-
-                        rightPadding: parent.parent.radius
-                        onAccepted: getMePeers(text.toLowerCase());
-                        onTextChanged: if (event_handler.currentOSys() === 0) getMePeers(text.toLowerCase())
-                        placeholderText: qsTr("Найти новых друзей")
-                        font.bold: true;
-                        font.pixelSize: {facade.doPx(20);}
-                        font.family: {trebu4etMsNorm.name}
-                        onActiveFocusChanged: find = false
-                        background: Rectangle {opacity: 0}
-                    }
-                }
-            }
-
             Item {
-                clip: true
-                id: friendList
-                width: parent.width
-                property int counter: 0
-                visible: index == 0 && activiti
-                height: {
-                    var cunter = 0;
-                    for (var i = 0; i < listView.count; i ++) {
-                        if (humanModel.get(i).activity == 1 && visible == true) cunter = cunter + 1
-                    }
-                    if (cunter > 2) {cunter = 2}
-                    counter=cunter;
-                    cunter * facade.toPx(104)
-                }
-
-                ListView {
-                    id: listView
-                    property var friend
-                    anchors.fill: {parent;}
-                    snapMode:ListView.SnapToItem
-                    model: ListModel {id: humanModel}
-                    spacing: 1
-
-                    delegate: Item {
-                        id: baseItem
-                        visible: activity
-                        width: parent.width
-                        height: activity==true? facade.toPx(20) + Math.max(bug.height,fo.height): 0
-
-                        Rectangle {
-                            clip: true
-                            width: parent.width/2
-                            height: parent.height
-                            color: loader.feed2Color;
-
-                            MouseArea {
-                                id: myMouseArea;
-                                anchors.fill: parent;
-                                onClicked: {
-                                    listView.friend = phone
-                                    defaultDialog.show("Добавление аккаунта", "Отправить заявку в друзья для <strong>" + login + " " + famil + "</strong>?");
-                                }
-                            }
-
-                            Connections {
-                                target: defaultDialog
-                                onChooseChanged: {
-                                    if (listView.memIndex != index) {
-                                        var objct = JSON.parse((loader.frienList))
-                                        if (defaultDialog.choose== false && listView.friend!=null) {
-                                            if (objct === null) {objct = [];}
-                                            var objs = objct.push(listView.friend)
-                                            loader.frienList=JSON.stringify(objct)
-                                            loader.addFriend(listView.friend)
-                                            defaultDialog.choose=true
-                                        }
-                                    }
-                                }
-                            }
-
-                            Rectangle {
-                                id: bug
-                                clip: true
-                                smooth: true
-                                color: "lightgray"
-                                x:facade.toPx(30)
-                                width: facade.toPx(80)
-                                height:facade.toPx(80)
-                                anchors.verticalCenter: parent.verticalCenter
-
-                                Image {
-                                    source: image
-                                    anchors.centerIn: parent
-                                    height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width)
-                                    width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width
-                                }
-                            }
-
-                            Column {
-                                id: fo
-                                anchors {
-                                    left: bug.right
-                                    right: parent.right
-                                    leftMargin: facade.toPx(30)
-                                }
-
-                                Text {
-                                    text: (login + " " + famil)
-                                    color: listView.currentIndex== index? "#FFFFFFFF": "#FF000000";
-                                    font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(20)
-                                }
-
-                                Text {
-                                    text: "ip: " + ip + ", port: " + port
-                                    color: listView.currentIndex== index? "#FFFFFFFF": "#FF808080";
-                                    font.family:trebu4etMsNorm.name
-                                    font.pixelSize: facade.doPx(14)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            Item {
-                id: rssItem
-                visible: index == 1
+                visible: index == 0
                 property int countCard: 4
 
                 Component.onCompleted: {
@@ -384,17 +224,18 @@ Rectangle {
                         }
 
                         Image {
-                            smooth: true;
-                            visible:false
+                            smooth: true
+                            visible: false
                             source: {"ui/mask/round.png";}
-                            sourceSize: {Qt.size(bag.width, bag.height)}
+                            sourceSize: {Qt.size(bag.width, bag.height);}
                         }
 
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
-                                if (chatScreen.position > 0) {return;}
+                                if (chatScreen.position > 0) return
                                 loader.urlLink = link;
+                                beckground.source = typeof image != "undefined"? image.replace("ps", "p"): ""
                                 if (event_handler.currentOSys() > (0)) {
                                     loader.webview = true;
                                     partnerHeader.text = (title)
@@ -462,13 +303,13 @@ Rectangle {
                 }
 
                 width: parent.width
-                height: if (rssItem.visible == true) {
+                height: {
                     var cardHeight = facade.toPx(210);
-                    var count = Math.floor((baseRect.height - partnerHeader.height - searchRow.height - friendList.height - (feedsModel.count - 1)*basView.spacing)/cardHeight);
+                    var count = Math.floor((baseRect.height - partnerHeader.height - (feedsModel.count - 1) * basView.spacing) / cardHeight)
                     if (count < 4) count = 4
                     countCard = count
                     if (event_handler.currentOSys() > 0) {
-                        if (Screen.orientation === Qt.LandscapeOrientation) {
+                        if (Screen.orientation ==Qt.LandscapeOrientation) {
                             countCard = 2 * countCard
                         }
                     }
@@ -476,28 +317,48 @@ Rectangle {
                 }
             }
 
-            ListView {
+            Rectangle {
                 clip: true
-                id: navBottom;
-                width: Math.min(contentWidth, parent.width - facade.toPx(50))
-                x: (parent.width-width)/2
-                height: facade.toPx(160);
-                spacing: facade.toPx(27);
-                orientation:Qt.Horizontal
-                anchors.horizontalCenter:parent.horizontalCenter
-                visible: index==2
+                visible: index == 1
+                width: parent.width
+                height: facade.toPx(160)
+                radius: facade.toPx(10);
+                color: loader.feed1Color
 
-                model:ListModel {
-                    ListElement { image: "ui/buttons/feeds/mus.png"; }
-                    ListElement { image: "ui/buttons/feeds/img.png"; }
-                    ListElement { image: "ui/buttons/feeds/vide.png" }
-                    ListElement { image: "ui/buttons/feeds/play.png" }
-                    ListElement { image: "ui/buttons/feeds/play.png" }
-                }
-                delegate: Image {
-                    width: {facade.toPx(sourceSize.width/3.55);}
-                    height: facade.toPx(sourceSize.height/3.55);
-                    source: image
+                ListView {
+                    width: parent.width - facade.toPx(50)
+                    height: parent.height - facade.toPx(16)
+                    spacing: (width - pages.count * facade.toPx(144)) / (pages.count - 1)
+                    orientation: Qt.Horizontal
+                    anchors.centerIn: {parent}
+
+                    model:ListModel {
+                        id: pages
+                        ListElement { image: "qrc:/ui/buttons/feeds/mus.png"; }
+                        ListElement { image: "qrc:/ui/buttons/feeds/img.png"; }
+                        ListElement { image: "qrc:/ui/buttons/feeds/vide.png" }
+                        ListElement { image: "qrc:/ui/buttons/feeds/play.png" }
+                    }
+
+                    delegate: Item {
+                        width: img.width
+                        height: img.height
+
+                        DropShadow {
+                            samples: 18
+                            source: img
+                            color: "#50000000"
+                            radius: 12
+                            anchors.fill: img;
+                        }
+                        Image {
+                            id: img
+                            width: facade.toPx(sourceSize.width / 3.55)
+                            height: {facade.toPx(sourceSize.height / 3.55);}
+                            anchors.centerIn: parent
+                            source: image
+                        }
+                    }
                 }
             }
         }
@@ -535,48 +396,39 @@ Rectangle {
         id: downRow
         width: parent.width
         height: facade.toPx(80);
-        anchors.bottom: parent.bottom;
-
-        Rectangle {
-            id: border
-            height: 1;
-            width: parent.width;
-            color: ("lightgray")
-            anchors.top: {parent.top;}
-        }
+        anchors.bottom: parent.bottom
 
         Item {
             clip: true
             width: nWidth
-            height: parent.height
+            height:parent.height
             x: facade.toPx(10)
 
             ListView {
                 id: bottomNav;
                 property var buttonWidth: facade.toPx(140)
-
-                height: parent.height - border.height;
-                width: (buttonWidth+spacing)*model.count-spacing;
-                spacing: facade.toPx(50)
-                orientation: Qt.Horizontal
                 anchors.horizontalCenter: parent.horizontalCenter
 
+                orientation: Qt.Horizontal
+                spacing: facade.toPx(50)
+                height: parent.height
+                width: (buttonWidth+spacing)*model.count-spacing;
+
                 model: ListModel {
-                    ListElement {message: "Новости"}
-                    ListElement {message: "Партнерам"}
-                    ListElement {message: "Поделись";}
-                    ListElement {message: "Все о P2P"}
+                    ListElement { message: "Новости" }
+                    ListElement { message: "Партнерам" }
+                    ListElement { message: "Поделись"; }
+                    ListElement { message: "Все о P2P" }
                 }
 
-                delegate: Button {
+                delegate: Item {
                     anchors.verticalCenter: parent.verticalCenter
                     width: bottomNav.buttonWidth
 
-                    contentItem: Text {
+                    Text {
                         text: message
+                        anchors.centerIn: parent
                         font.family: trebu4etMsNorm.name
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: {Text.AlignHCenter;}
                         font.pixelSize: facade.doPx(16);
                     }
                 }

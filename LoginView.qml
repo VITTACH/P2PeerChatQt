@@ -2,15 +2,15 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0;
 import "P2PStyle" as P2PStyle;
-import "js/URLQuery.js"as URLQuery
+import "js/URLQuery.js" as URLQuery
 
 Item {
     property var pageWidth
 
     Rectangle {
         height: parent.height
-        width: 2*parent.width
-        color: loader.feed3Color;
+        width: 2 * parent.width
+        color: loader.feed3Color
     }
 
     ListView {
