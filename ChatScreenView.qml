@@ -132,7 +132,7 @@ Drawer {
 
     onIsPortraitChanged: {
         if (height != 0) {
-            beckground.source = "http://pipsum.com/"+Math.ceil(width) + "x " + Math.ceil(height)+".jpg"
+            beckground.source = "http://pipsum.com/102" + Math.ceil(Math.random() * 9) + "x102"  + Math.ceil(Math.random() * 9) + ".jpg"
         }
     }
 

@@ -27,6 +27,7 @@ Button {
     }
     Rectangle {
         id: listText
+        clip: true
         color: loader.feed1Color
         width: {Math.max(funcs.width, facade.toPx(400))}
         height:funcs.implicitHeight;
@@ -44,7 +45,6 @@ Button {
                 model: buttons[menu]
                 Rectangle {
                     width: listText.width
-                    radius: listText.radius
                     height: inerText.implicitHeight + facade.toPx(60)
                     color: listText.color
                     Text {
