@@ -21,7 +21,7 @@ ApplicationWindow {
 
     // flags: Qt.FramelessWindowHint; // turned off system window
 
-    StatusBar {color: ("#3E4A56")}
+    StatusBar {color: ("#0E2A40")}
 
     Timer {
         id: connect
@@ -137,7 +137,7 @@ ApplicationWindow {
         property string menu16Color: "#EAEAEA"
         property string menu17Color: "#697886"
 
-        property string head1Color: "#637A8E";
+        property string head1Color: "#406582";
         property string head2Color: "#FFFFFF";
 
         property string sets1Color: "#647785";
@@ -147,7 +147,7 @@ ApplicationWindow {
 
         property string feed1Color: "#80FDFDFD";
         property string feed2Color: "#C68585";
-        property string feed3Color: "#798F9B";
+        property string feed3Color: "#527289";
         property string feed4Color: "#F6F4F7";
 
         property string toastColor: "#ECECEC";
