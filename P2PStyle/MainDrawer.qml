@@ -478,7 +478,7 @@ Drawer {
                     height: parent.height;
                     color: if (index==0) loader.menu14Color; else loader.menu16Color
 
-                    Connections {
+                    /* Connections {
                         target: defaultDialog
                         onChooseChanged: {
                             if (listView.memIndex ==index) {
@@ -501,7 +501,7 @@ Drawer {
                                 }
                             }
                         }
-                    }
+                    } */
 
                     Rectangle {
                         width: 0
@@ -538,7 +538,7 @@ Drawer {
                     MouseArea {
                         id: myMouseArea
                         anchors.fill: parent;
-                        property var presed: false;
+                        property bool presed: false
                         onClicked: {
                             if (index !=-1) listView.currentIndex = index
                             var json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
@@ -551,7 +551,7 @@ Drawer {
                         drag.minimumX: -width*0.40;
                         onPressAndHold: presed=true
                         onExited: {(circleAnimation.stop())}
-                        drag.target: presed == true? parent:undefined
+                        drag.target: parent
                         drag.maximumX: usersModel.count >= index+1?-drag.minimumX:0
                         onPressed: {
                             coloresRect.x = mouseX;
@@ -591,12 +591,12 @@ Drawer {
                             anchors.fill: {parent;}
                             anchors.margins: bor.radius/3.6;
                             running: {avatar.status !== Image.Ready;}
-                            contentItem: IndicatorBusy{}
+                            contentItem: IndicatorBusy {}
 
                             Image {
                                 id: avatar
                                 source: {image}
-                                anchors.centerIn: {(parent)}
+                                anchors.centerIn: parent;
                                 height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
                                 width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
                             }
@@ -607,7 +607,7 @@ Drawer {
                             anchors.fill: {parent;}
                             color: {"transparent";}
                             border.color: "#D5D6DA"
-                            border.width: facade.toPx(4)
+                            border.width: facade.toPx(4);
                             radius: facade.toPx(15)
                         }
                     }
@@ -618,8 +618,8 @@ Drawer {
                         anchors.verticalCenter: parent.verticalCenter
 
                         Text {
-                            font.weight: {Font.DemiBold}
                             font.family: "tahoma"
+                            font.weight: Font.DemiBold;
                             font.pixelSize: facade.doPx(29);
                             color: index == 0? "#FFFFFF" : "#000000";
                             width: {(fo.width) - (facade.toPx(100)) - (bug.width);}
@@ -694,7 +694,7 @@ Drawer {
                 target: leftMenu
                 to: leftMenu.direction? 0: -leftMenu.width -1;
                 property: "x";
-                duration: 250;
+                duration: 200;
             }
         }
 

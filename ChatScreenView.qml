@@ -369,8 +369,9 @@ Drawer {
                                             width: parent.height-y
                                             height:parent.height-y
                                             running: msgImage.status!==Image.Ready
-                                            contentItem: P2PStyle.IndicatorBusy{ }
+                                            contentItem: P2PStyle.IndicatorBusy {}
                                             clip: true
+
                                             Image {
                                                 id: msgImage
                                                 source: modelData;

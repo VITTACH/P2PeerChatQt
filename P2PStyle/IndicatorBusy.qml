@@ -22,10 +22,10 @@ Rectangle {
     SequentialAnimation on visLines {
         loops: Animation.Infinite;
         PropertyAnimation {
-            to: lines + 1; duration: 4000; easing.type: Easing.InCirc
+            to: lines + 1; duration: 5000; easing.type: Easing.InCirc
         }
         PropertyAnimation {
-            to: 0; duration: 3000; easing.type: Easing.OutCirc
+            to: 0; duration: 4000; easing.type: Easing.OutCirc
         }
     }
 
