@@ -14,60 +14,60 @@ Rectangle {
 
     color: loader.head1Color
 
-    Row {
-        id: elements
-        spacing: facade.toPx(30);
-        anchors {
-            verticalCenter: parent.verticalCenter
-            left: (loader.isLogin)? parent.left: undefined
-            leftMargin: loader.isLogin? facade.toPx(20): 0
-            horizontalCenter: (loader.isLogin == true) ? undefined : (parent.horizontalCenter)
+    Button {
+        id: actionButton
+        anchors.verticalCenter: parent.verticalCenter
+        x: facade.toPx(30)
+        visible: {page!=0||loader.isLogin||loader.webview}
+
+        onClicked: {
+            if (page > 0) page = page - 1
+            else if (loader.webview == true) {
+                loader.webview = false
+                rootRect.text = ""
+                if (loader.isLogin == false) loader.back()
+            } else if (loader.chatOpen) {
+                chatMenuList.xPosition = rootRect.width - chatMenuList.w - facade.toPx(30)
+                chatMenuList.yPosition = (facade.toPx(20))
+                loader.focus = loader.context = true;
+            } else loader.drawOpen = true
         }
 
-        Button {
-            id: actionButton
-            height: parent.height
-            width: height
-            visible: {page!=0||loader.isLogin||loader.webview}
+        background: Image {
+            source: "qrc:/ui/buttons/" + (page == 1 || loader.webview ? "back" : (page < 0 ? "more" : "infor")) + "Button.png"
+            height:facade.toPx(sourceSize.height)
+            width: facade.toPx(sourceSize.width);
+            fillMode: Image.PreserveAspectFit
+            anchors.centerIn: {parent}
+        }
+    }
 
-            onClicked: {
-                if (page > 0) page = page - 1
-                else if (loader.webview == true) {
-                    loader.webview = false
-                    rootRect.text = ""
-                    if (loader.isLogin == false) loader.back()
-                } else if (loader.chatOpen) {
-                    chatMenuList.xPosition = rootRect.width - chatMenuList.w - facade.toPx(30)
-                    chatMenuList.yPosition = (facade.toPx(20))
-                    loader.focus = loader.context = true;
-                } else loader.drawOpen = true
-            }
-
-            background: Image {
-                source: "qrc:/ui/buttons/" + (page == 1 || loader.webview? "back": (page < 0? "more":"infor")) + "Button.png"
-                height: {facade.toPx(sourceSize.height);}
-                width: facade.toPx(sourceSize.width)
-                fillMode: Image.PreserveAspectFit
-                anchors.centerIn: {parent}
-            }
+    Row {
+        id: row
+        spacing: facade.toPx(30)
+        anchors {
+            verticalCenter: parent.verticalCenter
+            left: loader.isLogin == true ? actionButton.right : undefined
+            leftMargin: loader.isLogin? actionButton.x: 0;
+            horizontalCenter: loader.isLogin == true ? undefined : parent.horizontalCenter
         }
 
         Item {
-            id: userImage
-            height: {facade.toPx(90);}
-            width: visible? height: 0;
-            visible: (page < 0) && (rootRect.phot !== "")
-            anchors.verticalCenter: parent.verticalCenter
+            id: bug
+            height: facade.toPx(90);
+            width: {visible? height: 0}
+            visible: (page < 0) && (rootRect.phot !== "");
+            anchors.verticalCenter: parent.verticalCenter;
 
             Image {
-                source: photo;
+                source: photo
                 anchors.fill: parent
                 anchors.margins: bor.radius/3.60;
             }
 
             Rectangle {
                 id: bor
-                anchors.fill: {parent;}
+                anchors.fill: parent
                 color: {"transparent";}
                 border.color: "#D5D6DA"
                 border.width: {facade.toPx(4.0);}
@@ -81,11 +81,11 @@ Rectangle {
             Text {
                 color: "white"
                 elide: Text.ElideRight;
-                width: Math.min((rootRect.width - userImage.width - actionButton.width - 2*elements.spacing), implicitWidth);
+                width: Math.min((rootRect.width - bug.width - row.spacing), implicitWidth)
                 text: rootRect.text.replace("\n", "")
 
                 font.family: trebu4etMsNorm.name
-                font.pixelSize: loader.isLogin == true? facade.doPx(26): facade.doPx(30)
+                font.pixelSize: loader.isLogin == true ? facade.doPx(26) : facade.doPx(30)
             }
 
             Text {

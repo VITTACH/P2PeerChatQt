@@ -305,6 +305,8 @@ Drawer {
                 }
 
                 Column {
+                    anchors.verticalCenter: parent.verticalCenter
+
                     Text {
                         font.bold: true
                         style: Text.Raised
@@ -315,8 +317,6 @@ Drawer {
                         font.family: trebu4etMsNorm.name
                         font.pixelSize: facade.doPx(34);
                     }
-
-                    anchors.bottom: parent.bottom
 
                     Text {
                         text: qsTr("Друзья")
@@ -478,31 +478,6 @@ Drawer {
                     height: parent.height;
                     color: if (index==0) loader.menu14Color; else loader.menu16Color
 
-                    /* Connections {
-                        target: defaultDialog
-                        onChooseChanged: {
-                            if (listView.memIndex ==index) {
-                                if (defaultDialog.choose === false) {
-                                    var phn=0
-                                    if (typeof usersModel.get(index) !=='undefined')
-                                        phn = usersModel.get(index).phone;
-                                    var obj = JSON.parse(loader.frienList)
-                                    for (var i = 0; i < obj.length; i++) {
-                                        var friend =obj[i].replace('"','')
-                                        if (friend == phn) {
-                                            obj.splice(i, 1)
-                                            event_handler.saveSettings("frnd",loader.frienList = JSON.stringify(obj))
-                                            loader.addFriend(friend,false)
-                                            listView.memIndex = -(1);
-                                            break;
-                                        }
-                                    }
-                                    usersModel.remove(index)
-                                }
-                            }
-                        }
-                    } */
-
                     Rectangle {
                         width: 0
                         height: 0
@@ -580,26 +555,17 @@ Drawer {
 
                     Item {
                         id: bug
-                        x: facade.toPx(50) - (facade.toPx(708) - drawer.width) / 5;
+                        x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/5.0;
                         height: width
                         width: facade.toPx(150)
                         anchors.top: parent.top
                         anchors.topMargin: {facade.toPx(10)}
 
-                        BusyIndicator {
-                            clip: true
+                        Image {
+                            id: avatar
+                            source: {image}
                             anchors.fill: {parent;}
                             anchors.margins: bor.radius/3.6;
-                            running: {avatar.status !== Image.Ready;}
-                            contentItem: IndicatorBusy {}
-
-                            Image {
-                                id: avatar
-                                source: {image}
-                                anchors.centerIn: parent;
-                                height:sourceSize.width>sourceSize.height? parent.height: sourceSize.height*(parent.width/sourceSize.width);
-                                width: sourceSize.width>sourceSize.height? sourceSize.width*(parent.height/sourceSize.height): parent.width;
-                            }
                         }
 
                         Rectangle {
@@ -607,7 +573,7 @@ Drawer {
                             anchors.fill: {parent;}
                             color: {"transparent";}
                             border.color: "#D5D6DA"
-                            border.width: facade.toPx(4);
+                            border.width: {facade.toPx(4.0)}
                             radius: facade.toPx(15)
                         }
                     }
