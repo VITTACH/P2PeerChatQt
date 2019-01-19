@@ -6,31 +6,12 @@ import QtQuick 2.0
 
 Rectangle {
     id: baseRect
-    color: loader.feed3Color
+    color: loader.mainBackgroundColor
     Component.onCompleted: mainDrawer.open()
 
     property int nWidth: 0
     property bool find: true
     property int oldContentY: 0
-
-    Item {
-        FastBlur {
-            radius: 30
-            opacity: 0.450
-            source: beckground
-            anchors.fill: beckground
-        }
-
-        anchors.fill: {parent;}
-
-        Image {
-            id: beckground;
-            anchors.centerIn: parent
-            visible: false;
-            height: Math.max(4.6 * parent.height /7, sourceSize.height*(width / sourceSize.width))
-            width: parent.width
-        }
-    }
 
     ListView {
         id: basView
@@ -118,7 +99,6 @@ Rectangle {
             function rssLoadingAndSaving() {
                 if (xmlmodel.count > 0) {
                     var RsCache = []
-                    beckground.source = xmlmodel.get(Math.random()*xmlmodel.count).image.replace("ps","p")
                     for (var i = 0; i < xmlmodel.count; i+= 1) {
                         var obj= {enable: true, link: xmlmodel.get(i).link, title: xmlmodel.get(i).title, image: xmlmodel.get(i).image, pDate: xmlmodel.get(i).pDate, pDesc: xmlmodel.get(i).pDesc}
                         RsCache.push(obj)
@@ -189,7 +169,7 @@ Rectangle {
                         visible: enable
                         width: parent.width;
                         radius: facade.toPx(10)
-                        height: {Math.max(bag.height, description.height) + facade.toPx(15)}
+                        height: Math.max(facade.toPx(260), description.height)
                         color: loader.feed1Color;
 
                         Item {
@@ -212,8 +192,8 @@ Rectangle {
                             clip: true
                             smooth: true
                             x: facade.toPx(10)
-                            width: facade.toPx(170)
-                            height:facade.toPx(170)
+                            width: facade.toPx(200)
+                            height:width
                             y: x
                             Image {
                                 source: typeof image!="undefined"?image.replace("ps","p"):""
@@ -323,7 +303,8 @@ Rectangle {
                 width: parent.width
                 height: facade.toPx(160)
                 radius: facade.toPx(10);
-                color: loader.feed1Color
+
+                color: loader.listChoseBackground
 
                 ListView {
                     width: parent.width - facade.toPx(50)
@@ -394,6 +375,7 @@ Rectangle {
 
     Rectangle {
         id: downRow
+
         width: parent.width
         height: facade.toPx(80);
         anchors.bottom: parent.bottom

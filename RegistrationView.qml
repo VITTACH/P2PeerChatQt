@@ -57,6 +57,7 @@ Item {
                     color: "#80000000"
                     anchors.fill: button
                 }
+
                 Button {
                     onClicked: {
                         if(index == 5) {
@@ -84,24 +85,24 @@ Item {
                     font.pixelSize: facade.doPx(28);
 
                     contentItem: Text {
-                        verticalAlignment: {Text.AlignVCenter}
+                        verticalAlignment: Text.AlignVCenter
                         horizontalAlignment: Text.AlignHCenter
-                        color: "white";
                         text: (parent.text)
                         font: (parent.font)
                     }
 
                     background: Rectangle {
-                        radius:facade.toPx(40)
+                        radius:facade.toPx(30)
                         color: {
                             if (parent.down) {
-                                (index === 5? "#5D99BA": "#5DBA94")
+                                (index === 5? "#F7DA71": "#5DBA94")
                             } else {
-                                (index === 5? "#84A8BC": "#84BCA6")
+                                (index === 5? "#E2CE7A": "#84BCA6")
                             }
                         }
                     }
                 }
+
                 visible: {image == "_";}
                 width: Math.min(0.82*parent.width,facade.toPx(700))
                 anchors.horizontalCenter: {parent.horizontalCenter}
@@ -113,12 +114,14 @@ Item {
                 height: {parent.height;}
                 width: Math.min(0.82*parent.width,facade.toPx(700))
                 anchors.horizontalCenter: {parent.horizontalCenter}
+
                 Image {
                     id: icon
                     width: facade.toPx(sourceSize.width * 15 / 10);
                     height:facade.toPx(sourceSize.height* 15 / 10);
                     source: index < 4? image: "";
                 }
+
                 TextField {
                     id: textRow
                     color: "white"
@@ -156,7 +159,7 @@ Item {
                 anchors.horizontalCenter: {parent.horizontalCenter}
                 width:Math.min(0.82*parent.width, facade.toPx(700))
                 height: facade.toPx(3)
-                visible:index<4
+                visible:index < 4
             }
         }
         model:ListModel {
@@ -183,10 +186,6 @@ Item {
             ListElement {
                 image: "_";
                 plaseholder: qsTr("Присоединиться");
-            }
-            ListElement {
-                image: "_";
-                plaseholder: qsTr("Демо аккаунт")
             }
         }
     }

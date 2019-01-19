@@ -16,20 +16,9 @@ ApplicationWindow {
     visible: true
     title: qsTr("CoinFriend")
 
-    // Universal.theme: {Universal.Light}
-    // Universal.accent: Universal.Purple
+    StatusBar {color: ("#992820")}
 
-    // flags: Qt.FramelessWindowHint; // turned off system window
-
-    StatusBar {color: ("#2A4154")}
-
-    Timer {
-        id: connect
-        interval: 4000
-        onTriggered: loader.logon(loader.tmpPhone, loader.tmpLogin)
-    }
-
-    onClosing: event_handler.currentOSys()>0? close.accepted = false:close.accepted = true
+    onClosing: event_handler.currentOSys() > 0? close.accepted = false: close.accepted = true
 
     height:event_handler.currentOSys()<1?Screen.height-facade.toPx(100):0
     width: event_handler.currentOSys()<1?Screen.width/1.2: 0
@@ -62,8 +51,8 @@ ApplicationWindow {
 
     Loader {
         id: loader;
-        objectName: "loader"
-        anchors.fill: parent
+        objectName: "loader";
+        anchors.fill: parent;
 
         function restores() {
             privated.visitedPageList =[];
@@ -75,7 +64,6 @@ ApplicationWindow {
             loader.aToken= ""
             loader.isLogin = false;
             loader.isOnline= false;
-            connect.stop();
         }
 
         Keys.onReleased: {listenBack(event)}
@@ -86,6 +74,44 @@ ApplicationWindow {
             id: privated
             property var visitedPageList: []
         }
+
+        property string listChoseBackground: "#4C4C4C"
+        property string menu2Color: "#A0A8AF";
+        property string mainMenuHeaderColor: "#CD322E"
+        property string menu4Color: "#CCCCCC";
+        property string listForegroundColor: "#212121"
+        property string menu6Color: "#30000000"
+        property string menu7Color: "#F1F1F1";
+        property string listBackgroundColor: "#424242"
+        property string menu9Color: "#DDDDDD";
+
+        property string menu10Color: "#535353";
+        property string menu11Color: "#7C9AAA";
+        property string switcherOnColor: "#666666"
+        property string switcherOffColor: "#999999"
+        property string menuCurElementColor: "#2C2C2C"
+        property string menu15Color: "#8DACBC";
+        property string menu16Color: "#EAEAEA";
+        property string menu17Color: "#697886";
+
+        property string headBackgroundColor: "#CD322E"
+        property string head2Color: "#FFFFFF";
+
+        property string mainMenuBorderColor: "#BC211D"
+        property string helpBackgroundColor: "#666666"
+        property string helpListItemColor: "#424242";
+
+        property string feed1Color: "#EFEFEF";
+        property string feed2Color: "#C68585";
+        property string mainBackgroundColor: "#222222"
+        property string feed4Color: "#F6F4F7";
+
+        property string toastColor: "#ECECEC";
+
+        property string chat2Color: "#A7A7A7";
+        property string chat3Color: "#70FFFFFF"
+
+        property string chatBackgroundColor: "#2C2C2C"
 
         property real dpi: 0
 
@@ -117,43 +143,6 @@ ApplicationWindow {
         property var tmpPhone;
         property var chatOpen;
         property var drawOpen;
-
-        property string menu1Color: "#939393";
-        property string menu2Color: "#A0A8AF";
-        property string menu3Color: "#6A8399";
-        property string menu4Color: "#CCCCCC";
-        property string menu5Color: "#AFB5BC";
-        property string menu6Color: "#30000000"
-        property string menu7Color: "#F1F1F1";
-        property string menu8Color: "#BBC6CA";
-        property string menu9Color: "#DDDDDD";
-
-        property string menu10Color: "#535353"
-        property string menu11Color: "#7C9AAA"
-        property string menu12Color: "#677784"
-        property string menu13Color: "#999999"
-        property string menu14Color: "#95A1AD"
-        property string menu15Color: "#8DACBC"
-        property string menu16Color: "#EAEAEA"
-        property string menu17Color: "#697886"
-
-        property string head1Color: "#42647F";
-        property string head2Color: "#FFFFFF";
-
-        property string sets1Color: "#647785";
-        property string sets2Color: "#AEBCC5";
-        property string sets3Color: "#6A8399";
-        property string sets4Color: "#6F8EA0";
-
-        property string feed1Color: "#80FDFDFD";
-        property string feed2Color: "#C68585";
-        property string feed3Color: "#5E8099";
-        property string feed4Color: "#F6F4F7";
-
-        property string toastColor: "#ECECEC";
-
-        property string chat2Color: "#A7A7A7";
-        property string chat3Color: "#70FFFFFF"
 
         property var fields: ["","","","",""];
 
@@ -194,68 +183,10 @@ ApplicationWindow {
         }
 
         function logon(phone, password) {
-            var request = new XMLHttpRequest();var response;
-            request.open('POST',"http://hoppernet.hol.es/default.php")
-            request.onreadystatechange = function() {
-                if (request.readyState == XMLHttpRequest.DONE) {
-                    if (request.status && request.status == 200) {
-                        if (request.responseText == "") response = -1;
-                        else if (request.responseText != "no") {
-                            response = (1)
-                            var obj = JSON.parse(request.responseText)
-                            loader.famil = obj.family
-                            loader.login = obj.login;
-                            loader.tel = obj.name;
-                        } else response =0
-
-                        switch(response) {
-                            case 1:
-                                var userModel = {
-                                    tel: phone,
-                                    pass: password,
-                                    login: loader.login,
-                                    family:loader.famil,
-                                    image: loader.avatarPath
-                                }
-
-                                loader.isOnline = true
-                                event_handler.sendMsgs(phone)
-                                event_handler.saveSettings("user", JSON.stringify(userModel))
-                                break;
-
-                            case 0:
-                                defaultDialog.show("Ошибка входа", "Вы не зарегистрированы");
-                                if (loader.aToken != ""){
-                                    loader.fields[0] = (loader.login);
-                                    loader.fields[1] = (loader.famil);
-                                } else {
-                                    loader.fields[0] = ""
-                                    loader.fields[1] = ""
-                                    loader.fields[2] =password
-                                }
-                                if (loader.source != "qrc:/MainScreenView.qml") {
-                                    goTo("qrc:/MainScreenView.qml");
-                                }
-                                loader.fields[4] = phone;
-                                partnerHeader.page = (1);
-                                break;
-
-                            case -1:
-                                defaultDialog.show("Ошибка входа", "Нет доступа в интернет");
-                                break;
-                        }
-                    } else {
-                        connect.restart();
-                    }
-                }
-            }
-            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            request.send("phone=" + phone + "&pass="+password)
-            tmpPhone = phone
-            tmpLogin = password
             loader.isLogin = true
-            if (loader.source != "ProfileView.qml")
+            if (loader.source != "ProfileView.qml") {
                 loader.goTo("ProfileView.qml")
+            }
         }
 
         function addFriend(friend, flag) {
@@ -268,15 +199,17 @@ ApplicationWindow {
     }
 
     function strartPage() {
-        var eh =event_handler.loadValue("user")
-        if (eh != "") {
-            var objct = JSON.parse(eh);
+        var user = event_handler.loadValue("user")
+        if (user != "") {
+            var objct = JSON.parse(user)
             loader.avatarPath = objct.image
             loader.logon(objct.tel, objct.pass)
             loader.login = objct.login;
             loader.famil = objct.family
             loader.tel = objct.tel;
-        } else loader.goTo("qrc:/MainScreenView.qml")
+        } else {
+            loader.goTo("qrc:/MainScreenView.qml")
+        }
     }
 
     function listenBack(event) {
@@ -291,7 +224,9 @@ ApplicationWindow {
                 loader.context= !loader.context
             } else if (loader.webview) {
                 loader.webview= !loader.webview
-                if (!loader.isLogin) {loader.back();}
+                if (!loader.isLogin) {
+                    loader.back()
+                }
             } else loader.back()
         }
     }

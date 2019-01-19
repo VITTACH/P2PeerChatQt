@@ -3,14 +3,15 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
 Button {
-    anchors.fill: parent;
+    anchors.fill: parent
     visible: loader.context
-    contentItem: Text {opacity: 0;}
+    contentItem: Text {opacity: 0}
     onClicked: loader.context=false
     background: Rectangle {color: "#12000000";}
+
     property int w: listText.width;
-    property int payload;
-    property int menu: 1;
+    property int payload
+    property int menu: 1
     property int xPosition;
     property int yPosition;
     property var buttons: [
@@ -25,28 +26,27 @@ Button {
         source: {listText;}
         anchors.fill: {listText}
     }
+
     Rectangle {
         id: listText
-        clip: true
         color: loader.feed1Color
         width: {Math.max(funcs.width, facade.toPx(400))}
-        height:funcs.implicitHeight;
+        height: funcs.implicitHeight
         y: (yPosition)
         x: (xPosition)
         radius: 8
+
         Column {
             id: funcs;
             Repeater {
-                anchors {
-                    top: parent.top;
-                    topMargin: facade.toPx(10)
-                    verticalCenter:parent.verticalCenter
-                }
                 model: buttons[menu]
+
                 Rectangle {
                     width: listText.width
                     height: inerText.implicitHeight + facade.toPx(60)
+                    radius: listText.radius
                     color: listText.color
+
                     Text {
                         id: inerText
                         text: {modelData}
@@ -57,10 +57,12 @@ Button {
                             family: trebu4etMsNorm.name;
                         }
                     }
+
                     MouseArea {
                         anchors.fill: {parent}
-                        onExited: parent.color = loader.feed1Color
+                        onExited: parent.color = listText.color
                         onEntered: {parent.color = loader.menu4Color}
+
                         onClicked: {
                             for (var i = 0, base = 1; i < menu; i+=1)
                                 base += buttons[menu].length;

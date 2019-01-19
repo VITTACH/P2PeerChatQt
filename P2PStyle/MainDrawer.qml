@@ -169,7 +169,7 @@ Drawer {
     Rectangle {
         id: gradient
         height: parent.height
-        color: loader.sets1Color
+        color: loader.mainMenuBorderColor
         anchors.left: drawer.right
         width: facade.toPx(5)
     }
@@ -182,7 +182,7 @@ Drawer {
 
         Rectangle {
             anchors.fill: parent
-            color: loader.menu8Color;
+            color: loader.listBackgroundColor;
             anchors.topMargin: profile.height
             opacity: 1.0;
         }
@@ -191,28 +191,24 @@ Drawer {
             id: leftRect;
             width: parent.width;
             height: {profile.height;}
-            color: {loader.isOnline == true ? loader.menu3Color : (loader.menu3Color);}
+            color: {loader.isOnline == true ? loader.mainMenuHeaderColor : (loader.mainMenuHeaderColor);}
         }
 
         Column {
             id: profile
             spacing: facade.toPx(10);
-            anchors.horizontalCenter: {parent.horizontalCenter;}
+            anchors.horizontalCenter: parent.horizontalCenter
 
-            Item {
-                height: 1;
-                width: {parent.width}
-            }
+            Item { height: 1; width: parent.width }
 
             Row {
                 id: firstRow;
-                anchors.horizontalCenter:parent.horizontalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
                 spacing:facade.toPx(40)
 
                 Column {
                     opacity: 0
-                    anchors.bottom: parent.bottom
-
+                    anchors.verticalCenter: {parent.verticalCenter;}
                     Text {
                         text: "0"
                         color: "white"
@@ -258,7 +254,7 @@ Drawer {
                             RadialGradient {
                                 anchors.fill: parent
                                 gradient: Gradient {
-                                    GradientStop { position: 0.40; color: "#20000000";}
+                                    GradientStop { position: 0.40; color: "#00000000";}
                                     GradientStop { position: 0.80; color: "#90000000";}
                                 }
                             }
@@ -449,24 +445,24 @@ Drawer {
                 Row {
                     Repeater {
                         model: ["trashButton.png" ,"dialerButton.png"]
+                        anchors.verticalCenter: parent.verticalCenter;
+
                         Rectangle {
-                            y: 1
-                            color: loader.menu5Color
-                            width: baseItem.width *5/10
-                            height: baseItem.height -(2*y)
-                            property var fac: facade.toPx(40)
+                            width: baseItem.width/2
+                            height: baseItem.height
+
+                            color: loader.listForegroundColor
 
                             Image {
+                                id: splashImage;
                                 anchors.verticalCenter: parent.verticalCenter
-                                x: index != 0? parent.width-width-fac:Math.abs(fac)
+                                x: index != 0 ? parent.width - width - facade.toPx(40) : facade.toPx(40)
                                 source: "qrc:/ui/buttons/" + modelData
                                 width: (facade.toPx(sourceSize.width))
                                 height: facade.toPx(sourceSize.height)
                                 fillMode: Image.PreserveAspectFit
-                                id: splashImage;
                             }
                         }
-                        anchors.verticalCenter: parent.verticalCenter;
                     }
                 }
 
@@ -475,20 +471,14 @@ Drawer {
                     clip: true
                     id: delegaRect;
                     width: parent.width
-                    height: parent.height;
-                    color: if (index==0) loader.menu14Color; else loader.menu16Color
+                    height: parent.height
+                    color: loader.menuCurElementColor
 
                     Rectangle {
                         width: 0
                         height: 0
                         id: coloresRect
-                        color: {
-                            if (index === 0) {
-                                if (loader.isOnline) {
-                                    loader.menu11Color
-                                } else {loader.menu1Color;}
-                            } else loader.feed4Color
-                        }
+                        color: loader.listChoseBackground
 
                         transform: Translate {
                             x: -coloresRect.width /2
@@ -500,7 +490,7 @@ Drawer {
                         duration: 500
                         id: circleAnimation
                         target: {coloresRect}
-                        properties:("width, height, radius")
+                        properties: "width,height,radius"
                         from: 0
                         to: (delegaRect.width * 3);
 
@@ -522,17 +512,20 @@ Drawer {
                             event_handler.sendMsgs(JSON.stringify(json));
                             chatScreen.open()
                         }
+
                         drag.axis: Drag.XAxis
                         drag.minimumX: -width*0.40;
                         onPressAndHold: presed=true
                         onExited: {(circleAnimation.stop())}
                         drag.target: parent
                         drag.maximumX: usersModel.count >= index+1?-drag.minimumX:0
+
                         onPressed: {
                             coloresRect.x = mouseX;
                             coloresRect.y = mouseY;
                             circleAnimation.start()
                         }
+
                         onReleased: {
                             presed = false
                             if (parent.x >= drag.maximumX) {
@@ -562,18 +555,24 @@ Drawer {
                         anchors.topMargin: {facade.toPx(10)}
 
                         Image {
+                            source: "qrc:/ui/profiles/default/Human.png"
+                            anchors.fill: {parent;}
+                            anchors.margins: bor.radius/3.5;
+                        }
+
+                        Image {
                             id: avatar
                             source: {image}
                             anchors.fill: {parent;}
-                            anchors.margins: bor.radius/3.6;
+                            anchors.margins: bor.radius/3.5;
                         }
 
                         Rectangle {
                             id: bor
                             anchors.fill: {parent;}
                             color: {"transparent";}
-                            border.color: "#D5D6DA"
-                            border.width: {facade.toPx(4.0)}
+                            border.color: "#A5A5A5"
+                            border.width: {facade.toPx(5.0)}
                             radius: facade.toPx(15)
                         }
                     }
@@ -581,13 +580,14 @@ Drawer {
                     Column {
                         id: fo
                         spacing: facade.toPx(10);
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: facade.toPx(10);
 
                         Text {
                             font.family: "tahoma"
                             font.weight: Font.DemiBold;
-                            font.pixelSize: facade.doPx(29);
-                            color: index == 0? "#FFFFFF" : "#000000";
+                            font.pixelSize: facade.doPx(29)
+                            color: "white"
                             width: {(fo.width) - (facade.toPx(100)) - (bug.width);}
                             text: login + " "+ famil
                             elide: {Text.ElideRight}
@@ -598,10 +598,11 @@ Drawer {
                             maximumLineCount: 3
                             wrapMode: Text.WordWrap;
                             text: previewText()
-                            color:index == 0? "#FFFFFF" : loader.menu11Color
+                            color: "#B6B6B6"
                             width:fo.width-facade.toPx(100)-bug.width
                             font.family: "tahoma";
                             font.pixelSize: facade.doPx(20);
+
                             function previewText() {
                                 var indx = 0, m = "", fl
                                 if (typeof loader.chats[index] !== ('undefined')) {
@@ -665,10 +666,10 @@ Drawer {
         }
 
         Rectangle {
-            color: loader.menu17Color
             anchors.bottom:profile.bottom
+            color: loader.mainMenuBorderColor
             height: facade.toPx(4)
-            width: {parent.width;}
+            width: parent.width
         }
 
         LinearGradient {
@@ -741,35 +742,25 @@ Drawer {
 
                     Image {
                         source: image;
-                        visible: index >= 1;
-                        width: facade.toPx(sourceSize.width * 1.10)
-                        height:facade.toPx(sourceSize.height* 1.10)
-                        horizontalAlignment: {(Image.AlignHCenter)}
-                        anchors {
-                            verticalCenter: (parent.verticalCenter)
-                        }
-                    }
-
-                    Component.onCompleted: {
-                        myswitcher.checked=loader.isOnline
-                    }
-
-                    Connections {
-                        target: loader
-                        onIsOnlineChanged: {myswitcher.checked = loader.isOnline;}
+                        width: facade.toPx(sourceSize.width*1.1)
+                        height: facade.toPx(sourceSize.height*1.1)
+                        horizontalAlignment: Image.AlignHCenter;
+                        anchors.verticalCenter: parent.verticalCenter
+                        visible: index >= 1
                     }
 
                     Switch {
                         id: myswitcher
                         visible: index==0;
+
                         indicator: Rectangle {
                             property bool checked: parent.checked
                             anchors.horizontalCenter: parent.horizontalCenter
+                            color: checked == true? loader.switcherOnColor: loader.switcherOffColor
                             radius: {facade.toPx(25)}
                             y: parent.height/2-height/2;
                             implicitWidth: facade.toPx(55)
                             implicitHeight: {facade.toPx(30)}
-                            color: checked? loader.menu12Color: loader.menu13Color
 
                             DropShadow {
                                 samples: (15)
@@ -778,13 +769,14 @@ Drawer {
                                 anchors.fill: switcher;
                                 radius: facade.toPx(11)
                             }
+
                             Rectangle {
                                 id: switcher
                                 radius: {width/2}
                                 color:loader.menu4Color
                                 width: myswitcher.height/2.6;
                                 height:width
-                                anchors.verticalCenter: {(parent.verticalCenter);}
+                                anchors.verticalCenter: parent.verticalCenter
                                 x: {
                                     if (myswitcher.checked) {
                                         var p=parent.height-height;
@@ -795,10 +787,18 @@ Drawer {
                                 }
                             }
                         }
+
                         onCheckedChanged: loader.isOnline = checked
                         width: facade.toPx(60)
                         height: parent.height;
                     }
+
+                    Connections {
+                        target: loader
+                        onIsOnlineChanged: myswitcher.checked=loader.isOnline
+                    }
+
+                    Component.onCompleted: myswitcher.checked=loader.isOnline
 
                     Text {
                         anchors {
@@ -823,7 +823,7 @@ Drawer {
 
         Rectangle {
             anchors.top: listMenu.top;
-            color: loader.menu2Color
+            color: loader.mainMenuBorderColor
             height: facade.toPx(2)
             width: parent.width
         }

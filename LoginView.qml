@@ -7,10 +7,39 @@ import "js/URLQuery.js" as URLQuery
 Item {
     property var pageWidth
 
+    function loginBySocialSite(index) {
+        switch (index) {
+            case 0: var params = {
+                display: 'popup',
+                response_type: 'token',
+                client_id:'396748683992616',
+                redirect_uri:'https://www.facebook.com/connect/login_success.html'
+            }
+            loader.urlLink = "https://graph.facebook.com/oauth/authorize?%1".arg(URLQuery.serializeParams(params))
+            partnerHeader.text = qsTr("Facebook");
+            break;
+
+            case 1:
+            case 2: var params = {
+                display: 'popup',
+                client_id: '5813771',
+                scope: 'wall, offline',
+                response_type: 'token',
+                redirect_uri: 'https://oauth.vk.com/blank.html'
+            }
+            loader.urlLink = (String) ("https://oauth.vk.com/authorize?%1".arg(URLQuery.serializeParams(params)));
+            partnerHeader.text = qsTr("Вконтакте")
+            break;
+        }
+
+        loader.webview = true
+        loader.goTo("qrc:/WebView.qml")
+    }
+
     Rectangle {
         height: parent.height
         width: 2 * parent.width
-        color: loader.feed3Color
+        color: loader.mainBackgroundColor
     }
 
     ListView {
@@ -76,43 +105,16 @@ Item {
                         samples: 15
                         source: social
                         color: "#90000000"
-                        anchors.fill: social
+                        anchors.fill: social;
                     }
 
                     Image {
                         id: social
                         source: image
-                        anchors.fill: parent
+                        anchors.fill: parent;
 
                         MouseArea {
-                            onClicked: {
-                                switch (index) {
-                                    case 0: var params = {
-                                        display: 'popup',
-                                        response_type: 'token',
-                                        client_id:'396748683992616',
-                                        redirect_uri:'https://www.facebook.com/connect/login_success.html'
-                                    }
-                                    loader.urlLink = "https://graph.facebook.com/oauth/authorize?%1".arg(URLQuery.serializeParams(params))
-                                    partnerHeader.text = qsTr("Facebook");
-                                    break;
-
-                                    case 1:
-                                    case 2: var params = {
-                                        display: 'popup',
-                                        client_id: '5813771',
-                                        scope: 'wall, offline',
-                                        response_type: 'token',
-                                        redirect_uri: 'https://oauth.vk.com/blank.html'
-                                    }
-                                    loader.urlLink = (String) ("https://oauth.vk.com/authorize?%1".arg(URLQuery.serializeParams(params)));
-                                    partnerHeader.text = qsTr("Вконтакте")
-                                    break;
-                                }
-
-                                loader.webview = true
-                                loader.goTo("qrc:/WebView.qml")
-                            }
+                            onClicked: loginBySocialSite(index)
                             anchors.fill: parent
                         }
                     }
@@ -164,24 +166,18 @@ Item {
                     background: Rectangle {
                         color: {
                             if (parent.down) {
-                                (index == 3? "#F7DA71": "#D86B68");
+                                (index == 4? "#F7DA71": "#D86B68");
                             } else {
-                                (index == 3? "#E2CE7A": "#CC7D7A");
+                                (index == 4? "#CCB970": "#B26D6B");
                             }
                         }
-                        radius:facade.toPx(40)
+                        radius:facade.toPx(30)
                     }
 
                     contentItem: Text {
-                        color: {
-                            if (parent.down) {
-                                (index == 3? "#000000": "#EECFCF");
-                            } else {
-                                (index == 3? "#0f133d": "#FFFFFF");
-                            }
-                        }
-                        horizontalAlignment: {(Text.AlignHCenter);}
-                        verticalAlignment: Text.AlignVCenter;
+                        color: "white"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
                         text: parent.text;
                         font: parent.font;
                     }
@@ -235,6 +231,7 @@ Item {
                         text: parent.text
                         font: parent.font
                     }
+
                     text: typeof plaseHolder == "undefined"? ("") : plaseHolder
                     background: Rectangle{opacity:0}
                     font.family: trebu4etMsNorm.name

@@ -195,34 +195,12 @@ Drawer {
         chatScrenList.positionViewAtEnd()
     }
 
-    Item {
+    Rectangle {
         clip: true
+        color: loader.chatBackgroundColor
         height: parent.height
         width: !isPortrait? (parent.width/2) : parent.width;
         anchors.right: parent.right
-
-        Item {
-            FastBlur {
-                radius: 30
-                opacity: 0.750
-                source: beckground
-                anchors.fill: beckground
-            }
-            anchors.fill:parent
-            Image {
-                id: beckground;
-                anchors.centerIn: parent
-                source: "qrc:/ui/chat/chat0.jpg"
-                height:sourceSize.width>sourceSize.height?parent.height:sourceSize.height*(parent.width/sourceSize.width)
-                width: sourceSize.width>sourceSize.height?sourceSize.width*(parent.height/sourceSize.height):parent.width
-                visible: false;
-            }
-        }
-        ColorAnimate {
-            opacity: 0.42
-            anchors.fill: {parent}
-            Component.onCompleted: setColors([60,60,60],100)
-        }
 
         ListView {
             id: chatScrenList
@@ -611,11 +589,13 @@ Drawer {
                     ListView {
                         clip: true
                         id: imagesList;
-                        height:parent.height
-                        width: area.width-cam.width-parent.x-spacing
+                        height: parent.height
+                        width: area.width - cam.width -parent.x-spacing
                         spacing: {parent.spacing;}
                         orientation: Qt.Horizontal
-                        model: ListModel {id:tachModel}
+                        model: ListModel {
+                            id:tachModel
+                        }
 
                         Component.onCompleted: {
                             var photos = (Math.random()*10) + 5;
@@ -626,7 +606,8 @@ Drawer {
 
                         onContentXChanged: {
                             var newX = scrollBar.start + (width - scrollBar.width)*contentX / ((tachModel.count -width/height*2)*height/2-spacing)
-                            if (newX > scrollBar.start) {scrollBar.x = (newX)}
+                            if (newX > scrollBar.start)
+                                scrollBar.x = newX
                             else {scrollBar.x = scrollBar.start}
                         }
 
@@ -637,7 +618,7 @@ Drawer {
                                 Item {
                                     clip: true
                                     width: height
-                                    height: {imagesList.height / 3 - spacing;}
+                                    height: imagesList.height/3-spacing
 
                                     Image {
                                         id: attachImg

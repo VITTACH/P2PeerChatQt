@@ -12,13 +12,15 @@ Rectangle {
     width: parent.width
     height: facade.toPx(140)
 
-    color: loader.head1Color
+    color: loader.headBackgroundColor
 
     Button {
-        id: actionButton
+        id: actionButton;
         anchors.verticalCenter: parent.verticalCenter
-        x: facade.toPx(30)
+        x:facade.toPx(30)
         visible: {page!=0||loader.isLogin||loader.webview}
+        width: facade.toPx(100)
+        height: width
 
         onClicked: {
             if (page > 0) page = page - 1
@@ -62,7 +64,7 @@ Rectangle {
             Image {
                 source: photo
                 anchors.fill: parent
-                anchors.margins: bor.radius/3.60;
+                anchors.margins: bor.radius/3.50;
             }
 
             Rectangle {
@@ -70,7 +72,7 @@ Rectangle {
                 anchors.fill: parent
                 color: {"transparent";}
                 border.color: "#D5D6DA"
-                border.width: {facade.toPx(4.0);}
+                border.width: {facade.toPx(5.0);}
                 radius: facade.toPx(15)
             }
         }

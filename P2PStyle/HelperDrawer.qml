@@ -8,27 +8,22 @@ Item {
 
     Rectangle {
         clip: true
-        color: loader.sets2Color
-        y: mainDrawer.getProfHeight();
-
         width: parent.width
+        y: mainDrawer.getProfHeight()
+        color: loader.helpBackgroundColor
         height: mainDrawer.getHelperHeight()
 
         ListView {
             id: listview
             anchors.fill: parent
             spacing:facade.toPx(20)/3
-            anchors {
-                topMargin: parent.height - contentHeight - facade.toPx(30)
-            }
+            anchors.topMargin: parent.height - contentHeight - facade.toPx(30)
 
             delegate: Rectangle {
-                x: listview.spacing*3
                 height: width
-                width: parent.width -2*x
-                border.color: loader.sets1Color
-                border.width: facade.toPx(5)
-                color: mypos%2 == 0? loader.sets3Color : loader.sets4Color
+                x: listview.spacing*3
+                color: loader.helpListItemColor
+                width: parent.width - 2*x
 
                 Image {
                     source: "qrc:/ui/icons/" + images
