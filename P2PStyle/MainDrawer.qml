@@ -820,12 +820,5 @@ Drawer {
                 }
             }
         }
-
-        Rectangle {
-            anchors.top: listMenu.top;
-            color: loader.mainMenuBorderColor
-            height: facade.toPx(2)
-            width: parent.width
-        }
     }
 }

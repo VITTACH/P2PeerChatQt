@@ -130,7 +130,7 @@ ApplicationWindow {
         property string tel
         property string login;
         property string famil;
-        property string avatarPath: "qrc:/ui/profiles/default/Human.png";
+        property string avatarPath: "qrc:/ui/profiles/default/woman.png";
 
         property bool isLogin
         property bool isOnline
