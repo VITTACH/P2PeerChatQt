@@ -71,7 +71,7 @@ Rectangle {
                 id: bor
                 anchors.fill: parent
                 color: {"transparent";}
-                border.color: "#D5D6DA"
+                border.color: "#A5A5A5"
                 border.width: {facade.toPx(5.0);}
                 radius: facade.toPx(15)
             }

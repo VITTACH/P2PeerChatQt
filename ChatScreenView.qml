@@ -380,6 +380,7 @@ Drawer {
                                         MouseArea {
                                             anchors.fill: parent
                                             acceptedButtons: Qt.LeftButton|Qt.RightButton;
+
                                             onPressAndHold: {
                                                 coloresRect.x = mouseX;
                                                 coloresRect.y = mouseY;
@@ -392,6 +393,7 @@ Drawer {
                                                 circleAnimation.start()
                                                 yPosition = 0
                                             }
+
                                             onClicked: {
                                                 baseRect.color = "#00000000"
                                                 msCloud.color = (backgroundColor)
@@ -657,13 +659,14 @@ Drawer {
                     Flickable {
                         height: {
                             if (textField.lineCount == 1) {
-                                textField.memHeight =facade.toPx(90)
+                                textField.memHeight =facade.toPx(100)
                             } else if (textField.lineCount < 6) {
                                 textField.memHeight =textField.implicitHeight;
                             } else {
                                 textField.memHeight
                             }
                         }
+
                         TextArea.flickable : TextArea {
                             id: textField
                             property variant memHeight;
@@ -673,6 +676,7 @@ Drawer {
                             wrapMode: TextEdit.Wrap
                             verticalAlignment: {(Text.AlignVCenter);}
                             background: Rectangle {color:"#FFFEFEFE"}
+
                             Keys.onReturnPressed: {
                                 pressCtrl = !false;
                                 event.accepted = false
@@ -682,6 +686,7 @@ Drawer {
                                     pressEntr = !false
                                 }
                             }
+
                             rightPadding:sendButton.width+leftPadding
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(26)
@@ -696,6 +701,7 @@ Drawer {
                             }
                             leftPadding: attachButton.width
                         }
+
                         flickableDirection: {Flickable.VerticalFlick}
                         width: parent.width
                     }
@@ -711,6 +717,7 @@ Drawer {
                         attach.move = false
                         checkMessage(2,JSON.stringify(selectedImage))
                     }
+
                     background: Image {
                         source: "ui/buttons/sendButton.png"
                         width: facade.toPx(sourceSize.width);
@@ -731,6 +738,7 @@ Drawer {
                     height: parent.height;
                     width: {background.width + facade.toPx(60)}
                     onClicked: attach.move = !attach.move;
+
                     background: Image {
                         source: "ui/buttons/addButton.png"
                         width: facade.toPx(sourceSize.width);

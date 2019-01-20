@@ -76,7 +76,6 @@ ApplicationWindow {
         }
 
         property string listChoseBackground: "#4C4C4C"
-        property string menu2Color: "#A0A8AF";
         property string mainMenuHeaderColor: "#CD322E"
         property string menu4Color: "#CCCCCC";
         property string listForegroundColor: "#212121"
@@ -86,13 +85,11 @@ ApplicationWindow {
         property string menu9Color: "#DDDDDD";
 
         property string menu10Color: "#535353";
-        property string menu11Color: "#7C9AAA";
         property string switcherOnColor: "#666666"
         property string switcherOffColor: "#999999"
         property string menuCurElementColor: "#2C2C2C"
         property string menu15Color: "#8DACBC";
         property string menu16Color: "#EAEAEA";
-        property string menu17Color: "#697886";
 
         property string headBackgroundColor: "#CD322E"
         property string head2Color: "#FFFFFF";
@@ -101,17 +98,17 @@ ApplicationWindow {
         property string helpBackgroundColor: "#666666"
         property string helpListItemColor: "#424242";
 
+        property string pageBackgroundColor: "#606060"
         property string feed1Color: "#EFEFEF";
-        property string feed2Color: "#C68585";
         property string mainBackgroundColor: "#222222"
         property string feed4Color: "#F6F4F7";
 
         property string toastColor: "#ECECEC";
 
-        property string chat2Color: "#A7A7A7";
-        property string chat3Color: "#70FFFFFF"
-
         property string chatBackgroundColor: "#2C2C2C"
+
+        property string chat3Color: "#70FFFFFF"
+        property string chat2Color: "#A7A7A7";
 
         property real dpi: 0
 

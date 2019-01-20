@@ -3,7 +3,7 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
 Item {
-    width: facade.toPx(140)
+    width: facade.toPx(160)
     height: parent.height
 
     Rectangle {
@@ -27,8 +27,8 @@ Item {
 
                 Image {
                     source: "qrc:/ui/icons/" + images
-                    width: facade.toPx(sourceSize.width/1.4)
-                    height: facade.toPx(sourceSize.height/1.4)
+                    width: facade.toPx(sourceSize.width/1.3)
+                    height: facade.toPx(sourceSize.height/1.3)
                     anchors.centerIn: (parent);
                 }
 

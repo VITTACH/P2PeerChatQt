@@ -304,7 +304,7 @@ Rectangle {
                 height: facade.toPx(160)
                 radius: facade.toPx(10);
 
-                color: loader.listChoseBackground
+                color: loader.pageBackgroundColor
 
                 ListView {
                     width: parent.width - facade.toPx(50)

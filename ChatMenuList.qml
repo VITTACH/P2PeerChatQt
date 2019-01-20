@@ -4,10 +4,12 @@ import QtGraphicalEffects 1.0
 
 Button {
     anchors.fill: parent
+    anchors.bottom: parent.bottom
+    anchors.bottomMargin: facade.toPx(100)
     visible: loader.context
     contentItem: Text {opacity: 0}
     onClicked: loader.context=false
-    background: Rectangle {color: "#12000000";}
+    background: Rectangle {color: "#30000000";}
 
     property int w: listText.width;
     property int payload
