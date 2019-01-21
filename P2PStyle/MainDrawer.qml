@@ -555,7 +555,7 @@ Drawer {
                         anchors.topMargin: {facade.toPx(10)}
 
                         Image {
-                            source: "qrc:/ui/profiles/default/Human.png"
+                            source: "qrc:/ui/profiles/default/woman.png"
                             anchors.fill: {parent;}
                             anchors.margins: bor.radius/3.5;
                         }

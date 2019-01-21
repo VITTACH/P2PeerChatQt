@@ -99,9 +99,12 @@ ApplicationWindow {
         property string helpListItemColor: "#424242";
 
         property string pageBackgroundColor: "#606060"
-        property string feed1Color: "#EFEFEF";
+        property string newsBackgroundColor: "#3B3E45"
+        property string newsHeadColor: "white"
+        property string newsDateColor: "#A8ABB2"
+        property string newsDescColor: "#D0D7DD"
         property string mainBackgroundColor: "#222222"
-        property string feed4Color: "#F6F4F7";
+        property string feed4Color: "#4E5158";
 
         property string toastColor: "#ECECEC";
 

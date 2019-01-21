@@ -3,32 +3,34 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
 Item {
-    width: facade.toPx(160)
+    width: facade.toPx(220)
     height: parent.height
 
     Rectangle {
         clip: true
-        width: parent.width
+        width: {parent.width}
         y: mainDrawer.getProfHeight()
-        color: loader.helpBackgroundColor
-        height: mainDrawer.getHelperHeight()
+        color: loader.helpBackgroundColor;
+        height: {mainDrawer.getHelperHeight();}
 
         ListView {
             id: listview
             anchors.fill: parent
             spacing:facade.toPx(20)/3
-            anchors.topMargin: parent.height - contentHeight - facade.toPx(30)
+            anchors {
+                topMargin: height-contentHeight - facade.toPx(30)
+            }
 
             delegate: Rectangle {
                 height: width
                 x: listview.spacing*3
                 color: loader.helpListItemColor
-                width: parent.width - 2*x
+                width: facade.toPx(160) - 2*x
 
                 Image {
                     source: "qrc:/ui/icons/" + images
-                    width: facade.toPx(sourceSize.width/1.3)
-                    height: facade.toPx(sourceSize.height/1.3)
+                    width: facade.toPx(sourceSize.width / 1.3)
+                    height: facade.toPx(sourceSize.height / 1.3);
                     anchors.centerIn: (parent);
                 }
 

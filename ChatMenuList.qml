@@ -31,7 +31,7 @@ Button {
 
     Rectangle {
         id: listText
-        color: loader.feed1Color
+        color: loader.newsBackgroundColor
         width: {Math.max(funcs.width, facade.toPx(400))}
         height: funcs.implicitHeight
         y: (yPosition)

@@ -170,7 +170,7 @@ Rectangle {
                         width: parent.width;
                         radius: facade.toPx(10)
                         height: Math.max(facade.toPx(260), description.height)
-                        color: loader.feed1Color;
+                        color: loader.newsBackgroundColor;
 
                         Item {
                             clip: true
@@ -255,7 +255,8 @@ Rectangle {
 
                             Text {
                                 text: title
-                                elide: {(Text.ElideRight)}
+                                color: loader.newsHeadColor
+                                elide: Text.ElideRight
                                 width: {parent.width - facade.toPx(30);}
                                 font.bold: true
                                 font.family: trebu4etMsNorm.name
@@ -264,6 +265,7 @@ Rectangle {
 
                             Text {
                                 text: pDate
+                                color: loader.newsDateColor
                                 lineHeight: 1.4
                                 width: {parent.width - facade.toPx(30);}
                                 font.family: trebu4etMsNorm.name
@@ -272,6 +274,7 @@ Rectangle {
 
                             Text {
                                 text: pDesc
+                                color: loader.newsDescColor
                                 maximumLineCount: 4
                                 width: {parent.width - facade.toPx(30);}
                                 wrapMode: Text.Wrap
