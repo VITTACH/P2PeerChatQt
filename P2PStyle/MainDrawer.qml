@@ -166,19 +166,10 @@ Drawer {
         return -1;
     }
 
-    Rectangle {
-        id: gradient
-        height: parent.height
-        color: loader.mainMenuBorderColor
-        anchors.left: drawer.right
-        width: facade.toPx(5)
-    }
-
     Item {
         id: drawer;
         clip: true;
-        height: parent.height;
-        width: parent.width - gradient.width;
+        anchors.fill: parent
 
         Rectangle {
             anchors.fill: parent
@@ -820,5 +811,12 @@ Drawer {
                 }
             }
         }
+    }
+
+    Rectangle {
+        height: profile.height
+        x: drawer.width-width;
+        color: loader.mainMenuBorderColor
+        width: facade.toPx(4);
     }
 }

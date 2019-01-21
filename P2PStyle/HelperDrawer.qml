@@ -3,7 +3,7 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
 Item {
-    width: facade.toPx(220)
+    width: facade.toPx(210)
     height: parent.height
 
     Rectangle {
