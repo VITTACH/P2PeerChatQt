@@ -9,23 +9,23 @@ Item {
     Rectangle {
         clip: true
         width: {parent.width}
-        y: mainDrawer.getProfHeight()
-        color: loader.helpBackgroundColor;
-        height: {mainDrawer.getHelperHeight();}
+        y: mainDrawer.getProfHeight();
+        color: loader.helpBackgroundColor
+        height: mainDrawer.getHelperHeight()
 
         ListView {
             id: listview
-            anchors.fill: parent
-            spacing:facade.toPx(20)/3
+            spacing: facade.toPx(20)/3
             anchors {
-                topMargin: height-contentHeight - facade.toPx(30)
+                fill: parent
+                topMargin: parent.height - contentHeight - facade.toPx(30)
             }
 
             delegate: Rectangle {
+                x: listview.spacing*3;
                 height: width
-                x: listview.spacing*3
+                width: facade.toPx(160) - (2*x)
                 color: loader.helpListItemColor
-                width: facade.toPx(160) - 2*x
 
                 Image {
                     source: "qrc:/ui/icons/" + images
@@ -35,7 +35,7 @@ Item {
                 }
 
                 MouseArea {
-                    anchors.fill: parent
+                    anchors.fill: parent;
                     onClicked: switch(mypos) {
                     case 5:
                         event_handler.saveSettings("user", "")

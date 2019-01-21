@@ -206,13 +206,13 @@ Item {
                         typeof plaseHolder == "undefined" ? ("") : plaseHolder;
                     }
                     inputMethodHints: {
-                        if (index == 1) Qt.ImhDialableCharactersOnly
-                        else Qt.ImhNone
+                        if (index== 1) Qt.ImhDialableCharactersOnly
+                        else Qt.ImhPreferLowercase
                     }
                     onFocusChanged: {
                         if (text.length == 0 && index == 1)text="8"
                     }
-                    echoMode: index == 2? TextInput.Password : TextInput.Normal
+                    echoMode: if (index == 2) {TextInput.Password;}
                     background: Rectangle{opacity:0}
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(29);
