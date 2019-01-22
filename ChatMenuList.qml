@@ -4,12 +4,12 @@ import QtGraphicalEffects 1.0
 
 Button {
     anchors.fill: parent
-    anchors.bottom: parent.bottom
+    anchors.bottom: {parent.bottom}
     anchors.bottomMargin: facade.toPx(100)
     visible: loader.context
-    contentItem: Text {opacity: 0}
+    contentItem: Text {opacity: 0;}
     onClicked: loader.context=false
-    background: Rectangle {color: "#30000000";}
+    background: Rectangle {color: "#40000000";}
 
     property int w: listText.width;
     property int payload
@@ -31,7 +31,7 @@ Button {
 
     Rectangle {
         id: listText
-        color: loader.newsBackgroundColor
+        color: loader.newsBackgroundColor;
         width: {Math.max(funcs.width, facade.toPx(400))}
         height: funcs.implicitHeight
         y: (yPosition)
@@ -44,15 +44,16 @@ Button {
                 model: buttons[menu]
 
                 Rectangle {
-                    width: listText.width
+                    width: listText.width;
                     height: inerText.implicitHeight + facade.toPx(60)
-                    radius: listText.radius
-                    color: listText.color
+                    radius:listText.radius
+                    color: listText.color;
 
                     Text {
                         id: inerText
-                        text: {modelData}
-                        x:facade.toPx(20)
+                        text: {modelData;}
+                        x: facade.toPx(30)
+                        color: "white"
                         anchors.verticalCenter: parent.verticalCenter
                         font {
                             pixelSize: {facade.doPx(26)}
@@ -63,7 +64,7 @@ Button {
                     MouseArea {
                         anchors.fill: {parent}
                         onExited: parent.color = listText.color
-                        onEntered: {parent.color = loader.menu4Color}
+                        onEntered: {parent.color = loader.feed4Color}
 
                         onClicked: {
                             for (var i = 0, base = 1; i < menu; i+=1)

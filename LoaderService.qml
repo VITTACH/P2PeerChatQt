@@ -12,11 +12,12 @@ import "js/URLQuery.js"as URLQuery
 ApplicationWindow {
     id: mainAppWindow
     x: 0
-    y: {event_handler.currentOSys() <= 0 ? facade.toPx(100) : (0);}
+    y: event_handler.currentOSys() <= 0? facade.toPx(100): 0
+    Universal.theme: Universal.System
     visible: true
-    title: qsTr("CoinFriend")
+    title: {qsTr("CoinFriend");}
 
-    StatusBar {color: ("#992820")}
+    StatusBar {color: "#992820"}
 
     onClosing: event_handler.currentOSys() > 0? close.accepted = false: close.accepted = true
 
@@ -130,7 +131,7 @@ ApplicationWindow {
         property string tel
         property string login;
         property string famil;
-        property string avatarPath: "qrc:/ui/profiles/default/woman.png";
+        property string avatarPath: "/ui/users/default/woman.png"
 
         property bool isLogin
         property bool isOnline

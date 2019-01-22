@@ -128,6 +128,7 @@ Item {
                     width: parent.width-facade.toPx(20)-icon.width;
                     height:parent.height
                     placeholderText: plaseholder;
+                    onTextChanged: loader.fields[index] = text
                     x: {facade.toPx(80)}
                     Connections {
                         target: partnerHeader
@@ -138,20 +139,16 @@ Item {
                         }
                     }
                     inputMethodHints: {
-                        if (index == 3)
-                            Qt.ImhFormattedNumbersOnly
+                        if (index == 3)Qt.ImhDialableCharactersOnly
                         else Qt.ImhNone
                     }
                     onFocusChanged: {
                         if (text.length<1 && index==3) {text = "8"}
                     }
-                    echoMode: {
-                       index==2?TextInput.Password:TextInput.Normal
-                    }
-                    onTextChanged: {loader.fields[index-0] = text;}
-                    font.pixelSize: {facade.doPx(28);}
-                    font.family: {trebu4etMsNorm.name}
-                    background: Rectangle {opacity: 0}
+                    echoMode: if (index == 2) {TextInput.Password;}
+                    background: Rectangle{opacity:0}
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(28);
                 }
             }
 

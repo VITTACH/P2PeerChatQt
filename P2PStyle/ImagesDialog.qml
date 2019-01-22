@@ -14,7 +14,7 @@ Button {
     property string color4: "#808080"
     property string color5: "#34AADC"
 
-    background: Rectangle {color : "#80727272";}
+    background: Rectangle {color : "#40000000";}
 
     Connections {
         target: loader;

@@ -206,8 +206,8 @@ Item {
                         typeof plaseHolder == "undefined" ? ("") : plaseHolder;
                     }
                     inputMethodHints: {
-                        if (index== 1) Qt.ImhDialableCharactersOnly
-                        else Qt.ImhPreferLowercase
+                        if (index == 1)Qt.ImhDialableCharactersOnly
+                        else Qt.ImhNone
                     }
                     onFocusChanged: {
                         if (text.length == 0 && index == 1)text="8"

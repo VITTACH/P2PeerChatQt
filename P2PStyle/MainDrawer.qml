@@ -332,7 +332,7 @@ Drawer {
                     width: facade.toPx(sourceSize.width * (3.0 / 2.0));
                     height:facade.toPx(sourceSize.height* (3.0 / 2.0));
                     anchors.topMargin: facade.toPx((15))
-                    source: {"qrc:/ui/profiles/lin.png"}
+                    source: "qrc:/ui/users/lin.png"
                 }
 
                 Text {
@@ -546,7 +546,7 @@ Drawer {
                         anchors.topMargin: {facade.toPx(10)}
 
                         Image {
-                            source: "qrc:/ui/profiles/default/woman.png"
+                            source: "qrc:/ui/users/default/woman.png"
                             anchors.fill: {parent;}
                             anchors.margins: bor.radius/3.5;
                         }
@@ -677,26 +677,27 @@ Drawer {
 
         ListView {
             id: listMenu
-            anchors.bottom: parent.bottom
-            snapMode:ListView.SnapOneItem
-            boundsBehavior: Flickable.StopAtBounds;
-            Component.onCompleted: currentIndex =-1
+            clip: true
+            snapMode: ListView.SnapOneItem
+            boundsBehavior: {Flickable.StopAtBounds}
+            Component.onCompleted: currentIndex = -1
+
+            anchors.bottom: parent.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
 
-            clip: true
-            model:ListModel {
-                id: navigateDownModel
-                ListElement {image: ""; target: ""}
-                ListElement {image: "/ui/icons/devIconBlue.png"; target:"Аккаунт"}
-            }
-
-            width: parent.width// - facade.toPx(20)
+            width: parent.width
             height: {
                 var length = parent.height - (facade.toPx(680) + getProfHeight());
                 var count = Math.ceil(length/facade.toPx(85));
                 if (count>navigateDownModel.count) count = navigateDownModel.count
                 if (count < 1) count = 1;
                 (count) * facade.toPx(85)
+            }
+
+            model:ListModel {
+                id: navigateDownModel
+                ListElement {image: ""; target: "";}
+                ListElement {image: "/ui/icons/navigate.png"; target: "Навигация"}
             }
 
             delegate: Rectangle {
@@ -726,32 +727,30 @@ Drawer {
                 }
 
                 Item {
-                    anchors {
-                        fill: {parent}
-                        leftMargin: facade.toPx(40)
-                    }
+                    anchors.fill: parent
+                    anchors.leftMargin: facade.toPx(40)
 
                     Image {
-                        source: image;
-                        width: facade.toPx(sourceSize.width*1.1)
-                        height: facade.toPx(sourceSize.height*1.1)
-                        horizontalAlignment: Image.AlignHCenter;
-                        anchors.verticalCenter: parent.verticalCenter
+                        source: image
+                        width: facade.toPx(sourceSize.width)
+                        height: facade.toPx(sourceSize.height);
                         visible: index >= 1
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                        }
                     }
 
                     Switch {
                         id: myswitcher
-                        visible: index==0;
-
+                        visible: index == 0
                         indicator: Rectangle {
                             property bool checked: parent.checked
                             anchors.horizontalCenter: parent.horizontalCenter
                             color: checked == true? loader.switcherOnColor: loader.switcherOffColor
-                            radius: {facade.toPx(25)}
-                            y: parent.height/2-height/2;
-                            implicitWidth: facade.toPx(55)
-                            implicitHeight: {facade.toPx(30)}
+                            radius: facade.toPx(25)
+                            y: parent.height/2-height/2
+                            implicitWidth: facade.toPx(55);
+                            implicitHeight: {facade.toPx(30);}
 
                             DropShadow {
                                 samples: (15)
@@ -765,16 +764,14 @@ Drawer {
                                 id: switcher
                                 radius: {width/2}
                                 color:loader.menu4Color
-                                width: myswitcher.height/2.6;
+                                width: myswitcher.height / 2.6
                                 height:width
                                 anchors.verticalCenter: parent.verticalCenter
-                                x: {
-                                    if (myswitcher.checked) {
-                                        var p=parent.height-height;
-                                        parent.width - width - p/2;
-                                    } else {
-                                        (parent.height - height)/2;
-                                    }
+                                x: if (myswitcher.checked) {
+                                    var p=parent.height-height
+                                    parent.width - width - p/2
+                                } else {
+                                    (parent.height - height)/2
                                 }
                             }
                         }
@@ -814,9 +811,9 @@ Drawer {
     }
 
     Rectangle {
-        height: profile.height
-        x: drawer.width-width;
+        height: parent.height
+        x: drawer.width-width
         color: loader.mainMenuBorderColor
-        width: facade.toPx(4);
+        width: facade.toPx(4)
     }
 }

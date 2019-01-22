@@ -6,18 +6,11 @@
         <file>ui/buttons/sendButton.png</file>
         <file>ChatScreenView.qml</file>
         <file>LoaderService.qml</file>
-        <file>ui/chat/leFtMessage.png</file>
-        <file>ui/chat/rightMessag.png</file>
         <file>js/URLQuery.js</file>
         <file>js/xHRQuery.js</file>
-        <file>ui/bars/icons/configDBlue.png</file>
-        <file>ui/bars/icons/configWhite.png</file>
         <file>ui/icons/phoneIconWhite.png</file>
         <file>ui/icons/personIconwhite.png</file>
         <file>ui/mask/round.png</file>
-        <file>ui/profiles/default/Human.png</file>
-        <file>ui/profiles/default/woman.png</file>
-        <file>ui/profiles/lin.png</file>
         <file>AndImagePicker.qml</file>
         <file>IOsImagesPicker.qml</file>
         <file>ui/apkIcon/iconMaxim.png</file>
@@ -41,12 +34,10 @@
         <file>ui/buttons/feeds/mus.png</file>
         <file>ui/buttons/feeds/play.png</file>
         <file>ui/buttons/feeds/vide.png</file>
-        <file>ui/backind/back1.png</file>
         <file>P2PStyle/HelperDrawer.qml</file>
         <file>P2PStyle/ImagesDialog.qml</file>
         <file>ui/icons/DeleteIconWhite.png</file>
         <file>ui/icons/PassWIconWhite.png</file>
-        <file>ui/icons/devIconBlue.png</file>
         <file>ui/icons/outIconBlue.png</file>
         <file>RegistrationView.qml</file>
         <file>ui/buttons/addButton.png</file>
@@ -58,11 +49,14 @@
         <file>ui/icons/security.png</file>
         <file>ColorAnimate.qml</file>
         <file>ChatMenuList.qml</file>
-        <file>ui/chat/chat0.jpg</file>
         <file>P2PStyle/IndicatorBusy.qml</file>
         <file>MainScreenView.qml</file>
         <file>LoginView.qml</file>
         <file>P2PStyle/MainDrawer.qml</file>
         <file>P2PStyle/DefaultDialog.qml</file>
+        <file>ui/icons/navigate.png</file>
+        <file>ui/users/default/Human.png</file>
+        <file>ui/users/default/woman.png</file>
+        <file>ui/users/lin.png</file>
     </qresource>
 </RCC>
