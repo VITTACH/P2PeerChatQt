@@ -9,7 +9,7 @@ Button {
     visible: loader.context
     contentItem: Text {opacity: 0;}
     onClicked: loader.context=false
-    background: Rectangle {color: "#40000000";}
+    background: Rectangle {color: "transparent"}
 
     property int w: listText.width;
     property int payload

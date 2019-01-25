@@ -107,8 +107,6 @@ ApplicationWindow {
         property string mainBackgroundColor: "#222222"
         property string feed4Color: "#4C4C4C";
 
-        property string toastColor: "#ECECEC";
-
         property string chatBackgroundColor: "#2C2C2C"
 
         property string chat3Color: "#70FFFFFF"

@@ -197,7 +197,7 @@ Rectangle {
                             y: x
                             Image {
                                 source: typeof image!="undefined"?image.replace("ps","p"):""
-                                anchors.centerIn: {parent}
+                                anchors.centerIn: parent
                                 height:sourceSize.width > sourceSize.height? parent.height: sourceSize.height*(parent.width / sourceSize.width)
                                 width: sourceSize.width > sourceSize.height? sourceSize.width*(parent.height / sourceSize.height): parent.width
                             }
@@ -206,8 +206,8 @@ Rectangle {
                         Image {
                             smooth: true
                             visible: false
-                            source: {"ui/mask/round.png";}
-                            sourceSize: {Qt.size(bag.width, bag.height);}
+                            source: "ui/mask/round.png";
+                            sourceSize: {Qt.size(bag.width, bag.height)}
                         }
 
                         MouseArea {
@@ -215,7 +215,6 @@ Rectangle {
                             onClicked: {
                                 if (chatScreen.position > 0) return
                                 loader.urlLink = link;
-                                beckground.source = typeof image != "undefined"? image.replace("ps", "p"): ""
                                 if (event_handler.currentOSys() > (0)) {
                                     loader.webview = true;
                                     partnerHeader.text = (title)
@@ -224,8 +223,8 @@ Rectangle {
                                 }
                             }
                             onPressed: {
-                                coloresRect2.x = (mouseX);
-                                coloresRect2.y = (mouseY);
+                                coloresRect2.x = mouseX;
+                                coloresRect2.y = mouseY;
                                 circleAnimation2.start()
                             }
                         }
@@ -238,8 +237,8 @@ Rectangle {
                             duration: 500
                             to: parent.width * 2
                             onStopped: {
-                                coloresRect2.width = 0;
-                                coloresRect2.height= 0;
+                                coloresRect2.width = (0)
+                                coloresRect2.height = 0;
                             }
                         }
 

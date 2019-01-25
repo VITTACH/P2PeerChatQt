@@ -8,12 +8,6 @@ Button {
     visible: loader.avatar
     onClicked: loader.avatar = false;
 
-    property string color1: "#F7F7F7"
-    property string color2: "#000000"
-    property string color3: "#D7D7D7"
-    property string color4: "#808080"
-    property string color5: "#34AADC"
-
     background: Rectangle {color : "#40000000";}
 
     Connections {
@@ -36,128 +30,90 @@ Button {
     }
 
     Rectangle {
-        id: dialogWindow
-        radius: facade.toPx(25)
         anchors.bottom: parent.bottom
         anchors.bottomMargin: parent.height/6
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenter:parent.horizontalCenter
         width: Math.min(0.73 * parent.width, facade.toPx(666.6));
         height: {2*width/3;}
-        color: color1
+        color: "#F2F2F2"
+
+        MouseArea {anchors.fill: parent}
 
         Rectangle {
-            color: loader.toastColor
             anchors {
-                fill: parent
-                margins: dialogWindow.radius
+                top: parent.top
+                bottom: actions.top;
+                horizontalCenter:parent.horizontalCenter
+                margins: facade.toPx(40)
             }
-        }
-
-        MouseArea {anchors.fill: {(parent)}}
-
-        Item {
-            anchors {
-                top: parent.top;
-                bottom: picDialogAndroidrow.top;
-                horizontalCenter: parent.horizontalCenter
-            }
-
-            width: (parent.width - 2*dialogWindow.radius)
+            width: parent.width-facade.toPx(60)
 
             Label {
-                color: color2
                 wrapMode: Text.Wrap;
-                width: parent.width - facade.toPx(20);
-                horizontalAlignment: {Text.AlignHCenter;}
-                text: parent.parent.parent.text;
-                anchors.centerIn:parent
+                width: {parent.width - facade.toPx(20);}
+                horizontalAlignment: {Text.AlignHCenter}
+                text: parent.parent.parent.text
+                anchors.centerIn: parent
                 font {
-                    pixelSize: (facade.doPx(27))
-                    family: trebu4etMsNorm.name;
+                    pixelSize: facade.doPx(22);
+                    family: trebu4etMsNorm.name
                 }
             }
-        }
-
-        Rectangle {
-            width: parent.width
-            height:picDialogAndroidButtonGallery.height/2
-            anchors.top: picDialogAndroidrow.top
-            anchors.topMargin:facade.toPx(102.4)
-            color: picDialogAndroidButtonGallery.pressed==true? color3: color1;
         }
 
         Column {
-            id: picDialogAndroidrow
-            anchors.bottom: parent.bottom
+            id: actions
             width: parent.width
-            height: facade.toPx(202)
+            anchors.bottom: parent.bottom
 
-            Rectangle {
-                height: 1
-                color: color4
-                width: parent.width;
-            }
+            Repeater {
+                id: buttons
+                model: ["Сделать новый снимок","Подгрузить из галереи"]
+                Item {
+                    width: parent.width
+                    height: facade.toPx(100)
 
-            Button {
-                width: parent.width;
-                height: facade.toPx(100)
-                id: picDialogAndroidButtonCamera
+                    Button {
+                        anchors.right: parent.right
+                        anchors.rightMargin: facade.toPx(30)
+                        anchors.verticalCenter: parent.verticalCenter
 
-                contentItem: Text {
-                    color: color5
-                    text: qsTr("Сделать новый снимок")
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    font {
-                        bold: true
-                        pixelSize: facade.doPx(27);
-                        family: trebu4etMsNorm.name
+                        background: Rectangle {
+                            color: parent.pressed? "#919191": "#C2C2C2"
+                            border.width: parent.pressed?2:0
+                            border.color: "#575757"
+                        }
+
+                        contentItem: Text {
+                            text: modelData;
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+
+                            font {
+                                pixelSize: {facade.doPx(20)}
+                                family: trebu4etMsNorm.name;
+                            }
+                        }
+
+                        onClicked: {
+                            loader.avatar=false
+                            if (index == 0) {
+                                imagePicker.item.takePhoto()
+                            } else {
+                                if (event_handler.currentOSys() == 0) {
+                                    fileDialog.open();
+                                } else { imagePicker.item.pickImage() }
+                            }
+
+                        }
                     }
-                }
 
-                background: Rectangle {
-                    color: picDialogAndroidButtonCamera.pressed? color3: color1
-                }
-
-                onClicked: {
-                    loader.avatar = false
-                    imagePicker.item.takePhoto();
-                }
-            }
-
-            Rectangle {
-                height: 1
-                color: color4
-                width: parent.width
-            }
-
-            Button {
-                width: parent.width
-                height: facade.toPx(100)
-                id: picDialogAndroidButtonGallery
-
-                contentItem: Text {
-                    color: color5
-                    text: qsTr("Подгрузить из галереи")
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
-                    font {
-                        bold: true
-                        pixelSize: facade.doPx(27);
-                        family: trebu4etMsNorm.name
+                    Rectangle {
+                        color: "#808080"
+                        anchors.top: parent.top;
+                        width: parent.width
+                        height: 1
                     }
-                }
-
-                background: Rectangle {
-                    radius:facade.toPx(25)
-                    color: picDialogAndroidButtonGallery.pressed?color3: color1
-                }
-
-                onClicked: {
-                    loader.avatar = false;
-                    if (event_handler.currentOSys()==0) {
-                        fileDialog.open();
-                    } else {imagePicker.item.pickImage()}
                 }
             }
         }

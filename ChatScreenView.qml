@@ -226,7 +226,7 @@ Drawer {
 
                             DropShadow {
                                 radius: facade.toPx(5)
-                                samples: (10);
+                                samples: 10;
                                 color:"#80000000"
                                 source: timeText;
                                 anchors.fill: {timeText}
@@ -282,9 +282,9 @@ Drawer {
                                     property var darksColor;
 
                                     color: backgroundColor
-                                    radius: {facade.toPx(8)}
                                     width: textarea.contentWidth
                                     height: textarea.height;
+                                    radius: {facade.toPx(8)}
 
                                     Component.onCompleted: {
                                         lightColor = Qt.rgba(color.r - 0.06, color.g - 0.04,color.b, 1)
@@ -376,6 +376,7 @@ Drawer {
                                         wrapMode: {TextEdit.Wrap;}
                                         font.pixelSize: facade.doPx(30)
                                         font.family:trebu4etMsNorm.name
+                                        background: Rectangle {color: "transparent"}
 
                                         MouseArea {
                                             anchors.fill: parent
@@ -687,9 +688,11 @@ Drawer {
                                 }
                             }
 
+                            leftPadding: attachButton.width
                             rightPadding:sendButton.width+leftPadding
                             font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(26)
+
                             Keys.onReleased: {
                                 if (event.key == Qt.Key_Control||event.key == Qt.Key_Return) {
                                     if (pressCtrl==true&&pressEntr) {
@@ -699,7 +702,6 @@ Drawer {
                                 }
                                 pressCtrl = pressEntr=false
                             }
-                            leftPadding: attachButton.width
                         }
 
                         flickableDirection: {Flickable.VerticalFlick}

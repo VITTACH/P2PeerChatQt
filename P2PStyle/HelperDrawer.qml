@@ -3,34 +3,34 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
 Item {
-    width: facade.toPx(210)
     height: parent.height
+    width: facade.toPx(200);
 
     Rectangle {
         clip: true
-        width: {parent.width}
-        y: mainDrawer.getProfHeight();
         color: loader.helpBackgroundColor
-        height: mainDrawer.getHelperHeight()
+        width: parent.width;
+        height: {mainDrawer.getHelperHeight();}
+        y: mainDrawer.getProfHeight();
 
         ListView {
             id: listview
             spacing: facade.toPx(20)/3
             anchors {
                 fill: parent
-                topMargin: parent.height - contentHeight - facade.toPx(30)
+                topMargin: Math.max(0, height - buttons.count*((facade.toPx(160) - 2*facade.toPx(20)) + spacing))
             }
 
             delegate: Rectangle {
-                x: listview.spacing*3;
-                height: width
-                width: facade.toPx(160) - (2*x)
+                x: listview.spacing *3
+                width: facade.toPx(160) - 2 * facade.toPx(20);
                 color: loader.helpListItemColor
+                height: width
 
                 Image {
                     source: "qrc:/ui/icons/" + images
                     width: facade.toPx(sourceSize.width / 1.3)
-                    height: facade.toPx(sourceSize.height / 1.3);
+                    height: facade.toPx(sourceSize.height/1.3)
                     anchors.centerIn: (parent);
                 }
 
@@ -48,6 +48,7 @@ Item {
             }
 
             model:ListModel {
+                id: buttons
                 ListElement {
                     mypos: 0;
                     images: "profile.png";
