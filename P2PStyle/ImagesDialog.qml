@@ -8,7 +8,7 @@ Button {
     visible: loader.avatar
     onClicked: loader.avatar = false;
 
-    background: Rectangle {color : "#90000000";}
+    background: Rectangle {color: "transparent"}
 
     Connections {
         target: loader;

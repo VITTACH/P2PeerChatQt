@@ -13,13 +13,13 @@ Item {
         y: mainDrawer.getProfHeight();
         color: loader.helpBackgroundColor
         width: parent.width;
-        height: mainDrawer.getHelperHeight()
+        height: mainDrawer.getHelperHeight();
 
         ListView {
             spacing: facade.toPx(20)/3
             anchors {
                 fill: parent
-                topMargin: Math.max(0, (height - buttons.count * (itemHeight + spacing))/2)
+                topMargin: Math.max(0, 3*(height - buttons.count * (itemHeight + spacing))/4)
             }
 
             delegate: Rectangle {

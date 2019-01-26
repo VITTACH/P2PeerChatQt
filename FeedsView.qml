@@ -317,10 +317,10 @@ Rectangle {
 
                     model:ListModel {
                         id: pages
-                        ListElement { image: "qrc:/ui/buttons/feeds/mus.png"; }
-                        ListElement { image: "qrc:/ui/buttons/feeds/img.png"; }
-                        ListElement { image: "qrc:/ui/buttons/feeds/vide.png" }
-                        ListElement { image: "qrc:/ui/buttons/feeds/play.png" }
+                        ListElement { image: "/ui/buttons/feeds/mus.png"; }
+                        ListElement { image: "/ui/buttons/feeds/img.png"; }
+                        ListElement { image: "/ui/buttons/feeds/vide.png" }
+                        ListElement { image: "/ui/buttons/feeds/play.png" }
                     }
 
                     delegate: Item {
@@ -337,7 +337,7 @@ Rectangle {
                         Image {
                             id: img
                             width: facade.toPx(sourceSize.width / 3.55)
-                            height: {facade.toPx(sourceSize.height / 3.55);}
+                            height: {facade.toPx(sourceSize.height / 3.55)}
                             anchors.centerIn: parent
                             source: image
                         }
@@ -347,40 +347,12 @@ Rectangle {
         }
     }
 
-    Button {
-        text:qsTr("Наверх")
-        anchors {
-            top: parent.top
-            bottom: downRow.top;
-            right: parent.right;
-        }
-
-        font.pixelSize: facade.doPx(20)
-        font.family:trebu4etMsNorm.name
-        visible: (basView.contentY > 0 && (parent.width - nWidth)/2 >= width)
-        contentItem: Text {
-            elide: Text.ElideRight
-            verticalAlignment: Text.AlignBottom
-            horizontalAlignment: {Text.AlignHCenter}
-            width: parent.width;
-            font: (parent.font);
-            text: (parent.text);
-        }
-
-        onClicked: basView.positionViewAtBeginning()
-        width: facade.toPx(200);
-        background: Rectangle {
-            color: ("#C0FFFFFF")
-            anchors.fill:parent;
-        }
-    }
-
     Rectangle {
         id: downRow
-
         width: parent.width
         height: facade.toPx(80);
         anchors.bottom: parent.bottom
+        color: loader.menu9Color
 
         Item {
             clip: true

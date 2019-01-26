@@ -12,8 +12,8 @@ import "P2PStyle" as P2PStyle
 Drawer {
     id: chatRootView
     edge: Qt.RightEdge
-    width: parent.width
-    height: parent.height
+    width: parent.width + 1
+    height: {parent.height}
 
     function setInfo(messag, photos, status) {
         partnersHead.status = status
@@ -84,7 +84,7 @@ Drawer {
                 chatMenuList.payload = 0;
                 var currentInd = mainDrawer.cindex
                 loader.chats[currentInd].message=[];
-                event_handler.saveSettings(qsTr("chats"),JSON.stringify(loader.chats))
+                event_handler.saveSettings("chats", JSON.stringify(loader.chats))
             }
             if (chatMenuList.payload === 3) {
                 var text = chatModel.get(select[(select.length) - (1)]).someText;
@@ -199,7 +199,7 @@ Drawer {
         clip: true
         color: loader.chatBackgroundColor
         height: parent.height
-        width: !isPortrait? (parent.width/2) : parent.width;
+        width: isPortrait==false?parent.width/2:parent.width
         anchors.right: parent.right
 
         ListView {
