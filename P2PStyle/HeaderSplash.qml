@@ -3,15 +3,14 @@ import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 
 Rectangle {
+    id: rootRect
     property int page: 0
     property var text: ""
     property var photo: ""
     property var status: ""
 
-    id: rootRect
     width: parent.width
     height: facade.toPx(140)
-
     color: loader.headBackgroundColor
 
     Button {
@@ -40,7 +39,7 @@ Rectangle {
             height:facade.toPx(sourceSize.height)
             width: facade.toPx(sourceSize.width);
             fillMode: Image.PreserveAspectFit
-            anchors.centerIn: {parent}
+            anchors.centerIn: parent
         }
     }
 
@@ -48,7 +47,7 @@ Rectangle {
         id: row
         spacing: facade.toPx(30)
         anchors {
-            verticalCenter: parent.verticalCenter
+            verticalCenter:parent.verticalCenter
             left: loader.isLogin == true ? actionButton.right : undefined
             leftMargin: loader.isLogin? actionButton.x: 0;
             horizontalCenter: loader.isLogin == true ? undefined : parent.horizontalCenter
@@ -57,43 +56,43 @@ Rectangle {
         Item {
             id: bug
             height: facade.toPx(90);
-            width: {visible? height: 0}
+            width: visible? height:0
             visible: (page < 0) && (rootRect.phot !== "");
             anchors.verticalCenter: parent.verticalCenter;
 
             Image {
                 source: photo
                 anchors.fill: parent
-                anchors.margins: bor.radius/3.50;
+                anchors.margins: bor.radius/3.50
             }
 
             Rectangle {
                 id: bor
                 anchors.fill: parent
-                color: {"transparent";}
-                border.color: "#A5A5A5"
-                border.width: {facade.toPx(5.0);}
                 radius: facade.toPx(15)
+                border.color: "#A5A5A5"
+                border.width: facade.toPx(5)
+                color: "transparent"
             }
         }
 
         Column {
-            spacing: {facade.toPx(10);}
+            spacing: facade.toPx(10)
 
             Text {
                 color: "white"
-                elide: Text.ElideRight;
                 width: Math.min((rootRect.width - bug.width - row.spacing), implicitWidth)
                 text: rootRect.text.replace("\n", "")
+                elide: Text.ElideRight
 
                 font.family: trebu4etMsNorm.name
                 font.pixelSize: loader.isLogin == true ? facade.doPx(26) : facade.doPx(30)
             }
 
             Text {
+                font.family: trebu4etMsNorm.name
                 font.bold: true
                 font.pixelSize: facade.doPx(18);
-                font.family: trebu4etMsNorm.name
                 visible: loader.isLogin && !loader.webview
                 color: text == "Online"?"white":"darkgrey"
                 text: rootRect.status.replace("\n", "")
@@ -103,8 +102,8 @@ Rectangle {
 
     Rectangle {
         anchors.bottom: parent.bottom
-        color: {loader.head2Color}
-        height: facade.toPx(5);
+        color: loader.head2Color
+        height: facade.toPx(5)
         width: parent.width
         opacity: 0.5
     }

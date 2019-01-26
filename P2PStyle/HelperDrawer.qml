@@ -6,32 +6,33 @@ Item {
     height: parent.height
     width: facade.toPx(200);
 
+    property var itemHeight: facade.toPx(120)
+
     Rectangle {
         clip: true
+        y: mainDrawer.getProfHeight();
         color: loader.helpBackgroundColor
         width: parent.width;
-        height: {mainDrawer.getHelperHeight();}
-        y: mainDrawer.getProfHeight();
+        height: mainDrawer.getHelperHeight()
 
         ListView {
-            id: listview
             spacing: facade.toPx(20)/3
             anchors {
                 fill: parent
-                topMargin: Math.max(0, height - buttons.count*((facade.toPx(160) - 2*facade.toPx(20)) + spacing))
+                topMargin: Math.max(0, (height - buttons.count * (itemHeight + spacing))/2)
             }
 
             delegate: Rectangle {
-                x: listview.spacing *3
-                width: facade.toPx(160) - 2 * facade.toPx(20);
-                color: loader.helpListItemColor
-                height: width
+                x: facade.toPx(20)
+                color: {loader.helpListItemColor}
+                width: itemHeight
+                height: itemHeight
 
                 Image {
-                    source: "qrc:/ui/icons/" + images
+                    source: "/ui/icons/" + images
                     width: facade.toPx(sourceSize.width / 1.3)
                     height: facade.toPx(sourceSize.height/1.3)
-                    anchors.centerIn: (parent);
+                    anchors.centerIn: parent
                 }
 
                 MouseArea {
