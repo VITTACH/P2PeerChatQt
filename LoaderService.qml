@@ -3,7 +3,7 @@ import StatusBar 0.1
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
-import QtQuick.Controls.Universal 2.0
+import QtQuick.Controls.Material 2.3
 
 import "P2PStyle" as P2PStyle
 import "js/xHRQuery.js"as XHRQuery
@@ -13,7 +13,7 @@ ApplicationWindow {
     id: mainAppWindow
     x: 0
     y: event_handler.currentOSys() <= 0? facade.toPx(100): 0
-    Universal.theme: Universal.System
+    Material.primary: "#c64949"
     visible: true
     title: {qsTr("CoinFriend");}
 
@@ -89,14 +89,13 @@ ApplicationWindow {
         property string switcherOnColor: "#666666"
         property string switcherOffColor: "#999999"
         property string menuCurElementColor: "#2C2C2C"
-        property string menu15Color: "#8DACBC";
         property string menu16Color: "#EAEAEA";
 
         property string headBackgroundColor: "#CD322E"
         property string head2Color: "#FFFFFF";
 
         property string mainMenuBorderColor: "#BC211D"
-        property string helpBackgroundColor: "#666666"
+        property string helpBackgroundColor: "#E0666666"
         property string helpListItemColor: "#424242";
 
         property string pageBackgroundColor: "#606060"

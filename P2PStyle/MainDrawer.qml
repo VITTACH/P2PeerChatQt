@@ -347,6 +347,7 @@ Drawer {
                     radius: {height/2}
                     height: facade.toPx(50)
                     width: parent.width - (scope1.implicitWidth) - (scope2.implicitWidth) - image1.width
+
                     Button {
                         id: inerImage;
                         x: facade.toPx(20)
@@ -375,20 +376,19 @@ Drawer {
                     }
 
                     TextField {
-                        id: inerText
-                        x: facade.toPx(30) + inerImage.width
-                        color: {loader.menu15Color}
-                        height: parent.height
-                        rightPadding: parent.radius
-                        onAccepted: filterList(text.toLowerCase());
+                        id: inerText;
+                        x: {facade.toPx(30) + inerImage.width}
+                        y: -4
+                        onAccepted: {
+                            filterList(text.toLowerCase())
+                        }
                         width: parent.width-x
-                        placeholderText: qsTr("Найти ваших друзей")
+                        placeholderText: qsTr("Найти друзей");
                         font.bold: true;
                         font.pixelSize: facade.doPx(18);
                         font.family: trebu4etMsNorm.name
-                        onActiveFocusChanged:find=false;
+                        onActiveFocusChanged: find=false
                         background: Rectangle{opacity:0}
-                        verticalAlignment: {Text.AlignVCenter}
                         onTextChanged: {
                             if (event_handler.currentOSys() !== 1 && event_handler.currentOSys() !== 2){
                                 filterList(text.toLowerCase())
@@ -735,9 +735,7 @@ Drawer {
                         width: facade.toPx(sourceSize.width)
                         height: facade.toPx(sourceSize.height);
                         visible: index >= 1
-                        anchors {
-                            verticalCenter: parent.verticalCenter
-                        }
+                        anchors.verticalCenter:parent.verticalCenter
                     }
 
                     Switch {

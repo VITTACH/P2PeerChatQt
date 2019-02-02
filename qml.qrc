@@ -49,7 +49,6 @@
         <file>ui/icons/security.png</file>
         <file>ColorAnimate.qml</file>
         <file>ChatMenuList.qml</file>
-        <file>P2PStyle/IndicatorBusy.qml</file>
         <file>MainScreenView.qml</file>
         <file>LoginView.qml</file>
         <file>P2PStyle/MainDrawer.qml</file>

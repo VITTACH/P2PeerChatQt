@@ -81,6 +81,7 @@ Item {
                     id: button
                     text: plaseholder
                     anchors.fill: parent
+                    font.capitalization: Font.MixedCase
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(28);
 
@@ -129,7 +130,7 @@ Item {
                     height:parent.height
                     placeholderText: plaseholder;
                     onTextChanged: loader.fields[index] = text
-                    x: {facade.toPx(80)}
+                    x: facade.toPx(100)
                     Connections {
                         target: partnerHeader
                         onPageChanged: {
@@ -145,8 +146,9 @@ Item {
                     onFocusChanged: {
                         if (text.length<1 && index==3) {text = "8"}
                     }
-                    echoMode: if (index == 2) {TextInput.Password;}
+                    echoMode: index == 2? TextInput.Password: TextInput.Normal
                     background: Rectangle{opacity:0}
+                    font.capitalization: Font.MixedCase
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(28);
                 }

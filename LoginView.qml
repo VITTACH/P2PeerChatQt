@@ -67,10 +67,10 @@ Item {
                 image: "ui/icons/PassWIconWhite.png"; plaseHolder: qsTr("Введите пароль");
             }
             ListElement {
-                image: qsTr(""); plaseHolder:qsTr("Начать Общение")
+                image: qsTr(""); plaseHolder:qsTr("Начать общение")
             }
             ListElement {
-                image: qsTr("");plaseHolder:qsTr("Вход по QR-Коду")
+                image: qsTr(""); plaseHolder:qsTr("Сканировать QR")
             }
             ListElement {
                 image: qsTr(""); plaseHolder:qsTr("Нету аккаунта?")
@@ -141,6 +141,8 @@ Item {
                         if (typeof plaseHolder == "undefined") {""}
                         else plaseHolder
                     }
+
+                    font.capitalization: Font.MixedCase
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(29);
 
@@ -203,7 +205,7 @@ Item {
                     width: parent.width-facade.toPx(20)-icon.width;
                     onTextChanged: loader.fields[index - 1] = text;
                     placeholderText: {
-                        typeof plaseHolder == "undefined" ? ("") : plaseHolder;
+                        typeof plaseHolder == "undefined" ? (""): plaseHolder;
                     }
                     inputMethodHints: {
                         if (index == 1)Qt.ImhDialableCharactersOnly
@@ -212,15 +214,21 @@ Item {
                     onFocusChanged: {
                         if (text.length == 0 && index == 1)text="8"
                     }
-                    echoMode: if (index == 2) {TextInput.Password;}
+                    echoMode: index == 2? TextInput.Password: TextInput.Normal
                     background: Rectangle{opacity:0}
+                    font.capitalization: Font.MixedCase
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(29);
-                    x: facade.toPx(80);
+                    x: facade.toPx(100)
                 }
             }
 
             Item {
+                visible: {index === 5;}
+                height:facade.toPx(100)
+                width: Math.min(0.82*parent.width,facade.toPx(700))
+                anchors.horizontalCenter: {parent.horizontalCenter}
+
                 Button {
                     anchors.right: parent.right
                     onClicked: partnerHeader.page=1;
@@ -232,16 +240,12 @@ Item {
                         font: parent.font
                     }
 
-                    text: typeof plaseHolder == "undefined"? ("") : plaseHolder
+                    text: typeof plaseHolder == "undefined"? (""): plaseHolder
                     background: Rectangle{opacity:0}
+                    font.capitalization: Font.MixedCase
                     font.family: trebu4etMsNorm.name
                     font.pixelSize: facade.doPx(26);
                 }
-
-                visible: {index === 5;}
-                height:facade.toPx(100)
-                width: Math.min(0.82*parent.width,facade.toPx(700))
-                anchors.horizontalCenter: {parent.horizontalCenter}
             }
 
             Rectangle {

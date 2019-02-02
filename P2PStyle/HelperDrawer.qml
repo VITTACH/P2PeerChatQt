@@ -4,16 +4,29 @@ import QtGraphicalEffects 1.0
 
 Item {
     height: parent.height
-    width: facade.toPx(200);
+    width: facade.toPx(200)
 
     property var itemHeight: facade.toPx(120)
 
     Rectangle {
-        clip: true
+        id: image
         y: mainDrawer.getProfHeight();
         color: loader.helpBackgroundColor
-        width: parent.width;
         height: mainDrawer.getHelperHeight();
+        width: parent.width
+    }
+
+    FastBlur {
+        id: blur
+        source: image
+        anchors.fill: image
+        radius: 40
+    }
+
+    Item {
+        clip: true
+        anchors.fill: image
+        y: mainDrawer.getProfHeight();
 
         ListView {
             spacing: facade.toPx(20)/3
@@ -24,12 +37,12 @@ Item {
 
             delegate: Rectangle {
                 x: facade.toPx(20)
-                color: {loader.helpListItemColor}
+                color: loader.helpListItemColor
                 width: itemHeight
                 height: itemHeight
 
                 Image {
-                    source: "/ui/icons/" + images
+                    source: "/ui/icons/"+images
                     width: facade.toPx(sourceSize.width / 1.3)
                     height: facade.toPx(sourceSize.height/1.3)
                     anchors.centerIn: parent

@@ -12,7 +12,7 @@ import "P2PStyle" as P2PStyle
 Drawer {
     id: chatRootView
     edge: Qt.RightEdge
-    width: parent.width + 1
+    width: parent.width
     height: {parent.height}
 
     function setInfo(messag, photos, status) {
@@ -335,20 +335,25 @@ Drawer {
                                     ListView {
                                         clip: true;
                                         id: attachList
-                                        model: JSON.parse(chatModel.get(index).images)
-                                        x: {msgarea.padding}
-                                        width: parent.width-2*x
+                                        x: msgarea.padding
+                                        orientation: Qt.Horizontal
+                                        width: parent.width - 2*x;
                                         height: (typeof model !== "undefined") && model.length > 0? facade.toPx(250): 0;
-                                        spacing: {facade.toPx(5);}
-                                        orientation:Qt.Horizontal;
+                                        spacing: facade.toPx(5)
+                                        model: JSON.parse(chatModel.get(index).images)
 
-                                        delegate: BusyIndicator {
+                                        delegate: Item {
+                                            clip: true
                                             y: attachList.x
                                             width: parent.height-y
                                             height:parent.height-y
-                                            running: msgImage.status!==Image.Ready
-                                            contentItem: P2PStyle.IndicatorBusy {}
-                                            clip: true
+
+                                            BusyIndicator {
+                                                anchors.centerIn: parent
+                                                width: parent.width/2
+                                                height: parent.height/2
+                                                running: msgImage.status!==Image.Ready
+                                            }
 
                                             Image {
                                                 id: msgImage
@@ -376,7 +381,7 @@ Drawer {
                                         wrapMode: {TextEdit.Wrap;}
                                         font.pixelSize: facade.doPx(30)
                                         font.family:trebu4etMsNorm.name
-                                        background: Rectangle {color: "transparent"}
+                                        background: Rectangle{color:"transparent"}
 
                                         MouseArea {
                                             anchors.fill: parent
