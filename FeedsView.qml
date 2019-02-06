@@ -232,10 +232,11 @@ Rectangle {
                         PropertyAnimation {
                             id: circleAnimation2
                             target: coloresRect2
-                            properties: {"width,height,radius";}
+                            properties: "width,height,radius"
                             from: 0
                             duration: 500
-                            to: parent.width * 2
+                            to: parent.width*2
+
                             onStopped: {
                                 coloresRect2.width = (0)
                                 coloresRect2.height = 0;

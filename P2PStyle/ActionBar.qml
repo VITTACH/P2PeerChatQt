@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
+import QtQuick.Controls.Material 2.3
 
 Column {
     id: header
@@ -9,23 +10,24 @@ Column {
     property var text: ""
     property var photo: ""
     property var status: ""
-
     property int page: -1
     property int payload: 0
+
+    function addPage(pageName) {
+        pageModel.append({target: pageName})
+    }
 
     Rectangle {
         width: parent.width
         height: facade.toPx(140)
-        color: loader.headBackgroundColor;
+        color: {loader.headBackgroundColor;}
 
         Button {
             id: button
             x: facade.toPx(30)
             width: facade.toPx(100)
             height: width
-            anchors {
-                verticalCenter: parent.verticalCenter
-            }
+            anchors.verticalCenter: parent.verticalCenter
 
             background: Image {
                 source: "/ui/buttons/" + (payload == 1 || loader.webview? "back": (payload < 0? "more": "infor")) + "Button.png"
@@ -111,39 +113,72 @@ Column {
         }
     }
 
-    function addPage(pageName) {
-        pageModel.append({target: pageName})
-    }
-
     Rectangle {
         width: parent.width
         height: facade.toPx(80)
         color: loader.headBackgroundColor
-        visible: page >= 0;
+        visible: page >= 0 && !loader.webview
 
         ListView {
             anchors.fill: parent
-            orientation: Qt.Horizontal
-            model: ListModel {id: pageModel}
+            orientation: Qt.Horizontal;
+
+            model: ListModel {id: pageModel;}
 
             delegate: Item {
-                height: parent.height;
-                width: content.implicitWidth+facade.toPx(100)
+                clip: true
+                height: parent.height
+                width: facade.toPx(200)
+
+                Rectangle {
+                    id: coloresRect
+                    width: 0
+                    height: 0
+                    color: loader.mainMenuBorderColor
+
+                    transform: Translate {
+                        x: -coloresRect.width /2
+                        y: -coloresRect.height/2
+                    }
+                }
+
+                PropertyAnimation {
+                    duration: 300
+                    id: circleAnimation
+                    target: coloresRect
+                    properties: "width,height,radius"
+                    from: 0
+                    to: parent.width
+
+                    onStopped: {
+                        coloresRect.width  = (0)
+                        coloresRect.height = (0)
+                    }
+                }
 
                 Text {
-                    id: content;
                     font.family:trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(16)
-                    font.capitalization: {Font.AllUppercase;}
+                    font.pixelSize: facade.doPx(18)
                     anchors.centerIn: parent
+                    color: "white"
                     text: target
                 }
 
                 Rectangle {
-                    visible: {index == page}
                     anchors.bottom: {parent.bottom}
-                    height: facade.toPx(4)
+                    visible: index == page
+                    height: facade.toPx(3)
                     width: parent.width
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: {
+                        coloresRect.x = mouseX;
+                        coloresRect.y = mouseY;
+                        circleAnimation.start()
+                    }
+                    onClicked: page = index
                 }
             }
         }

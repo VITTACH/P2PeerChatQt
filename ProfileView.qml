@@ -10,6 +10,11 @@ Item {
         onAvatarPathChanged: actionBar.phot=loader.avatarPath
     }
 
+    Connections {
+        target: actionBar
+        onPageChanged: view.currentIndex = actionBar.page
+    }
+
     function changeState() {
         actionBar.photo = loader.avatarPath
         actionBar.status = loader.isOnline?"Online":"Offline"
@@ -19,9 +24,10 @@ Item {
     Component.onCompleted: {
         actionBar.addPage("Новости")
         actionBar.addPage("Музыка")
-        actionBar.addPage("Котировки")
+        actionBar.addPage("YouTube")
         actionBar.addPage("Прочее")
         actionBar.page = 0
+
         changeState()
     }
 

@@ -460,7 +460,6 @@ Drawer {
 
                 Rectangle {
                     clip: true
-                    id: delegaRect;
                     width: parent.width
                     height: parent.height
                     color: loader.menuCurElementColor
@@ -480,10 +479,10 @@ Drawer {
                     PropertyAnimation {
                         duration: 500
                         id: circleAnimation
-                        target: {coloresRect}
+                        target: {coloresRect;}
                         properties: "width,height,radius"
                         from: 0
-                        to: (delegaRect.width * 3);
+                        to: parent.width*2
 
                         onStopped: {
                             coloresRect.width  = 0;

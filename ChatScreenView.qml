@@ -297,7 +297,7 @@ Drawer {
                                         target: coloresRect;
                                         properties: ("width,height,radius")
                                         from: 0
-                                        to: parent.width * 3
+                                        to: parent.width*2
 
                                         onStopped: {
                                             coloresRect.width = 0;
@@ -680,7 +680,7 @@ Drawer {
                             property bool pressEntr: false;
                             placeholderText: if (event_handler.currentOSys() <= 0) qsTr("Ctrl+Enter Для Отправки.."); else qsTr("Ваше Сообщение")
                             wrapMode: TextEdit.Wrap
-                            verticalAlignment: {(Text.AlignVCenter);}
+                            verticalAlignment: Text.AlignVCenter
                             background: Rectangle {color:"#FFFEFEFE"}
 
                             Keys.onReturnPressed: {
