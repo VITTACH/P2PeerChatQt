@@ -21,7 +21,7 @@ Rectangle {
             top: parent.top
             bottom: downRow.top;
             bottomMargin: facade.toPx(10)
-            topMargin: partnerHeader.height + facade.toPx(10)
+            topMargin: actionBar.height + facade.toPx(10)
         }
 
         boundsBehavior : {
@@ -217,7 +217,7 @@ Rectangle {
                                 loader.urlLink = link;
                                 if (event_handler.currentOSys() > (0)) {
                                     loader.webview = true;
-                                    partnerHeader.text = (title)
+                                    actionBar.text = (title)
                                 } else {
                                     Qt.openUrlExternally(loader.urlLink)
                                 }
@@ -287,7 +287,7 @@ Rectangle {
                 width: parent.width
                 height: {
                     var cardHeight = facade.toPx(210);
-                    var count = Math.floor((baseRect.height - partnerHeader.height - (feedsModel.count - 1) * basView.spacing) / cardHeight)
+                    var count = Math.floor((baseRect.height - actionBar.height - (feedsModel.count - 1) * basView.spacing) / cardHeight)
                     if (count < 4) count = 4
                     countCard = count
                     if (event_handler.currentOSys() > 0) {
@@ -364,22 +364,29 @@ Rectangle {
                 id: bottomNav;
                 property var buttonWidth: facade.toPx(140)
                 anchors.horizontalCenter: parent.horizontalCenter
-
                 orientation: Qt.Horizontal
                 spacing: facade.toPx(50)
                 height: parent.height
                 width: (buttonWidth+spacing)*model.count-spacing;
 
                 model: ListModel {
-                    ListElement { message: "Новости" }
-                    ListElement { message: "Партнерам" }
-                    ListElement { message: "Поделись"; }
-                    ListElement { message: "Все о P2P" }
+                    ListElement {
+                        message: "Контакты"
+                    }
+                    ListElement {
+                        message: "Партнеры"
+                    }
+                    ListElement {
+                        message: "Поделись"
+                    }
+                    ListElement {
+                        message: "CoinRoad"
+                    }
                 }
 
                 delegate: Item {
-                    anchors.verticalCenter: parent.verticalCenter
                     width: bottomNav.buttonWidth
+                    anchors.verticalCenter: parent.verticalCenter
 
                     Text {
                         text: message
@@ -397,7 +404,7 @@ Rectangle {
         visible: loader.webview
         anchors {
             fill: parent
-            topMargin: partnerHeader.height
+            topMargin: actionBar.height
         }
     }
 }

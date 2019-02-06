@@ -3,8 +3,8 @@ import QtQuick.Controls 2.0
 
 SwipeView {
     anchors.fill:parent
-    currentIndex: partnerHeader.page;
-    Component.onCompleted: partnerHeader.page = 0
+    currentIndex: actionBar.payload;
+    Component.onCompleted: actionBar.payload = 0
 
     Loader {
         id: loginScreen
@@ -17,15 +17,15 @@ SwipeView {
     }
 
     onCurrentIndexChanged: {
-        partnerHeader.page = currentIndex
+        actionBar.payload = currentIndex
         switch(currentIndex) {
             case 0:
-                partnerHeader.text = ""
+                actionBar.text = ""
                 loginScreen.focus = false
                 reginScreen.focus = true;
                 break;
             case 1:
-                partnerHeader.text = qsTr("Зарегистрироваться")
+                actionBar.text = qsTr("Новый профиль")
                 reginScreen.focus = false
                 loginScreen.focus = true;
                 break;

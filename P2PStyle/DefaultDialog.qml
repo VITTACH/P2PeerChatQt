@@ -3,22 +3,24 @@ import QtQuick.Controls 2.3;
 
 Dialog {
     id: dialog
-    property string message;
-    x:(parent.width-width)/2
+    property var message: ""
+    x: (parent.width - width)/2
     y: parent.height-height-parent.height/6
 
-    width: Math.min(0.73*parent.width, facade.toPx(666));
-    height: 2*width/3
+    width: Math.min(0.73 * parent.width, facade.toPx(666))
+    height: 2 * width/3;
 
-    standardButtons: Dialog.Ok
+    standardButtons: Dialog.Ok;
 
     contentItem: Rectangle {
         Text {
             text: message
-            anchors.centerIn:parent
+            width: parent.width
+            wrapMode: Text.Wrap
+            anchors.centerIn: parent
             font {
-                pixelSize: facade.doPx(20);
                 family: trebu4etMsNorm.name
+                pixelSize: facade.doPx(20);
             }
         }
     }

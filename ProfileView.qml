@@ -6,27 +6,42 @@ Item {
     Connections {
         target: loader
         onIsOnlineChanged: changeState()
-        onWebviewChanged: if (!loader.webview) changeState()
-        onAvatarPathChanged: partnerHeader.phot=loader.avatarPath
+        onWebviewChanged: if (!loader.webview) changeState();
+        onAvatarPathChanged: actionBar.phot=loader.avatarPath
     }
 
     function changeState() {
-        partnerHeader.photo = loader.avatarPath
-        partnerHeader.status = loader.isOnline ? "Online" : "Offline"
-        partnerHeader.text = (loader.login + " " + loader.famil);
+        actionBar.photo = loader.avatarPath
+        actionBar.status = loader.isOnline?"Online":"Offline"
+        actionBar.text = (loader.login + " " + loader.famil);
     }
 
-    Component.onCompleted: changeState()
+    Component.onCompleted: {
+        actionBar.addPage("Новости")
+        actionBar.addPage("Музыка")
+        actionBar.addPage("Котировки")
+        actionBar.addPage("Прочее")
+        actionBar.page = 0
+        changeState()
+    }
 
     Rectangle {
         anchors.fill: parent
         color: loader.menu16Color
+
         SwipeView {
             id: view;
             anchors.fill: parent;
 
             Loader {
-                Component.onCompleted: source = "qrc:/FeedsView.qml";
+                Component.onCompleted: source="FeedsView.qml"
+            }
+
+            Loader {
+            }
+
+            onCurrentIndexChanged: {
+                actionBar.page = currentIndex
             }
         }
     }

@@ -7,7 +7,7 @@ Rectangle {
         source: event_handler.currentOSys() > 0? "WebService.qml":""
         anchors {
             fill: parent
-            topMargin: partnerHeader.height
+            topMargin: actionBar.height
         }
     }
 }

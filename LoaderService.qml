@@ -147,7 +147,7 @@ ApplicationWindow {
         function back() {
             if (privated.visitedPageList.length > 1) {
                 if (source == "qrc:/MainScreenView.qml") {
-                    if (partnerHeader.page == 1) {partnerHeader.page = 0}
+                    if (actionBar.payload == 1) {actionBar.payload = 0}
                 } else if (loader.source != "ProfileView.qml") {
                     privated.visitedPageList.pop()
                     source = privated.visitedPageList[privated.visitedPageList.length - 1]
@@ -229,9 +229,9 @@ ApplicationWindow {
         }
     }
 
-    P2PStyle.HeaderSplash {
+    P2PStyle.ActionBar {
         visible: loader.source != "qrc:/QrScaner.qml"
-        id: partnerHeader;
+        id: actionBar
     }
 
     FontLoader {

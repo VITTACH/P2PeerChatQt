@@ -16,7 +16,7 @@ Item {
                 redirect_uri:'https://www.facebook.com/connect/login_success.html'
             }
             loader.urlLink = "https://graph.facebook.com/oauth/authorize?%1".arg(URLQuery.serializeParams(params))
-            partnerHeader.text = qsTr("Facebook");
+            actionBar.text = qsTr("Facebook");
             break;
 
             case 1:
@@ -28,7 +28,7 @@ Item {
                 redirect_uri: 'https://oauth.vk.com/blank.html'
             }
             loader.urlLink = (String) ("https://oauth.vk.com/authorize?%1".arg(URLQuery.serializeParams(params)));
-            partnerHeader.text = qsTr("Вконтакте")
+            actionBar.text = qsTr("Вконтакте")
             break;
         }
 
@@ -54,8 +54,8 @@ Item {
         }
 
         displayMarginBeginning: {
-            var rs=parent.height-partnerHeader.height-contentHeight
-            partnerHeader.height + spacing + (rs/2 > 0 ? rs/2 : 0);
+            var rs=parent.height-actionBar.height-contentHeight
+            actionBar.height + spacing + (rs/2 > 0 ? rs/2 : 0);
         }
 
         model:ListModel {
@@ -231,7 +231,7 @@ Item {
 
                 Button {
                     anchors.right: parent.right
-                    onClicked: partnerHeader.page=1;
+                    onClicked: actionBar.payload = 1
                     anchors.bottom: {parent.bottom;}
                     contentItem: Text {
                         verticalAlignment: Text.AlignVCenter

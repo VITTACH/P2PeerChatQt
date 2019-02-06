@@ -84,7 +84,7 @@ Item {
             Layout.maximumWidth: implicitWidth
             Layout.minimumWidth: implicitWidth
 
-            onClicked: actionBar.actionButtonClicked();
+            onClicked: actionBar.payloadButtonClicked();
 
             Image {
                 id: iconItem

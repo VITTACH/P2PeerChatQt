@@ -41,8 +41,8 @@ Item {
 
         spacing: facade.toPx(50);
         displayMarginBeginning: {
-            var rs=parent.height-partnerHeader.height-contentHeight
-            partnerHeader.height + spacing + (rs/2 > 0 ? rs/2 : 0);
+            var rs=parent.height-actionBar.height-contentHeight
+            actionBar.height + spacing + (rs/2 > 0 ? rs/2 : 0);
         }
 
         delegate: Column {
@@ -132,7 +132,7 @@ Item {
                     onTextChanged: loader.fields[index] = text
                     x: facade.toPx(100)
                     Connections {
-                        target: partnerHeader
+                        target: actionBar
                         onPageChanged: {
                             if (loader.aToken != "") {
                                 textRow.text = loader.fields[index]

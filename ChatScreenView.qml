@@ -16,9 +16,9 @@ Drawer {
     height: {parent.height}
 
     function setInfo(messag, photos, status) {
-        partnersHead.status = status
-        partnersHead.photo = photos
-        partnersHead.text = messag
+        actionBar.status = status
+        actionBar.photo = photos
+        actionBar.text = messag
     }
 
     function checkMessage(flag, selectImage) {
@@ -127,7 +127,7 @@ Drawer {
 
     Component.onCompleted: {
         loadChatsHistory()
-        partnersHead.page = -1
+        actionBar.payload = -1
     }
 
     onIsPortraitChanged: {
@@ -489,7 +489,7 @@ Drawer {
                 top: parent.top
                 bottom:area.top
                 bottomMargin:facade.toPx(40)
-                topMargin: {partnerHeader.height + 1*facade.toPx(10)}
+                topMargin: {actionBar.height + 1*facade.toPx(10)}
             }
         }
 
@@ -764,7 +764,7 @@ Drawer {
             }
         }
 
-        P2PStyle.HeaderSplash {id : partnersHead;}
+        P2PStyle.ActionBar {id: actionBar}
 
         ChatMenuList {id: chatMenuList}
 

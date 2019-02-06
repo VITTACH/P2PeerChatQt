@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>fonts/TrebuchetMSn.ttf</file>
-        <file>P2PStyle/HeaderSplash.qml</file>
         <file>ui/buttons/backButton.png</file>
         <file>ui/buttons/sendButton.png</file>
         <file>ChatScreenView.qml</file>
@@ -57,5 +56,6 @@
         <file>ui/users/default/Human.png</file>
         <file>ui/users/default/woman.png</file>
         <file>ui/users/lin.png</file>
+        <file>P2PStyle/ActionBar.qml</file>
     </qresource>
 </RCC>
