@@ -115,26 +115,26 @@ Column {
 
     Rectangle {
         width: parent.width
-        height: facade.toPx(80)
+        height: facade.toPx(90)
         color: loader.headBackgroundColor
         visible: page >= 0 && !loader.webview
 
         ListView {
             anchors.fill: parent
-            orientation: Qt.Horizontal;
+            orientation: Qt.Horizontal
 
             model: ListModel {id: pageModel;}
 
             delegate: Item {
                 clip: true
-                height: parent.height
                 width: facade.toPx(200)
+                height: parent.height
 
                 Rectangle {
                     id: coloresRect
                     width: 0
                     height: 0
-                    color: loader.mainMenuBorderColor
+                    color: "#80FFFFFF"
 
                     transform: Translate {
                         x: -coloresRect.width /2
@@ -157,8 +157,9 @@ Column {
                 }
 
                 Text {
+                    font.weight: Font.DemiBold
                     font.family:trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(18)
+                    font.pixelSize: facade.doPx(20)
                     anchors.centerIn: parent
                     color: "white"
                     text: target
