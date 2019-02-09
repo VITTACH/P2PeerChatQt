@@ -121,25 +121,47 @@ Column {
 
         ListView {
             anchors.fill: parent
-            orientation: Qt.Horizontal
+            orientation: Qt.Horizontal;
 
             model: ListModel {id: pageModel;}
 
             delegate: Item {
                 clip: true
                 width: facade.toPx(200)
-                height: parent.height
+                height: {parent.height}
 
                 Rectangle {
                     id: coloresRect
-                    width: 0
-                    height: 0
                     color: "#80FFFFFF"
 
                     transform: Translate {
-                        x: -coloresRect.width /2
-                        y: -coloresRect.height/2
+                        x:-coloresRect.width /2
+                        y:-coloresRect.height/2
                     }
+                }
+
+                MouseArea {
+                    anchors.fill:parent
+
+                    onPressed: {
+                        coloresRect.x = mouseX;
+                        coloresRect.y = mouseY;
+                        circleAnimation.start()
+                    }
+
+                    onPositionChanged: {
+                        circleAnimation.stop();
+                        coloresRect.height = 0
+                        coloresRect.width = 0
+                    }
+
+                    onReleased: {
+                        circleAnimation.stop();
+                        coloresRect.height = 0;
+                        coloresRect.width = 0
+                    }
+
+                    onClicked: page = index
                 }
 
                 PropertyAnimation {
@@ -149,37 +171,24 @@ Column {
                     properties: "width,height,radius"
                     from: 0
                     to: parent.width
-
-                    onStopped: {
-                        coloresRect.width  = (0)
-                        coloresRect.height = (0)
-                    }
                 }
 
                 Text {
-                    font.weight: Font.DemiBold
-                    font.family:trebu4etMsNorm.name
-                    font.pixelSize: facade.doPx(20)
+                    font.weight: Font.DemiBold;
+                    font.family: trebu4etMsNorm.name;
+                    font.pixelSize: {facade.doPx(22)}
                     anchors.centerIn: parent
                     color: "white"
                     text: target
                 }
 
                 Rectangle {
-                    anchors.bottom: {parent.bottom}
+                    anchors {
+                        bottom: parent.bottom;
+                    }
                     visible: index == page
                     height: facade.toPx(3)
                     width: parent.width
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    onPressed: {
-                        coloresRect.x = mouseX;
-                        coloresRect.y = mouseY;
-                        circleAnimation.start()
-                    }
-                    onClicked: page = index
                 }
             }
         }

@@ -180,6 +180,7 @@ Rectangle {
                             Rectangle {
                                 id: coloresRect2;
                                 color: loader.feed4Color
+
                                 transform: Translate {
                                     x: -coloresRect2.width /2
                                     y: -coloresRect2.height/2
@@ -212,6 +213,7 @@ Rectangle {
 
                         MouseArea {
                             anchors.fill: parent
+
                             onClicked: {
                                 if (chatScreen.position > 0) return
                                 loader.urlLink = link;
@@ -222,10 +224,17 @@ Rectangle {
                                     Qt.openUrlExternally(loader.urlLink)
                                 }
                             }
+
                             onPressed: {
                                 coloresRect2.x = mouseX;
                                 coloresRect2.y = mouseY;
                                 circleAnimation2.start()
+                            }
+
+                            onReleased: {
+                                circleAnimation2.stop();
+                                coloresRect2.height = 0;
+                                coloresRect2.width = 0
                             }
                         }
 
@@ -236,11 +245,6 @@ Rectangle {
                             from: 0
                             duration: 500
                             to: parent.width*2
-
-                            onStopped: {
-                                coloresRect2.width = (0)
-                                coloresRect2.height = 0;
-                            }
                         }
 
                         Column {

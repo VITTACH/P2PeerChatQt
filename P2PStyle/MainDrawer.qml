@@ -465,8 +465,6 @@ Drawer {
                     color: loader.menuCurElementColor
 
                     Rectangle {
-                        width: 0
-                        height: 0
                         id: coloresRect
                         color: loader.listChoseBackground
 
@@ -482,58 +480,7 @@ Drawer {
                         target: {coloresRect;}
                         properties: "width,height,radius"
                         from: 0
-                        to: parent.width*2
-
-                        onStopped: {
-                            coloresRect.width  = 0;
-                            coloresRect.height = 0;
-                        }
-                    }
-
-                    MouseArea {
-                        id: myMouseArea
-                        anchors.fill: parent;
-                        property bool presed: false
-                        onClicked: {
-                            if (index !=-1) listView.currentIndex = index
-                            var json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
-                            var text = usersModel.get(index).login+" "+usersModel.get(index).famil
-                            chatScreen.setInfo(text, usersModel.get(index).image, (json.port == 0) == true? qsTr("Offline"): qsTr("Online"))
-                            event_handler.sendMsgs(JSON.stringify(json));
-                            chatScreen.open()
-                        }
-
-                        drag.axis: Drag.XAxis
-                        drag.minimumX: -width*0.40;
-                        onPressAndHold: presed=true
-                        onExited: {(circleAnimation.stop())}
-                        drag.target: parent
-                        drag.maximumX: usersModel.count >= index+1?-drag.minimumX:0
-
-                        onPressed: {
-                            coloresRect.x = mouseX;
-                            coloresRect.y = mouseY;
-                            circleAnimation.start()
-                        }
-
-                        onReleased: {
-                            presed = false
-                            if (parent.x >= drag.maximumX) {
-                                if (usersModel.get(index).phone !== (loader.tel)) {
-                                    drawes.close();
-                                    listView.memIndex=index;
-                                    defaultDialog.show("Удаление аккаунта", "Вы хотите удалить <strong>" + login + " " + famil + "</strong> из списка друзей?")
-                                }
-                            }
-                            if (parent.x <= drag.minimumX) {
-                                if (event_handler.currentOSys() != 1)
-                                   Qt.openUrlExternally("tel:"+phone)
-                                else {
-                                    caller.directCall(phone)
-                                }
-                            }
-                            parent.x=0
-                        }
+                        to: parent.width * 2
                     }
 
                     Item {
@@ -617,9 +564,66 @@ Drawer {
                                 }
                             }
                         }
+
                         anchors.leftMargin: {facade.toPx(30);}
                         anchors.left: bug.right
                         width: parent.width;
+                    }
+
+                    MouseArea {
+                        id: myMouseArea
+                        anchors.fill: parent;
+                        property bool presed: false
+
+                        onClicked: {
+                            if (index !=-1) listView.currentIndex = index
+                            var json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
+                            var text = usersModel.get(index).login+" "+usersModel.get(index).famil
+                            chatScreen.setInfo(text, usersModel.get(index).image, (json.port == 0) == true? qsTr("Offline"): qsTr("Online"))
+                            event_handler.sendMsgs(JSON.stringify(json));
+                            chatScreen.open()
+                        }
+
+                        drag.axis: Drag.XAxis
+                        drag.minimumX: -width*0.40;
+                        onPressAndHold: presed=true
+                        drag.target: parent
+                        drag.maximumX: usersModel.count >= index+1?-drag.minimumX:0
+
+                        onPressed: {
+                            coloresRect.x = mouseX;
+                            coloresRect.y = mouseY;
+                            circleAnimation.start()
+                        }
+
+                        onPositionChanged: {
+                            circleAnimation.stop();
+                            coloresRect.height = 0
+                            coloresRect.width = 0
+                        }
+
+                        onReleased: {
+                            presed = false
+                            circleAnimation.stop();
+                            coloresRect.height = 0
+                            coloresRect.width = 0
+
+                            if (parent.x >= drag.maximumX) {
+                                if (usersModel.get(index).phone !== (loader.tel)) {
+                                    drawes.close();
+                                    listView.memIndex=index;
+                                    defaultDialog.show("Удаление аккаунта", "Вы хотите удалить <strong>" + login + " " + famil + "</strong> из списка друзей?")
+                                }
+                            } else if (parent.x <= drag.minimumX) {
+                                if (event_handler.currentOSys() != 1)
+                                   Qt.openUrlExternally("tel:"+phone)
+                                else {
+                                    caller.directCall(phone)
+                                }
+                            }
+
+                            parent.x = 0
+                        }
                     }
                 }
 
@@ -628,6 +632,7 @@ Drawer {
                     visible: (index != (usersModel.count - 1))
                     width: 2*parent.width/3;
                     height: facade.toPx(2)
+
                     anchors {
                         bottom:parent.bottom
                         right: parent.right;

@@ -259,6 +259,7 @@ Drawer {
                             x: parent.width/18
                             width:parent.width
                             height: {parentText.height;}
+
                             Rectangle {
                                 id: routeLine;
                                 color: Qt.hsva(lineColor, 0.40, 0.94)
@@ -298,20 +299,14 @@ Drawer {
                                         properties: ("width,height,radius")
                                         from: 0
                                         to: parent.width*2
-
-                                        onStopped: {
-                                            coloresRect.width = 0;
-                                            coloresRect.height= 0;
-                                        }
                                     }
+
                                     Item {
                                         clip: true;
                                         anchors.centerIn: {parent}
                                         width: parent.width-2*parent.radius
                                         height: {parent.height-2*parent.border.width}
                                         Rectangle {
-                                            width: 0
-                                            height: 0
                                             id: coloresRect;
                                             color: parent.parent.lightColor
 
@@ -398,6 +393,18 @@ Drawer {
                                                 chatMenuList.menu = (0)
                                                 circleAnimation.start()
                                                 yPosition = 0
+                                            }
+
+                                            onReleased: {
+                                                circleAnimation.stop();
+                                                coloresRect.height = 0;
+                                                coloresRect.width = 0
+                                            }
+
+                                            onPositionChanged: {
+                                                circleAnimation.stop();
+                                                coloresRect.height = 0
+                                                coloresRect.width = 0
                                             }
 
                                             onClicked: {

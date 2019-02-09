@@ -25,7 +25,6 @@ Item {
         actionBar.addPage("Новости")
         actionBar.addPage("Музыка")
         actionBar.addPage("YouTube")
-        actionBar.addPage("Прочее")
         actionBar.page = 0
 
         changeState()
