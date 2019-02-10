@@ -121,71 +121,32 @@ Column {
 
         ListView {
             anchors.fill: parent
-            orientation: Qt.Horizontal;
+            orientation: {Qt.Horizontal}
 
             model: ListModel {id: pageModel;}
+            delegate: Button {
+                flat: true
+                width: facade.toPx(200);
+                height: parent.height
 
-            delegate: Item {
-                clip: true
-                width: facade.toPx(200)
-                height: {parent.height}
+                onClicked: page = index;
 
-                Rectangle {
-                    id: coloresRect
-                    color: "#80FFFFFF"
-
-                    transform: Translate {
-                        x:-coloresRect.width /2
-                        y:-coloresRect.height/2
-                    }
+                Component.onCompleted: {
+                    background.color = "transparent"
                 }
 
-                MouseArea {
-                    anchors.fill:parent
-
-                    onPressed: {
-                        coloresRect.x = mouseX;
-                        coloresRect.y = mouseY;
-                        circleAnimation.start()
-                    }
-
-                    onPositionChanged: {
-                        circleAnimation.stop();
-                        coloresRect.height = 0
-                        coloresRect.width = 0
-                    }
-
-                    onReleased: {
-                        circleAnimation.stop();
-                        coloresRect.height = 0;
-                        coloresRect.width = 0
-                    }
-
-                    onClicked: page = index
-                }
-
-                PropertyAnimation {
-                    duration: 300
-                    id: circleAnimation
-                    target: coloresRect
-                    properties: "width,height,radius"
-                    from: 0
-                    to: parent.width
-                }
-
-                Text {
+                contentItem: Text {
                     font.weight: Font.DemiBold;
-                    font.family: trebu4etMsNorm.name;
-                    font.pixelSize: {facade.doPx(22)}
-                    anchors.centerIn: parent
+                    font.pixelSize: facade.doPx(22);
+                    font.family: trebu4etMsNorm.name
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
                     color: "white"
-                    text: target
+                    text: {target}
                 }
 
                 Rectangle {
-                    anchors {
-                        bottom: parent.bottom;
-                    }
+                    anchors.bottom: {parent.bottom;}
                     visible: index == page
                     height: facade.toPx(3)
                     width: parent.width

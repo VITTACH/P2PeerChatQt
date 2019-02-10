@@ -145,19 +145,11 @@ Rectangle {
                     }
                 }
 
-                DropShadow {
-                    samples:18
-                    radius: facade.toPx(15);
-                    anchors.fill: {rssView;}
-                    source: {rssView;}
-                    color: "#50000000"
-                }
                 ListView {
                     id: rssView
                     clip: visible;
                     width: parent.width
                     height: parent.height
-                    spacing: facade.toPx(20)
                     model: ListModel{id:rssmodel}
                     snapMode: ListView.SnapToItem
                     boundsBehavior: {
@@ -165,27 +157,13 @@ Rectangle {
                         else Flickable.DragAndOvershootBounds
                     }
 
-                    delegate: Rectangle {
+                    delegate: Button {
                         visible: enable
                         width: parent.width;
-                        radius: facade.toPx(10)
-                        height: Math.max(facade.toPx(260), description.height)
-                        color: loader.newsBackgroundColor;
+                        height: Math.max(facade.toPx(270), descr.height)
 
-                        Item {
-                            clip: true
-                            anchors.fill: parent;
-                            anchors.margins: {parent.radius;}
-
-                            Rectangle {
-                                id: coloresRect2;
-                                color: loader.feed4Color
-
-                                transform: Translate {
-                                    x: -coloresRect2.width /2
-                                    y: -coloresRect2.height/2
-                                }
-                            }
+                        Component.onCompleted: {
+                            background.color =loader.newsBackgroundColor
                         }
 
                         Rectangle {
@@ -204,55 +182,21 @@ Rectangle {
                             }
                         }
 
-                        Image {
-                            smooth: true
-                            visible: false
-                            source: "ui/mask/round.png";
-                            sourceSize: {Qt.size(bag.width, bag.height)}
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-
-                            onClicked: {
-                                if (chatScreen.position > 0) return
-                                loader.urlLink = link;
-                                if (event_handler.currentOSys() > (0)) {
-                                    loader.webview = true;
-                                    actionBar.text = (title)
-                                } else {
-                                    Qt.openUrlExternally(loader.urlLink)
-                                }
-                            }
-
-                            onPressed: {
-                                coloresRect2.x = mouseX;
-                                coloresRect2.y = mouseY;
-                                circleAnimation2.start()
-                            }
-
-                            onReleased: {
-                                circleAnimation2.stop();
-                                coloresRect2.height = 0;
-                                coloresRect2.width = 0
-                            }
-                        }
-
-                        PropertyAnimation {
-                            id: circleAnimation2
-                            target: coloresRect2
-                            properties: "width,height,radius"
-                            from: 0
-                            duration: 500
-                            to: parent.width*2
+                        onClicked: {
+                            if (chatScreen.position > 0) return
+                            loader.urlLink = link;
+                            if (event_handler.currentOSys() >= 1) {
+                                loader.webview = true;
+                                actionBar.text = title
+                            } else Qt.openUrlExternally(loader.urlLink);
                         }
 
                         Column {
-                            id: description
+                            id: descr
                             anchors {
                                 left: bag.right
-                                right: parent.right;
-                                topMargin:facade.toPx(5)
+                                right: parent.right
+                                topMargin: facade.toPx(10)
                                 leftMargin: facade.toPx(20)
                                 top: parent.top
                             }

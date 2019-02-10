@@ -13,7 +13,9 @@ Drawer {
     id: chatRootView
     edge: Qt.RightEdge
     width: parent.width
-    height: {parent.height}
+    height: parent.height
+
+    onPositionChanged: attach.move = false
 
     function setInfo(messag, photos, status) {
         actionBar.status = status
@@ -337,6 +339,8 @@ Drawer {
                                         spacing: facade.toPx(5)
                                         model: JSON.parse(chatModel.get(index).images)
 
+                                        onMovingHorizontallyChanged: chatRootView.interactive = !movingHorizontally
+
                                         delegate: Item {
                                             clip: true
                                             y: attachList.x
@@ -604,13 +608,14 @@ Drawer {
                     ListView {
                         clip: true
                         id: imagesList;
-                        height: parent.height
                         width: area.width - cam.width -parent.x-spacing
-                        spacing: {parent.spacing;}
+                        height: parent.height
+                        spacing: parent.spacing
                         orientation: Qt.Horizontal
-                        model: ListModel {
-                            id:tachModel
-                        }
+
+                        onMovingHorizontallyChanged: chatRootView.interactive = !movingHorizontally
+
+                        ScrollIndicator.horizontal: ScrollIndicator { }
 
                         Component.onCompleted: {
                             var photos = (Math.random()*10) + 5;
@@ -619,13 +624,7 @@ Drawer {
                             }
                         }
 
-                        onContentXChanged: {
-                            var newX = scrollBar.start + (width - scrollBar.width)*contentX / ((tachModel.count -width/height*2)*height/2-spacing)
-                            if (newX > scrollBar.start)
-                                scrollBar.x = newX
-                            else {scrollBar.x = scrollBar.start}
-                        }
-
+                        model: ListModel {id:tachModel}
                         delegate: Column {
                             spacing: imagesList.spacing
                             Repeater {
@@ -652,15 +651,6 @@ Drawer {
                         }
                     }
                 }
-
-                Rectangle {
-                    id: scrollBar
-                    property var start: cam.height + imgRow.spacing +imgRow.x;
-                    width: imagesList.width * imagesList.width / (tachModel.count * (imagesList.height/2 +imagesList.spacing)-imagesList.spacing)
-                    x: start
-                    anchors.bottom: {imgRow.bottom}
-                    height: facade.toPx(5)
-                }
             }
 
             Item {
@@ -672,7 +662,7 @@ Drawer {
                     Flickable {
                         height: {
                             if (textField.lineCount == 1) {
-                                textField.memHeight =facade.toPx(100)
+                                textField.memHeight = facade.toPx(100)
                             } else if (textField.lineCount < 6) {
                                 textField.memHeight =textField.implicitHeight;
                             } else {

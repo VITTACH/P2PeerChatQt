@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.3
 import QtGraphicalEffects 1.0
 
 //https://evileg.com/ru/post/110/ - fix SSL error
@@ -318,6 +318,7 @@ Drawer {
             Row {
                 id: myRow
                 width: firstRow.width;
+
                 Text {
                     id: scope1
                     text: "[ "
@@ -346,6 +347,7 @@ Drawer {
                 Rectangle {
                     radius: {height/2}
                     height: facade.toPx(50)
+                    color: loader.menu7Color;
                     width: parent.width - (scope1.implicitWidth) - (scope2.implicitWidth) - image1.width
 
                     Button {
@@ -379,259 +381,199 @@ Drawer {
                         id: inerText;
                         x: {facade.toPx(30) + inerImage.width}
                         y: -4
-                        onAccepted: {
-                            filterList(text.toLowerCase())
-                        }
                         width: parent.width-x
                         placeholderText: qsTr("Найти друзей");
+                        onAccepted: filterList(text.toLowerCase())
                         font.bold: true;
                         font.pixelSize: facade.doPx(18);
                         font.family: trebu4etMsNorm.name
                         onActiveFocusChanged: find=false
                         background: Rectangle{opacity:0}
                         onTextChanged: {
-                            if (event_handler.currentOSys() !== 1 && event_handler.currentOSys() !== 2){
+                            if (event_handler.currentOSys() !== 1 && event_handler.currentOSys() != 2) {
                                 filterList(text.toLowerCase())
                             }
                         }
                     }
-                    color: {loader.menu7Color}
                 }
             }
 
             Item {
+                height: facade.toPx(10)
                 width: parent.width
-                height: facade.toPx(10);
             }
         }
 
         ListView {
             id: listView
-            clip: (true)
             width: parent.width
-            property int memIndex: 0
-            model: ListModel {id: usersModel;}
-            Component.onCompleted: {
-                if (loader.chats.length < 1) {
-                    var chatHistory = event_handler.loadValue("chats")
-                    if (chatHistory != "") {
-                        loader.chats = JSON.parse(chatHistory)
-                    }
-                } usersModel.clear()
-            }
-
+            clip: true
             anchors {
-                top:profile.bottom
-                bottom: listMenu.top
+                top: profile.bottom
+                bottom: {listMenu.top}
                 topMargin: -1
                 leftMargin: 1
             }
 
-            delegate: Item {
-                id: baseItem
-                visible:activity
+            ScrollIndicator.vertical: ScrollIndicator {}
+            model: ListModel {id: usersModel}
+
+            delegate: SwipeDelegate {
                 width: parent.width
-                height: (activity == true) ? facade.toPx(20) + Math.max(facade.toPx(165), fo.height) : 0
+                height: activity? facade.toPx(20) + Math.max(facade.toPx(165), messageColumn.height): 0
+                visible: activity
+                Component.onCompleted: background.color = loader.menuCurElementColor
 
-                Row {
-                    Repeater {
-                        model: ["trashButton.png" ,"dialerButton.png"]
-                        anchors.verticalCenter: parent.verticalCenter;
+                onPressed: drawes.interactive = false
+                Connections {
+                    target: swipe
+                    onClosed: drawes.interactive = true
+                    //onCompleted: drawes.interactive = true
+                }
 
-                        Rectangle {
-                            width: baseItem.width/2
-                            height: baseItem.height
+                onClicked: {
+                    if (index !=-1) listView.currentIndex = index
+                    var json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
+                    var text = usersModel.get(index).login+" "+usersModel.get(index).famil
+                    chatScreen.setInfo(text, usersModel.get(index).image, qsTr("Offline"))
+                    event_handler.sendMsgs(JSON.stringify(json));
+                    chatScreen.open()
+                }
 
-                            color: loader.listForegroundColor
+                swipe.right: Rectangle {
+                    anchors.right: parent.right
+                    color: loader.listForegroundColor
+                    width: parent.width/4
+                    height: parent.height
 
-                            Image {
-                                id: splashImage;
-                                anchors.verticalCenter: parent.verticalCenter
-                                x: index != 0 ? parent.width - width - facade.toPx(40) : facade.toPx(40)
-                                source: "qrc:/ui/buttons/" + modelData
-                                width: (facade.toPx(sourceSize.width))
-                                height: facade.toPx(sourceSize.height)
-                                fillMode: Image.PreserveAspectFit
-                            }
+                    Image {
+                        anchors.centerIn: parent
+                        source: "/ui/buttons/dialerButton.png"
+                        width: facade.toPx(sourceSize.width)
+                        height: facade.toPx(sourceSize.height)
+                        fillMode: Image.PreserveAspectFit
+                    }
+
+                    SwipeDelegate.onClicked: {
+                        swipe.close()
+                        if (event_handler.currentOSys() !== 1)
+                           Qt.openUrlExternally("tel:"+ phone)
+                        else caller.directCall(phone)
+                    }
+                }
+
+                swipe.left: Rectangle {
+                    width: parent.width/4
+                    height: parent.height
+                    color: loader.listForegroundColor
+
+                    Image {
+                        anchors.centerIn: parent
+                        source: "/ui/buttons/trashButton.png"
+                        width: facade.toPx(sourceSize.width)
+                        height: facade.toPx(sourceSize.height)
+                        fillMode: Image.PreserveAspectFit
+                    }
+
+                    SwipeDelegate.onClicked: {
+                        swipe.close()
+                        if (usersModel.get(index).phone !== loader.tel) {
+                            defaultDialog.show("Удаление аккаунта", "Вы хотите удалить <strong>" + login + " " + famil + "</strong> из списка друзей?")
                         }
                     }
                 }
 
+                Item {
+                    id: bug
+                    height: width
+                    width: facade.toPx(150)
+                    anchors.top: parent.top
+                    anchors.topMargin: {facade.toPx(10)}
+                    x: swipe.position*parent.width/4+facade.toPx(50)-(facade.toPx(708)-drawer.width)/5;
 
-                Rectangle {
-                    clip: true
-                    width: parent.width
-                    height: parent.height
-                    color: loader.menuCurElementColor
+                    Image {
+                        anchors.fill: {parent;}
+                        anchors.margins: bor.radius/3.5;
+                        source: "/ui/users/default/woman.png"
+                    }
+
+                    Image {
+                        source: {image}
+                        anchors.fill: {parent;}
+                        anchors.margins: bor.radius/3.5;
+                    }
 
                     Rectangle {
-                        id: coloresRect
-                        color: loader.listChoseBackground
+                        id: bor
+                        anchors.fill: {parent;}
+                        color: {"transparent";}
+                        border.color: "#A5A5A5"
+                        border.width: {facade.toPx(5.0)}
+                        radius: facade.toPx(15)
+                    }
+                }
 
-                        transform: Translate {
-                            x: -coloresRect.width /2
-                            y: -coloresRect.height/2
-                        }
+                Column {
+                    id: messageColumn
+                    spacing: facade.toPx(10);
+                    anchors.top: parent.top
+                    anchors.topMargin: facade.toPx(10);
+
+                    Text {
+                        font.family: "tahoma"
+                        font.weight: Font.DemiBold;
+                        font.pixelSize: facade.doPx(29)
+                        color: "white"
+                        width: messageColumn.width - facade.toPx(100)-bug.width
+                        text: login + " "+ famil
+                        elide: {Text.ElideRight}
                     }
 
-                    PropertyAnimation {
-                        duration: 500
-                        id: circleAnimation
-                        target: {coloresRect;}
-                        properties: "width,height,radius"
-                        from: 0
-                        to: parent.width * 2
-                    }
+                    Text {
+                        id: preview
+                        maximumLineCount: 3
+                        wrapMode: Text.WordWrap;
+                        text: previewText()
+                        color: "#B6B6B6"
+                        width: messageColumn.width - facade.toPx(100)-bug.width
+                        font.family: "tahoma";
+                        font.pixelSize: facade.doPx(20);
 
-                    Item {
-                        id: bug
-                        x: facade.toPx(50) - (facade.toPx(708) - drawer.width)/5.0;
-                        height: width
-                        width: facade.toPx(150)
-                        anchors.top: parent.top
-                        anchors.topMargin: {facade.toPx(10)}
-
-                        Image {
-                            source: "qrc:/ui/users/default/woman.png"
-                            anchors.fill: {parent;}
-                            anchors.margins: bor.radius/3.5;
-                        }
-
-                        Image {
-                            id: avatar
-                            source: {image}
-                            anchors.fill: {parent;}
-                            anchors.margins: bor.radius/3.5;
-                        }
-
-                        Rectangle {
-                            id: bor
-                            anchors.fill: {parent;}
-                            color: {"transparent";}
-                            border.color: "#A5A5A5"
-                            border.width: {facade.toPx(5.0)}
-                            radius: facade.toPx(15)
-                        }
-                    }
-
-                    Column {
-                        id: fo
-                        spacing: facade.toPx(10);
-                        anchors.top: parent.top
-                        anchors.topMargin: facade.toPx(10);
-
-                        Text {
-                            font.family: "tahoma"
-                            font.weight: Font.DemiBold;
-                            font.pixelSize: facade.doPx(29)
-                            color: "white"
-                            width: {(fo.width) - (facade.toPx(100)) - (bug.width);}
-                            text: login + " "+ famil
-                            elide: {Text.ElideRight}
-                        }
-
-                        Text {
-                            id: preview
-                            maximumLineCount: 3
-                            wrapMode: Text.WordWrap;
-                            text: previewText()
-                            color: "#B6B6B6"
-                            width:fo.width-facade.toPx(100)-bug.width
-                            font.family: "tahoma";
-                            font.pixelSize: facade.doPx(20);
-
-                            function previewText() {
-                                var indx = 0, m = "", fl
-                                if (typeof loader.chats[index] !== ('undefined')) {
-                                    indx =loader.chats[index].message.length
-                                }
-                                if (indx >= 1) {
-                                    fl = loader.chats[index].message[indx - 1].flag
-                                    m =Math.abs(fl-2)!=0?qsTr("Вам: "):qsTr("Вы: ")
-                                    m += loader.chats[index].message[indx - 1].text
-                                } else if (indx === 0) {
-                                    m = qsTr("Секретный чат пуст")
-                                }
-                                return m;
+                        function previewText() {
+                            var indx = 0, m = "", fl
+                            if (typeof loader.chats[index] !== ('undefined')) {
+                                indx =loader.chats[index].message.length
                             }
+                            if (indx >= 1) {
+                                fl = loader.chats[index].message[indx - 1].flag
+                                m =Math.abs(fl-2)!=0?qsTr("Вам: "):qsTr("Вы: ")
+                                m += loader.chats[index].message[indx - 1].text
+                            } else if (indx === 0) {
+                                m = qsTr("Секретный чат пуст")
+                            }
+                            return m;
+                        }
 
-                            Connections {
-                                target: {drawes}
-                                onPositionChanged: {
-                                    if (position == 1) {
-                                        preview.text = preview.previewText()
-                                    }
+                        Connections {
+                            target: {drawes}
+                            onPositionChanged: {
+                                if (position == 1) {
+                                    preview.text = preview.previewText()
                                 }
                             }
                         }
-
-                        anchors.leftMargin: {facade.toPx(30);}
-                        anchors.left: bug.right
-                        width: parent.width;
                     }
 
-                    MouseArea {
-                        id: myMouseArea
-                        anchors.fill: parent;
-                        property bool presed: false
-
-                        onClicked: {
-                            if (index !=-1) listView.currentIndex = index
-                            var json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
-                            var text = usersModel.get(index).login+" "+usersModel.get(index).famil
-                            chatScreen.setInfo(text, usersModel.get(index).image, (json.port == 0) == true? qsTr("Offline"): qsTr("Online"))
-                            event_handler.sendMsgs(JSON.stringify(json));
-                            chatScreen.open()
-                        }
-
-                        drag.axis: Drag.XAxis
-                        drag.minimumX: -width*0.40;
-                        onPressAndHold: presed=true
-                        drag.target: parent
-                        drag.maximumX: usersModel.count >= index+1?-drag.minimumX:0
-
-                        onPressed: {
-                            coloresRect.x = mouseX;
-                            coloresRect.y = mouseY;
-                            circleAnimation.start()
-                        }
-
-                        onPositionChanged: {
-                            circleAnimation.stop();
-                            coloresRect.height = 0
-                            coloresRect.width = 0
-                        }
-
-                        onReleased: {
-                            presed = false
-                            circleAnimation.stop();
-                            coloresRect.height = 0
-                            coloresRect.width = 0
-
-                            if (parent.x >= drag.maximumX) {
-                                if (usersModel.get(index).phone !== (loader.tel)) {
-                                    drawes.close();
-                                    listView.memIndex=index;
-                                    defaultDialog.show("Удаление аккаунта", "Вы хотите удалить <strong>" + login + " " + famil + "</strong> из списка друзей?")
-                                }
-                            } else if (parent.x <= drag.minimumX) {
-                                if (event_handler.currentOSys() != 1)
-                                   Qt.openUrlExternally("tel:"+phone)
-                                else {
-                                    caller.directCall(phone)
-                                }
-                            }
-
-                            parent.x = 0
-                        }
-                    }
+                    anchors.leftMargin: facade.toPx(30)
+                    anchors.left: bug.right
+                    width: parent.width
                 }
 
                 Rectangle {
                     color: loader.menu6Color
-                    visible: (index != (usersModel.count - 1))
+                    visible: index != (usersModel.count - 1);
                     width: 2*parent.width/3;
-                    height: facade.toPx(2)
+                    height: {facade.toPx(2)}
 
                     anchors {
                         bottom:parent.bottom
@@ -639,29 +581,39 @@ Drawer {
                     }
                 }
             }
+
+            Component.onCompleted: {
+                if (loader.chats.length < 1) {
+                    var chatHistory = event_handler.loadValue("chats")
+                    if (chatHistory != "") {
+                        loader.chats = JSON.parse(chatHistory)
+                    }
+                }
+                usersModel.clear()
+            }
         }
 
         HelperDrawer {
-            x: -width-1
             id: leftMenu
-            property bool direction;
+            x: -width-1
+            property bool direction: false;
 
-            function move(dir) {
-                leftMenu.direction = dir;
+            function move(direction) {
+                leftMenu.direction = direction
                 opens.start();
             }
 
             PropertyAnimation {
                 id: opens
                 target: leftMenu
-                to: leftMenu.direction? 0: -leftMenu.width -1;
+                to: leftMenu.direction == true? 0: -leftMenu.width -1;
                 property: "x";
                 duration: 200;
             }
         }
 
         Rectangle {
-            anchors.bottom:profile.bottom
+            anchors.bottom: profile.bottom
             color: loader.mainMenuBorderColor
             height: facade.toPx(4)
             width: parent.width
@@ -669,7 +621,7 @@ Drawer {
 
         LinearGradient {
             height: facade.toPx(8)
-            anchors.top: {profile.bottom}
+            anchors.top: {profile.bottom;}
             width: parent.width;
             end: Qt.point(0, height);
             start: Qt.point(0,0)
@@ -682,7 +634,6 @@ Drawer {
         ListView {
             id: listMenu
             clip: true
-            snapMode: ListView.SnapOneItem
             boundsBehavior: {Flickable.StopAtBounds}
             Component.onCompleted: currentIndex = -1
 
@@ -691,9 +642,9 @@ Drawer {
 
             width: parent.width
             height: {
-                var length = parent.height - (facade.toPx(680) + getProfHeight());
+                var length = (parent.height - (facade.toPx(680) + getProfHeight()))
                 var count = Math.ceil(length/facade.toPx(85));
-                if (count>navigateDownModel.count) count = navigateDownModel.count
+                if (count >navigateDownModel.count) count = navigateDownModel.count
                 if (count < 1) count = 1;
                 (count) * facade.toPx(85)
             }
@@ -701,12 +652,13 @@ Drawer {
             model:ListModel {
                 id: navigateDownModel
                 ListElement {image: ""; target: "";}
-                ListElement {image: "/ui/icons/navigate.png"; target: "Навигация"}
+                ListElement {image: "/ui/icons/navigate.png"; target: "Навигация";}
             }
 
             delegate: Rectangle {
                 width: parent.width;
                 height: facade.toPx(85)
+
                 MouseArea {
                     id: menMouseArea
                     anchors.fill:parent
@@ -725,7 +677,7 @@ Drawer {
                 }
 
                 color: {
-                    if (ListView.isCurrentItem ||(index==1 && leftMenu.direction))
+                    if (ListView.isCurrentItem || (index == 1&&leftMenu.direction))
                         loader.menu4Color;
                     else loader.menu9Color
                 }
@@ -737,10 +689,19 @@ Drawer {
                     Image {
                         source: image
                         width: facade.toPx(sourceSize.width)
-                        height: facade.toPx(sourceSize.height);
+                        height: facade.toPx(sourceSize.height)
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                        }
                         visible: index >= 1
-                        anchors.verticalCenter:parent.verticalCenter
                     }
+
+                    Connections {
+                        target: loader
+                        onIsOnlineChanged: myswitcher.checked=loader.isOnline
+                    }
+
+                    Component.onCompleted: myswitcher.checked=loader.isOnline
 
                     Switch {
                         id: myswitcher
@@ -770,8 +731,7 @@ Drawer {
                                 height:width
                                 anchors.verticalCenter: parent.verticalCenter
                                 x: if (myswitcher.checked) {
-                                    var p=parent.height-height
-                                    parent.width - width - p/2
+                                    parent.width - width - (parent.height-height)/2
                                 } else {
                                     (parent.height - height)/2
                                 }
@@ -783,19 +743,13 @@ Drawer {
                         height: parent.height;
                     }
 
-                    Connections {
-                        target: loader
-                        onIsOnlineChanged: myswitcher.checked=loader.isOnline
-                    }
-
-                    Component.onCompleted: myswitcher.checked=loader.isOnline
-
                     Text {
                         anchors {
                             left: myswitcher.right
                             leftMargin: facade.toPx(30)
                             verticalCenter: {parent.verticalCenter}
                         }
+
                         color: loader.menu10Color;
                         font.pixelSize: facade.doPx(26)
                         font.family:trebu4etMsNorm.name
