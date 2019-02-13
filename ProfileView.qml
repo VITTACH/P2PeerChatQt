@@ -39,15 +39,14 @@ Item {
             anchors.fill: parent;
 
             Loader {
-                Component.onCompleted: source="FeedsView.qml"
+                Component.onCompleted: source = ("FeedsView.qml")
             }
 
             Loader {
+                Component.onCompleted: source = "MediaPlayer.qml"
             }
 
-            onCurrentIndexChanged: {
-                actionBar.page = currentIndex
-            }
+            onCurrentIndexChanged: actionBar.page = currentIndex;
         }
     }
 

@@ -57,5 +57,6 @@
         <file>ui/users/default/woman.png</file>
         <file>ui/users/lin.png</file>
         <file>P2PStyle/ActionBar.qml</file>
+        <file>MediaPlayer.qml</file>
     </qresource>
 </RCC>

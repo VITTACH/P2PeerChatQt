@@ -7,24 +7,24 @@ import QtQuick 2.0
 Rectangle {
     id: baseRect
     color: loader.mainBackgroundColor
-    Component.onCompleted: mainDrawer.open()
+
+    anchors.fill: parent
+    anchors.topMargin: {actionBar.height}
 
     property int nWidth: 0
-    property bool find: true
-    property int oldContentY: 0
 
     ListView {
         id: basView
         width: parent.width
         spacing: facade.toPx(15)
+
         anchors {
             top: parent.top
-            bottom: downRow.top;
-            bottomMargin: facade.toPx(10)
-            topMargin: actionBar.height + facade.toPx(10)
+            bottom: downRow.top
+            bottomMargin: facade.toPx(15)
         }
 
-        boundsBehavior : {
+        boundsBehavior: {
             contentY <= 0 ? Flickable.StopAtBounds : Flickable.DragAndOvershootBounds;
         }
 
@@ -160,20 +160,17 @@ Rectangle {
                     delegate: Button {
                         visible: enable
                         width: parent.width;
-                        height: Math.max(facade.toPx(270), descr.height)
-
-                        Component.onCompleted: {
-                            background.color =loader.newsBackgroundColor
-                        }
+                        height: Math.max(facade.toPx(280), descr.height)
+                        Component.onCompleted: background.color = loader.newsBackgroundColor
 
                         Rectangle {
                             id: bag;
                             clip: true
                             smooth: true
                             x: facade.toPx(10)
+                            y: facade.toPx(20)
                             width: facade.toPx(200)
                             height:width
-                            y: x
                             Image {
                                 source: typeof image!="undefined"?image.replace("ps","p"):""
                                 anchors.centerIn: parent
@@ -182,23 +179,13 @@ Rectangle {
                             }
                         }
 
-                        onClicked: {
-                            if (chatScreen.position > 0) return
-                            loader.urlLink = link;
-                            if (event_handler.currentOSys() >= 1) {
-                                loader.webview = true;
-                                actionBar.text = title
-                            } else Qt.openUrlExternally(loader.urlLink);
-                        }
-
                         Column {
                             id: descr
+                            y: facade.toPx(20)
                             anchors {
                                 left: bag.right
                                 right: parent.right
-                                topMargin: facade.toPx(10)
                                 leftMargin: facade.toPx(20)
-                                top: parent.top
                             }
 
                             Text {
@@ -230,19 +217,29 @@ Rectangle {
                                 font.pixelSize: facade.doPx(20);
                             }
                         }
+
+                        onClicked: {
+                            if (chatScreen.position > 0) return
+                            loader.urlLink= link
+                            if (event_handler.currentOSys() > (0)) {
+                                loader.webview = true;
+                                actionBar.text = title
+                            } else {
+                                Qt.openUrlExternally(loader.urlLink)
+                            }
+                        }
                     }
                 }
 
                 width: parent.width
                 height: {
                     var cardHeight = facade.toPx(210);
-                    var count = Math.floor((baseRect.height - actionBar.height - (feedsModel.count - 1) * basView.spacing) / cardHeight)
+                    var count = Math.floor((baseRect.height - (feedsModel.count - 1) * basView.spacing) / cardHeight)
                     if (count < 4) count = 4
                     countCard = count
                     if (event_handler.currentOSys() > 0) {
-                        if (Screen.orientation ==Qt.LandscapeOrientation) {
+                        if (Screen.orientation ==Qt.LandscapeOrientation)
                             countCard = 2 * countCard
-                        }
                     }
                     return countCard*cardHeight-rssView.spacing;
                 }
@@ -266,10 +263,10 @@ Rectangle {
 
                     model:ListModel {
                         id: pages
-                        ListElement { image: "/ui/buttons/feeds/mus.png"; }
-                        ListElement { image: "/ui/buttons/feeds/img.png"; }
-                        ListElement { image: "/ui/buttons/feeds/vide.png" }
-                        ListElement { image: "/ui/buttons/feeds/play.png" }
+                        ListElement {image: "/ui/buttons/feeds/mus.png";}
+                        ListElement {image: "/ui/buttons/feeds/img.png";}
+                        ListElement {image: "/ui/buttons/feeds/vide.png"}
+                        ListElement {image: "/ui/buttons/feeds/play.png"}
                     }
 
                     delegate: Item {
@@ -286,7 +283,7 @@ Rectangle {
                         Image {
                             id: img
                             width: facade.toPx(sourceSize.width / 3.55)
-                            height: {facade.toPx(sourceSize.height / 3.55)}
+                            height: facade.toPx(sourceSize.height / 3.55)
                             anchors.centerIn: parent
                             source: image
                         }

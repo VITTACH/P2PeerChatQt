@@ -34,8 +34,7 @@ HEADERS += \
     cameracontroler.h
 
 test_conf {
-    SOURCES += \
-        tst_friendupqml.cpp
+    SOURCES +=
 } else {
     SOURCES += \
         main.cpp\
@@ -85,7 +84,8 @@ DISTFILES += \
     android-sources/libs/jetty-servLet.1.1106.jar \
     android-sources/libs/jetty-Util.8.1121106.jar \
     android-sources/libs/servlet-api-3.0.jar \
-    tests/tst_login.qml
+    tests/tst_login.qml \
+    android-sources/res/values/styles.xml
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \

@@ -1,9 +1,9 @@
 import QtQuick 2.7
-import StatusBar 0.1
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 import QtQuick.Controls.Material 2.3
+import StatusBar 0.1
 
 import "P2PStyle" as P2PStyle
 import "js/xHRQuery.js"as XHRQuery
@@ -79,7 +79,7 @@ ApplicationWindow {
         property string listChoseBackground: "#4C4C4C"
         property string mainMenuHeaderColor: "#CD322E"
         property string menu4Color: "#CCCCCC";
-        property string listForegroundColor: "#212121"
+        property string listForegroundColor: "#242424"
         property string menu6Color: "#30000000"
         property string menu7Color: "#F1F1F1";
         property string listBackgroundColor: "#424242"

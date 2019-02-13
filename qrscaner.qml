@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import QtMultimedia 5.7
+import QtMultimedia 5.8
 import QtQuick.Controls 2.0
 
 Item {
@@ -45,8 +45,8 @@ Item {
             })
         }
 
-        running:true
-        repeat: true
+        repeat: true;
+        running: true
     }
 
     Connections {
@@ -65,19 +65,19 @@ Item {
     VideoOutput {
         id: viewer
         source: camera
-        anchors.fill: parent
-        autoOrientation:true
+        anchors.fill: parent;
+        autoOrientation: true
         fillMode: VideoOutput.PreserveAspectCrop
+    }
 
-        PinchArea {
-            anchors.fill: parent;
-            pinch.minimumScale: 1
-            pinch.maximumScale: camera.maximumDigitalZoom
-            scale: camera.digitalZoom
+    PinchArea {
+        anchors.fill: parent;
+        pinch.minimumScale: 1
+        pinch.maximumScale: camera.maximumDigitalZoom
+        scale: camera.digitalZoom
 
-            onPinchUpdated: {
-                camera.digitalZoom = pinch.scale
-            }
+        onPinchUpdated: {
+            camera.digitalZoom = pinch.scale;
         }
     }
 

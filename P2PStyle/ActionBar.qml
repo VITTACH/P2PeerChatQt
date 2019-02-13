@@ -81,10 +81,10 @@ Column {
                 Rectangle {
                     id: iamgeBorder
                     anchors.fill: parent
-                    color: "transparent"
                     radius: facade.toPx(15)
                     border.width: facade.toPx(5)
-                    border.color: "#A5A5A5"
+                    border.color: {loader.mainMenuBorderColor}
+                    color: "transparent"
                 }
             }
 

@@ -35,6 +35,7 @@ void StatusBar::setColor(const QColor &color)
     QtAndroid::runOnAndroidThread([=]() {
         QAndroidJniObject window = getAndroidWindow();
         window.callMethod<void>("setStatusBarColor", "(I)V", color.rgba());
+        window.callMethod<void>("setNavigationBarColor", "(I)V", QColor(102, 102, 102).rgba());
     });
 #endif
 }

@@ -419,19 +419,16 @@ Drawer {
             model: ListModel {id: usersModel}
 
             delegate: SwipeDelegate {
+                visible: activity == true
                 width: parent.width
                 height: activity? facade.toPx(20) + Math.max(facade.toPx(165), messageColumn.height): 0
-                visible: activity
-                Component.onCompleted: background.color = loader.menuCurElementColor
 
-                onPressed: drawes.interactive = false
-                Connections {
-                    target: swipe
-                    onClosed: drawes.interactive = true
-                    //onCompleted: drawes.interactive = true
+                Component.onCompleted: {
+                    background.color = loader.menuCurElementColor
                 }
 
                 onClicked: {
+                    swipe.close()
                     if (index !=-1) listView.currentIndex = index
                     var json = {ip:usersModel.get(index).ip,pt:usersModel.get(index).port}
                     var text = usersModel.get(index).login+" "+usersModel.get(index).famil
@@ -439,6 +436,13 @@ Drawer {
                     event_handler.sendMsgs(JSON.stringify(json));
                     chatScreen.open()
                 }
+
+                Connections {
+                    target: swipe
+                    onClosed: drawes.interactive = true
+                    onCompleted: drawes.interactive = true
+                }
+                onPressed: drawes.interactive = false
 
                 swipe.right: Rectangle {
                     anchors.right: parent.right
@@ -448,37 +452,43 @@ Drawer {
 
                     Image {
                         anchors.centerIn: parent
-                        source: "/ui/buttons/dialerButton.png"
                         width: facade.toPx(sourceSize.width)
                         height: facade.toPx(sourceSize.height)
+                        source: "qrc:/ui/buttons/dialerButton.png"
                         fillMode: Image.PreserveAspectFit
                     }
 
-                    SwipeDelegate.onClicked: {
-                        swipe.close()
-                        if (event_handler.currentOSys() !== 1)
-                           Qt.openUrlExternally("tel:"+ phone)
-                        else caller.directCall(phone)
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            swipe.close()
+                            if (event_handler.currentOSys() !== 1)
+                               Qt.openUrlExternally("tel:"+ phone)
+                            else caller.directCall(phone)
+                        }
                     }
                 }
 
                 swipe.left: Rectangle {
+                    color: loader.listForegroundColor
                     width: parent.width/4
                     height: parent.height
-                    color: loader.listForegroundColor
 
                     Image {
                         anchors.centerIn: parent
-                        source: "/ui/buttons/trashButton.png"
                         width: facade.toPx(sourceSize.width)
                         height: facade.toPx(sourceSize.height)
+                        source: "qrc:/ui/buttons/trashButton.png";
                         fillMode: Image.PreserveAspectFit
                     }
 
-                    SwipeDelegate.onClicked: {
-                        swipe.close()
-                        if (usersModel.get(index).phone !== loader.tel) {
-                            defaultDialog.show("Удаление аккаунта", "Вы хотите удалить <strong>" + login + " " + famil + "</strong> из списка друзей?")
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            swipe.close()
+                            if (usersModel.get(index).phone !== loader.tel) {
+                                defaultDialog.show("Удаление аккаунта", "Вы хотите удалить <strong>" + login + " " + famil + "</strong> из списка друзей?")
+                            }
                         }
                     }
                 }
@@ -486,27 +496,27 @@ Drawer {
                 Item {
                     id: bug
                     height: width
-                    width: facade.toPx(150)
-                    anchors.top: parent.top
+                    width: facade.toPx(150);
+                    anchors.top: parent.top;
                     anchors.topMargin: {facade.toPx(10)}
                     x: swipe.position*parent.width/4+facade.toPx(50)-(facade.toPx(708)-drawer.width)/5;
 
                     Image {
-                        anchors.fill: {parent;}
+                        anchors.fill: parent
                         anchors.margins: bor.radius/3.5;
-                        source: "/ui/users/default/woman.png"
+                        source: "qrc:/ui/users/default/woman.png"
                     }
 
                     Image {
                         source: {image}
-                        anchors.fill: {parent;}
+                        anchors.fill: parent
                         anchors.margins: bor.radius/3.5;
                     }
 
                     Rectangle {
                         id: bor
-                        anchors.fill: {parent;}
-                        color: {"transparent";}
+                        anchors.fill: parent
+                        color: "transparent"
                         border.color: "#A5A5A5"
                         border.width: {facade.toPx(5.0)}
                         radius: facade.toPx(15)
@@ -517,14 +527,14 @@ Drawer {
                     id: messageColumn
                     spacing: facade.toPx(10);
                     anchors.top: parent.top
-                    anchors.topMargin: facade.toPx(10);
+                    anchors.topMargin: {facade.toPx(10)}
 
                     Text {
                         font.family: "tahoma"
                         font.weight: Font.DemiBold;
-                        font.pixelSize: facade.doPx(29)
-                        color: "white"
-                        width: messageColumn.width - facade.toPx(100)-bug.width
+                        font.pixelSize: facade.doPx(28);
+                        color: "#454545"
+                        width: messageColumn.width -facade.toPx(100) -bug.width
                         text: login + " "+ famil
                         elide: {Text.ElideRight}
                     }
@@ -534,8 +544,8 @@ Drawer {
                         maximumLineCount: 3
                         wrapMode: Text.WordWrap;
                         text: previewText()
-                        color: "#B6B6B6"
-                        width: messageColumn.width - facade.toPx(100)-bug.width
+                        color: "#575354"
+                        width: messageColumn.width -facade.toPx(100) -bug.width
                         font.family: "tahoma";
                         font.pixelSize: facade.doPx(20);
 
@@ -558,7 +568,7 @@ Drawer {
                             target: {drawes}
                             onPositionChanged: {
                                 if (position == 1) {
-                                    preview.text = preview.previewText()
+                                    preview.text=preview.previewText()
                                 }
                             }
                         }

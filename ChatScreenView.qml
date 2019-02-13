@@ -15,7 +15,7 @@ Drawer {
     width: parent.width
     height: parent.height
 
-    onPositionChanged: attach.move = false
+    onPositionChanged: if (position == 0) attach.move =false
 
     function setInfo(messag, photos, status) {
         actionBar.status = status
@@ -129,13 +129,7 @@ Drawer {
 
     Component.onCompleted: {
         loadChatsHistory()
-        actionBar.payload = -1
-    }
-
-    onIsPortraitChanged: {
-        if (height != 0) {
-            beckground.source = "http://pipsum.com/102" + Math.ceil(Math.random() * 9) + "x102"  + Math.ceil(Math.random() * 9) + ".jpg"
-        }
+        actionBar.payload=-1
     }
 
     property bool isPortrait: Screen.primaryOrientation == Qt.PortraitOrientation
@@ -339,7 +333,9 @@ Drawer {
                                         spacing: facade.toPx(5)
                                         model: JSON.parse(chatModel.get(index).images)
 
-                                        onMovingHorizontallyChanged: chatRootView.interactive = !movingHorizontally
+                                        onMovingHorizontallyChanged: {
+                                            chatRootView.interactive = !movingHorizontally
+                                        }
 
                                         delegate: Item {
                                             clip: true
@@ -607,15 +603,17 @@ Drawer {
 
                     ListView {
                         clip: true
-                        id: imagesList;
-                        width: area.width - cam.width -parent.x-spacing
-                        height: parent.height
+                        id: imagesList
                         spacing: parent.spacing
                         orientation: Qt.Horizontal
+                        width: area.width - cam.width - parent.x - spacing
+                        height: parent.height
 
-                        onMovingHorizontallyChanged: chatRootView.interactive = !movingHorizontally
+                        onMovingHorizontallyChanged: {
+                            chatRootView.interactive = !movingHorizontally
+                        }
 
-                        ScrollIndicator.horizontal: ScrollIndicator { }
+                        ScrollIndicator.horizontal: ScrollIndicator {}
 
                         Component.onCompleted: {
                             var photos = (Math.random()*10) + 5;
@@ -632,7 +630,7 @@ Drawer {
                                 Item {
                                     clip: true
                                     width: height
-                                    height: imagesList.height/3-spacing
+                                    height: imagesList.height/3 - spacing;
 
                                     Image {
                                         id: attachImg
@@ -670,20 +668,25 @@ Drawer {
                             }
                         }
 
-                        TextArea.flickable : TextArea {
+                        flickableDirection: {Flickable.VerticalFlick}
+                        width: parent.width
+
+                        TextArea.flickable: TextArea {
                             id: textField
-                            property variant memHeight;
-                            property bool pressCtrl: false;
-                            property bool pressEntr: false;
                             placeholderText: if (event_handler.currentOSys() <= 0) qsTr("Ctrl+Enter Для Отправки.."); else qsTr("Ваше Сообщение")
                             wrapMode: TextEdit.Wrap
                             verticalAlignment: Text.AlignVCenter
                             background: Rectangle {color:"#FFFEFEFE"}
 
+                            property variant memHeight
+                            property bool pressCtrl: false;
+                            property bool pressEntr: false;
+
                             Keys.onReturnPressed: {
-                                pressCtrl = !false;
+                                pressCtrl = true
                                 event.accepted = false
                             }
+
                             Keys.onPressed: {
                                 if (event.key === (Qt.Key_Control)) {
                                     pressEntr = !false
@@ -692,7 +695,6 @@ Drawer {
 
                             leftPadding: attachButton.width
                             rightPadding:sendButton.width+leftPadding
-                            font.family:trebu4etMsNorm.name
                             font.pixelSize: facade.doPx(26)
 
                             Keys.onReleased: {
@@ -705,9 +707,6 @@ Drawer {
                                 pressCtrl = pressEntr=false
                             }
                         }
-
-                        flickableDirection: {Flickable.VerticalFlick}
-                        width: parent.width
                     }
                 }
 
