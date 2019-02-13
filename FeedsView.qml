@@ -348,9 +348,6 @@ Rectangle {
     Loader {
         source: event_handler.currentOSys()>0?"WebService.qml":""
         visible: loader.webview
-        anchors {
-            fill: parent
-            topMargin: actionBar.height
-        }
+        anchors.fill: parent
     }
 }

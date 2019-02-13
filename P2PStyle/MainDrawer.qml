@@ -442,7 +442,7 @@ Drawer {
                     onClosed: drawes.interactive = true
                     onCompleted: drawes.interactive = true
                 }
-                onPressed: drawes.interactive = false
+                onPressAndHold: drawes.interactive = false
 
                 swipe.right: Rectangle {
                     anchors.right: parent.right
