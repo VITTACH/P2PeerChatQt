@@ -38,24 +38,22 @@ Item {
 
     Rectangle {
         height: parent.height
-        width: 2 * parent.width
+        width: 2*parent.width
         color: loader.mainBackgroundColor
     }
 
     ListView {
         id: listView
-        width: parent.width
-        spacing: facade.toPx(50);
+        spacing: facade.toPx(50)
 
         anchors {
-            top: parent.top
-            bottom: parent.bottom
-            topMargin: displayMarginBeginning;
+            fill: parent
+            topMargin: displayMarginBeginning
         }
 
         displayMarginBeginning: {
-            var rs=parent.height-actionBar.height-contentHeight
-            actionBar.height + spacing + (rs/2 > 0 ? rs/2 : 0);
+            var rs = parent.height -actionBar.height -contentHeight
+            return actionBar.height + spacing + (rs/2 > 0? rs/2: 0)
         }
 
         model:ListModel {
@@ -75,8 +73,8 @@ Item {
             ListElement {
                 image: qsTr(""); plaseHolder:qsTr("Нету аккаунта?")
             }
-            ListElement {image: ""; placeholder: ""}
         }
+
         delegate: Column {
             width: parent.width
             height: if (index == 0) pageWidth; else facade.toPx(90)
@@ -195,13 +193,13 @@ Item {
                 Image {
                     id: icon;
                     source: image;
-                    width: {facade.toPx(sourceSize.width * 15 /10)}
-                    height:{facade.toPx(sourceSize.height* 15 /10)}
+                    width: facade.toPx(sourceSize.width * 1.5)
+                    height: facade.toPx(sourceSize.height*1.5)
                 }
 
                 TextField {
                     color: "white"
-                    height: facade.toPx(88)
+                    height: parent.height
                     width: parent.width-facade.toPx(20)-icon.width;
                     onTextChanged: loader.fields[index - 1] = text;
                     placeholderText: {
@@ -224,8 +222,8 @@ Item {
             }
 
             Item {
-                visible: {index === 5;}
-                height:facade.toPx(100)
+                visible: index == 5
+                height: facade.toPx(100)
                 width: Math.min(0.82*parent.width,facade.toPx(700))
                 anchors.horizontalCenter: {parent.horizontalCenter}
 

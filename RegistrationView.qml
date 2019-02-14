@@ -36,26 +36,26 @@ Item {
     ListView {
         anchors {
             fill: parent;
-            topMargin: displayMarginBeginning;
+            topMargin: displayMarginBeginning
         }
+        spacing: facade.toPx(50)
 
-        spacing: facade.toPx(50);
         displayMarginBeginning: {
-            var rs=parent.height-actionBar.height-contentHeight
-            actionBar.height + spacing + (rs/2 > 0 ? rs/2 : 0);
+            var rs = parent.height -actionBar.height -contentHeight
+            return actionBar.height + spacing + (rs/2 > 0? rs/2: 0)
         }
 
         delegate: Column {
             width: parent.width
-            height: index == 6? facade.toPx(150): (image == "-"? 0: facade.toPx(90))
+            height: index == 5? facade.toPx(150): (image == "-"? 0: facade.toPx(90))
 
             Item {
                 DropShadow {
                     radius: 12
-                    samples: (20)
-                    source: button;
-                    color: "#80000000"
+                    samples:20
                     anchors.fill: button
+                    source: {button;}
+                    color:"#80000000"
                 }
 
                 Button {
@@ -118,8 +118,8 @@ Item {
 
                 Image {
                     id: icon
-                    width: facade.toPx(sourceSize.width * 15 / 10);
-                    height:facade.toPx(sourceSize.height* 15 / 10);
+                    width: facade.toPx(sourceSize.width * 1.5);
+                    height:facade.toPx(sourceSize.height* 1.5);
                     source: index < 4? image: "";
                 }
 
@@ -161,6 +161,7 @@ Item {
                 visible:index < 4
             }
         }
+
         model:ListModel {
             ListElement {
                 image:"ui/icons/personIconwhite.png"

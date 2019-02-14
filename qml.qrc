@@ -1,8 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>fonts/TrebuchetMSn.ttf</file>
-        <file>ui/buttons/backButton.png</file>
-        <file>ui/buttons/sendButton.png</file>
+        <file>ui/buttons/actionBar/backButton.png</file>
+        <file>ui/buttons/chat/sendButton.png</file>
         <file>ChatScreenView.qml</file>
         <file>LoaderService.qml</file>
         <file>js/URLQuery.js</file>
@@ -12,12 +12,14 @@
         <file>ui/mask/round.png</file>
         <file>AndImagePicker.qml</file>
         <file>IOsImagesPicker.qml</file>
-        <file>ui/apkIcon/iconMaxim.png</file>
-        <file>ui/apkIcon/iconMediw.png</file>
-        <file>ui/apkIcon/iconSmaler.png</file>
-        <file>ui/buttons/inforButton.png</file>
+        <file>ui/apk/iconMaxim.png</file>
+        <file>ui/apk/iconMediw.png</file>
+        <file>ui/buttons/feed/img.png</file>
+        <file>ui/buttons/feed/mus.png</file>
+        <file>ui/apk/iconSmaler.png</file>
+        <file>ui/buttons/actionBar/menuButton.png</file>
         <file>ui/icons/searchIconWhite.png</file>
-        <file>ui/buttons/moreButton.png</file>
+        <file>ui/buttons/actionBar/dotsButton.png</file>
         <file>ui/buttons/social/fb.png</file>
         <file>ui/buttons/social/gp.png</file>
         <file>ui/buttons/social/tw.png</file>
@@ -26,20 +28,18 @@
         <file>WebView.qml</file>
         <file>QrScaner.qml</file>
         <file>ProfileView.qml</file>
-        <file>ui/buttons/trashButton.png</file>
-        <file>ui/buttons/dialerButton.png</file>
-        <file>FeedsView.qml</file>
-        <file>ui/buttons/feeds/img.png</file>
-        <file>ui/buttons/feeds/mus.png</file>
-        <file>ui/buttons/feeds/play.png</file>
-        <file>ui/buttons/feeds/vide.png</file>
+        <file>ui/buttons/clearButton.png</file>
         <file>P2PStyle/HelperDrawer.qml</file>
         <file>P2PStyle/ImagesDialog.qml</file>
+        <file>ui/buttons/favoButton.png</file>
+        <file>FeedsView.qml</file>
+        <file>ui/buttons/feed/play.png</file>
+        <file>ui/buttons/feed/vide.png</file>
         <file>ui/icons/DeleteIconWhite.png</file>
         <file>ui/icons/PassWIconWhite.png</file>
         <file>ui/icons/outIconBlue.png</file>
         <file>RegistrationView.qml</file>
-        <file>ui/buttons/addButton.png</file>
+        <file>ui/buttons/chat/addButton.png</file>
         <file>ui/icons/alerts.png</file>
         <file>ui/icons/configuration.png</file>
         <file>ui/icons/design.png</file>
@@ -58,5 +58,12 @@
         <file>ui/users/lin.png</file>
         <file>P2PStyle/ActionBar.qml</file>
         <file>MediaPlayer.qml</file>
+        <file>ui/buttons/player/shuffleOffButton.png</file>
+        <file>ui/buttons/player/nextButton.png</file>
+        <file>ui/buttons/player/pauseButton.png</file>
+        <file>ui/buttons/player/playButton.png</file>
+        <file>ui/buttons/player/previousButton.png</file>
+        <file>ui/buttons/player/repeatOffButton.png</file>
+        <file>ui/buttons/player/repeatOnButton.png</file>
     </qresource>
 </RCC>

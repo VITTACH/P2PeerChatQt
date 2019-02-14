@@ -13,11 +13,11 @@ ApplicationWindow {
     id: mainAppWindow
     x: 0
     y: event_handler.currentOSys() <= 0? facade.toPx(100): 0
-    Material.primary: "#c64949"
+    Material.accent: Material.Red
     visible: true
-    title: {qsTr("CoinFriend");}
+    title: qsTr("CoinFriend")
 
-    StatusBar {color: "#992820"}
+    StatusBar {color: "#992820";}
 
     onClosing: event_handler.currentOSys() > 0? close.accepted = false: close.accepted = true
 

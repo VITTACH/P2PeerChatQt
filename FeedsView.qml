@@ -263,10 +263,10 @@ Rectangle {
 
                     model:ListModel {
                         id: pages
-                        ListElement {image: "/ui/buttons/feeds/mus.png";}
-                        ListElement {image: "/ui/buttons/feeds/img.png";}
-                        ListElement {image: "/ui/buttons/feeds/vide.png"}
-                        ListElement {image: "/ui/buttons/feeds/play.png"}
+                        ListElement {image: "/ui/buttons/feed/mus.png";}
+                        ListElement {image: "/ui/buttons/feed/img.png";}
+                        ListElement {image: "/ui/buttons/feed/vide.png"}
+                        ListElement {image: "/ui/buttons/feed/play.png"}
                     }
 
                     delegate: Item {

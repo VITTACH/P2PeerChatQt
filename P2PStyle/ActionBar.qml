@@ -7,9 +7,11 @@ Column {
     id: header
     width: parent.width
 
-    property var text: ""
-    property var photo: ""
-    property var status: ""
+    property string text: ""
+    property string photo: ""
+    property string status: ""
+    property string editUrl: ""
+
     property int page: -1
     property int payload: 0
 
@@ -30,10 +32,9 @@ Column {
             anchors.verticalCenter: parent.verticalCenter
 
             background: Image {
-                source: "/ui/buttons/" + (payload == 1 || loader.webview? "back": (payload < 0? "more": "infor")) + "Button.png"
-                height:facade.toPx(sourceSize.height)
-                width: facade.toPx(sourceSize.width);
-                fillMode: Image.PreserveAspectFit;
+                source: "/ui/buttons/actionBar/" + (payload == 1 || loader.webview? "back": (payload < 0? "dots": "menu")) + "Button.png"
+                width: facade.toPx(sourceSize.width)
+                height: facade.toPx(sourceSize.height)
                 anchors.centerIn: {parent}
             }
 
@@ -60,8 +61,8 @@ Column {
 
             anchors {
                 verticalCenter: parent.verticalCenter
-                left: loader.isLogin? button.right : undefined
-                leftMargin: loader.isLogin?button.x:0
+                left: loader.isLogin? button.right: undefined;
+                leftMargin: loader.isLogin? button.x: 0
                 horizontalCenter: loader.isLogin == true ? undefined : parent.horizontalCenter
             }
 
@@ -89,6 +90,7 @@ Column {
             }
 
             Column {
+                visible: page != 1
                 spacing: facade.toPx(10)
 
                 Text {
@@ -110,6 +112,19 @@ Column {
                     text: header.status.replace("\n", "")
                 }
             }
+
+            Flickable {
+                visible: page == 1
+                width: header.width - bug.width - 2 * parent.spacing - button.x - button.width
+                height: facade.toPx(80)
+
+                flickableDirection: Flickable.HorizontalFlick;
+                TextArea.flickable: TextArea {
+                    font.pixelSize: facade.doPx(20)
+                    placeholderText: "Url"
+                    onTextChanged: {editUrl = text}
+                }
+            }
         }
     }
 
@@ -117,38 +132,39 @@ Column {
         width: parent.width
         height: facade.toPx(90)
         color: loader.headBackgroundColor
-        visible: page >= 0 && !loader.webview
+        visible: page >= 0 &&!loader.webview
 
         ListView {
             anchors.fill: parent
-            orientation: {Qt.Horizontal}
+            orientation: Qt.Horizontal
+            model: ListModel {id: pageModel}
 
-            model: ListModel {id: pageModel;}
             delegate: Button {
                 flat: true
-                width: facade.toPx(200);
                 height: parent.height
+                width: facade.toPx(200);
 
-                onClicked: page = index;
+                contentItem: Text {
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+
+                    font.weight: Font.DemiBold
+                    font.family: trebu4etMsNorm.name
+                    font.pixelSize: facade.doPx(22);
+                    text: target
+                    color: "white"
+                }
 
                 Component.onCompleted: {
                     background.color = "transparent"
                 }
 
-                contentItem: Text {
-                    font.weight: Font.DemiBold;
-                    font.pixelSize: facade.doPx(22);
-                    font.family: trebu4etMsNorm.name
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    color: "white"
-                    text: {target}
-                }
+                onClicked: page = index;
 
                 Rectangle {
                     anchors.bottom: {parent.bottom;}
-                    visible: index == page
-                    height: facade.toPx(3)
+                    visible: index == page;
+                    height: facade.toPx(3);
                     width: parent.width
                 }
             }

@@ -722,7 +722,7 @@ Drawer {
                     }
 
                     background: Image {
-                        source: "ui/buttons/sendButton.png"
+                        source: "ui/buttons/chat/sendButton.png"
                         width: facade.toPx(sourceSize.width);
                         height: facade.toPx(sourceSize.height);
                         anchors {
@@ -743,7 +743,7 @@ Drawer {
                     onClicked: attach.move = !attach.move;
 
                     background: Image {
-                        source: "ui/buttons/addButton.png"
+                        source: "ui/buttons/chat/addButton.png"
                         width: facade.toPx(sourceSize.width);
                         height: facade.toPx(sourceSize.height);
                         anchors {

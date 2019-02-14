@@ -454,7 +454,7 @@ Drawer {
                         anchors.centerIn: parent
                         width: facade.toPx(sourceSize.width)
                         height: facade.toPx(sourceSize.height)
-                        source: "qrc:/ui/buttons/dialerButton.png"
+                        source: "qrc:/ui/buttons/favoButton.png"
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -478,7 +478,7 @@ Drawer {
                         anchors.centerIn: parent
                         width: facade.toPx(sourceSize.width)
                         height: facade.toPx(sourceSize.height)
-                        source: "qrc:/ui/buttons/trashButton.png";
+                        source: "qrc:/ui/buttons/clearButton.png";
                         fillMode: Image.PreserveAspectFit
                     }
 
