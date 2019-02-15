@@ -1,11 +1,11 @@
-import QtQml 2.0
-import QtQuick 2.7
 import QtMultimedia 5.7
 import QtQuick.Window 2.0
 import QtQuick.Dialogs 1.0
 import QtQuick.Controls 2.0
 import QtGraphicalEffects 1.0
 import "P2PStyle" as P2PStyle
+import QtQml 2.0
+import QtQuick 2.7
 
 // https://falsinsoft.blogspot.com/2018/04/qml-mixed-native-android-and-qml.html;
 
@@ -622,11 +622,14 @@ Drawer {
                             }
                         }
 
-                        model: ListModel {id:tachModel}
+                        model: ListModel {id: tachModel}
+
                         delegate: Column {
-                            spacing: imagesList.spacing
+                            spacing: imagesList.spacing;
+
                             Repeater {
                                 model: 3
+
                                 Item {
                                     clip: true
                                     width: height

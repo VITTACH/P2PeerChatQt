@@ -7,7 +7,7 @@ Item {
         target: loader
         onIsOnlineChanged: changeState()
         onWebviewChanged: if (!loader.webview) changeState();
-        onAvatarPathChanged: actionBar.phot=loader.avatarPath
+        onAvatarPathChanged: actionBar.phot = (loader.avatarPath)
     }
 
     Connections {
@@ -17,7 +17,7 @@ Item {
 
     function changeState() {
         actionBar.photo = loader.avatarPath
-        actionBar.status = loader.isOnline?"Online":"Offline"
+        actionBar.status = loader.isOnline? "Online": ("Offline")
         actionBar.text = (loader.login + " " + loader.famil);
     }
 
@@ -38,15 +38,20 @@ Item {
             id: view;
             anchors.fill: parent;
 
+            onCurrentIndexChanged: {
+                actionBar.visible = !mediaPlayer.fullScreen || currentIndex != 1
+                actionBar.page = currentIndex;
+            }
+
             Loader {
                 Component.onCompleted: source = ("FeedsView.qml")
             }
 
             Loader {
+                id: mediaPlayer
+                property bool fullScreen: false
                 Component.onCompleted: source = "MediaPlayer.qml"
             }
-
-            onCurrentIndexChanged: actionBar.page = currentIndex;
         }
     }
 

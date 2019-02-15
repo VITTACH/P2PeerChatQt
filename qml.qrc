@@ -58,7 +58,8 @@
         <file>ui/users/lin.png</file>
         <file>P2PStyle/ActionBar.qml</file>
         <file>MediaPlayer.qml</file>
-        <file>ui/buttons/player/shuffleOffButton.png</file>
+        <file>ui/buttons/player/fullScreenButton.png</file>
+        <file>ui/buttons/player/exitScreenButton.png</file>
         <file>ui/buttons/player/nextButton.png</file>
         <file>ui/buttons/player/pauseButton.png</file>
         <file>ui/buttons/player/playButton.png</file>

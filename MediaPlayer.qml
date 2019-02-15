@@ -1,15 +1,24 @@
 import QtQuick 2.7
 import QtMultimedia 5.8
+import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
+import QtGraphicalEffects 1.0
 
 Item {
     id: rootItem
     clip: true
-
     anchors.fill: parent
-    anchors.topMargin: actionBar.height
+    anchors.topMargin: actionBar.visible? actionBar.height: 0
 
-    MediaPlayer {id: player}
+    property int firstPosition: 0
+    property int secondPosition: 0
+
+    property bool isPortraitOrientation: Screen.primaryOrientation === Qt.PortraitOrientation
+
+    onIsPortraitOrientationChanged: {
+        actionBar.visible = isPortraitOrientation
+        mediaPlayer.fullScreen = !actionBar.visible
+    }
 
     Timer {
         id: borderRectTimeer
@@ -17,26 +26,37 @@ Item {
         onTriggered: borderRect.visible = false
     }
 
+    PropertyAnimation {
+       id: transit
+       target: controlPanel
+       to: player.loops != MediaPlayer.Infinite? facade.toPx(180): facade.toPx(240)
+       from: player.loops != MediaPlayer.Infinite? facade.toPx(240): facade.toPx(180)
+       property: "height"
+       duration: 200
+    }
+
+    MediaPlayer {id: player}
+
     VideoOutput {
         id: video
         source: player
-        width: parent.width;
+        width: parent.width
         height: parent.height - controlPanel.height
 
         MouseArea {
             anchors.fill: parent
             onWheel: {
                 video.scale += video.scale * wheel.angleDelta.y / 1200
-                borderRect.visible = true
+                borderRect.visible = true;
                 borderRectTimeer.restart()
             }
 
             scrollGestureEnabled: false
 
             drag.target: video
-            drag.maximumX: Math.abs(video.width - video.contentRect.width * video.scale) / 2
+            drag.maximumX: Math.abs(video.width - video.contentRect.width * video.scale) / 2;
             drag.minimumX: -drag.maximumX
-            drag.maximumY: Math.abs(video.height-video.contentRect.height * video.scale) / 2
+            drag.maximumY: Math.abs(video.height-video.contentRect.height * video.scale) / 2;
             drag.minimumY: -drag.maximumY
         }
 
@@ -49,7 +69,7 @@ Item {
             pinch.minimumX: -pinch.maximumX
             pinch.maximumY: Math.abs(video.height-video.contentRect.height * video.scale) / 2
             pinch.minimumY: -pinch.maximumY
-            pinch.minimumScale: Math.min(rootItem.width, rootItem.height) / Math.max(video.contentRect.width, video.contentRect.height) * 1.00
+            pinch.minimumScale: Math.min(rootItem.width, rootItem.height) / Math.max(video.contentRect.width, video.contentRect.height)
             pinch.maximumScale: 10
 
             onPinchUpdated: {
@@ -58,17 +78,20 @@ Item {
             }
         }
 
-        Behavior on scale {NumberAnimation { duration: 100 } }
-        Behavior on x { NumberAnimation { duration: 100 } }
-        Behavior on y { NumberAnimation { duration: 100 } }
+        Behavior on scale {NumberAnimation { duration: 200 } }
+        Behavior on x { NumberAnimation { duration: 200 } }
+        Behavior on y { NumberAnimation { duration: 200 } }
     }
 
     Rectangle {
         id: borderRect
-        width: parent.width
-        anchors.top: parent.top
-        anchors.bottom: controlPanel.top;
         visible: false
+
+        width: Math.min(parent.width, video.contentRect.width * video.scale)
+        height: Math.min(video.height, video.contentRect.height * video.scale)
+
+        x: Math.max(0, video.x + (video.width - video.contentRect.width * (video.scale)) / 2)
+        y: Math.max(0, video.y + (video.height - video.contentRect.height * video.scale) / 2)
 
         color: "transparent"
         border.width: facade.toPx(40)
@@ -80,137 +103,225 @@ Item {
         color: loader.mainBackgroundColor
     }
 
-    Column {
+    ListView {
         id: controlPanel
+        clip: true
+
         anchors.bottom: parent.bottom
+        boundsBehavior: Flickable.StopAtBounds;
+
         width: parent.width
-        padding: facade.toPx(30)
-        spacing: facade.toPx(10)
-        topPadding: 0
+        height: facade.toPx(180)
+        spacing: facade.toPx(30)
 
-        property int innerWidth: parent.width - controlPanel.leftPadding*2
+        model: ListModel {
+            ListElement {position: 0}
+            ListElement {position: 1}
+        }
 
-        Row {
-            spacing: facade.toPx(10)
-            anchors.horizontalCenter: parent.horizontalCenter
+        delegate: Item {
+            width: parent.width
+            height: position == 0? control.height + facade.toPx(40):sliders.height
 
-            Repeater {
-                id: buttons
-                model: ["repeatOff", "previous", "play", "next", "shuffleOff"];
-                Button {
-                    flat: true
-                    width: facade.toPx(80)
-                    height:facade.toPx(90)
+            Row {
+                id: control
+                visible: position == 0
+                anchors.bottom: parent.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: facade.toPx(10)
+
+                Repeater {
+                    id: buttons
+                    model: ["repeatOff", "previous", "play", "next", "fullScreen"]
+
+                    Button {
+                        flat: true
+                        width: facade.toPx(80);
+                        height: facade.toPx(90)
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        onClicked: {
+                            switch(index) {
+                            case 4:
+                                mediaPlayer.fullScreen = !(mediaPlayer.fullScreen)
+                                actionBar.visible = !actionBar.visible
+                                break;
+                            case 0:
+                                if (player.loops != MediaPlayer.Infinite) player.loops=MediaPlayer.Infinite
+                                else {
+                                    player.loops = 0
+                                }
+                                transit.start()
+                                break;
+                            case 2:
+                                if (player.playbackState == MediaPlayer.PlayingState)  {
+                                    player.pause()
+                                } else {
+                                    player.source = actionBar.editUrl
+                                    player.play()
+                                }
+                                break;
+                            }
+                        }
+
+                        Image {
+                            anchors.centerIn: parent
+                            height: facade.toPx(sourceSize.height)
+                            width: facade.toPx(sourceSize.width)
+                            source: {
+                                if (mediaPlayer.fullScreen && index == 4) {
+                                    "ui/buttons/player/exitScreenButton.png"
+                                } else if (player.loops == MediaPlayer.Infinite && index == 0) {
+                                    "ui/buttons/player/repeatOnButton.png"
+                                } else if (player.playbackState == MediaPlayer.PlayingState && index ==2) {
+                                    "ui/buttons/player/pauseButton.png"
+                                } else {
+                                    "ui/buttons/player/" + modelData + "Button.png"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Row {
+                id: sliders
+                visible: position == 1 && player.loops == MediaPlayer.Infinite
+                x: Math.max(facade.toPx(60), video.x +(parent.width-video.contentRect.width*video.scale)/2)
+
+                width: parent.width - x * 2
+
+                spacing: facade.toPx(20)
+
+                Label {
+                    id: firstTime
                     anchors.verticalCenter: parent.verticalCenter
 
-                    Image {
-                        anchors.centerIn: parent
-                        source: {
-                            if (player.loops == MediaPlayer.Infinite && index == 0) {
-                                "ui/buttons/player/repeatOnButton.png"
-                            } else if (player.playbackState == MediaPlayer.PlayingState && index == 2) {
-                                "ui/buttons/player/pauseButton.png"
-                            } else {
-                                "ui/buttons/player/" + modelData + "Button.png"
-                            }
+                    readonly property int minutes: Math.floor(firstPosition / 60000)
+                    readonly property int seconds: Math.round((firstPosition % 60000) / (1000))
+
+                    font.pixelSize: facade.doPx(24)
+
+                    text: Qt.formatTime(new Date(0, 0, 0, 0, minutes, seconds), qsTr("mm:ss"));
+                    color: "white"
+                }
+
+                RangeSlider {
+                    id: rangeSlider
+                    width: sliders.width - firstTime.width - secondTime.width -parent.spacing*2
+
+                    second.value: 0
+                    first.handle.width: facade.toPx(10)
+                    first.handle.height: facade.toPx(40);
+
+                    second.handle.width: facade.toPx(10);
+                    second.handle.height:facade.toPx(40);
+
+                    second.onValueChanged: secondPosition = second.value;
+
+                    first.onValueChanged: {
+                        if (first.value > slider.value) {
+                            slider.value = first.value
                         }
-                        height: facade.toPx(sourceSize.height)
-                        width: facade.toPx(sourceSize.width)
+                        firstPosition = first.value
                     }
 
-                    onClicked: {
-                        switch(index) {
-                        case 0:
-                            if (player.loops != MediaPlayer.Infinite) {
-                                player.loops = MediaPlayer.Infinite
-                            } else {
-                                player.loops = 0
-                            }
-                            break;
-                        case 2:
-                            if (player.playbackState == MediaPlayer.PlayingState) player.pause()
-                            else {
-                                player.source = (actionBar.editUrl)
-                                player.play()
-                            }
-                            break;
+                    to: player.duration
+
+                    background: Rectangle {
+                        x: rangeSlider.leftPadding
+                        y: rangeSlider.topPadding + rangeSlider.availableHeight / 2 - height /2
+                        width: rangeSlider.availableWidth
+                        height: 1
+
+                        Rectangle {
+                            x: rangeSlider.first.handle.x
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: rangeSlider.second.handle.x - x
+                            color: "#FFEB3B"
+                            height: 3
                         }
                     }
+                }
+
+                Label {
+                    id: secondTime
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    readonly property int minutes: Math.floor(secondPosition / 60000)
+                    readonly property int seconds: Math.round((secondPosition % 60000) / 1000);
+
+                    font.pixelSize: facade.doPx(24)
+
+                    text: Qt.formatTime(new Date(0, 0, 0, 0, minutes, seconds), qsTr("mm:ss"));
+                    color: "white"
+                }
+            }
+        }
+    }
+
+    DropShadow {
+        samples: 16
+        color: "#90000000"
+        source: seeker
+        anchors.fill: seeker
+    }
+    Row {
+        id: seeker
+        width: parent.width - x * 2
+        x: Math.max(facade.toPx(60), video.x + (parent.width - video.contentRect.width * video.scale) / 2)
+        anchors.bottom: controlPanel.top
+        anchors.bottomMargin: -height/2;
+
+        spacing: facade.toPx(20)
+
+        Label {
+            id: curTime
+
+            readonly property int minutes: Math.floor(player.position / 60000)
+            readonly property int seconds: Math.round((player.position % 60000) / 1000)
+
+            font.pixelSize: facade.doPx(24)
+
+            text: Qt.formatTime(new Date(0, 0, 0, 0, minutes, seconds), qsTr("mm:ss"));
+            color: "white"
+        }
+
+        Slider {
+            id: slider
+            width: seeker.width - curTime.width - allTime.width - parent.spacing * 2
+
+            handle.width: handle.height
+            handle.height: facade.toPx(40)
+
+            to: player.duration
+
+            onValueChanged: if (!sync) player.seek(value);
+
+            property bool sync: false
+            Connections {
+                target: player
+                onPositionChanged: {
+                    slider.sync = true;
+                    slider.value = player.position
+                    if (player.position >= secondPosition && secondPosition > 0 && player.loops == MediaPlayer.Infinite) {
+                        player.seek(firstPosition)
+                    }
+                    slider.sync = false
                 }
             }
         }
 
-        Row {
-            spacing: facade.toPx(20)
-            width: controlPanel.innerWidth
-            height: facade.toPx(30)
+        Label {
+            id: allTime
 
-            Label {
-                id: curTime
-                anchors.verticalCenter: parent.verticalCenter
+            readonly property int minutes: Math.floor(player.duration / 60000)
+            readonly property int seconds: Math.round((player.duration % 60000) / 1000)
 
-                readonly property int minutes: Math.floor(player.position / 60000)
-                readonly property int seconds: Math.round((player.position % 60000) / 1000)
+            font.pixelSize: facade.doPx(24)
 
-                text: Qt.formatTime(new Date(0, 0, 0, 0, minutes, seconds), qsTr("mm:ss"));
-                color: "white"
-            }
-
-            RangeSlider {
-                id: range
-                anchors.verticalCenter: parent.verticalCenter
-                width: {parent.width - curTime.width - allTime.width - parent.spacing * 2;}
-
-                first.onValueChanged: if (first.value > slider.value) slider.value = first.value
-
-                first.handle.visible: player.loops == MediaPlayer.Infinite
-                second.handle.visible: player.loops == MediaPlayer.Infinite
-
-                to: player.duration
-
-                background: Rectangle {
-                    visible: player.loops == MediaPlayer.Infinite
-                    width: range.second.handle.x + range.second.handle.width - x
-                    x: range.first.handle.x
-                    y: range.topPadding + range.availableHeight / 2 - height / 2
-                    color: "#FFEB3B"
-                    radius: height/2
-                }
-
-                Slider {
-                    id: slider
-                    anchors.fill: parent
-
-                    to: player.duration;
-
-                    onValueChanged: if (!sync) player.seek(value)
-                    enabled: player.loops != MediaPlayer.Infinite
-
-                    property bool sync: false
-                    Connections {
-                        target: player
-                        onPositionChanged: {
-                            slider.sync = true;
-                            slider.value = player.position
-                            if (slider.value >= range.second.value && range.second.value > 0 && player.loops == MediaPlayer.Infinite) {
-                                player.seek(range.first.value)
-                            }
-                            slider.sync = false
-                        }
-                    }
-                }
-            }
-
-            Label {
-                id: allTime
-                anchors.verticalCenter: parent.verticalCenter;
-
-                readonly property int minutes: Math.floor(player.duration / 60000)
-                readonly property int seconds: Math.round((player.duration % 60000) / 1000)
-
-                text: Qt.formatTime(new Date(0, 0, 0, 0, minutes, seconds), qsTr("mm:ss"));
-                color: "white"
-            }
+            text: Qt.formatTime(new Date(0, 0, 0, 0, minutes, seconds), qsTr("mm:ss"));
+            color: "white"
         }
     }
 }

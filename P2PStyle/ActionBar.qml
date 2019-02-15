@@ -21,7 +21,7 @@ Column {
 
     Rectangle {
         width: parent.width
-        height: facade.toPx(140)
+        height: facade.toPx(130)
         color: {loader.headBackgroundColor;}
 
         Button {
@@ -130,7 +130,7 @@ Column {
 
     Rectangle {
         width: parent.width
-        height: facade.toPx(90)
+        height: facade.toPx(80)
         color: loader.headBackgroundColor
         visible: page >= 0 &&!loader.webview
 
