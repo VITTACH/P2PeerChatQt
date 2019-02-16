@@ -12,7 +12,7 @@ Item {
 
     Connections {
         target: actionBar
-        onPageChanged: view.currentIndex = actionBar.page
+        onPageChanged: view.currentIndex = actionBar.page;
     }
 
     function changeState() {
@@ -30,6 +30,15 @@ Item {
         changeState()
     }
 
+    PropertyAnimation {
+       id: transit
+       target: actionBar
+       from: (actionBar.height === 0)? 0: facade.toPx(210);
+       to: (actionBar.height === 0)? facade.toPx(210): 0
+       property: "height"
+       duration: 200
+    }
+
     Rectangle {
         anchors.fill: parent
         color: loader.menu16Color
@@ -39,8 +48,8 @@ Item {
             anchors.fill: parent;
 
             onCurrentIndexChanged: {
-                actionBar.visible = !mediaPlayer.fullScreen || currentIndex != 1
-                actionBar.page = currentIndex;
+                if (mediaPlayer.fullScreen) transit.start()
+                actionBar.page = currentIndex
             }
 
             Loader {
@@ -49,8 +58,10 @@ Item {
 
             Loader {
                 id: mediaPlayer
-                property bool fullScreen: false
                 Component.onCompleted: source = "MediaPlayer.qml"
+
+                property bool fullScreen: false
+                function startAnimation() {transit.start()}
             }
         }
     }

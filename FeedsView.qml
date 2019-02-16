@@ -9,7 +9,7 @@ Rectangle {
     color: loader.mainBackgroundColor
 
     anchors.fill: parent
-    anchors.topMargin: {actionBar.height}
+    anchors.topMargin: actionBar.height
 
     property int nWidth: 0
 

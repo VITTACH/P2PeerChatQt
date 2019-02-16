@@ -7,23 +7,35 @@ import QtGraphicalEffects 1.0
 Item {
     id: rootItem
     clip: true
+
     anchors.fill: parent
-    anchors.topMargin: actionBar.visible? actionBar.height: 0
+    anchors.topMargin: actionBar.height
 
     property int firstPosition: 0
     property int secondPosition: 0
 
-    property bool isPortraitOrientation: Screen.primaryOrientation === Qt.PortraitOrientation
+    property bool portraitOrientation: Screen.primaryOrientation === Qt.PortraitOrientation
 
-    onIsPortraitOrientationChanged: {
-        actionBar.visible = isPortraitOrientation
-        mediaPlayer.fullScreen = !actionBar.visible
+    onPortraitOrientationChanged: {
+        mediaPlayer.fullScreen = !portraitOrientation;
+        mediaPlayer.startAnimation()
     }
 
-    Timer {
-        id: borderRectTimeer
-        interval: 1000
-        onTriggered: borderRect.visible = false
+    function formatTime(minutes, seconds, separator) {
+        var min = minutes < 10 ? "0" + minutes : minutes
+        var sec = seconds < 10 ? "0" + seconds : seconds
+        return min + separator + sec
+    }
+
+    function readTextFile(fileUrl) {
+        var xhr = new XMLHttpRequest
+        xhr.open("GET", "shaders/" + fileUrl)
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                effect.fragmentShader = "precision mediump float;" + xhr.responseText
+            }
+        }
+        xhr.send()
     }
 
     PropertyAnimation {
@@ -35,63 +47,93 @@ Item {
        duration: 200
     }
 
+    Timer {
+        id: borderRectTimeer
+        interval: 1000
+        onTriggered: {borderRect.visible = false}
+    }
+
+    Camera {id: camera}
+
     MediaPlayer {id: player}
 
     VideoOutput {
         id: video
-        source: player
+        source: camera
+        fillMode: VideoOutput.PreserveAspectCrop;
         width: parent.width
-        height: parent.height - controlPanel.height
+        height: parent.height-controlPanel.height
 
-        MouseArea {
-            anchors.fill: parent
-            onWheel: {
-                video.scale += video.scale * wheel.angleDelta.y / 1200
-                borderRect.visible = true;
-                borderRectTimeer.restart()
-            }
+        Behavior on scale {
+            NumberAnimation { duration: 200 } }
+        Behavior on x {
+            NumberAnimation { duration: 200 } }
+        Behavior on y {
+            NumberAnimation { duration: 200 } }
+    }
 
-            scrollGestureEnabled: false
-
-            drag.target: video
-            drag.maximumX: Math.abs(video.width - video.contentRect.width * video.scale) / 2;
-            drag.minimumX: -drag.maximumX
-            drag.maximumY: Math.abs(video.height-video.contentRect.height * video.scale) / 2;
-            drag.minimumY: -drag.maximumY
+    MouseArea {
+        anchors.fill: video
+        scrollGestureEnabled: false
+        onWheel: {
+            video.scale += video.scale * wheel.angleDelta.y / 1200
+            if (video.scale < 0.5) video.scale = 0.5
+            borderRect.visible = true;
+            borderRectTimeer.restart()
         }
 
-        PinchArea {
-            anchors.fill: parent
+        drag.target: video
+        drag.maximumX: Math.abs(video.width - video.contentRect.width * video.scale) / 2;
+        drag.minimumX: -drag.maximumX
+        drag.maximumY: Math.abs(video.height-video.contentRect.height * video.scale) / 2;
+        drag.minimumY: -drag.maximumY
+    }
 
-            pinch.target: video
-            pinch.dragAxis: Pinch.XAndYAxis
-            pinch.maximumX: Math.abs(video.width - video.contentRect.width * video.scale) / 2
-            pinch.minimumX: -pinch.maximumX
-            pinch.maximumY: Math.abs(video.height-video.contentRect.height * video.scale) / 2
-            pinch.minimumY: -pinch.maximumY
-            pinch.minimumScale: Math.min(rootItem.width, rootItem.height) / Math.max(video.contentRect.width, video.contentRect.height)
-            pinch.maximumScale: 10
+    PinchArea {
+        anchors.fill: video
 
-            onPinchUpdated: {
-                borderRect.visible = true
-                borderRectTimeer.restart()
-            }
+        pinch.target: video
+        pinch.dragAxis: Pinch.XAndYAxis
+        pinch.maximumX: Math.abs(video.width - video.contentRect.width * video.scale) / 2
+        pinch.minimumX: -pinch.maximumX
+        pinch.maximumY: Math.abs(video.height-video.contentRect.height * video.scale) / 2
+        pinch.minimumY: -pinch.maximumY
+        pinch.minimumScale: Math.min(rootItem.width, rootItem.height) / Math.max(video.contentRect.width, video.contentRect.height)
+        pinch.maximumScale: 10
+
+        onPinchUpdated: {
+            borderRect.visible = true
+            borderRectTimeer.restart()
         }
+    }
 
-        Behavior on scale {NumberAnimation { duration: 200 } }
-        Behavior on x { NumberAnimation { duration: 200 } }
-        Behavior on y { NumberAnimation { duration: 200 } }
+    ShaderEffect {
+        id: effect
+        anchors.fill: video
+        scale: video.scale
+
+        property variant source: ShaderEffectSource {sourceItem: video; hideSource: true}
+
+        property real grid: 5.0
+        property real dividerValue: 1
+        property real targetWidth: video.width
+        property real targetHeight: video.height
+
+        property real step_x: 0.0015625
+        property real step_y: targetHeight ? (step_x * targetWidth / targetHeight) : 0.0;
+
+
+        Component.onCompleted: readTextFile("billboard.fsh")
     }
 
     Rectangle {
         id: borderRect
         visible: false
 
-        width: Math.min(parent.width, video.contentRect.width * video.scale)
-        height: Math.min(video.height, video.contentRect.height * video.scale)
+        width: Math.min(rootItem.width, video.width * video.scale)
+        height: parent.height - controlPanel.height
 
-        x: Math.max(0, video.x + (video.width - video.contentRect.width * (video.scale)) / 2)
-        y: Math.max(0, video.y + (video.height - video.contentRect.height * video.scale) / 2)
+        x: Math.max(0, video.x + (rootItem.width - video.width * video.scale) / 2)
 
         color: "transparent"
         border.width: facade.toPx(40)
@@ -121,18 +163,20 @@ Item {
 
         delegate: Item {
             width: parent.width
-            height: position == 0? control.height + facade.toPx(40):sliders.height
+            height: position == 0? control.height + facade.toPx(40): sliders.height
 
             Row {
                 id: control
                 visible: position == 0
-                anchors.bottom: parent.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors {
+                    bottom: parent.bottom
+                    horizontalCenter: parent.horizontalCenter
+                }
                 spacing: facade.toPx(10)
 
                 Repeater {
                     id: buttons
-                    model: ["repeatOff", "previous", "play", "next", "fullScreen"]
+                    model: ["repeatOff", "previous", "play", "next", "fullScreen"];
 
                     Button {
                         flat: true
@@ -143,8 +187,8 @@ Item {
                         onClicked: {
                             switch(index) {
                             case 4:
-                                mediaPlayer.fullScreen = !(mediaPlayer.fullScreen)
-                                actionBar.visible = !actionBar.visible
+                                mediaPlayer.fullScreen = !(mediaPlayer.fullScreen);
+                                mediaPlayer.startAnimation()
                                 break;
                             case 0:
                                 if (player.loops != MediaPlayer.Infinite) player.loops=MediaPlayer.Infinite
@@ -154,9 +198,9 @@ Item {
                                 transit.start()
                                 break;
                             case 2:
-                                if (player.playbackState == MediaPlayer.PlayingState)  {
+                                if (player.playbackState==MediaPlayer.PlayingState)
                                     player.pause()
-                                } else {
+                                else {
                                     player.source = actionBar.editUrl
                                     player.play()
                                 }
@@ -184,12 +228,30 @@ Item {
                 }
             }
 
+            Button {
+                anchors {
+                    right: parent.right
+                    rightMargin: facade.toPx(60)
+                    verticalCenter: control.verticalCenter;
+                }
+                visible: position == 0
+                flat: true
+                width: facade.toPx(80);
+                height: facade.toPx(90)
+
+                Image {
+                    anchors.centerIn: parent
+                    source: "ui/buttons/player/extensionButton.png"
+                    height: facade.toPx(sourceSize.height)
+                    width: facade.toPx(sourceSize.width)
+                }
+            }
+
             Row {
                 id: sliders
-                visible: position == 1 && player.loops == MediaPlayer.Infinite
-                x: Math.max(facade.toPx(60), video.x +(parent.width-video.contentRect.width*video.scale)/2)
-
                 width: parent.width - x * 2
+                x: facade.toPx(60)
+                visible: position == 1 && player.loops == MediaPlayer.Infinite
 
                 spacing: facade.toPx(20)
 
@@ -202,7 +264,7 @@ Item {
 
                     font.pixelSize: facade.doPx(24)
 
-                    text: Qt.formatTime(new Date(0, 0, 0, 0, minutes, seconds), qsTr("mm:ss"));
+                    text: formatTime(minutes, seconds, ":")
                     color: "white"
                 }
 
@@ -253,23 +315,17 @@ Item {
 
                     font.pixelSize: facade.doPx(24)
 
-                    text: Qt.formatTime(new Date(0, 0, 0, 0, minutes, seconds), qsTr("mm:ss"));
+                    text: formatTime(minutes, seconds, ":")
                     color: "white"
                 }
             }
         }
     }
 
-    DropShadow {
-        samples: 16
-        color: "#90000000"
-        source: seeker
-        anchors.fill: seeker
-    }
     Row {
         id: seeker
         width: parent.width - x * 2
-        x: Math.max(facade.toPx(60), video.x + (parent.width - video.contentRect.width * video.scale) / 2)
+        x: facade.toPx(60)
         anchors.bottom: controlPanel.top
         anchors.bottomMargin: -height/2;
 
@@ -277,13 +333,14 @@ Item {
 
         Label {
             id: curTime
+            anchors.bottom: parent.bottom
 
             readonly property int minutes: Math.floor(player.position / 60000)
             readonly property int seconds: Math.round((player.position % 60000) / 1000)
 
             font.pixelSize: facade.doPx(24)
 
-            text: Qt.formatTime(new Date(0, 0, 0, 0, minutes, seconds), qsTr("mm:ss"));
+            text: formatTime(minutes, seconds, ":")
             color: "white"
         }
 
@@ -314,13 +371,14 @@ Item {
 
         Label {
             id: allTime
+            anchors.bottom: parent.bottom
 
             readonly property int minutes: Math.floor(player.duration / 60000)
             readonly property int seconds: Math.round((player.duration % 60000) / 1000)
 
             font.pixelSize: facade.doPx(24)
 
-            text: Qt.formatTime(new Date(0, 0, 0, 0, minutes, seconds), qsTr("mm:ss"));
+            text: formatTime(minutes, seconds, ":")
             color: "white"
         }
     }

@@ -112,13 +112,9 @@ Drawer {
     Connections {
         target: chatScreen
         onPositionChanged: {
-            if (!loader.isLogin) {
-                position = 0
-            } else if (position == 1) {
-                loader.chatOpen = true;
-            } else if (position == 0) {
-                loader.chatOpen = false
-            }
+            if (!loader.isLogin) position = 0
+            else if (position == 1) loader.chatOpen = (true)
+            else if (position == 0) loader.chatOpen = false;
         }
     }
 
@@ -554,47 +550,40 @@ Drawer {
                 Connections {
                     target: attach;
                     onMoveChanged: {
-                        attach.move? camera2.start(): (camera2.stop());
-                        // chatScreen.interactive = !attach.move
+                        attach.move ? cameraFront.start() : cameraFront.stop()
                         attachMove.restart()
                     }
                 }
 
                 Row {
-                    id: imgRow;
+                    anchors.verticalCenter: parent.verticalCenter
                     x: facade.toPx(20)
-                    spacing: facade.toPx(10)
                     height: parent.height-x;
-                    anchors.verticalCenter : {(parent.verticalCenter);}
+                    spacing: facade.toPx(10)
 
                     Rectangle {
-                        id: cam
-                        width: height;
-                        height: parent.height*0.7
-
-                        Camera {
-                            id:camera2
-                            position: Camera.FrontFace
-                            flash.mode: Camera.FlashAuto
-                            exposure {
-                                exposureCompensation: -1
-                                exposureMode: {Camera.ExposurePortrait}
-                            }
-                            Component.onCompleted:stop()
-                        }
+                        id: camArea
+                        width: height
+                        height: parent.height * 0.7
 
                         VideoOutput {
-                            fillMode: {VideoOutput.PreserveAspectCrop;}
-                            source: camera2
+                            fillMode: VideoOutput.PreserveAspectCrop
+                            anchors.fill: parent
                             autoOrientation: true
-                            anchors.fill: parent;
+
+                            source: Camera {
+                                id: cameraFront
+                                exposure.exposureMode: Camera.ExposurePortrait
+                                cameraState: {Camera.LoadedState}
+                                position: Camera.FrontFace
+                            }
                         }
 
                         MouseArea {
                             anchors.fill: parent;
                             onClicked: {
-                                attach.move=false
-                                if (event_handler.currentOSys() != 0) {
+                                attach.move = false
+                                if (event_handler.currentOSys() !== 0) {
                                     imagePicker.item.takePhoto()
                                 }
                             }
@@ -606,14 +595,14 @@ Drawer {
                         id: imagesList
                         spacing: parent.spacing
                         orientation: Qt.Horizontal
-                        width: area.width - cam.width - parent.x - spacing
+                        width: area.width - camArea.width - parent.x - spacing
                         height: parent.height
 
-                        onMovingHorizontallyChanged: {
-                            chatRootView.interactive = !movingHorizontally
-                        }
-
                         ScrollIndicator.horizontal: ScrollIndicator {}
+
+                        onMovingHorizontallyChanged: {
+                            chatRootView.interactive=!movingHorizontally
+                        }
 
                         Component.onCompleted: {
                             var photos = (Math.random()*10) + 5;
@@ -633,7 +622,7 @@ Drawer {
                                 Item {
                                     clip: true
                                     width: height
-                                    height: imagesList.height/3 - spacing;
+                                    height: imagesList.height/3-spacing;
 
                                     Image {
                                         id: attachImg
@@ -690,14 +679,10 @@ Drawer {
                                 event.accepted = false
                             }
 
-                            Keys.onPressed: {
-                                if (event.key === (Qt.Key_Control)) {
-                                    pressEntr = !false
-                                }
-                            }
+                            Keys.onPressed: if (event.key === Qt.Key_Control) pressEntr = true
 
                             leftPadding: attachButton.width
-                            rightPadding:sendButton.width+leftPadding
+                            rightPadding: sendButton.width+leftPadding
                             font.pixelSize: facade.doPx(26)
 
                             Keys.onReleased: {
@@ -721,7 +706,7 @@ Drawer {
                     width: background.width
                     onClicked: {
                         attach.move = false
-                        checkMessage(2,JSON.stringify(selectedImage))
+                        checkMessage(2, JSON.stringify(selectedImage))
                     }
 
                     background: Image {
@@ -750,7 +735,7 @@ Drawer {
                         width: facade.toPx(sourceSize.width);
                         height: facade.toPx(sourceSize.height);
                         anchors {
-                            horizontalCenter: parent.horizontalCenter
+                            horizontalCenter: parent.horizontalCenter;
                             bottom: parent.bottom;
                             bottomMargin: {
                                 if (textField.lineCount <= 1) {

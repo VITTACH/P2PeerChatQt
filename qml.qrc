@@ -58,6 +58,7 @@
         <file>ui/users/lin.png</file>
         <file>P2PStyle/ActionBar.qml</file>
         <file>MediaPlayer.qml</file>
+        <file>ui/buttons/player/extensionButton.png</file>
         <file>ui/buttons/player/fullScreenButton.png</file>
         <file>ui/buttons/player/exitScreenButton.png</file>
         <file>ui/buttons/player/nextButton.png</file>
@@ -66,5 +67,6 @@
         <file>ui/buttons/player/previousButton.png</file>
         <file>ui/buttons/player/repeatOffButton.png</file>
         <file>ui/buttons/player/repeatOnButton.png</file>
+        <file>shaders/billboard.fsh</file>
     </qresource>
 </RCC>
