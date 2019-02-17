@@ -238,7 +238,7 @@ Rectangle {
                     if (count < 4) count = 4
                     countCard = count
                     if (event_handler.currentOSys() > 0) {
-                        if (Screen.orientation ==Qt.LandscapeOrientation)
+                        if (Screen.orientation==Qt.LandscapeOrientation)
                             countCard = 2 * countCard
                     }
                     return countCard*cardHeight-rssView.spacing;
@@ -283,7 +283,7 @@ Rectangle {
                         Image {
                             id: img
                             width: facade.toPx(sourceSize.width / 3.55)
-                            height: facade.toPx(sourceSize.height / 3.55)
+                            height: facade.toPx(sourceSize.height/ 3.55)
                             anchors.centerIn: parent
                             source: image
                         }

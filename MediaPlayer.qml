@@ -29,6 +29,7 @@ Item {
         mediaPlayer.fullScreen = !portraitScreen;
         if (oldValue != mediaPlayer.fullScreen) {
             mediaPlayer.startAnimation()
+            panelAnimation.start()
         }
     }
 
@@ -50,10 +51,19 @@ Item {
     }
 
     PropertyAnimation {
+       id: panelAnimation
+       target: controlPanel
+       to: controlPanel.height == 0? (player.loops != MediaPlayer.Infinite? facade.toPx(160): facade.toPx(220)): 0
+       from: controlPanel.height == 0? 0: (player.loops != MediaPlayer.Infinite? facade.toPx(160): facade.toPx(220))
+       property: "height"
+       duration: 200
+    }
+
+    PropertyAnimation {
        id: transit
        target: controlPanel
-       to: player.loops != MediaPlayer.Infinite? facade.toPx(180): facade.toPx(240)
-       from: player.loops != MediaPlayer.Infinite? facade.toPx(240): facade.toPx(180)
+       to: player.loops != MediaPlayer.Infinite? facade.toPx(160): facade.toPx(220)
+       from: player.loops != MediaPlayer.Infinite? facade.toPx(220): facade.toPx(160)
        property: "height"
        duration: 200
     }
@@ -64,6 +74,12 @@ Item {
         onTriggered: borderRect.visible =false
     }
 
+    Timer {
+        id: controlShowTimer
+        interval: 2000
+        onTriggered: panelAnimation.start()
+    }
+
     // Camera {id: camera}
 
     MediaPlayer {id: player}
@@ -71,26 +87,13 @@ Item {
     VideoOutput {
         id: video
         source: player
+
+        Behavior on scale {NumberAnimation {duration:200}}
+        Behavior on x {NumberAnimation {duration:200}}
+        Behavior on y {NumberAnimation {duration:200}}
+
         width: parent.width
-        height: {parent.height - controlPanel.height}
-
-        Behavior on scale {
-            NumberAnimation { duration: 200 }}
-        Behavior on x {
-            NumberAnimation { duration: 200 }}
-        Behavior on y {
-            NumberAnimation { duration: 200 }}
-    }
-
-    MouseArea {
-        anchors.fill: video
-        scrollGestureEnabled: false
-        onWheel: {
-            video.scale += video.scale * wheel.angleDelta.y / 1200
-            if (video.scale < 0.5) video.scale = 0.5
-            borderRect.visible = true;
-            borderRectTimeer.restart()
-        }
+        height: {parent.height - controlPanel.height;}
     }
 
     PinchArea {
@@ -101,8 +104,27 @@ Item {
         pinch.maximumScale: 5
 
         onPinchUpdated: {
-            borderRect.visible = true
+            borderRect.visible = true;
             borderRectTimeer.restart()
+        }
+    }
+
+    MouseArea {
+        anchors.top: parent.top
+        anchors.bottom: controlPanel.top
+        width: parent.width
+        scrollGestureEnabled: false
+
+        onWheel: {
+            video.scale += video.scale * wheel.angleDelta.y / 1200
+            if (video.scale < 0.5) {video.scale = 0.5}
+            borderRect.visible = true;
+            borderRectTimeer.restart()
+        }
+
+        onClicked: if (mediaPlayer.fullScreen) {
+            panelAnimation.start()
+            controlShowTimer.restart()
         }
     }
 
@@ -111,7 +133,7 @@ Item {
         anchors.fill: video
         scale: video.scale
 
-        property variant source: ShaderEffectSource {sourceItem: video; hideSource: true}
+        property variant source: ShaderEffectSource {sourceItem:video; hideSource:true}
 
         // biilboard
         property real grid: 5.0
@@ -120,7 +142,7 @@ Item {
         property real targetHeight: video.height
 
         property real step_x: 0.0015625
-        property real step_y: targetHeight ? (step_x * targetWidth / targetHeight) : 0.0;
+        property real step_y: targetHeight? (step_x * targetWidth / targetHeight): 0.0;
 
         // shockwave
         property real granularity: 0.5 * 20
@@ -180,8 +202,8 @@ Item {
         boundsBehavior: Flickable.StopAtBounds;
 
         width: parent.width
-        height: facade.toPx(180)
-        spacing: facade.toPx(30)
+        height: facade.toPx(160)
+        spacing: facade.toPx(10)
 
         model: ListModel {
             ListElement {position: 0}
@@ -190,47 +212,42 @@ Item {
 
         delegate: Item {
             width: parent.width
-            height: position==0? control.height+facade.toPx(40): sliders.height
+            height: {position == 0? (control.height + facade.toPx(40)): sliders.height}
 
             Row {
                 id: control
-                visible: position == 0
-                anchors {
-                    bottom: parent.bottom
-                    horizontalCenter: parent.horizontalCenter
-                }
+                anchors.bottom: parent.bottom;
+                anchors.horizontalCenter: parent.horizontalCenter
                 spacing: facade.toPx(10)
+                visible: {position == 0}
 
                 Repeater {
                     id: buttons
-                    model: ["repeatOff", "previous", "play", "next", "fullScreen"];
-
                     Button {
                         flat: true
-                        width: facade.toPx(80);
-                        height: facade.toPx(90)
+                        width: facade.toPx(80)
+                        height:facade.toPx(90)
                         anchors.verticalCenter: parent.verticalCenter
 
                         onClicked: {
                             switch(index) {
-                            case 4:
-                                mediaPlayer.fullScreen = !(mediaPlayer.fullScreen);
-                                mediaPlayer.startAnimation()
-                                break;
                             case 0:
                                 if (player.loops != MediaPlayer.Infinite) player.loops=MediaPlayer.Infinite
-                                else {
-                                    player.loops = 0
-                                }
+                                else player.loops = 0;
                                 transit.start()
                                 break;
                             case 2:
-                                if (player.playbackState==MediaPlayer.PlayingState)
+                                if (player.playbackState == MediaPlayer.PlayingState) {
                                     player.pause()
-                                else {
+                                } else {
                                     player.source = actionBar.editUrl
-                                    player.play()
+                                    player.play();
                                 }
+                                break;
+                            case 4:
+                                mediaPlayer.fullScreen = !mediaPlayer.fullScreen
+                                mediaPlayer.startMovingAnimation()
+                                panelAnimation.start()
                                 break;
                             }
                         }
@@ -246,20 +263,21 @@ Item {
                                     "ui/buttons/player/repeatOnButton.png"
                                 } else if (player.playbackState == MediaPlayer.PlayingState && index ==2) {
                                     "ui/buttons/player/pauseButton.png"
-                                } else {
-                                    "ui/buttons/player/" + modelData + "Button.png"
-                                }
+                                } else "ui/buttons/player/" + modelData + "Button.png";
                             }
                         }
                     }
+
+                    model: ["repeatOff", "previous", "play", "next", "fullScreen"]
                 }
             }
 
             Row {
                 id: sliders
-                width: parent.width - x * 2
                 x: facade.toPx(60)
                 visible: position == 1 && player.loops == MediaPlayer.Infinite
+                width: parent.width - x * 2
+                height: visible? implicitHeight: 0;
 
                 spacing: facade.toPx(20)
 
@@ -270,9 +288,8 @@ Item {
                     readonly property int minutes: Math.floor(firstPosition / 60000)
                     readonly property int seconds: Math.round((firstPosition % 60000) / (1000))
 
-                    font.pixelSize: facade.doPx(24)
-
                     text: formatTime(minutes, seconds, ":")
+                    font.pixelSize: facade.doPx(24)
                     color: "white"
                 }
 
@@ -321,9 +338,8 @@ Item {
                     readonly property int minutes: Math.floor(secondPosition / 60000)
                     readonly property int seconds: Math.round((secondPosition % 60000) / 1000);
 
-                    font.pixelSize: facade.doPx(24)
-
                     text: formatTime(minutes, seconds, ":")
+                    font.pixelSize: facade.doPx(24)
                     color: "white"
                 }
             }
@@ -332,14 +348,15 @@ Item {
                 anchors {
                     right: parent.right
                     rightMargin: facade.toPx(60)
-                    verticalCenter: control.verticalCenter;
+                    verticalCenter: control.verticalCenter
                 }
-                visible: position == 0
+                property int shaderCounter: 0
+
                 flat: true
                 width: facade.toPx(80);
                 height: facade.toPx(90)
 
-                property int shaderCounter: 0
+                visible: position == 0;
 
                 onClicked: {
                     loadShader(shaders[shaderCounter++])
@@ -362,34 +379,36 @@ Item {
         id: seeker
         width: parent.width - x * 2
         x: facade.toPx(60)
-        anchors.bottom: controlPanel.top
-        anchors.bottomMargin: -height/2;
+        anchors.bottom: controlPanel.top;
+        anchors.bottomMargin: -height/2
 
         spacing: facade.toPx(20)
 
         Label {
             id: curTime
-            anchors.bottom: parent.bottom
-
             readonly property int minutes: Math.floor(player.position / 60000)
             readonly property int seconds: Math.round((player.position % 60000) / 1000)
 
-            font.pixelSize: facade.doPx(24)
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: -height/4
 
             text: formatTime(minutes, seconds, ":")
+            font.pixelSize: facade.doPx(24)
             color: "white"
         }
 
         Slider {
             id: slider
-            width: seeker.width - curTime.width - allTime.width - parent.spacing * 2
+            width: (seeker.width - curTime.width - allTime.width - parent.spacing * 2)
 
             handle.width: handle.height
             handle.height: facade.toPx(40)
 
             to: player.duration
 
-            onValueChanged: if (!sync) player.seek(value);
+            onValueChanged: {
+                if (!sync) player.seek(value)
+            }
 
             property bool sync: false
             Connections {
@@ -407,14 +426,14 @@ Item {
 
         Label {
             id: allTime
-            anchors.bottom: parent.bottom
-
             readonly property int minutes: Math.floor(player.duration / 60000)
             readonly property int seconds: Math.round((player.duration % 60000) / 1000)
 
-            font.pixelSize: facade.doPx(24)
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: -height/4
 
             text: formatTime(minutes, seconds, ":")
+            font.pixelSize: facade.doPx(24)
             color: "white"
         }
     }

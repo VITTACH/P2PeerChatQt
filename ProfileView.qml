@@ -61,7 +61,7 @@ Item {
                 Component.onCompleted: source = "MediaPlayer.qml"
 
                 property bool fullScreen: false
-                function startAnimation() {transit.start()}
+                function startMovingAnimation() {transit.start()}
             }
         }
     }
