@@ -55,6 +55,7 @@
         <file>ui/icons/navigate.png</file>
         <file>ui/users/default/Human.png</file>
         <file>ui/users/default/woman.png</file>
+        <file>ui/buttons/player/repeatOffButton.png</file>
         <file>ui/users/lin.png</file>
         <file>P2PStyle/ActionBar.qml</file>
         <file>MediaPlayer.qml</file>
@@ -65,8 +66,10 @@
         <file>ui/buttons/player/pauseButton.png</file>
         <file>ui/buttons/player/playButton.png</file>
         <file>ui/buttons/player/previousButton.png</file>
-        <file>ui/buttons/player/repeatOffButton.png</file>
         <file>ui/buttons/player/repeatOnButton.png</file>
         <file>shaders/billboard.fsh</file>
+        <file>shaders/isolate.fsh</file>
+        <file>shaders/waves.fsh</file>
+        <file>shaders/glow.fsh</file>
     </qresource>
 </RCC>

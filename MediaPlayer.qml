@@ -9,27 +9,38 @@ Item {
     clip: true
 
     anchors.fill: parent
-    anchors.topMargin: actionBar.height
+    anchors.topMargin: actionBar.height;
+
+    //github.com/qt-labs/qt5-everywhere-demo/tree/master/QtDemo/qml/QtDemo/demos/shaders/shaders
+    property var shaders: [
+        "isolate",
+        "billboard",
+        "glow",
+        "waves"
+    ]
+
+    property bool portraitScreen: Screen.primaryOrientation == Qt.PortraitOrientation
 
     property int firstPosition: 0
     property int secondPosition: 0
 
-    property bool portraitOrientation: Screen.primaryOrientation === Qt.PortraitOrientation
-
-    onPortraitOrientationChanged: {
-        mediaPlayer.fullScreen = !portraitOrientation;
-        mediaPlayer.startAnimation()
+    onPortraitScreenChanged: {
+        var oldValue = mediaPlayer.fullScreen
+        mediaPlayer.fullScreen = !portraitScreen;
+        if (oldValue != mediaPlayer.fullScreen) {
+            mediaPlayer.startAnimation()
+        }
     }
 
     function formatTime(minutes, seconds, separator) {
-        var min = minutes < 10 ? "0" + minutes : minutes
-        var sec = seconds < 10 ? "0" + seconds : seconds
+        var min = minutes < 10 ? "0" + minutes : minutes;
+        var sec = seconds < 10 ? "0" + seconds : seconds;
         return min + separator + sec
     }
 
-    function readTextFile(fileUrl) {
+    function loadShader(fileName) {
         var xhr = new XMLHttpRequest
-        xhr.open("GET", "shaders/" + fileUrl)
+        xhr.open("GET", "shaders/" + fileName + ".fsh")
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 effect.fragmentShader = "precision mediump float;" + xhr.responseText
@@ -50,26 +61,25 @@ Item {
     Timer {
         id: borderRectTimeer
         interval: 1000
-        onTriggered: {borderRect.visible = false}
+        onTriggered: borderRect.visible =false
     }
 
-    Camera {id: camera}
+    // Camera {id: camera}
 
     MediaPlayer {id: player}
 
     VideoOutput {
         id: video
-        source: camera
-        fillMode: VideoOutput.PreserveAspectCrop;
+        source: player
         width: parent.width
-        height: parent.height-controlPanel.height
+        height: {parent.height - controlPanel.height}
 
         Behavior on scale {
-            NumberAnimation { duration: 200 } }
+            NumberAnimation { duration: 200 }}
         Behavior on x {
-            NumberAnimation { duration: 200 } }
+            NumberAnimation { duration: 200 }}
         Behavior on y {
-            NumberAnimation { duration: 200 } }
+            NumberAnimation { duration: 200 }}
     }
 
     MouseArea {
@@ -81,25 +91,14 @@ Item {
             borderRect.visible = true;
             borderRectTimeer.restart()
         }
-
-        drag.target: video
-        drag.maximumX: Math.abs(video.width - video.contentRect.width * video.scale) / 2;
-        drag.minimumX: -drag.maximumX
-        drag.maximumY: Math.abs(video.height-video.contentRect.height * video.scale) / 2;
-        drag.minimumY: -drag.maximumY
     }
 
     PinchArea {
         anchors.fill: video
 
         pinch.target: video
-        pinch.dragAxis: Pinch.XAndYAxis
-        pinch.maximumX: Math.abs(video.width - video.contentRect.width * video.scale) / 2
-        pinch.minimumX: -pinch.maximumX
-        pinch.maximumY: Math.abs(video.height-video.contentRect.height * video.scale) / 2
-        pinch.minimumY: -pinch.maximumY
         pinch.minimumScale: Math.min(rootItem.width, rootItem.height) / Math.max(video.contentRect.width, video.contentRect.height)
-        pinch.maximumScale: 10
+        pinch.maximumScale: 5
 
         onPinchUpdated: {
             borderRect.visible = true
@@ -114,16 +113,44 @@ Item {
 
         property variant source: ShaderEffectSource {sourceItem: video; hideSource: true}
 
+        // biilboard
         property real grid: 5.0
-        property real dividerValue: 1
+        property real dividerValue: 0.5
         property real targetWidth: video.width
         property real targetHeight: video.height
 
         property real step_x: 0.0015625
         property real step_y: targetHeight ? (step_x * targetWidth / targetHeight) : 0.0;
 
+        // shockwave
+        property real granularity: 0.5 * 20
+        property real weight: 0.5
 
-        Component.onCompleted: readTextFile("billboard.fsh")
+        property real centerX
+        property real centerY
+        property real time
+
+        SequentialAnimation {
+            running: true
+            loops: Animation.Infinite
+            ScriptAction {
+                script: {
+                    effect.centerX = Math.random()
+                    effect.centerY = Math.random()
+                }
+            }
+            NumberAnimation {
+                target: effect
+                property: "time"
+                from: 0
+                to: 1
+                duration: 1000
+            }
+        }
+
+        // isolate
+        property real windowWidth: 0.5 * 60
+        property real targetHue: 0.5 * 360
     }
 
     Rectangle {
@@ -163,7 +190,7 @@ Item {
 
         delegate: Item {
             width: parent.width
-            height: position == 0? control.height + facade.toPx(40): sliders.height
+            height: position==0? control.height+facade.toPx(40): sliders.height
 
             Row {
                 id: control
@@ -225,25 +252,6 @@ Item {
                             }
                         }
                     }
-                }
-            }
-
-            Button {
-                anchors {
-                    right: parent.right
-                    rightMargin: facade.toPx(60)
-                    verticalCenter: control.verticalCenter;
-                }
-                visible: position == 0
-                flat: true
-                width: facade.toPx(80);
-                height: facade.toPx(90)
-
-                Image {
-                    anchors.centerIn: parent
-                    source: "ui/buttons/player/extensionButton.png"
-                    height: facade.toPx(sourceSize.height)
-                    width: facade.toPx(sourceSize.width)
                 }
             }
 
@@ -317,6 +325,34 @@ Item {
 
                     text: formatTime(minutes, seconds, ":")
                     color: "white"
+                }
+            }
+
+            Button {
+                anchors {
+                    right: parent.right
+                    rightMargin: facade.toPx(60)
+                    verticalCenter: control.verticalCenter;
+                }
+                visible: position == 0
+                flat: true
+                width: facade.toPx(80);
+                height: facade.toPx(90)
+
+                property int shaderCounter: 0
+
+                onClicked: {
+                    loadShader(shaders[shaderCounter++])
+                    if (shaderCounter >= shaders.length) {
+                        shaderCounter = 0
+                    }
+                }
+
+                Image {
+                    anchors.centerIn: parent
+                    source: "ui/buttons/player/extensionButton.png"
+                    height: facade.toPx(sourceSize.height)
+                    width: facade.toPx(sourceSize.width)
                 }
             }
         }
