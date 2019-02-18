@@ -6,32 +6,15 @@ import QtGraphicalEffects 1.0
 
 Item {
     id: rootItem
-    clip: true
-
     anchors.fill: parent
     anchors.topMargin: actionBar.height;
+    clip: true
 
     //github.com/qt-labs/qt5-everywhere-demo/tree/master/QtDemo/qml/QtDemo/demos/shaders/shaders
-    property var shaders: [
-        "isolate",
-        "billboard",
-        "glow",
-        "waves"
-    ]
-
-    property bool portraitScreen: Screen.primaryOrientation == Qt.PortraitOrientation
+    property var shaders: ["isolate", "billboard", "glow", "waves"]
 
     property int firstPosition: 0
     property int secondPosition: 0
-
-    onPortraitScreenChanged: {
-        var oldValue = mediaPlayer.fullScreen
-        mediaPlayer.fullScreen = !portraitScreen;
-        if (oldValue != mediaPlayer.fullScreen) {
-            mediaPlayer.startAnimation()
-            panelAnimation.start()
-        }
-    }
 
     function formatTime(minutes, seconds, separator) {
         var min = minutes < 10 ? "0" + minutes : minutes;
@@ -88,7 +71,7 @@ Item {
         id: video
         source: player
 
-        Behavior on scale {NumberAnimation {duration:200}}
+        Behavior on scale {NumberAnimation{duration:200}}
         Behavior on x {NumberAnimation {duration:200}}
         Behavior on y {NumberAnimation {duration:200}}
 
@@ -97,9 +80,11 @@ Item {
     }
 
     PinchArea {
-        anchors.fill: video
+        anchors.top: parent.top
+        anchors.bottom: controlPanel.top
+        width: parent.width
 
-        pinch.target: video
+        pinch.target: {video}
         pinch.minimumScale: Math.min(rootItem.width, rootItem.height) / Math.max(video.contentRect.width, video.contentRect.height)
         pinch.maximumScale: 5
 
@@ -107,24 +92,23 @@ Item {
             borderRect.visible = true;
             borderRectTimeer.restart()
         }
-    }
 
-    MouseArea {
-        anchors.top: parent.top
-        anchors.bottom: controlPanel.top
-        width: parent.width
-        scrollGestureEnabled: false
+        MouseArea {
+            anchors.fill: parent
+            propagateComposedEvents: true;
 
-        onWheel: {
-            video.scale += video.scale * wheel.angleDelta.y / 1200
-            if (video.scale < 0.5) {video.scale = 0.5}
-            borderRect.visible = true;
-            borderRectTimeer.restart()
-        }
+            onWheel: {
+                video.scale += video.scale * wheel.angleDelta.y / 1200
+                if (video.scale < 0.5) video.scale=0.5
+                borderRect.visible = true;
+                borderRectTimeer.restart()
+            }
 
-        onClicked: if (mediaPlayer.fullScreen) {
-            panelAnimation.start()
-            controlShowTimer.restart()
+            onClicked: if (controlPanel.height == 0) {
+                mouse.accepted = false
+                panelAnimation.start()
+                controlShowTimer.restart()
+            }
         }
     }
 
@@ -136,8 +120,8 @@ Item {
         property variant source: ShaderEffectSource {sourceItem:video; hideSource:true}
 
         // biilboard
-        property real grid: 5.0
-        property real dividerValue: 0.5
+        property real grid: 4.0
+        property real dividerValue: 1
         property real targetWidth: video.width
         property real targetHeight: video.height
 
@@ -247,7 +231,7 @@ Item {
                             case 4:
                                 mediaPlayer.fullScreen = !mediaPlayer.fullScreen
                                 mediaPlayer.startMovingAnimation()
-                                panelAnimation.start()
+                                controlShowTimer.running ? controlShowTimer.stop() : panelAnimation.start()
                                 break;
                             }
                         }
