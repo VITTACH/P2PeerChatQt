@@ -224,12 +224,12 @@ Item {
                                 if (player.playbackState == MediaPlayer.PlayingState) {
                                     player.pause()
                                 } else {
-                                    player.source = actionBar.editUrl
+                                    player.source = loader.urlLink
                                     player.play();
                                 }
                                 break;
                             case 4:
-                                mediaPlayer.fullScreen = !mediaPlayer.fullScreen
+                                mediaPlayer.fullScreen = !mediaPlayer.fullScreen;
                                 mediaPlayer.startMovingAnimation()
                                 controlShowTimer.running ? controlShowTimer.stop() : panelAnimation.start()
                                 break;

@@ -131,10 +131,9 @@ Drawer {
     function getFriends() {
         var request = new XMLHttpRequest()
         request.open('POST', "http://www.hoppernet.hol.es")
-        request.onreadystatechange =function() {
-            if (request.readyState ==XMLHttpRequest.DONE) {
-                if (request.status &&request.status == 200)
-                    getMePeers(loader.frienList = request.responseText);
+        request.onreadystatechange = function() {
+            if (request.readyState == XMLHttpRequest.DONE && request.status == 200) {
+                getMePeers(loader.frienList = request.responseText);
             }
         }
         var urlEncode = 'application/x-www-form-urlencoded'

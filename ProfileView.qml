@@ -6,7 +6,7 @@ Item {
     Connections {
         target: loader
         onIsOnlineChanged: changeState()
-        onWebviewChanged: if (!loader.webview) changeState();
+        onWebviewChanged: if (!loader.webview) changeState()
         onAvatarPathChanged: actionBar.phot = (loader.avatarPath)
     }
 
@@ -18,7 +18,7 @@ Item {
     function changeState() {
         actionBar.photo = loader.avatarPath
         actionBar.status = loader.isOnline? "Online": ("Offline")
-        actionBar.text = (loader.login + " " + loader.famil);
+        actionBar.text = (loader.login + " " + loader.famil)
     }
 
     Component.onCompleted: {
@@ -33,8 +33,8 @@ Item {
     PropertyAnimation {
        id: transit
        target: actionBar
-       from: (actionBar.height === 0)? 0: facade.toPx(210);
-       to: (actionBar.height === 0)? facade.toPx(210): 0
+       from: (actionBar.height === 0)? 0 : facade.toPx(210);
+       to: (actionBar.height === 0)? facade.toPx(210) : 0
        property: "height"
        duration: 200
     }
@@ -48,7 +48,7 @@ Item {
             anchors.fill: parent;
 
             onCurrentIndexChanged: {
-                if (mediaPlayer.fullScreen) transit.start()
+                if (mediaPlayer.fullScreen==true) transit.start()
                 actionBar.page = currentIndex
             }
 

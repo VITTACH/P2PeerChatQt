@@ -76,6 +76,9 @@ ApplicationWindow {
             property var visitedPageList: []
         }
 
+        property string youtube_base_url: "https://www.googleapis.com/youtube/v3/"
+        property string youtube_api_key: "AIzaSyDrCaBdK7meQDXglqdexrvOPv1JqjrkqNE"
+
         property string listChoseBackground: "#4C4C4C"
         property string mainMenuHeaderColor: "#CD322E"
         property string menu4Color: "#CCCCCC";
@@ -119,8 +122,8 @@ ApplicationWindow {
         property string userId
 
         // some visible popup window
-        property bool avatar;
-        property bool dialog;
+        property bool avatar
+        property bool dialog
         property bool webview;
         property bool context;
 
@@ -134,7 +137,7 @@ ApplicationWindow {
         property bool isOnline
 
         // history of chats
-        property var chats:[];
+        property var chats: []
         property var frienList
 
         property var tmpLogin;

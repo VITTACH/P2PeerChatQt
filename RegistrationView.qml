@@ -9,24 +9,22 @@ Item {
         request.open('POST', "http://hoppernet.hol.es/default.php")
         request.setRequestHeader('Content-Type', ('application/x-www-form-urlencoded'))
         request.onreadystatechange = function() {
-            if (request.readyState === XMLHttpRequest.DONE) {
-                if (request.status && request.status == 200) {
-                    if (request.responseText == "yes") {
-                        loader.tel = phone;
-                        loader.famil = family
-                        loader.LoginView = LoginView;
-                        event_handler.saveSettings("phone", loader.tel);
-                        event_handler.saveSettings("passw", (password));
-                        var objectFrnd=JSON.parse(loader.frienList)
-                        objectFrnd.push(phone)
-                        defaultDialog.show("Ошибка регистрации", "Вы зарегистрированы")
-                        loader.frienList=JSON.stringify(objectFrnd)
-                        loader.addFriends()
-                        loader.isLogin = true;
-                        goTo("ProfileView.qml")
-                    } else if (request.responseText == "no") {
-                        defaultDialog.show("Ошибка регистрации", "Что-то пошло не так")
-                    }
+            if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+                if (request.responseText == "yes") {
+                    loader.tel = phone;
+                    loader.famil = family
+                    loader.LoginView = LoginView;
+                    event_handler.saveSettings("phone", loader.tel);
+                    event_handler.saveSettings("passw", (password));
+                    var objectFrnd=JSON.parse(loader.frienList)
+                    objectFrnd.push(phone)
+                    defaultDialog.show("Ошибка регистрации", "Вы зарегистрированы")
+                    loader.frienList=JSON.stringify(objectFrnd)
+                    loader.addFriends()
+                    loader.isLogin = true;
+                    goTo("ProfileView.qml")
+                } else if (request.responseText == "no") {
+                    defaultDialog.show("Ошибка регистрации", "Что-то пошло не так")
                 }
             }
         }

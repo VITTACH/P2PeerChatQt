@@ -38,129 +38,120 @@ Rectangle {
             x: facade.toPx(15)
             width: nWidth = Math.min(parent.width - facade.toPx(80), facade.toPx(800))
 
-            function findPeer(phone) {
-                for (var i = 0; i < humanModel.count; i+=1) {
-                    if (humanModel.get(i).phone == (phone)) {
-                        return i;
-                    }
-                }
-                return -1;
+            function concatUriParams(data) {
+                return typeof data == 'string' ? data : Object.keys(data).map(
+                     function(k) {return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])}
+                 ).join('&')
             }
 
-            function filterList(param) {
-                var succesFind = (false)
-                for (var i = 0; i < humanModel.count; i ++) {
-                    var name = " " + humanModel.get(i).login + humanModel.get(i).famil
-                    if (name.toLowerCase().search(param)>0) {
-                        humanModel.setProperty(i, ("activity"), 1)
-                        if (!succesFind) listView.currentIndex = i
-                        succesFind =true
-                    } else {
-                        humanModel.setProperty(i, ("activity"), 0)
+            function requestVideoLink(id, videoMeta, cache, size) {
+                var request = new XMLHttpRequest()
+                request.open('GET', "https://you-link.herokuapp.com/?url=https://www.youtube.com/watch?v=" + id)
+                request.onreadystatechange = function() {
+                    if (request.readyState == XMLHttpRequest.DONE && request.status == 200) {
+                        var links = JSON.parse(request.responseText)
+                        var obj = {
+                            title: videoMeta.title,
+                            pDesc: videoMeta.description,
+                            image: videoMeta.thumbnails.default.url,
+                            hdUrl: links[0].url,
+                            pDate: Qt.formatDateTime(videoMeta.publishedAt, "dd.MM.yy hh:mm")
+                        }
+
+                        videoModel.append(obj)
+                        cache.push(obj)
+
+                        if (size === cache.length) {event_handler.saveSettings("videos", JSON.stringify(cache))}
                     }
                 }
-                listView.positionViewAtBeginning()
+
+                request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+                request.send()
             }
 
-            function getMePeers(param) {
-                var request = new XMLHttpRequest(), obj,index
-                request.open('POST',"http://www.hoppernet.hol.es")
-                request.onreadystatechange =function() {
-                    if (request.readyState==XMLHttpRequest.DONE) {
-                        if (request.status&&request.status==200) {
-                            obj = JSON.parse(request.responseText)
-                            for (var i = 0; i < obj.length; i++) {
-                                index = findPeer(obj[i].name)
-                                if (humanModel.count<1||index<0) {
-                                    loader.chats.push({phone:obj[i].name, message:[]})
-                                    humanModel.append({
-                                        image: "https://randomuser.me/portraits/men/" + Math.floor(100*Math.random()) + ".jpg",
-                                        famil: obj[i].family,
-                                        login: obj[i].login,
-                                        phone: obj[i].name,
-                                        port: obj[i].port,
-                                        ip: obj[i].ip,
-                                        activity: 0
-                                    });
-                                }else {
-                                    humanModel.setProperty(index, "port", obj[i].port)
-                                    humanModel.setProperty(index, "ip", obj[i].ip)
-                                }
+            function youtubeRequest(url, data) {
+                var params = concatUriParams(data)
+                videoModel.clear()
+
+                var request = new XMLHttpRequest()
+                request.open('GET', url + "?" + params)
+                request.onreadystatechange = function() {
+                    if (request.readyState == XMLHttpRequest.DONE) {
+                        if (request.status == 200) {
+                            var cache = []
+                            var items = JSON.parse(request.responseText).items;
+                            var size = items.length - 1
+                            for (var i = 0; i < items.length; i++) {
+                                requestVideoLink(items[i].id, items[i].snippet, cache, size);
                             }
-                            filterList(param)
+                        } else {
+                            console.log(request.responseText)
+                            loadCachedVideos()
                         }
                     }
                 }
-                var contype = 'Content-Type'
-                request.setRequestHeader(contype, 'application/x-www-form-urlencoded')
-                request.send("READ=4")
+
+                request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+                request.send()
             }
 
-            function rssLoadingAndSaving() {
-                if (xmlmodel.count > 0) {
-                    var RsCache = []
-                    for (var i = 0; i < xmlmodel.count; i+= 1) {
-                        var obj= {enable: true, link: xmlmodel.get(i).link, title: xmlmodel.get(i).title, image: xmlmodel.get(i).image, pDate: xmlmodel.get(i).pDate, pDesc: xmlmodel.get(i).pDesc}
-                        RsCache.push(obj)
-                        for (var j = 0; j < rssView.model.count; j++) {
-                            if (rssView.model.get(j).title == obj.title)
-                                break
-                        }
-                        if (j == rssView.model.count)
-                            rssView.model.append(obj)
-                    }
-                    event_handler.saveSettings("rss",JSON.stringify(RsCache))
-                } else {
-                    var rssNews = event_handler.loadValue("rss");
-                    if (rssNews !== "") {
-                        var rssOld = JSON.parse(rssNews);
-                        for (var i = 0; i <rssOld.length; i+=1) {
-                            rssView.model.append({enable: (true), link: (rssOld[i].link), title: (rssOld[i].title), image: (rssOld[i].image), pDate: (rssOld[i].pDate), pDesc: (rssOld[i].pDesc)});
-                        }
+            function loadCachedVideos() {
+                var recentVideos = event_handler.loadValue("videos")
+                if (recentVideos != "") {
+                    var videoMetaData = JSON.parse(recentVideos)
+                    for (var i = 0; i < videoMetaData.length; i++) {
+                        videoModel.append({
+                            title: videoMetaData[i].title, pDesc: videoMetaData[i].pDesc,
+                            hdUrl: videoMetaData[i].hdUrl, pDate: videoMetaData[i].pDate
+                        });
                     }
                 }
+            }
+
+            function searchingVideo(data) {
+                var params = {"part": "snippet", "q": data, "maxResults": 20, "key": loader.youtube_api_key}
+                youtubeRequest(loader.youtube_base_url + "search", params)
+            }
+
+            Connections {
+                target: actionBar
+                onEditUrlChanged: searchingVideo(actionBar.editUrl)
             }
 
             Item {
                 visible: index == 0
                 property int countCard: 4
 
-                Component.onCompleted: {
-                    xmlmodel.source = "http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+                width: parent.width
+                height: {
+                    var cardHeight = facade.toPx(210);
+                    var count = Math.floor((baseRect.height - (feedsModel.count -1)*basView.spacing)/cardHeight)
+                    if (count < 4) count = 4
+                    countCard = count
+                    if (event_handler.currentOSys() > 0 && Screen.orientation === Qt.LandscapeOrientation) {
+                        countCard = 2 * countCard
+                    }
+                    return countCard * cardHeight -feedView.spacing
                 }
 
-                XmlListModel {
-                    id: xmlmodel
-                    query: {"/rss/channel/item";}
-                    XmlRole {name: "link"; query: "link/string()"}
-                    XmlRole {name: "title"; query: "title/string()"}
-                    XmlRole {name: "pDate"; query: "pubDate/string()"}
-                    XmlRole {name: "pDesc";query:"description/string()"}
-                    XmlRole {name: "image"; query: "media:content/@url/string()";}
-                    namespaceDeclarations: "declare namespace media=\"http://search.yahoo.com/mrss/\";"
-                    onStatusChanged: {
-                        if ((status == XmlListModel.Ready || status == XmlListModel.Error)) {
-                            rssLoadingAndSaving()
-                        }
-                    }
+                Component.onCompleted: {
+                    var params = {"part": "snippet", "chart": "mostPopular", "regionCode": "RU", "maxResults": 20, "key": loader.youtube_api_key}
+                    youtubeRequest(loader.youtube_base_url + "videos", params)
                 }
 
                 ListView {
-                    id: rssView
-                    clip: visible;
+                    id: feedView
+                    clip: true
                     width: parent.width
                     height: parent.height
-                    model: ListModel{id:rssmodel}
-                    snapMode: ListView.SnapToItem
-                    boundsBehavior: {
-                        if(contentY<1) Flickable.StopAtBounds
-                        else Flickable.DragAndOvershootBounds
-                    }
+
+                    boundsBehavior: (contentY < 1)? Flickable.StopAtBounds: Flickable.DragAndOvershootBounds;
+
+                    model: ListModel {id: videoModel}
 
                     delegate: Button {
-                        visible: enable
-                        width: parent.width;
-                        height: Math.max(facade.toPx(280), descr.height)
+                        width: parent.width
+                        height: Math.max(facade.toPx(280), description.height)
                         Component.onCompleted: background.color = loader.newsBackgroundColor
 
                         Rectangle {
@@ -180,7 +171,7 @@ Rectangle {
                         }
 
                         Column {
-                            id: descr
+                            id: description
                             y: facade.toPx(20)
                             anchors {
                                 left: bag.right
@@ -219,29 +210,11 @@ Rectangle {
                         }
 
                         onClicked: {
-                            if (chatScreen.position > 0) return
-                            loader.urlLink= link
-                            if (event_handler.currentOSys() > (0)) {
-                                loader.webview = true;
-                                actionBar.text = title
-                            } else {
-                                Qt.openUrlExternally(loader.urlLink)
-                            }
+                            if (chatScreen.position > 0) return;
+                            loader.urlLink = videoModel.get(index).hdUrl
+                            actionBar.page = 1
                         }
                     }
-                }
-
-                width: parent.width
-                height: {
-                    var cardHeight = facade.toPx(210);
-                    var count = Math.floor((baseRect.height - (feedsModel.count - 1) * basView.spacing) / cardHeight)
-                    if (count < 4) count = 4
-                    countCard = count
-                    if (event_handler.currentOSys() > 0) {
-                        if (Screen.orientation==Qt.LandscapeOrientation)
-                            countCard = 2 * countCard
-                    }
-                    return countCard*cardHeight-rssView.spacing;
                 }
             }
 
@@ -343,11 +316,5 @@ Rectangle {
                 }
             }
         }
-    }
-
-    Loader {
-        source: event_handler.currentOSys()>0?"WebService.qml":""
-        visible: loader.webview
-        anchors.fill: parent
     }
 }

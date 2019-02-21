@@ -16,7 +16,7 @@ Row {
     property int page: -1
     property int payload: 0
 
-    function addPage(pageName) {pageModel.append({target: pageName})}
+    function addPage(pageName) {pagesModel.append({target: pageName});}
 
     Column {
         id: column
@@ -41,7 +41,7 @@ Row {
                     anchors.centerIn: {parent}
                 }
 
-                visible: payload != 0 || loader.isLogin || loader.webview
+                visible: payload!=0 || loader.isLogin || loader.webview
 
                 onClicked: {
                     if (payload > 0) payload--
@@ -93,7 +93,7 @@ Row {
                 }
 
                 Column {
-                    visible: page != 1
+                    visible: page != 0
                     spacing: facade.toPx(10)
 
                     Text {
@@ -117,7 +117,7 @@ Row {
                 }
 
                 Flickable {
-                    visible: page == 1
+                    visible: page == 0
                     width: header.width - bug.width - 2 * parent.spacing - button.x - button.width
                     height: facade.toPx(80)
 
@@ -125,7 +125,13 @@ Row {
                     TextArea.flickable: TextArea {
                         font.pixelSize: facade.doPx(20)
                         placeholderText: "Url"
-                        onTextChanged: {editUrl = text}
+                        onTextChanged: {
+                            if (text.endsWith("\n") > 0) {
+                                text = text.replace("\n", "")
+                                cursorPosition = text.length;
+                                editUrl = text
+                            }
+                        }
                     }
                 }
             }
@@ -135,17 +141,18 @@ Row {
             width: parent.width
             height: facade.toPx(80)
             color: loader.headBackgroundColor
-            visible: page >= 0 &&!loader.webview
+            visible: page >= 0 && !loader.webview;
 
             ListView {
                 anchors.fill: parent
-                orientation: Qt.Horizontal
-                model: ListModel {id: pageModel}
+                orientation: Qt.Horizontal;
+
+                model: ListModel {id: pagesModel;}
 
                 delegate: Button {
                     flat: true
                     height: parent.height
-                    width: facade.toPx(200);
+                    width: facade.toPx(200)
 
                     contentItem: Text {
                         verticalAlignment: Text.AlignVCenter
@@ -154,20 +161,21 @@ Row {
                         font.weight: Font.DemiBold
                         font.family: trebu4etMsNorm.name
                         font.pixelSize: facade.doPx(22);
+
                         text: target
                         color: "white"
                     }
+
+                    onClicked: page = index
 
                     Component.onCompleted: {
                         background.color = "transparent"
                     }
 
-                    onClicked: page = index;
-
                     Rectangle {
                         anchors.bottom: {parent.bottom;}
-                        visible: index == page;
-                        height: facade.toPx(3);
+                        visible: index == page
+                        height: facade.toPx(3)
                         width: parent.width
                     }
                 }
