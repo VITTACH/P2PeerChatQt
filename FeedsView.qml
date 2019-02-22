@@ -40,7 +40,9 @@ Rectangle {
 
             function concatUriParams(data) {
                 return typeof data == 'string' ? data : Object.keys(data).map(
-                     function(k) {return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])}
+                     function(key) {
+                         return encodeURIComponent(key) + '=' + encodeURIComponent(data[key])
+                     }
                  ).join('&')
             }
 
@@ -78,16 +80,14 @@ Rectangle {
                 request.onreadystatechange = function() {
                     if (request.readyState == XMLHttpRequest.DONE) {
                         if (request.status == 200) {
-                            var cache = []
-                            var items = JSON.parse(request.responseText).items;
+                            var cacheVideo = []
+                            var items = JSON.parse(request.responseText).items
                             var size = items.length - 1
                             for (var i = 0; i < items.length; i++) {
-                                requestVideoLink(items[i].id, items[i].snippet, cache, size);
+                                var videoId = typeof items[i].id == "string" ? items[i].id : items[i].id.videoId
+                                requestVideoLink(videoId, items[i].snippet, cacheVideo, size)
                             }
-                        } else {
-                            console.log(request.responseText)
-                            loadCachedVideos()
-                        }
+                        } else loadCachedVideos()
                     }
                 }
 
@@ -111,8 +111,8 @@ Rectangle {
                 }
             }
 
-            function searchingVideo(data) {
-                var params = {"part": "snippet", "q": data, "maxResults": 10, "key": loader.youtube_api_key}
+            function searchingVideo(metadata) {
+                var params = {"part": "snippet", "q": metadata, "maxResults": 10, "key": loader.youtube_api_key}
                 youtubeRequest(loader.youtube_base_url + "search", params)
             }
 
