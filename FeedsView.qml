@@ -98,18 +98,21 @@ Rectangle {
             function loadCachedVideos() {
                 var recentVideos = event_handler.loadValue("videos")
                 if (recentVideos != "") {
-                    var videoMetaData = JSON.parse(recentVideos)
-                    for (var i = 0; i < videoMetaData.length; i++) {
+                    var cache = JSON.parse(recentVideos)
+                    for (var i = 0; i < cache.length; i++) {
                         videoModel.append({
-                            title: videoMetaData[i].title, pDesc: videoMetaData[i].pDesc,
-                            hdUrl: videoMetaData[i].hdUrl, pDate: videoMetaData[i].pDate
+                            title: cache[i].title,
+                            pDesc: cache[i].pDesc,
+                            hdUrl: cache[i].hdUrl,
+                            pDate: cache[i].pDate,
+                            image: cache[i].image
                         });
                     }
                 }
             }
 
             function searchingVideo(data) {
-                var params = {"part": "snippet", "q": data, "maxResults": 20, "key": loader.youtube_api_key}
+                var params = {"part": "snippet", "q": data, "maxResults": 10, "key": loader.youtube_api_key}
                 youtubeRequest(loader.youtube_base_url + "search", params)
             }
 
