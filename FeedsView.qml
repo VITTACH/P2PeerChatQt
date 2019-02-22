@@ -138,7 +138,7 @@ Rectangle {
                 }
 
                 Component.onCompleted: {
-                    var params = {"part": "snippet", "chart": "mostPopular", "regionCode": "RU", "maxResults": 20, "key": loader.youtube_api_key}
+                    var params = {"part": "snippet", "chart": "mostPopular", "regionCode": "RU", "maxResults": 10, "key": loader.youtube_api_key}
                     youtubeRequest(loader.youtube_base_url + "videos", params)
                 }
 
