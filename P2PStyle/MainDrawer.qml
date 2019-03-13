@@ -1,4 +1,4 @@
-import QtQuick 2.7
+﻿import QtQuick 2.7
 import QtQuick.Controls 2.3
 import QtGraphicalEffects 1.0
 
@@ -159,8 +159,7 @@ Drawer {
 
     function findPeer(phone) {
         for(var i = 0; i<usersModel.count; i++) {
-            if (usersModel.get(i).phone == phone)
-                return i;
+            if (usersModel.get(i).phone == phone) return i;
         }
         return -1;
     }
@@ -172,16 +171,15 @@ Drawer {
 
         Rectangle {
             anchors.fill: parent
-            color: loader.listBackgroundColor;
+            color: loader.listBackgroundColor
             anchors.topMargin: profile.height
             opacity: 1.0;
         }
 
         Rectangle {
-            id: leftRect;
             width: parent.width;
             height: {profile.height;}
-            color: {loader.isOnline == true ? loader.mainMenuHeaderColor : (loader.mainMenuHeaderColor);}
+            color: loader.mainMenuHeaderColor
         }
 
         Column {
@@ -189,16 +187,20 @@ Drawer {
             spacing: facade.toPx(10);
             anchors.horizontalCenter: parent.horizontalCenter
 
-            Item { height: 1; width: parent.width }
+            Item {
+                height: 1
+                width: {parent.width}
+            }
 
             Row {
                 id: firstRow;
                 anchors.horizontalCenter: parent.horizontalCenter
-                spacing:facade.toPx(40)
+                spacing: facade.toPx(40)
 
                 Column {
                     opacity: 0
-                    anchors.verticalCenter: {parent.verticalCenter;}
+                    anchors.verticalCenter: parent.verticalCenter
+
                     Text {
                         text: "0"
                         color: "white"
